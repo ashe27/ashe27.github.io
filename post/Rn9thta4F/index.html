@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629300448489">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629301869229">
 <link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
 
 
@@ -18,8 +18,8 @@
 
 
 
-    <meta name="description" content="IEAK是一个IE的管理工具包，可自定义配置IE并生成一个安装包，一般是给网管人员部署使用的。
-适用于IE11的工具包下载地址：https://docs.microsoft.com/zh-cn/internet-explorer/ie11-..." />
+    <meta name="description" content="Internet Explorer Administration Kit (IEAK)是一个IE的管理工具包，可自定义配置IE并生成一个安装包，一般是给网管人员部署使用的，可以帮助管理员快速统一部署IE。
+适用于IE11的工具包下载地址：h..." />
     <meta name="keywords" content="Windows,IE" />
   </head>
   <body>
@@ -29,7 +29,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://ashe27.github.io">
-        <img src="https://ashe27.github.io/images/avatar.png?v=1629300448489" class="site-logo">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1629301869229" class="site-logo">
         <h1 class="site-title">ashe&#39;s blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -99,10 +99,12 @@
             <div class="post-date">2021-08-18</div>
             
             <div class="post-content" v-pre>
-              <p>IEAK是一个IE的管理工具包，可自定义配置IE并生成一个安装包，一般是给网管人员部署使用的。<br>
-适用于IE11的工具包下载地址：<a href="https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads">https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads</a><br>
+              <p>Internet Explorer Administration Kit (IEAK)是一个IE的管理工具包，可自定义配置IE并生成一个安装包，一般是给网管人员部署使用的，可以帮助管理员快速统一部署IE。<br>
+适用于IE11的工具包下载地址：<a href="https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads">https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads</a></p>
+<h2 id="ins配置文件">INS配置文件</h2>
+<p>我们用它配置&quot;链接&quot;相关设置<br>
 <img src="https://ashe27.github.io/post-images/1629300058002.png" alt="" loading="lazy"><br>
-我们用它配置&quot;链接&quot;相关设置，最终会生成一个安装包，其中有一个INS文件内容大概是这样</p>
+最终会生成一个安装包，其中有一个INS文件内容大概是这样</p>
 <pre><code>[Branding]
 CompanyName=Microsoft Corporation
 Wizard_Version=11.00.18362.1
@@ -129,15 +131,7 @@ Use_Same_Proxy=1
 Proxy_Enable=0
 Proxy_Override=&quot;&lt;local&gt;&quot;
 </code></pre>
-<p>双击运行安装包后会在IE目录下生成一个INS文件，并提示注销登录后生效</p>
-<pre><code>C:\Program Files\Internet Explorer\CUSTOM\INSTALL.INS
-</code></pre>
-<p>注销是为了让配置生效，实际上我们可以使用其他手段立即生效，就是重置IE。配置文件只有在IE初始化时会被访问，我们重置IE来让它再次载入配置文件。<br>
-运行命令<code>RunDll32.exe inetcpl.cpl,ResetIEtoDefaults</code>可以弹出重置对话框，确认重置后IE会依次从以下位置来获取配置</p>
-<pre><code>C:\Program Files\Internet Explorer\Custom\install.ins
-C:\Program Files\Internet Explorer\Signup\install.ins
-</code></pre>
-<p>一个有效的ins文件必须有<code>[Branding]</code>节，我们不用IEAK生成，直接从<code>Signup\install.ini</code>复制一份，手动添加配置也是可以的</p>
+<p>一个有效的ins文件必须有<code>[Branding]</code>节，我们不用IEAK生成，直接从<code>Signup\install.ini</code>复制一份，手动修改也是可以的</p>
 <pre><code>[Branding]
 CompanyName=
 Wizard_Version=11.00.19041.1
@@ -157,8 +151,22 @@ User Agent=
 FirstHomePage=https://www.google.com
 </code></pre>
 <p>这个例子添加了FirstHomePage字段，首次打开IE就会打开该首页。</p>
+<p>运行部署安装包后会在IE目录下生成一个INS文件，并提示注销登录后生效</p>
+<pre><code>C:\Program Files\Internet Explorer\CUSTOM\INSTALL.INS
+</code></pre>
+<p>注销是为了让设置生效，实际上我们可以使用其他手段立即生效，有两种方法</p>
+<h3 id="重置ie">重置IE</h3>
+<p>配置文件只有在IE初始化时会被访问，我们可以重置IE来让它再次载入配置文件。<br>
+运行命令<code>RunDll32.exe inetcpl.cpl,ResetIEtoDefaults</code>可以弹出重置对话框，确认重置后IE会依次从以下位置来获取配置</p>
+<pre><code>C:\Program Files\Internet Explorer\Custom\install.ins
+C:\Program Files\Internet Explorer\Signup\install.ins
+</code></pre>
+<h3 id="brandinternetexplorer">BrandInternetExplorer</h3>
+<p>iedkcs32有一个导出函数<code>BrandInternetExplorer</code>可以使得IE下次启动时载入指定的INS配置。<br>
+<code>rundll32.exe iedkcs32.dll,BrandInternetExplorer /ins:&quot;D:\test.ins&quot;</code></p>
 <h2 id="参考">参考</h2>
 <p><a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpie/8206de0e-2d1e-4a02-977b-b8614c5350d9">INS File Format</a></p>
+<p><a href="https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/">https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/</a></p>
 
             </div>
             
