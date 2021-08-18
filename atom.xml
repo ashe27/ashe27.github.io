@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-08-18T15:54:42.460Z</updated>
+    <updated>2021-08-18T15:57:11.796Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -79,7 +79,7 @@ FirstHomePage=https://www.google.com
 C:\Program Files\Internet Explorer\Signup\install.ins
 </code></pre>
 <h3 id="brandinternetexplorer">BrandInternetExplorer</h3>
-<p>iedkcs32有一个导出函数<code>BrandInternetExplorer</code>可以使得IE下次启动时载入指定的INS配置。<br>
+<p><code>iedkcs32.dll</code>有一个导出函数<code>BrandInternetExplorer</code>可以使得IE下次启动时载入指定的INS配置文件。<br>
 <code>rundll32.exe iedkcs32.dll,BrandInternetExplorer /ins:&quot;D:\test.ins&quot;</code></p>
 <h2 id="参考">参考</h2>
 <p><a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpie/8206de0e-2d1e-4a02-977b-b8614c5350d9">INS File Format</a></p>
