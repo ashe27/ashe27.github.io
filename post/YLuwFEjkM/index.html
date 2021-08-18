@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>编程实现挂载ISO镜像文件 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629300199410">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="Win8平台自带API
+挂载虚拟磁盘文件VHD或ISO镜像文件可以用 OpenVirtualDisk 相关API。其中ISO文件要求Win8及以上的系统，Win7不支持ISO文件
+#include &lt;initguid.h&gt;
+#i..." />
+    <meta name="keywords" content="Windows编程" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1629300199410" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">编程实现挂载ISO镜像文件</h2>
+            <div class="post-date">2021-08-06</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="win8平台自带api">Win8平台自带API</h2>
+<p>挂载虚拟磁盘文件VHD或ISO镜像文件可以用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-openvirtualdisk">OpenVirtualDisk</a> 相关API。其中ISO文件要求Win8及以上的系统，Win7不支持ISO文件</p>
+<pre><code class="language-cpp">#include &lt;initguid.h&gt;
+#include &lt;virtdisk.h&gt;
+
+#pragma comment(lib, &quot;VirtDisk&quot;)
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	HANDLE hVirtualDisk = nullptr;
+	VIRTUAL_STORAGE_TYPE vst;
+	vst.DeviceId = VIRTUAL_STORAGE_TYPE_DEVICE_ISO;   // Win7不支持ISO
+	vst.VendorId = VIRTUAL_STORAGE_TYPE_VENDOR_MICROSOFT;
+
+	OPEN_VIRTUAL_DISK_PARAMETERS openParams;
+	openParams.Version = OPEN_VIRTUAL_DISK_VERSION_1;
+	
+	DWORD dwError = OpenVirtualDisk(&amp;vst, L&quot;E:\\vs2013.4_ult_chs.iso&quot;, VIRTUAL_DISK_ACCESS_ATTACH_RO, OPEN_VIRTUAL_DISK_FLAG_NONE, &amp;openParams, &amp;hVirtualDisk);
+	if (dwError == ERROR_SUCCESS) {
+		ATTACH_VIRTUAL_DISK_PARAMETERS attachParameters;
+		attachParameters.Version = ATTACH_VIRTUAL_DISK_VERSION_1;
+		dwError = AttachVirtualDisk(hVirtualDisk, nullptr, ATTACH_VIRTUAL_DISK_FLAG_READ_ONLY | ATTACH_VIRTUAL_DISK_FLAG_PERMANENT_LIFETIME, 0, &amp;attachParameters, nullptr);
+		if (dwError == ERROR_SUCCESS) {
+		} else {
+			std::cout &lt;&lt; &quot;AttachVirtualDisk error: &quot; &lt;&lt; dwError &lt;&lt; std::endl;
+		}
+	} else {
+		std::cout &lt;&lt; &quot;OpenVirtualDisk error: &quot; &lt;&lt; dwError &lt;&lt; std::endl;
+	}
+
+	system(&quot;pause&quot;);
+	return 0;
+}
+</code></pre>
+<p>上面的方法虽然可以挂载了，但是分配的挂载点是随机的，如果要手动指定挂载点则需要额外处理。</p>
+<p>1、在 <a href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-openvirtualdisk">OpenVirtualDisk</a> 的第3个参数带上 VIRTUAL_DISK_ACCESS_GET_INFO，否则后面的 <a href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-getvirtualdiskphysicalpath">GetVirtualDiskPhysicalPath</a> 函数会失败。<br>
+2、在 <a href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-attachvirtualdisk">AttachVirtualDisk</a> 的第3个参数带上 ATTACH_VIRTUAL_DISK_FLAG_NO_DRIVE_LETTER，表示不自动分配分区。<br>
+3、使用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-getvirtualdiskphysicalpath">GetVirtualDiskPhysicalPath</a> 得到设备名称。<br>
+4、用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstvolumew">FindFirstVolume</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findnextvolumew">FindNextVolume</a>来枚举所有卷，并用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-querydosdevicew">QueryDosDevice</a> 查询每个卷的设备名，和上一步得到的设备名做比对，从而确认卷名称。<br>
+5、用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setvolumemountpointw">SetVolumeMountPoint</a> 挂载到指定分区上。</p>
+<p>其中第四步枚举的方法有点愚蠢，更简单的方式是用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumenameforvolumemountpointw">GetVolumeNameForVolumeMountPointW</a> 函数代替，它可以直接获取卷名称，参数是设备路径（注意末尾必须是反斜杠）</p>
+<pre><code>\\.\GLOBALROOT\Device\CDROM0\
+</code></pre>
+<p>卸载虚拟磁盘用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-detachvirtualdisk">DetachVirtualDisk</a> 函数</p>
+<h2 id="兼容win7平台方案">兼容Win7平台方案</h2>
+<p>如果要兼容Win7可以考虑使用第三方工具，比如这个 <a href="https://www.osforensics.com/tools/mount-disk-images.html">https://www.osforensics.com/tools/mount-disk-images.html</a><br>
+提取 OSFMount.com 文件和 OSFMount.sys 文件即可，驱动程序会自动注册进系统<br>
+只读挂载命令</p>
+<pre><code>OSFMount.com -a -t file -m Z: -o ro -f &quot;D:\vs2013.4_ce_enu.iso&quot;
+</code></pre>
+<p>卸载命令</p>
+<pre><code>OSFMount.com -D -m Z:
+</code></pre>
+<p>V2.0.1001版本的驱动在Win7 x64下无法使用，提示无法验证驱动签名。V1.5.1015版本可用。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://stackoverflow.com/questions/24396644/programmatically-mount-a-microsoft-virtual-hard-drive-vhd">https://stackoverflow.com/questions/24396644/programmatically-mount-a-microsoft-virtual-hard-drive-vhd</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/X2BDcznSs/" class="tag">
+                    Windows编程
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/3iNjV54lB/">
+                  <h3 class="post-title">
+                    U盘启动盘工具的工作原理
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>

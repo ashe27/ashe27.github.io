@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>[Sciter] 常见FAQ | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629300199410">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="去掉POPUP的阴影
+
+Sciter uses two types of popup windows:
+1.standard OS popup window, with or without shadow – per user’s / OS..." />
+    <meta name="keywords" content="Sciter" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1629300199410" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">[Sciter] 常见FAQ</h2>
+            <div class="post-date">2021-07-30</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="去掉popup的阴影">去掉POPUP的阴影</h2>
+<figure data-type="image" tabindex="1"><img src="https://ashe27.github.io/post-images/1627615298697.png" alt="" loading="lazy"></figure>
+<p>Sciter uses two types of popup windows:</p>
+<p>1.standard OS popup window, with or without shadow – per user’s / OS preferences<br>
+2.“layered” popup window, [semi-]transparent element – without shadow.</p>
+<p>Element is considered as transparent if its shape has transparent elements or it has round borders. So either one of these three properties:</p>
+<pre><code class="language-css">popup {
+  border: 1px solid transparent; // or
+  border-radius: 3dip; // or
+  background: transparent url(...); // transparent back and image with alpha
+}
+</code></pre>
+<p>will cause layered window to be created and so no shadow.</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://sciter.com/forums/topic/how-to-remove-shadow-from-menu/#post-46867">How to remove shadow from menu</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/a4ikEvgX5/" class="tag">
+                    Sciter
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/JVz2xdg9a/">
+                  <h3 class="post-title">
+                    [Sciter] 实现平滑过渡的进度条
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>

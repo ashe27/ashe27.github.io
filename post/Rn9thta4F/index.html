@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>IE自动部署工具包IEAK | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629300199410">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="IEAK是一个IE的管理工具包，可自定义配置IE并生成一个安装包，一般是给网管人员部署使用的。
+适用于IE11的工具包下载地址：https://docs.microsoft.com/zh-cn/internet-explorer/ie11-..." />
+    <meta name="keywords" content="Windows,IE" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1629300199410" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">IE自动部署工具包IEAK</h2>
+            <div class="post-date">2021-08-18</div>
+            
+            <div class="post-content" v-pre>
+              <p>IEAK是一个IE的管理工具包，可自定义配置IE并生成一个安装包，一般是给网管人员部署使用的。</p>
+<p>适用于IE11的工具包下载地址：<a href="https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads">https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads</a><br>
+<img src="https://ashe27.github.io/post-images/1629300058002.png" alt="" loading="lazy"><br>
+我们用它配置&quot;链接&quot;相关设置，最终会生成一个安装包，其中有一个INS文件内容大概是这样</p>
+<pre><code>[Branding]
+CompanyName=Microsoft Corporation
+Wizard_Version=11.00.18362.1
+Version=11,00,18362,1
+Custom_Key=MICROSO
+Global=1
+IE4 Welcome Msg=1
+Platform=2
+GUID={7211FFE6-C149-11D0-AFF0-00AA003758BB}
+Type=0
+NoClear=1
+[URL]
+FirstHomePage=https://www.baidu.com
+AutoDetect=0
+AutoConfig=1
+AutoConfigTime=1
+AutoConfigURL=http://localhost/IE.INS
+AutoConfigJSURL=http://localhost/proxy.pac
+[Proxy]
+HTTP_Proxy_Server=
+FTP_Proxy_Server=
+Secure_Proxy_Server=
+Socks_Proxy_Server=
+Use_Same_Proxy=1
+Proxy_Enable=0
+Proxy_Override=&quot;&lt;local&gt;&quot;
+</code></pre>
+<p>双击运行安装包后会在IE目录下生成一个INS文件</p>
+<pre><code>C:\Program Files\Internet Explorer\CUSTOM\INSTALL.INS
+</code></pre>
+<p>注销是为了让配置生效，实际上我们可以使用其他手段立即生效，就是重置IE。<br>
+配置文件只有在IE初始化时会被访问，我们重置IE来让它再次载入配置文件。<br>
+运行命令<code>RunDll32.exe inetcpl.cpl,ResetIEtoDefaults</code>可以弹出重置对话框，确认重置后IE会依次从以下位置来获取配置</p>
+<pre><code>C:\Program Files\Internet Explorer\Custom\install.ins
+C:\Program Files\Internet Explorer\Signup\install.ins
+</code></pre>
+<p>一个有效的ins文件必须有<code>[Branding]</code>节，我们不用IEAK生成，直接从Signup\install.ini复制一份，手动添加配置也是可以的</p>
+<pre><code>[Branding]
+CompanyName=
+Wizard_Version=11.00.19041.1
+Version=11,00,19041,1
+Custom_Key=MICROSO
+Global=1
+IE4 Welcome Msg=1
+Platform=2
+GUID={7211FFE6-C149-11D0-AFF0-00AA003758BB}
+Type=0
+NoClear=1
+NoDial=0
+FavoritesDelete=0
+FavoritesOnTop=0
+User Agent=
+[URL]
+FirstHomePage=https://www.google.com
+</code></pre>
+<p>这个例子添加了FirstHomePage字段，首次打开IE就会打开该首页。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpie/8206de0e-2d1e-4a02-977b-b8614c5350d9">INS File Format</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/toQX3shSu/" class="tag">
+                    Windows
+                  </a>
+                
+                  <a href="https://ashe27.github.io/tag/g9FfOdI_q/" class="tag">
+                    IE
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/hzdYve5My/">
+                  <h3 class="post-title">
+                    慎用 IsNetworkAlive 检测网络
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>

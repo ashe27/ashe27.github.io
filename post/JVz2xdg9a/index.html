@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>[Sciter] 实现平滑过渡的进度条 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629300199410">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="在处理一些任务的时候，进度不总是可以量化的，一个假的进度条实现起来会更方便。
+功能：进度每秒加1，到99时会终止。且中途可以设置进度到某个特定的值，这里的特点是进度要平滑地过度。
+方法一
+模拟实现sleep函数，然后在循环里累加。
+&lt;..." />
+    <meta name="keywords" content="Sciter" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1629300199410" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">[Sciter] 实现平滑过渡的进度条</h2>
+            <div class="post-date">2021-07-27</div>
+            
+            <div class="post-content" v-pre>
+              <p>在处理一些任务的时候，进度不总是可以量化的，一个假的进度条实现起来会更方便。</p>
+<p>功能：进度每秒加1，到99时会终止。且中途可以设置进度到某个特定的值，这里的特点是进度要平滑地过度。</p>
+<h2 id="方法一">方法一</h2>
+<p>模拟实现sleep函数，然后在循环里累加。</p>
+<pre><code class="language-html">&lt;html&gt;
+&lt;script&gt;
+    let iid;
+    let newPercent = 0;
+
+    function sleep(time) {
+        return new Promise(resolve =&gt; setTimeout(resolve, time));
+    }
+
+    async function doTick() {
+        const el = document.querySelector('progress');
+        let current = el.value;
+        const max = el.getAttribute('max') - 1;
+        if (current &lt; max) {
+            if (current &lt; newPercent) {
+                while (current &lt; newPercent) {
+                    await sleep(10);
+                    el.value = ++current;
+                }
+            } else {
+                el.value = ++current;
+            }
+        } else {
+            clearInterval(iid);
+        }
+    }
+
+    document.querySelector('button').onclick = () =&gt; {
+        newPercent = 70;
+    }
+
+    document.ready = () =&gt; {
+        iid = setInterval(doTick, 1000);
+    }
+&lt;/script&gt;
+
+&lt;body&gt;
+    &lt;progress max=&quot;100&quot; value=&quot;0&quot;&gt;&lt;/progress&gt;
+    &lt;button&gt;test&lt;/button&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<p>效果图<br>
+<img src="https://ashe27.github.io/post-images/1627356612106.gif" alt="" loading="lazy"></p>
+<h2 id="方法二">方法二</h2>
+<p>上面的方法有点笨，更好的方法是通过元素的 <a href="https://github.com/c-smile/sciter-js-sdk/blob/main/docs/md/Element.md#user-content-animate-step">animate</a> 方法来实现。</p>
+<pre><code class="language-html">&lt;html&gt;
+&lt;script&gt;
+    let iid;
+
+    function doTick() {
+        const el = document.querySelector('progress');
+        const max = el.getAttribute('max') - 1;
+        if (el.value &lt; max) {
+            el.value++;
+        } else {
+            return true;
+        }
+    }
+
+    document.querySelector('button').onclick = () =&gt; {
+        const newValue = 90;
+        const el = document.querySelector('progress');
+        clearInterval(iid);
+
+        const left = newValue - el.value;
+        const old = el.value;
+        el.animate(function (progress) {
+            if (progress &gt; 0) {
+                this.value = old + left * progress;
+                if (progress == 1) {
+                    iid = setInterval(doTick, 1000);
+                }
+            }
+            return true;
+        }, { duration: 500 });
+    }
+
+    document.ready = () =&gt; {
+        iid = setInterval(doTick, 1000);
+    }
+&lt;/script&gt;
+
+&lt;body&gt;
+    &lt;progress max=&quot;100&quot; value=&quot;10&quot;&gt;&lt;/progress&gt;
+    &lt;button&gt;go&lt;/button&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<p>效果图<br>
+<img src="https://ashe27.github.io/post-images/1627439563717.gif" alt="" loading="lazy"></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/a4ikEvgX5/" class="tag">
+                    Sciter
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/lq6QUYTNw/">
+                  <h3 class="post-title">
+                    IE首页读取策略
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>

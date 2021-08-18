@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>金山护眼大师实现方式 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629300199410">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="软件下载
+https://pc.qq.com/detail/19/detail_25499.html
+软件设置保存在注册表
+HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\khealtheye
+
+护眼原理
+原..." />
+    <meta name="keywords" content="逆向" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1629300199410" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">金山护眼大师实现方式</h2>
+            <div class="post-date">2020-08-12</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="软件下载">软件下载</h2>
+<p><a href="https://pc.qq.com/detail/19/detail_25499.html">https://pc.qq.com/detail/19/detail_25499.html</a></p>
+<h2 id="软件设置保存在注册表">软件设置保存在注册表</h2>
+<p>HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\khealtheye<br>
+</br></p>
+<h2 id="护眼原理">护眼原理</h2>
+<p>原理是利用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setdevicegammaramp">SetDeviceGammaRamp</a> 函数设置色温<br>
+关键位置在keyeprotect.dll文件中，关键函数 sub_100A8C10<br>
+IDA静态分析</p>
+<pre><code class="language-cpp">char __usercall sub_100A8C10@&lt;al&gt;(unsigned __int16 per@&lt;ax&gt;, int context@&lt;ecx&gt;, int healthMode@&lt;edi&gt;)
+{
+  int v3; // esi
+  unsigned __int16 blueStep; // ST24_2
+  unsigned __int16 v5; // ax
+  double multiplier; // st7
+  double v7; // st6
+  unsigned __int16 v8; // ax
+  int redStep; // [esp+10h] [ebp-8h]
+  WORD redStepa; // [esp+10h] [ebp-8h]
+  WORD greenStep; // [esp+12h] [ebp-6h]
+
+  switch ( healthMode )
+  {
+    case 0:                                     // 智能模式
+      v3 = per;
+      redStep = *(_DWORD *)(context + 20);
+      blueStep = *(_WORD *)(context + 24);
+      v5 = (signed int)((double)per * 1.28);
+      goto LABEL_10;
+    case 1:                                     // 办公模式
+      v3 = per;
+      multiplier = (double)per;
+      v7 = 0.4 * multiplier + 88.0;
+      v8 = (signed int)v7;
+      redStepa = (signed int)v7;
+      if ( v8 &lt; 88u )
+        redStepa = 88;
+      greenStep = (signed int)v7;
+      if ( v8 &lt; 88u )
+        greenStep = 88;
+      SetGamma((_DWORD *)context, redStepa, greenStep, (signed int)(multiplier * 1.28));
+      goto LABEL_11;
+    case 2:                                     // 影视模式
+      v3 = per;
+      v5 = (signed int)((double)per * 1.28);
+      break;
+    case 3:                                     // 游戏模式
+      v3 = per;
+      v5 = (signed int)((double)per * 1.28);
+      break;
+  }
+  LOWORD(redStep) = v5;
+  HIWORD(redStep) = v5;
+LABEL_10:
+  SetGamma((_DWORD *)context, redStep, HIWORD(redStep), v5);
+LABEL_11:
+  sub_100A4AE0(healthMode);
+  sub_100A4AE0(v3);
+  return 1;
+}
+</code></pre>
+<p>得出设置公式</p>
+<pre><code class="language-cpp">enum class HealthMode
+{
+	Smart,
+	Office,
+	Movie,
+	Game
+};
+
+bool SetGamma(double redStep, double greenStep, double blueStep)
+{
+	auto success = false;
+	HDC hDevice = ::GetDC(nullptr);
+	if (hDevice)
+	{
+		WORD ramp[3][256];
+		for (auto i = 0; i &lt; 256; ++i)
+		{
+			const auto r = i * (redStep + 128);
+			const auto g = i * (greenStep + 128);
+			const auto b = i * (blueStep + 128);
+			ramp[0][i] = (WORD)(min(0xFFFF, r));
+			ramp[1][i] = (WORD)(min(0xFFFF, g));
+			ramp[2][i] = (WORD)(min(0xFFFF, b));
+		}
+		success = ::SetDeviceGammaRamp(hDevice, ramp);
+		::ReleaseDC(nullptr, hDevice);
+	}
+	return success;
+}
+
+/// &lt;summary&gt;
+/// 护眼
+/// &lt;/summary&gt;
+/// &lt;param name=&quot;brightness&quot;&gt;亮度百分比(0 ~ 100)&lt;/param&gt;
+/// &lt;param name=&quot;mode&quot;&gt;护眼模式&lt;/param&gt;
+/// &lt;returns&gt;&lt;/returns&gt;
+bool EyeProtect(double brightness, HealthMode mode)
+{
+	auto success = false;
+	const auto multiplier = brightness;
+	double r = 0;
+	double g = 0;
+	double b = std::round(multiplier * 1.28);
+
+	switch (mode)
+	{
+	case HealthMode::Smart:
+		r = g = 128;
+		break;
+
+	case HealthMode::Office:
+		r = g = max(88, 0.4 * multiplier + 88.0);
+		break;
+
+	case HealthMode::Movie:
+	case HealthMode::Game:
+		r = g = b;
+		break;
+	}
+	success = SetGamma(r, g, b);
+	return success;
+}
+</code></pre>
+<p>任何模式下将亮度设置为100都会变为系统默认值，等同于关闭护眼功能。<br>
+其中影视模式和游戏模式的公式是同一个，效果相同。</p>
+<p>智能模式默认亮度为75%<br>
+办公模式默认亮度为30%<br>
+影视模式默认亮度为59%<br>
+游戏模式默认亮度为78%</p>
+<h2 id="配置文件解密">配置文件解密</h2>
+<p>data目录下有部分.dat文件，是xml加密后的数据。<br>
+解密方法就是去掉头4字节，就是字符串&quot;.tmp&quot;，然后把余下的数据与0xD8异或，最后从末尾搜索0xFDFDFDFD，找到并删除其之后的数据</p>
+<pre><code class="language-cpp">#define WIN32_LEAN_AND_MEAN
+#include &lt;Windows.h&gt;
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;string&gt;
+#include &lt;memory&gt;
+#include &lt;filesystem&gt;
+
+namespace fs = std::filesystem;
+
+std::string Decrypt(char* pData, int size)
+{
+	std::string s;
+	for (auto i = 0; i &lt; size; ++i)
+	{
+		pData[i] ^= 0xD8;
+	}
+	return s;
+}
+
+int main()
+{
+	auto dir = fs::current_path();
+	auto iter = fs::recursive_directory_iterator(dir);
+	auto end = fs::recursive_directory_iterator();
+
+	while (iter != end)
+	{
+		if (fs::is_regular_file(*iter))
+		{
+			auto path = iter-&gt;path();
+			if (path.extension() == &quot;.dat&quot;)
+			{
+				std::ifstream in(path, std::ios::binary | std::ios::ate);
+				if (in.is_open())
+				{
+					auto size = in.tellg();
+					in.seekg(0, std::ios::beg);
+					auto buf = std::make_unique&lt;char[]&gt;(size);
+					auto p = buf.get();
+					in.read(p, size);
+					if (_strnicmp(p, &quot;.tmp&quot;, 4) == 0)
+					{
+						p += 4;
+						Decrypt(p, (int)size - 4);
+
+						std::ofstream out(&quot;out.xml&quot;, std::ios::binary | std::ios::trunc);
+						if (out.is_open())
+						{
+							out &lt;&lt; p;
+							out.close();
+						}
+					}
+					in.close();
+				}
+			}
+		}
+		iter++;
+	}
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/caCYYA_8b/" class="tag">
+                    逆向
+                  </a>
+                
+              </div>
+            
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>

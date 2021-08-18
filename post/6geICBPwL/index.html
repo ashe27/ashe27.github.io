@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>从磁盘上加载证书文件 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629300199410">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="方式一
+将证书视为存储库，通过 CertOpenStore 打开，枚举出第一个证书即可。
+一个例子
+template &lt;typename T&gt;
+T decodeObject(DWORD dwEncodingType, const..." />
+    <meta name="keywords" content="CryptoAPI,Windows编程" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1629300199410" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">从磁盘上加载证书文件</h2>
+            <div class="post-date">2021-08-13</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="方式一">方式一</h2>
+<p>将证书视为存储库，通过 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore">CertOpenStore</a> 打开，枚举出第一个证书即可。<br>
+一个例子</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+T decodeObject(DWORD dwEncodingType, const PCERT_EXTENSION pExt)
+{
+	T pInfo = nullptr;
+	DWORD cbInfo = 0;
+	if (!CryptDecodeObjectEx(dwEncodingType, pExt-&gt;pszObjId, pExt-&gt;Value.pbData, pExt-&gt;Value.cbData, CRYPT_DECODE_ALLOC_FLAG | CRYPT_DECODE_NOCOPY_FLAG, nullptr, &amp;pInfo, &amp;cbInfo))
+		return nullptr;
+	return pInfo;
+}
+
+// 证书既是存储库
+HCERTSTORE hCertStore = CertOpenStore(CERT_STORE_PROV_FILENAME_A, dwEncodingType, NULL, CERT_STORE_OPEN_EXISTING_FLAG | CERT_STORE_READONLY_FLAG, &quot;ca.cer&quot;);
+if (hCertStore) {
+	// 取出第一个证书
+	PCCERT_CONTEXT pCertContext = CertEnumCertificatesInStore(hCertStore, nullptr);
+	if (pCertContext) {
+		// 遍历扩展信息
+		for (DWORD i = 0; i &lt; pCertContext-&gt;pCertInfo-&gt;cExtension; ++i) {
+			const PCERT_EXTENSION pExt = pCertContext-&gt;pCertInfo-&gt;rgExtension + i;
+			if (strcmp(pExt-&gt;pszObjId, szOID_KEY_USAGE) == 0) {
+				// 密钥用法
+				const auto pInfo = decodeObject&lt;PCRYPT_BIT_BLOB&gt;(dwEncodingType, pExt);
+				LocalFree(pInfo);
+			} else if(strcmp(pExt-&gt;pszObjId, szOID_BASIC_CONSTRAINTS2) == 0) {
+				// 基本约束
+				const auto pInfo = decodeObject&lt;PCERT_BASIC_CONSTRAINTS2_INFO&gt;(dwEncodingType, pExt);
+				LocalFree(pInfo);
+			} else if (strcmp(pExt-&gt;pszObjId, szOID_ENHANCED_KEY_USAGE) == 0) {
+				// 增强型密钥用法
+				auto pInfo = decodeObject&lt;PCTL_USAGE&gt;(dwEncodingType, pExt);
+				LocalFree(pInfo);
+			} else if (strcmp(pExt-&gt;pszObjId, szOID_SUBJECT_ALT_NAME2) == 0) {
+				// 使用者可选名称
+				const auto pInfo = decodeObject&lt;PCERT_ALT_NAME_INFO&gt;(dwEncodingType, pExt);
+				LocalFree(pInfo);
+			}
+		}
+	}
+	CertCloseStore(hCertStore, 0);
+}
+</code></pre>
+<h2 id="方式二">方式二</h2>
+<p>在 <a href="https://docs.microsoft.com/en-us/windows/win32/seccrypto/cryptoapi-system-architecture">CryptoAPI</a> 中，一个证书文件用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构描述，所以只要将证书文件转换为 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构即可。<br>
+<a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certcreatecertificatecontext">CertCreateCertificateContext</a> 函数可以做到，它从内存中读取证书数据并转换为 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构。<br>
+但是要注意，这个函数只接受DER编码格式的证书，而我们常用的一般是PEM格式（以BEGIN开头，END结尾，中间是BASE64编码），所以要进行转换。<br>
+转换可以用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptstringtobinarya">CryptStringToBinaryA</a> 函数搞定。<br>
+一个简单的例子</p>
+<pre><code class="language-cpp">const DWORD dwEncodingType = X509_ASN_ENCODING;
+
+// 打开证书
+HANDLE hFile = CreateFileW(L&quot;ca.cer&quot;, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+LARGE_INTEGER fileSize;
+GetFileSizeEx(hFile, &amp;fileSize);
+
+// 读取证书内容
+BYTE* buffer = new BYTE[fileSize.QuadPart];
+DWORD dwWritten;
+ReadFile(hFile, buffer, fileSize.QuadPart, &amp;dwWritten, nullptr);
+
+// PEM转DER
+BYTE* bin = new BYTE[dwWritten];
+DWORD flags;
+BOOL ok = CryptStringToBinaryA((LPCSTR)buffer, dwWritten, CRYPT_STRING_BASE64HEADER, bin, &amp;dwWritten, NULL, &amp;flags);
+
+// 获得证书上下文
+PCCERT_CONTEXT pCert = CertCreateCertificateContext(dwEncodingType, bin, dwWritten);
+</code></pre>
+<h2 id="参考">参考</h2>
+<p><a href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/dd743310(v=vs.85)">Load a Certificate from a File</a></p>
+<p><a href="https://stackoverflow.com/questions/34623247/certcreatecertificatecontext-returns-crypt-e-asn1-badtag-8009310b">CertCreateCertificateContext returns CRYPT_E_ASN1_BADTAG / 8009310b</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/ZtE9dmkEA/" class="tag">
+                    CryptoAPI
+                  </a>
+                
+                  <a href="https://ashe27.github.io/tag/X2BDcznSs/" class="tag">
+                    Windows编程
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/vsCMLcwdS/">
+                  <h3 class="post-title">
+                    支持以 SYSTEM 账户执行程序的工具软件
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>

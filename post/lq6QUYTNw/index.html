@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>IE首页读取策略 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629300199410">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="起始页
+网上有很多话题反映说在IE选项里了设置了新的首页，但是没有任何效果，除去软件劫持等原因以外，这都是对IE的首页读取策略没有搞清楚导致的。
+在很久以前，大概是XP+IE6的时代，设置IE首页只需要设置一个注册表值就可以了
+[HKEY_..." />
+    <meta name="keywords" content="Windows,IE" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1629300199410" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">IE首页读取策略</h2>
+            <div class="post-date">2021-05-25</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="起始页">起始页</h2>
+<p>网上有很多话题反映说在IE选项里了设置了新的首页，但是没有任何效果，除去软件劫持等原因以外，这都是对IE的首页读取策略没有搞清楚导致的。</p>
+<p>在很久以前，大概是XP+IE6的时代，设置IE首页只需要设置一个注册表值就可以了</p>
+<pre><code>[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]
+&quot;Start Page&quot;=&quot;www.google.com&quot;
+</code></pre>
+<p>自从IE8开始，首页的读取策略就变化了，浏览器启动后会<strong>依次访问</strong>以下位置来获取首页地址</p>
+<h3 id="第1个位置">第1个位置</h3>
+<pre><code>[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]
+&quot;First Home Page&quot;=&quot;www.google.com&quot;
+</code></pre>
+<p>这里的权重最高，但是只会执行一次，浏览器读取后会删掉该值，也可以称为一次性首页。</p>
+<h3 id="第2个位置">第2个位置</h3>
+<pre><code>[HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer\Main]
+&quot;First Home Page&quot;=&quot;www.google.com&quot;
+</code></pre>
+<p>与HKCU不同的是，这个值读取后不会自动删除，<strong>所以这里是锁定首页的最佳位置</strong>。</p>
+<h3 id="第3个位置">第3个位置</h3>
+<pre><code>[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\EUPP]
+&quot;BackupHomePage&quot;=hex:.....
+</code></pre>
+<p>如其名，这是一个缓存的首页地址，如果缓存地址和第6步中的地址不同，则会从第4步开始依次访问对应注册表位置的值来询问用户是否更改首页<br>
+<img src="https://ashe27.github.io/post-images/1627432328308.png" alt="" loading="lazy"></p>
+<h3 id="第4个位置">第4个位置</h3>
+<pre><code>[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Main]
+&quot;Start Page&quot;=&quot;www.google.com&quot;
+</code></pre>
+<h3 id="第5个位置">第5个位置</h3>
+<pre><code>[HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Internet Explorer\Main]
+&quot;Start Page&quot;=&quot;www.google.com&quot;
+</code></pre>
+<h3 id="第6个位置">第6个位置</h3>
+<pre><code>[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]
+&quot;Start Page&quot;=&quot;www.google.com&quot;
+</code></pre>
+<h3 id="第7个位置">第7个位置</h3>
+<pre><code>[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main]
+&quot;Start Page&quot;=&quot;www.google.com&quot;
+</code></pre>
+<h3 id="结论">结论</h3>
+<p>对于锁定首页来说，修改第2个位置就行了，它优先级高，且不出现在IE选项里，普通用户无法通过更改IE设置来还原首页。</p>
+<p>如果你想让IE以选项里的设置为准，只需要删除&quot;BackupHomePage&quot;和&quot;First Home Page&quot;即可，我这里提供一个写好的批处理</p>
+<pre><code class="language-bat">set HOMEPAGE=www.google.com
+REG DELETE &quot;HKCU\SOFTWARE\Microsoft\Internet Explorer\EUPP&quot; /v &quot;BackupHomePage&quot; /f
+REG DELETE &quot;HKLM\SOFTWARE\Microsoft\Internet Explorer\Main&quot; /v &quot;Start Page&quot; /f
+REG DELETE &quot;HKCU\SOFTWARE\Policies\Microsoft\Internet Explorer\Main&quot; /v &quot;Start Page&quot; /f
+REG DELETE &quot;HKLM\SOFTWARE\Policies\Microsoft\Internet Explorer\Main&quot; /v &quot;Start Page&quot; /f
+REG DELETE &quot;HKCU\SOFTWARE\Microsoft\Internet Explorer\Main&quot; /v &quot;First Home Page&quot; /f
+REG DELETE &quot;HKLM\SOFTWARE\Microsoft\Internet Explorer\Main&quot; /v &quot;First Home Page&quot; /f
+REG ADD &quot;HKCU\SOFTWARE\Microsoft\Internet Explorer\Main&quot; /v &quot;Start Page&quot; /t REG_SZ /d %HOMEPAGE% /f
+</code></pre>
+<p>第一行修改为自己的网址即可，由于删除了缓存地址，IE会提示设置已损坏，点击更改即可。<br>
+使用此脚本重置后就可以在IE选项里修改首页了。<br>
+<img src="https://ashe27.github.io/post-images/1627432337787.png" alt="" loading="lazy"></p>
+<hr>
+<h2 id="辅助起始页">辅助起始页</h2>
+<p>辅助起始页是随着浏览器启动的多开网页地址，和第一首页不冲突，同样的，HKCU比HKLM优先级高</p>
+<pre><code>[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]
+&quot;Secondary Start Pages&quot;=hex(7):68,00,74,00,74,00,70,00,3a,00,2f,00,2f,00,77,00,\
+  77,00,77,00,2e,00,71,00,71,00,2e,00,63,00,6f,00,6d,00,2f,00,00,00,68,00,74,\
+  00,74,00,70,00,3a,00,2f,00,2f,00,77,00,77,00,77,00,2e,00,31,00,36,00,33,00,\
+  2e,00,63,00,6f,00,6d,00,2f,00,00,00,00,00
+</code></pre>
+<p>因为可以设置多个网址，所以注册表值类型是&quot;REG_MULTI_SZ&quot;。由于该功能使用不多，就不继续深究了。</p>
+<h2 id="相关阅读">相关阅读</h2>
+<p><a href="https://bbs.pediy.com/thread-196517.htm">逆向IE11的首页保护算法</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/toQX3shSu/" class="tag">
+                    Windows
+                  </a>
+                
+                  <a href="https://ashe27.github.io/tag/g9FfOdI_q/" class="tag">
+                    IE
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/mMhC5Gp12/">
+                  <h3 class="post-title">
+                    用未公开函数 NtShutdownSystem 快速重启、关机
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>

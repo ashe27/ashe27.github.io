@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>[Sciter] 样式集 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629300199410">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="在Sciter中有个叫样式集的概念，它主要的目的是解决程序应用主题样式的问题。
+@set my-btn {
+    :root {
+        background: red;
+    }
+}
+
+button {
+    style-s..." />
+    <meta name="keywords" content="Sciter" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1629300199410" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">[Sciter] 样式集</h2>
+            <div class="post-date">2021-07-30</div>
+            
+            <div class="post-content" v-pre>
+              <p>在Sciter中有个叫样式集的概念，它主要的目的是解决程序应用主题样式的问题。</p>
+<pre><code class="language-css">@set my-btn {
+    :root {
+        background: red;
+    }
+}
+
+button {
+    style-set: my-btn;
+}
+</code></pre>
+<p>样式集使用<code>@set</code>关键字指定一个名称。<code>:root</code>是伪元素，表示应用该样式集的元素。<br>
+应用样式集用<code>style-set</code>关键字。清除样式集可以用<code>style-set: none</code>。</p>
+<h2 id="优先级">优先级</h2>
+<p>样式集的权重比普通CSS样式高</p>
+<pre><code class="language-html">&lt;html&gt;
+&lt;head&gt;
+    &lt;style&gt;
+        @set my-btn {
+            :root {
+                background: red;
+            }
+        }
+
+        button {
+            style-set: my-btn;
+        }
+
+        #test {
+            background: green;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;button id=&quot;test&quot;&gt;test&lt;/button&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>元素背景色将是红色，也就是说元素自身的样式没有效果。如果需要覆盖样式集的属性可以用<code>!important</code>关键字。</p>
+<pre><code class="language-css">#test {
+    background: green !important;
+}
+</code></pre>
+<h2 id="继承性">继承性</h2>
+<p>样式集是可以继承的</p>
+<pre><code class="language-css">@set my-btn-base {
+    :root {
+        border: 1px solid blue;
+    }
+}
+
+@set my-btn &lt; my-btn-base {
+     :root {
+        background: red;
+     }
+}
+</code></pre>
+<p>使用<code>&lt;</code>表示继承，比如上面的<code>my-btn</code>将从<code>my-btn-base</code>继承所有样式。</p>
+<h2 id="内置样式集">内置样式集</h2>
+<p>Sciter内置了两个样式文件<code>master-base.css</code>和<code>ux-master.css</code>。<br>
+可查看<code>samples.sciter\editor-plaintext\sciter-resources.htm</code>。<br>
+或使用<code>fetch</code>来获取内置文件</p>
+<pre><code class="language-html">&lt;html&gt;
+&lt;head&gt;
+&lt;/head&gt;
+&lt;script&gt;
+    async function foo(url) {
+        const r = await fetch(url);
+        if (r.ok) {
+            document.querySelector('plaintext').value = r.text();
+        }
+    }
+
+    document.ready = () =&gt; {
+        document.getElementById('f1').onclick = () =&gt; {
+            foo('sciter:master-base.css');
+        };
+
+        document.getElementById('f2').onclick = () =&gt; {
+            foo('sciter:ux-master.css');
+        };
+    }
+&lt;/script&gt;
+
+&lt;body&gt;
+    &lt;button id=&quot;f1&quot;&gt;master-base.css&lt;/button&gt;
+    &lt;button id=&quot;f2&quot;&gt;ux-master.css&lt;/button&gt;
+    &lt;plaintext type=&quot;text/css&quot; readonly /&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h2 id="参考">参考</h2>
+<p><a href="https://sciter.com/style-sets-in-h-smile-core/">Style sets in H-SMILE core.</a></p>
+<p><a href="https://sciter.com/?s=%40set">Search result: @set</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/a4ikEvgX5/" class="tag">
+                    Sciter
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/MdWdr7OmR/">
+                  <h3 class="post-title">
+                    [Sciter] 常见FAQ
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>
