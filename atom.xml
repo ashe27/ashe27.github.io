@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-08-18T15:24:24.505Z</updated>
+    <updated>2021-08-18T15:27:51.107Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -16,8 +16,8 @@
         <link href="https://ashe27.github.io/post/Rn9thta4F/">
         </link>
         <updated>2021-08-18T15:20:31.000Z</updated>
-        <content type="html"><![CDATA[<p>IEAK是一个IE的管理工具包，可自定义配置IE并生成一个安装包，一般是给网管人员部署使用的。</p>
-<p>适用于IE11的工具包下载地址：<a href="https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads">https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads</a><br>
+        <content type="html"><![CDATA[<p>IEAK是一个IE的管理工具包，可自定义配置IE并生成一个安装包，一般是给网管人员部署使用的。<br>
+适用于IE11的工具包下载地址：<a href="https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads">https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads</a><br>
 <img src="https://ashe27.github.io/post-images/1629300058002.png" alt="" loading="lazy"><br>
 我们用它配置&quot;链接&quot;相关设置，最终会生成一个安装包，其中有一个INS文件内容大概是这样</p>
 <pre><code>[Branding]
@@ -32,12 +32,11 @@ GUID={7211FFE6-C149-11D0-AFF0-00AA003758BB}
 Type=0
 NoClear=1
 [URL]
-FirstHomePage=https://www.baidu.com
 AutoDetect=0
 AutoConfig=1
 AutoConfigTime=1
-AutoConfigURL=http://localhost/IE.INS
-AutoConfigJSURL=http://localhost/proxy.pac
+AutoConfigURL=http://localhost/ie.ins
+AutoConfigJSURL=http://localhost/test1.pac
 [Proxy]
 HTTP_Proxy_Server=
 FTP_Proxy_Server=
@@ -47,16 +46,15 @@ Use_Same_Proxy=1
 Proxy_Enable=0
 Proxy_Override=&quot;&lt;local&gt;&quot;
 </code></pre>
-<p>双击运行安装包后会在IE目录下生成一个INS文件</p>
+<p>双击运行安装包后会在IE目录下生成一个INS文件，并提示注销登录后生效</p>
 <pre><code>C:\Program Files\Internet Explorer\CUSTOM\INSTALL.INS
 </code></pre>
-<p>注销是为了让配置生效，实际上我们可以使用其他手段立即生效，就是重置IE。<br>
-配置文件只有在IE初始化时会被访问，我们重置IE来让它再次载入配置文件。<br>
+<p>注销是为了让配置生效，实际上我们可以使用其他手段立即生效，就是重置IE。配置文件只有在IE初始化时会被访问，我们重置IE来让它再次载入配置文件。<br>
 运行命令<code>RunDll32.exe inetcpl.cpl,ResetIEtoDefaults</code>可以弹出重置对话框，确认重置后IE会依次从以下位置来获取配置</p>
 <pre><code>C:\Program Files\Internet Explorer\Custom\install.ins
 C:\Program Files\Internet Explorer\Signup\install.ins
 </code></pre>
-<p>一个有效的ins文件必须有<code>[Branding]</code>节，我们不用IEAK生成，直接从Signup\install.ini复制一份，手动添加配置也是可以的</p>
+<p>一个有效的ins文件必须有<code>[Branding]</code>节，我们不用IEAK生成，直接从<code>Signup\install.ini</code>复制一份，手动添加配置也是可以的</p>
 <pre><code>[Branding]
 CompanyName=
 Wizard_Version=11.00.19041.1
