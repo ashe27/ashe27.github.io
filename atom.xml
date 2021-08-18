@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-08-18T15:51:10.726Z</updated>
+    <updated>2021-08-18T15:54:42.460Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -48,7 +48,7 @@ Use_Same_Proxy=1
 Proxy_Enable=0
 Proxy_Override=&quot;&lt;local&gt;&quot;
 </code></pre>
-<p>一个有效的ins文件必须有<code>[Branding]</code>节，我们不用IEAK生成，直接从<code>Signup\install.ini</code>复制一份，手动修改也是可以的</p>
+<p>一个有效的ins文件必须有<code>[Branding]</code>节，我们也可以不用IEAK生成，而是直接从<code>C:\Program Files\Internet Explorer\SIGNUP\install.ins</code>拷贝一份进行手动修改也是可以的。</p>
 <pre><code>[Branding]
 CompanyName=
 Wizard_Version=11.00.19041.1
