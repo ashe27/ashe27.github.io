@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-08-18T15:57:11.796Z</updated>
+    <updated>2021-08-20T14:36:34.364Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -11,12 +11,206 @@
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, ashe&apos;s blog</rights>
     <entry>
+        <title type="html"><![CDATA[代理设置与注册表位置]]></title>
+        <id>https://ashe27.github.io/post/18OY8R7kO/</id>
+        <link href="https://ashe27.github.io/post/18OY8R7kO/">
+        </link>
+        <updated>2021-08-20T04:00:57.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="自动配置部分">自动配置部分</h2>
+<figure data-type="image" tabindex="1"><img src="https://ashe27.github.io/post-images/1629342427593.png" alt="" loading="lazy"></figure>
+<ul>
+<li>自动检测设置</li>
+</ul>
+<pre><code>[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings]
+&quot;AutoDetect&quot;=dword:00000001
+</code></pre>
+<p><code>REG_DWORD</code>类型。通过 <a href="https://docs.microsoft.com/en-us/sysinternals/downloads/procmon">Process Monitor</a> 监测发现，打开选项设置窗口后会将其值同步到<code>DefaultConnectionSettings</code>并删除<code>AutoDetect</code>，看上去是一种&quot;升级&quot;操作，将旧设置迁移至新位置，所以尽量还是以<code>DefaultConnectionSettings</code>为准。</p>
+<ul>
+<li>自动配置脚本</li>
+</ul>
+<pre><code>[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings]
+&quot;AutoConfigURL&quot;=&quot;http://localhost/rule.pac&quot;
+</code></pre>
+<p><code>REG_SZ</code>类型。如果没有值或值为空，表示未启用状态，会尝试从<code>DefaultConnectionSettings</code>获取最近一次的值并显示。<br>
+需要注意的是，PAC 地址应该是一个使用HTTP协议的地址，而不应使用本地文件路径，否则会无法加载，原因见 <a href="https://docs.microsoft.com/en-us/troubleshoot/browsers/cannot-read-pac-file">Windows 10 does not read a PAC file referenced by a file protocol</a><br>
+并且服务器应该为其指定MIME类型为<code>application/x-ns-proxy-autoconfig</code>。</p>
+<h2 id="代理服务器部分">代理服务器部分</h2>
+<figure data-type="image" tabindex="2"><img src="https://ashe27.github.io/post-images/1629343344669.png" alt="" loading="lazy"></figure>
+<pre><code>[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings]
+&quot;ProxyEnable&quot;=dword:00000001
+&quot;ProxyServer&quot;=&quot;http=127.0.0.1:7890;https=127.0.0.1:7890;ftp=127.0.0.1:7890;socks=127.0.0.1:7890&quot;
+&quot;ProxyOverride&quot;=&quot;localhost;127.*;10.*;172.16.*;172.17.*;172.18.*;172.19.*;172.20.*;172.21.*;172.22.*;172.23.*;172.24.*;172.25.*;172.26.*;172.27.*;172.28.*;172.29.*;172.30.*;172.31.*;192.168.*;&lt;local&gt;&quot;
+</code></pre>
+<p><code>ProxyEnable</code>：是否启用代理。<br>
+<code>ProxyServer</code>：各协议所使用的代理服务器，用分号分隔。如果不指定具体协议而直接写上服务器与端口号，则表示所有协议使用同一个代理。<br>
+<code>ProxyOverride</code>：禁止使用代理服务器的地址列表，通常指定为本地地址。支持通配符，用分号分隔。它同时也是&quot;对于本地地址不使用代理服务器&quot;选项的开关。</p>
+<h2 id="解密defaultconnectionsettings">解密DefaultConnectionSettings</h2>
+<p>先明确一件事情：<a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> API产生链接时都会从<code>DefaultConnectionSettings</code>中读取代理设置，而不是<code>Internet Settings</code>下的值。</p>
+<p>如果是手动在IE选项中修改设置，则会在代理设置窗口打开或关闭时将<code>Internet Settings</code>下的设置覆盖到<code>DefaultConnectionSettings</code>，使得设置立即生效。</p>
+<p>所以这就产生一个问题，直接修改注册表<code>Internet Settings</code>下的值是不会立即生效的，必须打开或关闭代理设置窗口，值才会刷新到<code>DefaultConnectionSettings</code>。</p>
+<p>如果是通过API来设置，则会立即写入到<code>DefaultConnectionSettings</code>，一个例子</p>
+<pre><code>std::vector&lt;INTERNET_PER_CONN_OPTIONW&gt; option{ 2 };
+option[0].dwOption = INTERNET_PER_CONN_FLAGS;
+option[0].Value.dwValue = PROXY_TYPE_AUTO_DETECT | PROXY_TYPE_DIRECT | PROXY_TYPE_AUTO_PROXY_URL;
+option[1].dwOption = INTERNET_PER_CONN_AUTOCONFIG_URL;
+option[1].Value.pszValue = (LPWSTR)L&quot;http://localhost/test.pac&quot;;
+
+INTERNET_PER_CONN_OPTION_LISTW options{ 0 };
+options.dwOptionCount = option.size();
+options.dwSize = option.size() * options.dwOptionCount;
+options.pOptions = &amp;option[0];
+
+BOOL result = InternetSetOptionW(nullptr, INTERNET_OPTION_PER_CONNECTION_OPTION, &amp;options, sizeof(options));
+</code></pre>
+<p>所以不通过API来修改代理设置的话则必须要了解<code>DefaultConnectionSettings</code>结构。</p>
+<p>它是一个未公开的结构体，我们可以在泄露的Windows 2003源码中找到蛛丝马迹，<br>
+头文件 <a href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/dll/proxreg.cxx">proxreg.cxx</a> 中的结构体 <a href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/inc/proxreg.h#L69">INTERNET_PROXY_INFO_EX</a> 就是它了，函数 <a href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/dll/proxreg.cxx#L889">WriteProxySettings</a> 用于将这个结构体写入注册表，而 <a href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/dll/proxreg.cxx#L721#L721">ReadProxySettings</a> 将<code>DefaultConnectionSettings</code>读取到结构体中，这就是一个序列化，反序列化的过程。</p>
+<p>开始的4字节表示结构体大小，同时也用于标识结构体版本，XP到Win10为止仅修改过一次，所以目前只有两种可能的值：0x3C和0x46。<br>
+根据源码中的定义，IE5和IE6都是0x3C，也就是第一版的结构体</p>
+<pre><code>#define INTERNET_PROXY_INFO_EX_VERSION      60      // 60 := IE 5.x &amp; 6.0 format
+</code></pre>
+<p>XP系统自带的是IE6，实际查看一下也确实如此<br>
+<img src="https://ashe27.github.io/post-images/1629429506257.png" alt="" loading="lazy"><br>
+从Vista的IE7开始，结构体就升级了，变为了0x46。<br>
+我编写了一个010 Editor的模板，这样看起来比较直观</p>
+<pre><code>//------------------------------------------------
+//--- 010 Editor v9.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+enum PROXY_TYPE {
+    PROXY_TYPE_DIRECT = 1,
+    PROXY_TYPE_PROXY = 2,
+    PROXY_TYPE_AUTO_PROXY_URL = 4,
+    PROXY_TYPE_AUTO_DETECT = 8
+};
+
+struct INTERNET_PROXY_INFO_EX_1 {
+    DWORD dwStructSize &lt;comment=&quot;结构版本&quot;&gt;;;
+    DWORD dwCurrentSettingsVersion &lt;comment=&quot;计数器，每次修改会增加&quot;&gt;;
+    PROXY_TYPE dwFlags &lt;comment=&quot;代理方式&quot;&gt;;
+    DWORD cbProxy &lt;comment=&quot;代理服务器字符串长度&quot;&gt;;
+    CHAR szProxy[cbProxy] &lt;comment=&quot;代理服务器地址&quot;&gt;;;
+    DWORD cbProxyBypass &lt;comment=&quot;代理忽略列表字符串长度&quot;&gt;;
+    CHAR szProxyBypass[cbProxyBypass] &lt;comment=&quot;代理忽略列表&quot;&gt;;
+    DWORD cbAutoConfigUrl;
+    CHAR szAutoConfigUrl[cbAutoConfigUrl];
+    DWORD dwAutoDiscoveryFlags &lt;comment=&quot;auto detect flags&quot;&gt;;
+    DWORD cbLastKnownGoodAutoConfigUrl;
+    CHAR szLastKnownGoodAutoConfigUrl[cbLastKnownGoodAutoConfigUrl];
+    FILETIME ftLastKnownDetectTime;
+    DWORD dwDetectedInterfaceIpCount &lt;comment=&quot;最近一次检测到的IP数&quot;&gt;;
+    DWORD arrDetectedInterfaceIp[dwDetectedInterfaceIpCount];
+    DWORD cbAutoconfigSecondaryUrl;
+    CHAR szAutoconfigSecondaryUrl[cbAutoconfigSecondaryUrl];
+    DWORD dwAutoconfigReloadDelayMins;
+};
+
+struct INTERNET_PROXY_INFO_EX_2 {
+    INTERNET_PROXY_INFO_EX_1 info1;
+    DWORD dwUnknown;
+};
+
+local DWORD dwVersion = ReadUInt();
+if (dwVersion == 0x3C) {
+    INTERNET_PROXY_INFO_EX_1 info;
+} else {
+    INTERNET_PROXY_INFO_EX_2 info;
+}
+</code></pre>
+<p><img src="https://ashe27.github.io/post-images/1629431873468.png" alt="" loading="lazy"><br>
+从头部的4字节看，0x46 - 0x3C = 0xA，也就是在其dll内部的结构体多了10字节，但是持久化到注册表后只多了4字节。</p>
+<ul>
+<li>dwFlags<br>
+dwFlags实际上就是常量<code>PROXY_TYPE_DIRECT</code>和其他三个值的组合。</li>
+</ul>
+<pre><code>#define PROXY_TYPE_DIRECT                               0x00000001   // direct to net
+#define PROXY_TYPE_PROXY                                0x00000002   // via named proxy
+#define PROXY_TYPE_AUTO_PROXY_URL                       0x00000004   // autoproxy URL
+#define PROXY_TYPE_AUTO_DETECT                          0x00000008   // use autoproxy detection
+</code></pre>
+<ul>
+<li>自动配置URL<br>
+自动代理的URL有两个，一个主一个次，但是我们在IE设置中只能设置一个主要的，次要的URL是怎么配置进去的呢？这就是通过之前的一篇文章 <a href="/post/Rn9thta4F/">IE自动部署工具包IEAK</a> 中介绍过的INS文件写入进去的</li>
+</ul>
+<pre><code>[URL]
+AutoDetect=1
+AutoConfig=1
+AutoConfigTime=1
+AutoConfigURL=http://localhost/test1.pac
+AutoConfigJSURL=http://localhost/test2.pac
+</code></pre>
+<p>其中<code>AutoConfigJSURL</code>就是次选代理URL。</p>
+<h2 id="总结">总结</h2>
+<ol>
+<li>代理选项以<code>DefaultConnectionSettings</code>中的值为准。</li>
+<li><code>Internet Settings</code>中的设置只有在打开或关闭代理设置窗口时会更新至<code>DefaultConnectionSettings</code>。</li>
+</ol>
+<p>所以，直接修改<code>Internet Settings</code>下的设置是不会立即生效的，还需要将设置写入到<code>DefaultConnectionSettings</code>。<br>
+而仅仅只修改<code>DefaultConnectionSettings</code>也会面临一个问题，如果用户打开了代理设置窗口，那么<code>Internet Settings</code>下的选项会覆盖过去，而导致修改失效。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://stackoverflow.com/questions/4283027/whats-the-format-of-the-defaultconnectionsettings-value-in-the-windows-registry">https://stackoverflow.com/questions/4283027/whats-the-format-of-the-defaultconnectionsettings-value-in-the-windows-registry</a></p>
+<p><a href="https://stackoverflow.com/questions/1674119/what-key-in-windows-registry-disables-ie-connection-parameter-automatically-det">https://stackoverflow.com/questions/1674119/what-key-in-windows-registry-disables-ie-connection-parameter-automatically-det</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[WinINet的代理设置]]></title>
+        <id>https://ashe27.github.io/post/2dhPgdQCU/</id>
+        <link href="https://ashe27.github.io/post/2dhPgdQCU/">
+        </link>
+        <updated>2021-08-19T01:26:10.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="什么是系统代理">什么是系统代理</h2>
+<p>我们在网上冲浪时，无时无刻都在使用着基于HTTP协议的应用程序，使用最多的就是浏览器了。<br>
+面向开发者而言，微软提供了 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 和 <a href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 两套网络API。<a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 是 <a href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 的超集。<br>
+我们在桌面上使用的应用程序几乎都是用的 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a>，而 <a href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 通常用于一些无GUI的服务程序中。<br>
+关于 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 和 <a href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 的差别可以查看官方手册 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/wininet-vs-winhttp">WinINet vs. WinHTTP</a>。<br>
+本文所讨论的是 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 的代理机制。</p>
+<h2 id="按用户代理">按用户代理</h2>
+<p>Windows系统默认是&quot;按用户代理&quot;的，意味着每个系统账户都有属于自己独立的代理设置。我们可以运行命令<code>Inetcpl.cpl</code>来打开IE选项窗口，在&quot;连接&quot;选项卡中点击&quot;局域网设置&quot;便可以显示代理设置界面。<br>
+代理设置会保存在注册表中</p>
+<pre><code>HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Connections\DefaultConnectionSettings
+</code></pre>
+<p>这是一个<code>REG_BINARY</code>类型的值，一个未公开的结构体，但是结构并不复杂，本文不讨论它。<br>
+另一个值<code>SavedLegacySettings</code>是<code>DefaultConnectionSettings</code>的副本，每当改变代理选项后都会生成这个副本，作用不详，似乎没有什么用处。</p>
+<h2 id="按计算机代理">按计算机代理</h2>
+<p>运行命令<code>gpedit.msc</code>打开策略编辑器，依次打开&quot;计算机配置&quot;、&quot;管理模板&quot;、&quot;Windows 组件&quot;、&quot;Internet Explorer&quot;，找到&quot;按计算机(而不是按用户)进行代理&quot;，启用这个选项将会在注册表保存一个值</p>
+<pre><code>[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings]
+&quot;ProxySettingsPerUser&quot;=dword:00000000
+</code></pre>
+<p>值不存在或是非0值，意味着&quot;按用户代理&quot;，否则就是&quot;按计算机代理&quot;。<br>
+当系统变为&quot;按计算机代理&quot;后，代理设置的位置将使用注册表值</p>
+<pre><code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Connections\DefaultConnectionSettings
+</code></pre>
+<p>路径和&quot;按用户代理&quot;是一致的，只是根路径由<code>HKEY_CURRENT_USER</code>变为<code>HKEY_LOCAL_MACHINE</code>而已。</p>
+<h2 id="wininet的代理设置">WinINet的代理设置</h2>
+<p>API函数 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenw">InternetOpenW</a> 决定了程序如何使用代理，重点在第2个参数<code>AccessType</code>，解释如下：<br>
+<code>INTERNET_OPEN_TYPE_DIRECT</code>：直连，不走代理。<br>
+<code>INTERNET_OPEN_TYPE_PRECONFIG</code>：从注册表获取代理设置并使用。<br>
+<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>：从注册表获取代理设置并使用，但不使用&quot;自动配置&quot;代理设置。<br>
+<code>INTERNET_OPEN_TYPE_PROXY</code>：绕过注册表的代理设置，直连代理服务器，代理服务器由第3个参数指定。<br>
+第1个和第4个参数很好理解，说下第2个和第3个参数，WinINet的代理机制分两种，一种是<code>自动配置</code>，另一种是<code>代理服务器</code><br>
+<img src="https://ashe27.github.io/post-images/1629336801688.png" alt="" loading="lazy"><br>
+<code>自动配置</code>基于 <a href="https://zh.wikipedia.org/wiki/%E4%BB%A3%E7%90%86%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE">PAC</a> 技术来实现代理。而<code>代理服务器</code>则是比较传统的方式，通过指定地址和协议来代理的，虽然也可以指定黑名单IP禁止代理，但灵活性是不如 <a href="https://zh.wikipedia.org/wiki/%E4%BB%A3%E7%90%86%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE">PAC</a> 代理技术的。<br>
+当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数时，表示<strong>优先使用&quot;自动配置&quot;代理，否则使用&quot;代理服务器&quot;的设置</strong>。<br>
+而当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>作为参数时，表示<strong>跳过&quot;自动配置&quot;代理，直接使用&quot;代理服务器&quot;的设置</strong>。<br>
+最常见的浏览器和绝大多数应用通常是使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数，用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>的情况比较少见。</p>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[IE自动部署工具包IEAK]]></title>
         <id>https://ashe27.github.io/post/Rn9thta4F/</id>
         <link href="https://ashe27.github.io/post/Rn9thta4F/">
         </link>
         <updated>2021-08-18T15:20:31.000Z</updated>
-        <content type="html"><![CDATA[<p>Internet Explorer Administration Kit (IEAK)是一个IE的管理工具包，可自定义配置IE并生成一个安装包，一般是给网管人员部署使用的，可以帮助管理员快速统一部署IE。<br>
+        <content type="html"><![CDATA[<p>Internet Explorer Administration Kit (IEAK)是一个IE的管理工具包，可自定义配置生成一个IE安装包或仅设置的包，一般是给网管人员部署使用的，可以帮助管理员快速统一部署IE。<br>
 适用于IE11的工具包下载地址：<a href="https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads">https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads</a></p>
 <h2 id="ins配置文件">INS配置文件</h2>
 <p>我们用它配置&quot;链接&quot;相关设置<br>
@@ -207,7 +401,7 @@ PCCERT_CONTEXT pCert = CertCreateCertificateContext(dwEncodingType, bin, dwWritt
 </code></pre>
 <p>-s表示以SYSTEM账户运行，-i表示运行在用户桌面而非SYSTEM桌面，-d表示不等待进程结束。其他不常用参数输入-h查看。</p>
 <h2 id="nircmd">NirCmd</h2>
-<p>下载地址：<a href="https://www.nirsoft.net/utils/advanced_run.html">https://www.nirsoft.net/utils/advanced_run.html</a><br>
+<p>下载地址：<a href="https://www.nirsoft.net/utils/nircmd.html">https://www.nirsoft.net/utils/nircmd.html</a><br>
 <a href="https://www.nirsoft.net">NirSoft</a> 出品，算是cmd的加强版，其中一个功能是支持以SYSTEM账户运行程序</p>
 <pre><code>nircmd.exe elevatecmd runassystem C:\Windows\regedit.exe
 </code></pre>
@@ -215,23 +409,27 @@ PCCERT_CONTEXT pCert = CertCreateCertificateContext(dwEncodingType, bin, dwWritt
 <p>下载地址：<a href="https://www.nirsoft.net/utils/advanced_run.html">https://www.nirsoft.net/utils/advanced_run.html</a><br>
 <a href="https://www.nirsoft.net">NirSoft</a> 出品，带GUI界面，同时也支持命令行方式启动，支持中文、支持添加右键菜单，启动程序更方便。<br>
 支持更多的启动参数设置，如启动目录、窗口大小、兼容模式、环境变量等等。<br>
-<img src="https://ashe27.github.io/post-images/1628729493924.png" alt="" loading="lazy"></p>
+<img src="https://ashe27.github.io/post-images/1628729493924.png" alt="" loading="lazy"><br>
+同时支持以<strong>TrustedInstaller</strong>账户启动</p>
 <h2 id="process-hacker">Process Hacker</h2>
 <p>下载地址：<a href="https://processhacker.sourceforge.io">https://processhacker.sourceforge.io</a><br>
 一个进程管理器工具，类似 <a href="https://docs.microsoft.com/en-us/sysinternals/downloads/process-explorer">Process Explorer</a>，但是功能更强大，比普通的进程管理器多出很多底层级别的操作。以其他账户运行程序是其中一个功能，不过似乎不支持用命令行方式。<br>
-<img src="https://ashe27.github.io/post-images/1628729538434.png" alt="" loading="lazy"></p>
+<img src="https://ashe27.github.io/post-images/1628729538434.png" alt="" loading="lazy"><br>
+同时支持以<strong>TrustedInstaller</strong>账户启动</p>
 <h2 id="nsudo">NSudo</h2>
 <p>下载地址：<a href="https://github.com/M2Team/NSudo">https://github.com/M2Team/NSudo</a><br>
 开源工具，有GUI界面，也支持命令行操作。</p>
 <pre><code>NSudoLC.exe -U:S regedit.exe
 </code></pre>
-<p>更多说明可以使用-h参数查看，或访问 <a href="https://nsudo.m2team.org/zh-hans/">https://nsudo.m2team.org/zh-hans/</a></p>
+<p>同时支持以<strong>TrustedInstaller</strong>账户启动<br>
+更多说明可以使用-h参数查看，或访问 <a href="https://nsudo.m2team.org/zh-hans/">https://nsudo.m2team.org/zh-hans/</a></p>
 <h2 id="runx">RunX</h2>
 <p>下载地址：<a href="https://www.d7xtech.com/free-software/runx/">https://www.d7xtech.com/free-software/runx/</a><br>
 执行程序带有数字签名。分两个版本，RunX.exe是GUI版，RunXcmd.exe是命令行版本。</p>
 <pre><code>RunXcmd.exe /exec=&quot;C:\Windows\regedit.exe&quot; /account=system
 </code></pre>
-<figure data-type="image" tabindex="1"><img src="https://ashe27.github.io/post-images/1628732240937.png" alt="" loading="lazy"></figure>
+<p><img src="https://ashe27.github.io/post-images/1628732240937.png" alt="" loading="lazy"><br>
+同时支持以<strong>TrustedInstaller</strong>账户启动</p>
 <h2 id="自定义右键菜单">自定义右键菜单</h2>
 <p>上面大部分工具都支持使用命令行，所以我们可以在exe右键菜单中添加一个快速启动的菜单项。<br>
 比如我用RunX的话，编写一个.reg文件导入即可</p>
@@ -503,134 +701,6 @@ button {
 <h2 id="参考">参考</h2>
 <p><a href="https://sciter.com/style-sets-in-h-smile-core/">Style sets in H-SMILE core.</a></p>
 <p><a href="https://sciter.com/?s=%40set">Search result: @set</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[[Sciter] 常见FAQ]]></title>
-        <id>https://ashe27.github.io/post/MdWdr7OmR/</id>
-        <link href="https://ashe27.github.io/post/MdWdr7OmR/">
-        </link>
-        <updated>2021-07-30T03:18:45.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="去掉popup的阴影">去掉POPUP的阴影</h2>
-<figure data-type="image" tabindex="1"><img src="https://ashe27.github.io/post-images/1627615298697.png" alt="" loading="lazy"></figure>
-<p>Sciter uses two types of popup windows:</p>
-<p>1.standard OS popup window, with or without shadow – per user’s / OS preferences<br>
-2.“layered” popup window, [semi-]transparent element – without shadow.</p>
-<p>Element is considered as transparent if its shape has transparent elements or it has round borders. So either one of these three properties:</p>
-<pre><code class="language-css">popup {
-  border: 1px solid transparent; // or
-  border-radius: 3dip; // or
-  background: transparent url(...); // transparent back and image with alpha
-}
-</code></pre>
-<p>will cause layered window to be created and so no shadow.</p>
-<h2 id="参考">参考</h2>
-<p><a href="https://sciter.com/forums/topic/how-to-remove-shadow-from-menu/#post-46867">How to remove shadow from menu</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[[Sciter] 实现平滑过渡的进度条]]></title>
-        <id>https://ashe27.github.io/post/JVz2xdg9a/</id>
-        <link href="https://ashe27.github.io/post/JVz2xdg9a/">
-        </link>
-        <updated>2021-07-27T03:29:09.000Z</updated>
-        <content type="html"><![CDATA[<p>在处理一些任务的时候，进度不总是可以量化的，一个假的进度条实现起来会更方便。</p>
-<p>功能：进度每秒加1，到99时会终止。且中途可以设置进度到某个特定的值，这里的特点是进度要平滑地过度。</p>
-<h2 id="方法一">方法一</h2>
-<p>模拟实现sleep函数，然后在循环里累加。</p>
-<pre><code class="language-html">&lt;html&gt;
-&lt;script&gt;
-    let iid;
-    let newPercent = 0;
-
-    function sleep(time) {
-        return new Promise(resolve =&gt; setTimeout(resolve, time));
-    }
-
-    async function doTick() {
-        const el = document.querySelector('progress');
-        let current = el.value;
-        const max = el.getAttribute('max') - 1;
-        if (current &lt; max) {
-            if (current &lt; newPercent) {
-                while (current &lt; newPercent) {
-                    await sleep(10);
-                    el.value = ++current;
-                }
-            } else {
-                el.value = ++current;
-            }
-        } else {
-            clearInterval(iid);
-        }
-    }
-
-    document.querySelector('button').onclick = () =&gt; {
-        newPercent = 70;
-    }
-
-    document.ready = () =&gt; {
-        iid = setInterval(doTick, 1000);
-    }
-&lt;/script&gt;
-
-&lt;body&gt;
-    &lt;progress max=&quot;100&quot; value=&quot;0&quot;&gt;&lt;/progress&gt;
-    &lt;button&gt;test&lt;/button&gt;
-&lt;/body&gt;
-
-&lt;/html&gt;
-</code></pre>
-<p>效果图<br>
-<img src="https://ashe27.github.io/post-images/1627356612106.gif" alt="" loading="lazy"></p>
-<h2 id="方法二">方法二</h2>
-<p>上面的方法有点笨，更好的方法是通过元素的 <a href="https://github.com/c-smile/sciter-js-sdk/blob/main/docs/md/Element.md#user-content-animate-step">animate</a> 方法来实现。</p>
-<pre><code class="language-html">&lt;html&gt;
-&lt;script&gt;
-    let iid;
-
-    function doTick() {
-        const el = document.querySelector('progress');
-        const max = el.getAttribute('max') - 1;
-        if (el.value &lt; max) {
-            el.value++;
-        } else {
-            return true;
-        }
-    }
-
-    document.querySelector('button').onclick = () =&gt; {
-        const newValue = 90;
-        const el = document.querySelector('progress');
-        clearInterval(iid);
-
-        const left = newValue - el.value;
-        const old = el.value;
-        el.animate(function (progress) {
-            if (progress &gt; 0) {
-                this.value = old + left * progress;
-                if (progress == 1) {
-                    iid = setInterval(doTick, 1000);
-                }
-            }
-            return true;
-        }, { duration: 500 });
-    }
-
-    document.ready = () =&gt; {
-        iid = setInterval(doTick, 1000);
-    }
-&lt;/script&gt;
-
-&lt;body&gt;
-    &lt;progress max=&quot;100&quot; value=&quot;10&quot;&gt;&lt;/progress&gt;
-    &lt;button&gt;go&lt;/button&gt;
-&lt;/body&gt;
-
-&lt;/html&gt;
-</code></pre>
-<p>效果图<br>
-<img src="https://ashe27.github.io/post-images/1627439563717.gif" alt="" loading="lazy"></p>
 ]]></content>
     </entry>
 </feed>

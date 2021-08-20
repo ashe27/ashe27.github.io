@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629302230088">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629470192649">
 <link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
 
 
@@ -33,7 +33,7 @@ PsExec.exe -sid regedit.exe
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://ashe27.github.io">
-        <img src="https://ashe27.github.io/images/avatar.png?v=1629302230088" class="site-logo">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1629470192649" class="site-logo">
         <h1 class="site-title">ashe&#39;s blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -110,7 +110,7 @@ PsExec.exe -sid regedit.exe
 </code></pre>
 <p>-s表示以SYSTEM账户运行，-i表示运行在用户桌面而非SYSTEM桌面，-d表示不等待进程结束。其他不常用参数输入-h查看。</p>
 <h2 id="nircmd">NirCmd</h2>
-<p>下载地址：<a href="https://www.nirsoft.net/utils/advanced_run.html">https://www.nirsoft.net/utils/advanced_run.html</a><br>
+<p>下载地址：<a href="https://www.nirsoft.net/utils/nircmd.html">https://www.nirsoft.net/utils/nircmd.html</a><br>
 <a href="https://www.nirsoft.net">NirSoft</a> 出品，算是cmd的加强版，其中一个功能是支持以SYSTEM账户运行程序</p>
 <pre><code>nircmd.exe elevatecmd runassystem C:\Windows\regedit.exe
 </code></pre>
@@ -118,23 +118,27 @@ PsExec.exe -sid regedit.exe
 <p>下载地址：<a href="https://www.nirsoft.net/utils/advanced_run.html">https://www.nirsoft.net/utils/advanced_run.html</a><br>
 <a href="https://www.nirsoft.net">NirSoft</a> 出品，带GUI界面，同时也支持命令行方式启动，支持中文、支持添加右键菜单，启动程序更方便。<br>
 支持更多的启动参数设置，如启动目录、窗口大小、兼容模式、环境变量等等。<br>
-<img src="https://ashe27.github.io/post-images/1628729493924.png" alt="" loading="lazy"></p>
+<img src="https://ashe27.github.io/post-images/1628729493924.png" alt="" loading="lazy"><br>
+同时支持以<strong>TrustedInstaller</strong>账户启动</p>
 <h2 id="process-hacker">Process Hacker</h2>
 <p>下载地址：<a href="https://processhacker.sourceforge.io">https://processhacker.sourceforge.io</a><br>
 一个进程管理器工具，类似 <a href="https://docs.microsoft.com/en-us/sysinternals/downloads/process-explorer">Process Explorer</a>，但是功能更强大，比普通的进程管理器多出很多底层级别的操作。以其他账户运行程序是其中一个功能，不过似乎不支持用命令行方式。<br>
-<img src="https://ashe27.github.io/post-images/1628729538434.png" alt="" loading="lazy"></p>
+<img src="https://ashe27.github.io/post-images/1628729538434.png" alt="" loading="lazy"><br>
+同时支持以<strong>TrustedInstaller</strong>账户启动</p>
 <h2 id="nsudo">NSudo</h2>
 <p>下载地址：<a href="https://github.com/M2Team/NSudo">https://github.com/M2Team/NSudo</a><br>
 开源工具，有GUI界面，也支持命令行操作。</p>
 <pre><code>NSudoLC.exe -U:S regedit.exe
 </code></pre>
-<p>更多说明可以使用-h参数查看，或访问 <a href="https://nsudo.m2team.org/zh-hans/">https://nsudo.m2team.org/zh-hans/</a></p>
+<p>同时支持以<strong>TrustedInstaller</strong>账户启动<br>
+更多说明可以使用-h参数查看，或访问 <a href="https://nsudo.m2team.org/zh-hans/">https://nsudo.m2team.org/zh-hans/</a></p>
 <h2 id="runx">RunX</h2>
 <p>下载地址：<a href="https://www.d7xtech.com/free-software/runx/">https://www.d7xtech.com/free-software/runx/</a><br>
 执行程序带有数字签名。分两个版本，RunX.exe是GUI版，RunXcmd.exe是命令行版本。</p>
 <pre><code>RunXcmd.exe /exec=&quot;C:\Windows\regedit.exe&quot; /account=system
 </code></pre>
-<figure data-type="image" tabindex="1"><img src="https://ashe27.github.io/post-images/1628732240937.png" alt="" loading="lazy"></figure>
+<p><img src="https://ashe27.github.io/post-images/1628732240937.png" alt="" loading="lazy"><br>
+同时支持以<strong>TrustedInstaller</strong>账户启动</p>
 <h2 id="自定义右键菜单">自定义右键菜单</h2>
 <p>上面大部分工具都支持使用命令行，所以我们可以在exe右键菜单中添加一个快速启动的菜单项。<br>
 比如我用RunX的话，编写一个.reg文件导入即可</p>
