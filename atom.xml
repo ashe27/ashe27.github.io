@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-08-20T14:41:04.983Z</updated>
+    <updated>2021-08-20T14:42:19.027Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -103,11 +103,11 @@ struct INTERNET_PROXY_INFO_EX_1 {
     CHAR szProxyBypass[cbProxyBypass] &lt;comment=&quot;代理忽略列表&quot;&gt;;
     DWORD cbAutoConfigUrl;
     CHAR szAutoConfigUrl[cbAutoConfigUrl];
-    DWORD dwAutoDiscoveryFlags &lt;comment=&quot;auto detect flags&quot;&gt;;
+    DWORD dwAutoDiscoveryFlags;
     DWORD cbLastKnownGoodAutoConfigUrl;
     CHAR szLastKnownGoodAutoConfigUrl[cbLastKnownGoodAutoConfigUrl];
     FILETIME ftLastKnownDetectTime;
-    DWORD dwDetectedInterfaceIpCount &lt;comment=&quot;最近一次检测到的IP数&quot;&gt;;
+    DWORD dwDetectedInterfaceIpCount;
     DWORD arrDetectedInterfaceIp[dwDetectedInterfaceIpCount];
     DWORD cbAutoconfigSecondaryUrl;
     CHAR szAutoconfigSecondaryUrl[cbAutoconfigSecondaryUrl];
