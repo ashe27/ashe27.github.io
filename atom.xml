@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-08-20T14:44:18.556Z</updated>
+    <updated>2021-08-21T02:50:00.719Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,6 +10,223 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, ashe&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Windows原版系统镜像（简体中文）]]></title>
+        <id>https://ashe27.github.io/post/Uov-Qcel9/</id>
+        <link href="https://ashe27.github.io/post/Uov-Qcel9/">
+        </link>
+        <updated>2021-08-21T02:49:27.000Z</updated>
+        <content type="html"><![CDATA[<hr>
+<h1 id="windows-10">Windows 10</h1>
+<hr>
+<h1 id="windows-81">Windows 8.1</h1>
+<hr>
+<h1 id="windows-8">Windows 8</h1>
+<hr>
+<h1 id="windows-7">Windows 7</h1>
+<h3 id="rtm">RTM</h3>
+<ul>
+<li>
+<p>Windows 7 Ultimate (x64)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_ultimate_x64_dvd_x15-66043.iso%7C3341268992%7C7DD7FA757CE6D2DB78B6901F81A6907A%7C/">cn_windows_7_ultimate_x64_dvd_x15-66043.iso</a></p>
+</li>
+<li>
+<p>Windows 7 Ultimate (x86)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_ultimate_x86_dvd_x15-65907.iso%7C2604238848%7CD6F139D7A45E81B76199DDCCDDC4B509%7C/">cn_windows_7_ultimate_x86_dvd_x15-65907.iso</a></p>
+</li>
+<li>
+<p>Windows 7 Enterprise (x64)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_enterprise_x64_dvd_x15-70741.iso%7C3203516416%7C876DCF115C2EE28D74B178BE1A84AB3B%7C/">cn_windows_7_enterprise_x64_dvd_x15-70741.iso</a></p>
+</li>
+<li>
+<p>Windows 7 Enterprise (x86)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_enterprise_x86_dvd_x15-70737.iso%7C2465783808%7C41ABFA74E57353B2F35BC33E56BD5202%7C/">cn_windows_7_enterprise_x86_dvd_x15-70737.iso</a></p>
+</li>
+<li>
+<p>Windows 7 Professional, VL Build (x64)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_professional_vl_build_x64_dvd_x15-71029.iso%7C3203971072%7C23155387CBD0771CFBA528CB1E7B170F%7C/">cn_windows_7_professional_vl_build_x64_dvd_x15-71029.iso</a></p>
+</li>
+<li>
+<p>Windows 7 Professional, VL Build (x86)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_professional_vl_build_x86_dvd_x15-71025.iso%7C2466107392%7C9EA7E0C2594B5A236FD09D572CA39770%7C/">cn_windows_7_professional_vl_build_x86_dvd_x15-71025.iso</a></p>
+</li>
+<li>
+<p>Windows 7 Professional (x64)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_professional_x64_dvd_x15-65791.iso%7C3341268992%7C3474800521D169FBF3F5E527CD835156%7C/">cn_windows_7_professional_x64_dvd_x15-65791.iso</a></p>
+</li>
+<li>
+<p>Windows 7 Professional (x86)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_professional_x86_dvd_x15-65790.iso%7C2604238848%7CE812FBE758F05B485C5A858C22060785%7C/">cn_windows_7_professional_x86_dvd_x15-65790.iso</a></p>
+</li>
+<li>
+<p>Windows 7 Home Premium (x64)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_home_premium_x64_dvd_x15-65718.iso%7C3341268992%7C9F976045631A6A2162ABE32FC77C8ACC%7C/">cn_windows_7_home_premium_x64_dvd_x15-65718.iso</a></p>
+</li>
+<li>
+<p>Windows 7 Home Premium (x86)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_home_premium_x86_dvd_x15-65717.iso%7C2604238848%7C98E1EB474F92343B06737F227665DF1C%7C/">cn_windows_7_home_premium_x86_dvd_x15-65717.iso</a></p>
+</li>
+<li>
+<p>Windows 7 Home Basic (x86)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_home_basic_x86_dvd_x15-65975.iso%7C2604238848%7CAF82993DCF8F3D7AA08D54693691BB48%7C/">cn_windows_7_home_basic_x86_dvd_x15-65975.iso</a></p>
+</li>
+<li>
+<p>Windows 7 Starter (x86)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_starter_x86_dvd_x15-69303.iso%7C2604238848%7C5A6796B2B6A97B3E372F7C37D3A42AA4%7C/">cn_windows_7_starter_x86_dvd_x15-69303.iso</a></p>
+</li>
+</ul>
+<h1 id="windows-vista">Windows Vista</h1>
+<h3 id="service-pack-2">Service Pack 2</h3>
+<ul>
+<li>
+<p>Windows Vista 企业版 SP2 (x64)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_vista_enterprise_with_sp2_x64_dvd_x15-40402.iso%7C3104415744%7CD0CF708192BF9596CC603DF53ABDB76D%7C/">cn_windows_vista_enterprise_with_sp2_x64_dvd_x15-40402.iso</a></p>
+</li>
+<li>
+<p>Windows Vista 企业版 SP2 (x86)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_vista_enterprise_with_sp2_x86_dvd_x15-40257.iso%7C2348410880%7CA567A6C970038233C0B2B7F130ADEF23%7C/">cn_windows_vista_enterprise_with_sp2_x86_dvd_x15-40257.iso</a></p>
+</li>
+<li>
+<p>Windows Vista SP2 (x64)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_vista_with_sp2_x64_dvd_x15-36322.iso%7C3817512960%7C3719CEC49ECC2D73FCF7AF152A42049A%7C/">cn_windows_vista_with_sp2_x64_dvd_x15-36322.iso</a></p>
+</li>
+<li>
+<p>Windows Vista SP2 (x86)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_vista_with_sp2_x86_dvd_x15-36285.iso%7C3078893568%7CF50709974F03C63BB41B5CA0D406160D%7C/">cn_windows_vista_with_sp2_x86_dvd_x15-36285.iso</a></p>
+</li>
+</ul>
+<h3 id="service-pack-1">Service Pack 1</h3>
+<ul>
+<li>
+<p>Windows Vista 企业版 SP1 (x64)<br>
+<a href="ed2k://%7Cfile%7Czh-hans_windows_vista_enterprise_with_service_pack_1_x64_dvd_x14-55848.iso%7C2969976832%7CB4F450ED55F14D48EBA1A76129903A9A%7C/">zh-hans_windows_vista_enterprise_with_service_pack_1_x64_dvd_x14-55848.iso</a></p>
+</li>
+<li>
+<p>Windows Vista 企业版 SP1 (x86)<br>
+<a href="ed2k://%7Cfile%7Czh-hans_windows_vista_enterprise_with_service_pack_1_x86_dvd_x14-55727.iso%7C2255577088%7CC7EB8C68B6D9D72988DE7F57670B2EC1%7C/">zh-hans_windows_vista_enterprise_with_service_pack_1_x86_dvd_x14-55727.iso</a></p>
+</li>
+<li>
+<p>Windows Vista SP1 (x64)<br>
+<a href="ed2k://%7Cfile%7Czh-hans_windows_vista_with_service_pack_1_x64_dvd_x14-30733.iso%7C3926849536%7C67C15BF7CCF3130B31F49223D3F485FD%7C/">zh-hans_windows_vista_with_service_pack_1_x64_dvd_x14-30733.iso</a></p>
+</li>
+<li>
+<p>Windows Vista SP1 (x86)<br>
+<a href="ed2k://%7Cfile%7Czh-hans_windows_vista_with_service_pack_1_x86_dvd_x14-30732.iso%7C2948851712%7C78927112D52EA2B1D4357583F041A20E%7C/">zh-hans_windows_vista_with_service_pack_1_x86_dvd_x14-30732.iso</a></p>
+</li>
+</ul>
+<h3 id="rtm-2">RTM</h3>
+<ul>
+<li>
+<p>Windows Vista (x64)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_vista_x64_dvd_X12-63216.iso%7C3536730112%7C73EF8E235F3AD1A359546C89EDE7E4FC%7C/">cn_windows_vista_x64_dvd_X12-63216.iso</a></p>
+</li>
+<li>
+<p>Windows Vista (x86)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_vista_x86_dvd_X12-59648.iso%7C2613229568%7CDBC16B06681EE44AA2DA0A8F95192C8F%7C/">cn_windows_vista_x86_dvd_X12-59648.iso</a></p>
+</li>
+</ul>
+<hr>
+<h1 id="windows-xp">Windows XP</h1>
+<h3 id="service-pack-3">Service Pack 3</h3>
+<ul>
+<li>
+<p>Windows XP 专业版 SP3（批量授权）<br>
+<a href="ed2k://%7Cfile%7Czh-hans_windows_xp_professional_with_service_pack_3_x86_cd_vl_x14-74070.iso%7C630237184%7CEC51916C9D9B8B931195EE0D6EE9B40E%7C/">zh-hans_windows_xp_professional_with_service_pack_3_x86_cd_vl_x14-74070.iso</a></p>
+</li>
+<li>
+<p>Windows XP 专业版 SP3<br>
+<a href="ed2k://%7Cfile%7Czh-hans_windows_xp_professional_with_service_pack_3_x86_cd_x14-80404.iso%7C630239232%7CCD0900AFA058ACB6345761969CBCBFF4%7C/">zh-hans_windows_xp_professional_with_service_pack_3_x86_cd_x14-80404.iso</a></p>
+</li>
+<li>
+<p>Windows XP 家庭版 SP3<br>
+<a href="ed2k://%7Cfile%7Czh-hans_windows_xp_professional_with_service_pack_3_x86_cd_x14-80404.iso%7C630239232%7CCD0900AFA058ACB6345761969CBCBFF4%7C/">zh-hans_windows_xp_home_with_service_pack_3_x86_cd_x14-92408.iso</a></p>
+</li>
+</ul>
+<h3 id="service-pack-2-2">Service Pack 2</h3>
+<ul>
+<li>
+<p>Windows XP 专业版 SP2（批量授权）<br>
+<a href="ed2k://%7Cfile%7Csc_win_xp_pro_with_sp2_vl.iso%7C621346816%7C6F27DB53806D79FE37A0EDEC04AA9B05%7C/">sc_win_xp_pro_with_sp2_vl.iso</a></p>
+</li>
+<li>
+<p>Windows XP 专业版 SP2<br>
+<a href="ed2k://%7Cfile%7Csc_winxp_pro_with_sp2.iso%7C629227520%7C505B810E128351482AF8B83AC4D04FD2%7C/">sc_winxp_pro_with_sp2.iso</a></p>
+</li>
+<li>
+<p>Windows XP 家庭版 SP2<br>
+<a href="ed2k://%7Cfile%7Csc_winxp_home_with_sp2.iso%7C611358720%7CB80F4CCF312420015FFD5740057085B0%7C/">sc_winxp_home_with_sp2.iso</a></p>
+</li>
+</ul>
+<h3 id="service-pack-1a">Service Pack 1a</h3>
+<ul>
+<li>升级包（非系统镜像）<br>
+<a href="ed2k://%7Cfile%7Csc_winxp_sp1.iso%7C312993792%7C2711C1C07563C6F4782271ECA771FC90%7C/">sc_winxp_sp1.iso</a></li>
+</ul>
+<h3 id="rtm-3">RTM</h3>
+<ul>
+<li>
+<p>Windows XP 专业版<br>
+<a href="ed2k://%7Cfile%7CCN_WINXP_PRO_ISO.img%7C530186240%7C7855069CE4216615D761654E2B75A4F7%7C/">CN_WINXP_PRO_ISO.img</a></p>
+</li>
+<li>
+<p>Windows XP 家庭版<br>
+<a href="ed2k://%7Cfile%7CCN_WINXP_HOME_ISO.img%7C513515520%7C58373CA20ABB0438AF5858AEBF22E983%7C/">CN_WINXP_HOME_ISO.img</a></p>
+</li>
+</ul>
+<hr>
+<h1 id="windows-server-2003">Windows Server 2003</h1>
+<ul>
+<li>Windows Server 2003 Service Pack 2 (x86)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_server_2003_sp2_x86_cd.iso%7C390135808%7C4C38E53EF100F80683810CAC1044CA70%7C/">cn_windows_server_2003_sp2_x86_cd.iso</a></li>
+</ul>
+<hr>
+<h1 id="windows-2000">Windows 2000</h1>
+<ul>
+<li>Windows 2000 Professional with SP4<br>
+<a href="ed2k://%7Cfile%7CZRMPSEL_CN.iso%7C402690048%7C00D1BDA0F057EDB8DA0B29CF5E188788%7C/">ZRMPSEL_CN.iso</a></li>
+</ul>
+<hr>
+<h1 id="windows-nt-server">Windows NT Server</h1>
+<ul>
+<li>Windows NT Server 4.0<br>
+<a href="ed2k://%7Cfile%7Csc_winnt_4.0_svr.iso%7C676548608%7C3BCB905EB3A6ED9AB685B5701BF94A29%7C/">sc_winnt_4.0_svr.iso</a></li>
+</ul>
+<hr>
+<h1 id="windows-me">Windows ME</h1>
+<ul>
+<li>Windows Millennium Edition<br>
+<a href="ed2k://%7Cfile%7CSC_WINME.exe%7C174098008%7CEEBAABADCD0162DA9F66F68E91B1B92A%7C/">SC_WINME.exe</a></li>
+</ul>
+<hr>
+<h1 id="windows-98">Windows 98</h1>
+<ul>
+<li>Windows 98 Second Edition<br>
+<a href="ed2k://%7Cfile%7CSC_WIN98SE.exe%7C278540368%7C939909E688963174901F822123E55F7E%7C/">SC_WIN98SE.exe</a></li>
+</ul>
+<hr>
+<h1 id="windows-3">Windows 3.*</h1>
+<ul>
+<li>
+<p>Windows 3.2.144<br>
+<a href="ed2k://%7Cfile%7CSC_Windows32_144.exe%7C12835440%7C782F5AF8A1405D518C181F057FCC4287%7C/">SC_Windows32_144.exe</a></p>
+</li>
+<li>
+<p>Windows 3.2.12<br>
+<a href="ed2k://%7Cfile%7CSC_Windows32_12.exe%7C12832984%7CA76EB68E35CD62F8B40ECD3E6F5E213F%7C/">SC_Windows32_12.exe</a></p>
+</li>
+<li>
+<p>Windows 3.1<br>
+<a href="ed2k://%7Cfile%7CSC_Windows31.exe%7C8472384%7C84037137FFF3932707F286EC852F2ABC%7C/">SC_Windows31.exe</a></p>
+</li>
+</ul>
+<hr>
+<h1 id="ms-dos">MS-DOS</h1>
+<ul>
+<li>MS-DOS 6.22<br>
+<a href="ed2k://%7Cfile%7CSC_MSDOS622sc.exe%7C10020288%7C0B2B0878B8BBD2233D23022EE5339637%7C/">SC_MSDOS622sc.exe</a></li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[代理设置与注册表位置]]></title>
         <id>https://ashe27.github.io/post/18OY8R7kO/</id>
@@ -599,108 +816,6 @@ PartAssist /hd:1 /whide:1 /src:D:\fbinst\EFI
 <p>最终就实现了市面上U盘制作工具所谓的三分区方案。<br>
 <img src="https://ashe27.github.io/post-images/1627984548568.png" alt="" loading="lazy"></p>
 <p>系统启动、封装相关技术可以去 <a href="http://wuyou.net/">无忧启动</a> 论坛和 <a href="https://www.itsk.com/">IT天空</a> 网站学习。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[[Sciter] 样式集]]></title>
-        <id>https://ashe27.github.io/post/8RwoLa5kw/</id>
-        <link href="https://ashe27.github.io/post/8RwoLa5kw/">
-        </link>
-        <updated>2021-07-30T09:11:15.000Z</updated>
-        <content type="html"><![CDATA[<p>在Sciter中有个叫样式集的概念，它主要的目的是解决程序应用主题样式的问题。</p>
-<pre><code class="language-css">@set my-btn {
-    :root {
-        background: red;
-    }
-}
-
-button {
-    style-set: my-btn;
-}
-</code></pre>
-<p>样式集使用<code>@set</code>关键字指定一个名称。<code>:root</code>是伪元素，表示应用该样式集的元素。<br>
-应用样式集用<code>style-set</code>关键字。清除样式集可以用<code>style-set: none</code>。</p>
-<h2 id="优先级">优先级</h2>
-<p>样式集的权重比普通CSS样式高</p>
-<pre><code class="language-html">&lt;html&gt;
-&lt;head&gt;
-    &lt;style&gt;
-        @set my-btn {
-            :root {
-                background: red;
-            }
-        }
-
-        button {
-            style-set: my-btn;
-        }
-
-        #test {
-            background: green;
-        }
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;button id=&quot;test&quot;&gt;test&lt;/button&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p>元素背景色将是红色，也就是说元素自身的样式没有效果。如果需要覆盖样式集的属性可以用<code>!important</code>关键字。</p>
-<pre><code class="language-css">#test {
-    background: green !important;
-}
-</code></pre>
-<h2 id="继承性">继承性</h2>
-<p>样式集是可以继承的</p>
-<pre><code class="language-css">@set my-btn-base {
-    :root {
-        border: 1px solid blue;
-    }
-}
-
-@set my-btn &lt; my-btn-base {
-     :root {
-        background: red;
-     }
-}
-</code></pre>
-<p>使用<code>&lt;</code>表示继承，比如上面的<code>my-btn</code>将从<code>my-btn-base</code>继承所有样式。</p>
-<h2 id="内置样式集">内置样式集</h2>
-<p>Sciter内置了两个样式文件<code>master-base.css</code>和<code>ux-master.css</code>。<br>
-可查看<code>samples.sciter\editor-plaintext\sciter-resources.htm</code>。<br>
-或使用<code>fetch</code>来获取内置文件</p>
-<pre><code class="language-html">&lt;html&gt;
-&lt;head&gt;
-&lt;/head&gt;
-&lt;script&gt;
-    async function foo(url) {
-        const r = await fetch(url);
-        if (r.ok) {
-            document.querySelector('plaintext').value = r.text();
-        }
-    }
-
-    document.ready = () =&gt; {
-        document.getElementById('f1').onclick = () =&gt; {
-            foo('sciter:master-base.css');
-        };
-
-        document.getElementById('f2').onclick = () =&gt; {
-            foo('sciter:ux-master.css');
-        };
-    }
-&lt;/script&gt;
-
-&lt;body&gt;
-    &lt;button id=&quot;f1&quot;&gt;master-base.css&lt;/button&gt;
-    &lt;button id=&quot;f2&quot;&gt;ux-master.css&lt;/button&gt;
-    &lt;plaintext type=&quot;text/css&quot; readonly /&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<h2 id="参考">参考</h2>
-<p><a href="https://sciter.com/style-sets-in-h-smile-core/">Style sets in H-SMILE core.</a></p>
-<p><a href="https://sciter.com/?s=%40set">Search result: @set</a></p>
 ]]></content>
     </entry>
 </feed>
