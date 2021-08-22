@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629599944440">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629609288103">
 <link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
 
 
@@ -31,7 +31,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://ashe27.github.io">
-        <img src="https://ashe27.github.io/images/avatar.png?v=1629599944440" class="site-logo">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1629609288103" class="site-logo">
         <h1 class="site-title">ashe&#39;s blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -110,10 +110,18 @@
 <h2 id="按用户代理">按用户代理</h2>
 <p>Windows系统默认是&quot;按用户代理&quot;的，意味着每个系统账户都有属于自己独立的代理设置。我们可以运行命令<code>Inetcpl.cpl</code>来打开IE选项窗口，在&quot;连接&quot;选项卡中点击&quot;局域网设置&quot;便可以显示代理设置界面。<br>
 代理设置会保存在注册表中</p>
-<pre><code>HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Connections\DefaultConnectionSettings
+<pre><code>[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings]
+&quot;AutoDetect&quot;=dword:00000001
+&quot;AutoConfigURL&quot;=&quot;http://localhost/test.pac&quot;
+&quot;ProxyEnable&quot;=dword:00000001
+&quot;ProxyServer&quot;=&quot;127.0.0.1:7890&quot;
+&quot;ProxyOverride&quot;=&quot;&lt;local&gt;&quot;
 </code></pre>
-<p>这是一个<code>REG_BINARY</code>类型的值，一个未公开的结构体，但是结构并不复杂，本文不讨论它。<br>
-另一个值<code>SavedLegacySettings</code>是<code>DefaultConnectionSettings</code>的副本，每当改变代理选项后都会生成这个副本，作用不详，似乎没有什么用处。</p>
+<p><code>AutoDetect</code>：自动检测配置开关。<br>
+<code>AutoConfigURL</code>：自动配置URL。<br>
+<code>ProxyEnable</code>：是否启用代理。<br>
+<code>ProxyServer</code>：各协议所使用的代理服务器，用分号分隔。如果不指定具体协议而直接写上服务器与端口号，则表示所有协议使用同一个代理。<br>
+<code>ProxyOverride</code>：禁止使用代理服务器的地址列表，通常指定为本地地址。支持通配符，用分号分隔。它同时也是&quot;对于本地地址不使用代理服务器&quot;选项的开关。</p>
 <h2 id="按计算机代理">按计算机代理</h2>
 <p>运行命令<code>gpedit.msc</code>打开策略编辑器，依次打开&quot;计算机配置&quot;、&quot;管理模板&quot;、&quot;Windows 组件&quot;、&quot;Internet Explorer&quot;，找到&quot;按计算机(而不是按用户)进行代理&quot;，启用这个选项将会在注册表保存一个值</p>
 <pre><code>[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings]
@@ -123,7 +131,7 @@
 当系统变为&quot;按计算机代理&quot;后，代理设置的位置将使用注册表值</p>
 <pre><code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Connections\DefaultConnectionSettings
 </code></pre>
-<p>路径和&quot;按用户代理&quot;是一致的，只是根路径由<code>HKEY_CURRENT_USER</code>变为<code>HKEY_LOCAL_MACHINE</code>而已。</p>
+<p>除了根路径由<code>HKEY_CURRENT_USER</code>变为<code>HKEY_LOCAL_MACHINE</code>外，设置已经不保存在<code>Internet Settings</code>下了，而是<code>DefaultConnectionSettings</code>这个键值中，它是一个未公开的结构体，以后会讲到。</p>
 <h2 id="wininet的代理设置">WinINet的代理设置</h2>
 <p>API函数 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenw">InternetOpenW</a> 决定了程序如何使用代理，重点在第2个参数<code>AccessType</code>，解释如下：<br>
 <code>INTERNET_OPEN_TYPE_DIRECT</code>：直连，不走代理。<br>
