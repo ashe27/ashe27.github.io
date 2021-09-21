@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" >
 
-<title>WinINet 的代理设置 | ashe&#39;s blog</title>
+<title>WinINet 的代理策略 | ashe&#39;s blog</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1629609815759">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1632211946558">
 <link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
 
 
@@ -31,7 +31,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://ashe27.github.io">
-        <img src="https://ashe27.github.io/images/avatar.png?v=1629609815759" class="site-logo">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1632211946558" class="site-logo">
         <h1 class="site-title">ashe&#39;s blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -97,7 +97,7 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">WinINet 的代理设置</h2>
+            <h2 class="post-title">WinINet 的代理策略</h2>
             <div class="post-date">2021-08-19</div>
             
             <div class="post-content" v-pre>
@@ -107,7 +107,7 @@
 我们在桌面上使用的应用程序几乎都是用的 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a>，而 <a href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 通常用于一些无GUI的服务程序中。<br>
 关于 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 和 <a href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 的差别可以查看官方手册 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/wininet-vs-winhttp">WinINet vs. WinHTTP</a>。<br>
 本文所讨论的是 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 的代理机制。</p>
-<h2 id="wininet的代理设置">WinINet的代理设置</h2>
+<h2 id="wininet的代理策略">WinINet的代理策略</h2>
 <p>API函数 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenw">InternetOpenW</a> 决定了程序如何使用代理，重点在第2个参数<code>AccessType</code>，解释如下：<br>
 <code>INTERNET_OPEN_TYPE_DIRECT</code>：直连，不走代理。<br>
 <code>INTERNET_OPEN_TYPE_PRECONFIG</code>：从注册表获取代理设置并使用。<br>
