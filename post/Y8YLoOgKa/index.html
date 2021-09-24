@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>[Sciter] 样式集 | ashe&#39;s blog</title>
+<title>[Sciter] 中文字体渲染效果 | ashe&#39;s blog</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -18,16 +18,11 @@
 
 
 
-    <meta name="description" content="在Sciter中有个叫样式集的概念，它主要的目的是解决程序应用主题样式的问题。
-@set my-btn {
-    :root {
-        background: red;
-    }
-}
-
-button {
-    style-s..." />
-    <meta name="keywords" content="Sciter" />
+    <meta name="description" content="目前中文网站上中文字体使用最多的是苹方、微软雅黑。看看在Sciter中分别用GDI+、D2D、Skia渲染字体看看效果如何。
+标准版DLL
+路径：bin\windows\x32\sciter.dll
+支持GDI+、Direct2D，不支持S..." />
+    <meta name="keywords" content="" />
   </head>
   <body>
     <div id="app" class="main">
@@ -102,121 +97,83 @@ button {
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">[Sciter] 样式集</h2>
-            <div class="post-date">2021-07-30</div>
+            <h2 class="post-title">[Sciter] 中文字体渲染效果</h2>
+            <div class="post-date">2021-09-24</div>
             
             <div class="post-content" v-pre>
-              <p>在Sciter中有个叫样式集的概念，它主要的目的是解决程序应用主题样式的问题。</p>
-<pre><code class="language-css">@set my-btn {
-    :root {
-        background: red;
-    }
-}
-
-button {
-    style-set: my-btn;
-}
-</code></pre>
-<p>样式集使用<code>@set</code>关键字指定一个名称。<code>:root</code>是伪元素，表示应用该样式集的元素。<br>
-应用样式集用<code>style-set</code>关键字。清除样式集可以用<code>style-set: none</code>。</p>
-<h2 id="优先级">优先级</h2>
-<p>样式集的权重比普通CSS样式高</p>
+              <p>目前中文网站上中文字体使用最多的是苹方、微软雅黑。看看在Sciter中分别用GDI+、D2D、Skia渲染字体看看效果如何。</p>
+<p>标准版DLL<br>
+路径：<code>bin\windows\x32\sciter.dll</code><br>
+支持GDI+、Direct2D，不支持Skia。</p>
+<p>Skia版DLL<br>
+路径：<code>bin\windows\x32skia\sciter.dll</code><br>
+支持Direct2D，Skia，不支持GDI+。</p>
+<p>测试HTML</p>
 <pre><code class="language-html">&lt;html&gt;
 &lt;head&gt;
+    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
     &lt;style&gt;
-        @set my-btn {
-            :root {
-                background: red;
-            }
+        #pf {
+            font-family: 'PingFang SC';
         }
 
-        button {
-            style-set: my-btn;
+        #yhui {
+            font-family: 'Microsoft Yahei UI';
         }
 
-        #test {
-            background: green;
+        #yh {
+            font-family: 'Microsoft Yahei';
         }
     &lt;/style&gt;
+    &lt;script type=&quot;module&quot;&gt;
+        document.getElementById('backend').innerText = `后端: ${Window.this.graphicsBackend}`;
+    &lt;/script&gt;
 &lt;/head&gt;
+
 &lt;body&gt;
-    &lt;button id=&quot;test&quot;&gt;test&lt;/button&gt;
+    &lt;div style=&quot;width: max-content; padding: 20px; border: 2px solid red;&quot;&gt;
+        &lt;h3 id=&quot;backend&quot;&gt;&lt;/h3&gt;
+        &lt;h3 id=&quot;pf&quot;&gt;苹方：你好、世界、动漫&lt;/h3&gt;
+        &lt;h3 id=&quot;yhui&quot;&gt;微软雅黑UI：你好、世界、动漫&lt;/h3&gt;
+        &lt;h3 id=&quot;yh&quot;&gt;微软雅黑：你好、世界、动漫&lt;/h3&gt;
+    &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 </code></pre>
-<p>元素背景色将是红色，也就是说元素自身的样式没有效果。如果需要覆盖样式集的属性可以用<code>!important</code>关键字。</p>
-<pre><code class="language-css">#test {
-    background: green !important;
-}
-</code></pre>
-<h2 id="继承性">继承性</h2>
-<p>样式集是可以继承的</p>
-<pre><code class="language-css">@set my-btn-base {
-    :root {
-        border: 1px solid blue;
-    }
-}
-
-@set my-btn &lt; my-btn-base {
-     :root {
-        background: red;
-     }
-}
-</code></pre>
-<p>使用<code>&lt;</code>表示继承，比如上面的<code>my-btn</code>将从<code>my-btn-base</code>继承所有样式。</p>
-<h2 id="内置样式集">内置样式集</h2>
-<p>Sciter内置了两个样式文件<code>master-base.css</code>和<code>ux-master.css</code>。<br>
-可查看<code>samples.sciter\editor-plaintext\sciter-resources.htm</code>。<br>
-或使用<code>fetch</code>来获取内置文件</p>
-<pre><code class="language-html">&lt;html&gt;
-&lt;head&gt;
-&lt;/head&gt;
-&lt;script&gt;
-    async function foo(url) {
-        const r = await fetch(url);
-        if (r.ok) {
-            document.querySelector('plaintext').value = r.text();
-        }
-    }
-
-    document.ready = () =&gt; {
-        document.getElementById('f1').onclick = () =&gt; {
-            foo('sciter:master-base.css');
-        };
-
-        document.getElementById('f2').onclick = () =&gt; {
-            foo('sciter:ux-master.css');
-        };
-    }
-&lt;/script&gt;
-
-&lt;body&gt;
-    &lt;button id=&quot;f1&quot;&gt;master-base.css&lt;/button&gt;
-    &lt;button id=&quot;f2&quot;&gt;ux-master.css&lt;/button&gt;
-    &lt;plaintext type=&quot;text/css&quot; readonly /&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
+<h3 id="gdi">GDI+</h3>
+<p>使用<code>GFX_LAYER_GDI</code>参数<br>
+<code>SciterSetOption(nullptr, SCITER_SET_GFX_LAYER, GFX_LAYER_GDI);</code><br>
+<img src="https://ashe27.github.io/post-images/1632463783950.png" alt="" loading="lazy"><br>
+很明显，不支持苹方字体（准确地说是不支持OpenType字体），回退到雅黑了。</p>
+<h3 id="d2d">D2D</h3>
+<p>使用<code>GFX_LAYER_D2D</code>参数<br>
+<code>SciterSetOption(nullptr, SCITER_SET_GFX_LAYER, GFX_LAYER_D2D);</code><br>
+<img src="https://ashe27.github.io/post-images/1632463401404.png" alt="" loading="lazy"></p>
+<h3 id="skia">Skia</h3>
+<p>使用<code>GFX_LAYER_SKIA</code>参数<br>
+<code>SciterSetOption(nullptr, SCITER_SET_GFX_LAYER, GFX_LAYER_SKIA);</code><br>
+<img src="https://ashe27.github.io/post-images/1632463251822.png" alt="" loading="lazy"><br>
+雅黑出现乱码。</p>
+<h3 id="skia-opengl">Skia-opengl</h3>
+<p>使用<code>GFX_LAYER_SKIA_OPENGL</code>参数<br>
+<code>SciterSetOption(nullptr, SCITER_SET_GFX_LAYER, GFX_LAYER_SKIA_OPENGL);</code><br>
+<img src="https://ashe27.github.io/post-images/1632463112568.png" alt="" loading="lazy"><br>
+雅黑出现乱码。</p>
+<h2 id="结论">结论</h2>
+<p>GDI+已经过时了，且不支持OpenType字体，同时也不支持硬件加速，所以不建议使用。<br>
+大多数时候应该使用D2D作为渲染引擎，这也是Sciter的默认值。<br>
+Skia作为一个跨平台的2D引擎，似乎在Windows上表现的不是那么好，酌情使用。</p>
 <h2 id="参考">参考</h2>
-<p><a href="https://sciter.com/style-sets-in-h-smile-core/">Style sets in H-SMILE core.</a></p>
-<p><a href="https://sciter.com/?s=%40set">Search result: @set</a></p>
+<p><a href="https://sciter.com/forums/topic/text-in-windows-7-bug/">https://sciter.com/forums/topic/text-in-windows-7-bug/</a></p>
 
             </div>
-            
-              <div class="tag-container">
-                
-                  <a href="https://ashe27.github.io/tag/a4ikEvgX5/" class="tag">
-                    Sciter
-                  </a>
-                
-              </div>
             
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://ashe27.github.io/post/JVz2xdg9a/">
+                <a href="https://ashe27.github.io/post/UovaQcel9/">
                   <h3 class="post-title">
-                    [Sciter] 实现平滑过渡的进度条
+                    Windows原版系统镜像（简体中文）
                   </h3>
                 </a>
               </div>
