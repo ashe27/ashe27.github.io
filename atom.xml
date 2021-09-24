@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-09-24T11:17:23.136Z</updated>
+    <updated>2021-09-24T15:45:15.109Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,78 +10,6 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, ashe&apos;s blog</rights>
-    <entry>
-        <title type="html"><![CDATA[[Sciter] 中文字体渲染效果]]></title>
-        <id>https://ashe27.github.io/post/Y8YLoOgKa/</id>
-        <link href="https://ashe27.github.io/post/Y8YLoOgKa/">
-        </link>
-        <updated>2021-09-24T05:41:50.000Z</updated>
-        <content type="html"><![CDATA[<p>目前中文网站上中文字体使用最多的是苹方、微软雅黑。看看在Sciter中分别用GDI+、D2D、Skia渲染字体的效果如何。</p>
-<p>标准版DLL<br>
-路径：<code>bin\windows\x32\sciter.dll</code><br>
-支持GDI+、Direct2D，不支持Skia。</p>
-<p>Skia版DLL<br>
-路径：<code>bin\windows\x32skia\sciter.dll</code><br>
-支持Direct2D，Skia，不支持GDI+。</p>
-<p>测试HTML</p>
-<pre><code class="language-html">&lt;html&gt;
-&lt;head&gt;
-    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
-    &lt;style&gt;
-        #pf {
-            font-family: 'PingFang SC';
-        }
-
-        #yhui {
-            font-family: 'Microsoft Yahei UI';
-        }
-
-        #yh {
-            font-family: 'Microsoft Yahei';
-        }
-    &lt;/style&gt;
-    &lt;script&gt;
-        document.getElementById('backend').innerText = `后端: ${Window.this.graphicsBackend}`;
-    &lt;/script&gt;
-&lt;/head&gt;
-
-&lt;body&gt;
-    &lt;div style=&quot;width: max-content; padding: 20px; border: 2px solid red;&quot;&gt;
-        &lt;h3 id=&quot;backend&quot;&gt;&lt;/h3&gt;
-        &lt;h3 id=&quot;pf&quot;&gt;苹方：你好、世界、动漫&lt;/h3&gt;
-        &lt;h3 id=&quot;yhui&quot;&gt;微软雅黑UI：你好、世界、动漫&lt;/h3&gt;
-        &lt;h3 id=&quot;yh&quot;&gt;微软雅黑：你好、世界、动漫&lt;/h3&gt;
-    &lt;/div&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<h3 id="gdi">GDI+</h3>
-<p>使用<code>GFX_LAYER_GDI</code>参数<br>
-<code>SciterSetOption(nullptr, SCITER_SET_GFX_LAYER, GFX_LAYER_GDI);</code><br>
-<img src="https://ashe27.github.io/post-images/1632463783950.png" alt="" loading="lazy"><br>
-很明显，不支持苹方字体（准确地说是不支持OpenType字体），回退到雅黑了。</p>
-<h3 id="d2d">D2D</h3>
-<p>使用<code>GFX_LAYER_D2D</code>参数<br>
-<code>SciterSetOption(nullptr, SCITER_SET_GFX_LAYER, GFX_LAYER_D2D);</code><br>
-<img src="https://ashe27.github.io/post-images/1632463401404.png" alt="" loading="lazy"></p>
-<h3 id="skia">Skia</h3>
-<p>使用<code>GFX_LAYER_SKIA</code>参数<br>
-<code>SciterSetOption(nullptr, SCITER_SET_GFX_LAYER, GFX_LAYER_SKIA);</code><br>
-<img src="https://ashe27.github.io/post-images/1632463251822.png" alt="" loading="lazy"><br>
-雅黑出现乱码。</p>
-<h3 id="skia-opengl">Skia-opengl</h3>
-<p>使用<code>GFX_LAYER_SKIA_OPENGL</code>参数<br>
-<code>SciterSetOption(nullptr, SCITER_SET_GFX_LAYER, GFX_LAYER_SKIA_OPENGL);</code><br>
-<img src="https://ashe27.github.io/post-images/1632463112568.png" alt="" loading="lazy"><br>
-雅黑出现乱码。</p>
-<h2 id="结论">结论</h2>
-<p>GDI+已经过时了，且不支持OpenType字体，同时也不支持硬件加速，所以不建议使用。<br>
-大多数时候应该使用D2D作为渲染引擎，这也是Sciter的默认值。<br>
-Skia作为一个跨平台的2D引擎，似乎在Windows上表现的不是那么好，酌情使用。</p>
-<h2 id="参考">参考</h2>
-<p><a href="https://sciter.com/forums/topic/text-in-windows-7-bug/">https://sciter.com/forums/topic/text-in-windows-7-bug/</a></p>
-]]></content>
-    </entry>
     <entry>
         <title type="html"><![CDATA[Windows原版系统镜像（简体中文）]]></title>
         <id>https://ashe27.github.io/post/UovaQcel9/</id>
@@ -1153,6 +1081,59 @@ int _tmain(int argc, _TCHAR* argv[])
 <p>V2.0.1001版本的驱动在Win7 x64下无法使用，提示无法验证驱动签名。V1.5.1015版本可用。</p>
 <h2 id="参考">参考</h2>
 <p><a href="https://stackoverflow.com/questions/24396644/programmatically-mount-a-microsoft-virtual-hard-drive-vhd">https://stackoverflow.com/questions/24396644/programmatically-mount-a-microsoft-virtual-hard-drive-vhd</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[U盘启动盘工具的工作原理]]></title>
+        <id>https://ashe27.github.io/post/3iNjV54lB/</id>
+        <link href="https://ashe27.github.io/post/3iNjV54lB/">
+        </link>
+        <updated>2021-08-03T09:22:19.000Z</updated>
+        <content type="html"><![CDATA[<p>目前市面上所有启动盘制作工具都可以说是套壳工具，核心都是依赖于finst和 <a href="https://www.disktool.cn/">分区助手</a> 或 <a href="https://www.diskgenius.cn/">DiskGenius</a>。</p>
+<h2 id="legacy引导支持">Legacy引导支持</h2>
+<p>fbinst的作用是在U盘上分出一个自创格式的分区，也就是所谓的 <a href="https://baike.baidu.com/item/UD%E5%8C%BA/17608149">UD分区</a>，这个分区不被系统识别，所以有较强的防病毒作用，只能通过fbinst来编辑分区文件。缺点是不支持UEFI引导。<br>
+fbinst工具有1.6和1.7两个版本，互相不兼容，且只有1.6版本有命令行支持，所以所有启动盘制作工具都是用的1.6版本。</p>
+<p>用命令行来划分UD区，并添加进去一个ISO文件的例子</p>
+<pre><code>:: 在第1块磁盘上，格式化并创建UD区，分配300m空间
+fbinst.exe (hd1) format --force --fat32 --align --extended 300m
+:: 添加菜单文件
+fbinst.exe (hd1) add-menu fb.cfg fb.cfg
+:: 添加grldr引导管理器
+fbinst.exe (hd1) add grldr grldr -e
+:: 添加ISO文件
+fbinst.exe (hd1) add wepe.iso wepe.iso -e
+</code></pre>
+<p>fb.cfg菜单</p>
+<pre><code>default 0
+timeout 0
+menu F1 grldr &quot;grldr&quot;
+</code></pre>
+<p>软件内置了grldr程序，但不是较新的版本，新的版本可以去 <a href="http://grub4dos.chenall.net/">http://grub4dos.chenall.net/</a> 下载。然后手动添加到UD区并编辑内容为</p>
+<pre><code>map /wepe.iso (0xff)
+map --hook
+chainloader (0xff)
+</code></pre>
+<p>然后导出这个编辑过后的grldr即可，以后就可以通过命令行导入了。更多用法可以自行百度，这里不深究。<br>
+这样，这个U盘就支持Legacy引导了。</p>
+<h2 id="uefi引导支持">UEFI引导支持</h2>
+<p>UEFI引导还需要再划出一个分区，一般是使用 <a href="https://www.disktool.cn/">分区助手</a> 或 <a href="https://www.diskgenius.cn/">DiskGenius</a> 来做。<br>
+并将支持UEFI引导的ISO文件解压到这个分区中，比如用分区助手大概是这样</p>
+<pre><code>:: 格式化
+PartAssist.exe /hd:1 /fmt:0 /fs:fat32
+:: 在U盘末尾分出300mb空间
+PartAssistexe /hd:1 /resize:0 /reduce-right:300 /align
+:: 在刚才的空间上创建一个隐藏分区
+PartAssist.exe /hd:1 /cre /pri /size:auto /end /fs:fat16 /hide /align /label:EFI
+:: 从EFI文件夹拷贝所有文件到隐藏分区
+PartAssist /hd:1 /whide:1 /src:D:\fbinst\EFI
+</code></pre>
+<p>这样，这个U盘就支持UEFI引导了。</p>
+<h2 id="用户数据区">用户数据区</h2>
+<p>用户数据区也就是用户用来存放数据的分区，系统可见，不需要额外操作。<br>
+经过上面两轮操作后，U盘就有了三个分区：UD分区、EFI分区、用户数据分区。</p>
+<p>最终就实现了市面上U盘制作工具所谓的三分区方案。<br>
+<img src="https://ashe27.github.io/post-images/1627984548568.png" alt="" loading="lazy"></p>
+<p>系统启动、封装相关技术可以去 <a href="http://wuyou.net/">无忧启动</a> 论坛和 <a href="https://www.itsk.com/">IT天空</a> 网站学习。</p>
 ]]></content>
     </entry>
 </feed>
