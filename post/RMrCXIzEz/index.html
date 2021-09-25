@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1632585282032">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1632586218797">
 <link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
 
 
@@ -34,7 +34,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://ashe27.github.io">
-        <img src="https://ashe27.github.io/images/avatar.png?v=1632585282032" class="site-logo">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1632586218797" class="site-logo">
         <h1 class="site-title">ashe&#39;s blog</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -163,11 +163,12 @@
 	return 0;
 }
 </code></pre>
-<p>剩下的就是在窗口上播放一个短视频了。还有的人甚至在上面放置浏览器，这不是一个好注意，浏览器太占用内存资源，会比较卡。</p>
-<h2 id="扩展问题">扩展问题</h2>
-<p>至此，一个简单的动态壁纸功能就实现了。如果要完美，还需要考虑以下问题<br>
+<p>剩下的就是在窗口上播放一个短视频了。还有的人甚至在上面放置浏览器，这不是一个好注意，浏览器太占用内存资源，会比较卡。<br>
+至此，一个简单的动态壁纸功能就实现了。</p>
+<h2 id="思考">思考</h2>
+<p>如果要使软件更加完美，还需要考虑以下问题<br>
 1、当桌面窗口大小变化时（修改分辨率），壁纸也要跟着变化。<br>
-2、用户执行全屏程序时，应停止播放动态壁纸以便节省资源。<br>
+2、用户执行全屏程序时，应停止播放动态壁纸以便节省系统资源。<br>
 3、交互功能，一般不用实现交互功能，如果要做，可以考虑HOOK、消息钩子的手段。</p>
 <h2 id="参考">参考</h2>
 <p><a href="https://zhuanlan.zhihu.com/p/37877070">如何实现一个 windows 桌面动态壁纸</a><br>
