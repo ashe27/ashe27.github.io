@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-09-24T15:45:49.461Z</updated>
+    <updated>2021-09-25T15:54:48.273Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,6 +10,85 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, ashe&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[动态壁纸实现原理]]></title>
+        <id>https://ashe27.github.io/post/RMrCXIzEz/</id>
+        <link href="https://ashe27.github.io/post/RMrCXIzEz/">
+        </link>
+        <updated>2021-09-25T13:54:52.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="桌面窗口层次关系">桌面窗口层次关系</h2>
+<p>桌面窗口层次是这样的<br>
+<img src="https://ashe27.github.io/post-images/1632581286029.png" alt="" loading="lazy"></p>
+<h2 id="检查系统是否开启了aero">检查系统是否开启了Aero</h2>
+<p>动态壁纸技术需要系统开启Aero才行，原因下面会讲到。<br>
+检测系统是否开启了Aero可以使用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmiscompositionenabled">DwmIsCompositionEnabled</a> 函数。<br>
+只有在Win7及以前的系统上需要检测，Win8后这个函数总是返回 TRUE。</p>
+<h2 id="未公开的消息">未公开的消息</h2>
+<p>桌面窗口内部有一个神秘的消息：<code>WM_USER + 300</code>，数值为<code>0x52C</code>。<br>
+它收到这个消息后就会在其上创建两个窗口，并将图标层移动上去，然后窗口层次就变成这样了<br>
+<img src="https://ashe27.github.io/post-images/1632583220300.png" alt="" loading="lazy"><br>
+如果系统没有开启Aero，它收到消息后就不会创建这两个窗口，也就无法实现动态壁纸了，这就是系统必须开启Aero的原因。</p>
+<h2 id="创建壁纸窗口">创建壁纸窗口</h2>
+<p>最后一步就是创建一个Win32窗口了，然后将其父窗口设置为上面提到的Worker窗口（靠下面的那一个）。</p>
+<pre><code class="language-cpp">HWND createWindow(HWND hParent)
+{
+	// 获取父窗口尺寸
+	RECT rect;
+	GetWindowRect(hParent, &amp;rect);
+
+	// 创建动态壁纸窗口并挂到&quot;Worker&quot;窗口下
+	HWND hWnd = CreateWindowExW(0, CLASSNAME, L&quot;DynamicWallpaper&quot;, WS_CHILDWINDOW, 0, 0, rect.right, rect.bottom, hParent, nullptr, nullptr, nullptr);
+	ShowWindow(hWnd, SW_SHOWNOACTIVATE);
+
+	return hWnd;
+}
+</code></pre>
+<p>还有个细节要注意，当动态壁纸窗口销毁时需要将父窗口刷新一下，因为父窗口的扩展样式用到了<code>WS_EX_TRANSPARENT</code>，这是一个透明窗口，如果不刷新的话，动态壁纸窗口的残影会一直留在桌面上。<br>
+最简单的刷新办法是隐藏它，我们在窗口消息过程中处理即可</p>
+<pre><code class="language-cpp">LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lparam)
+{
+	switch (uMsg) {
+	case WM_CREATE:
+	{
+		// 上次隐藏了，这次再显示出来
+		HWND hParent = GetParent(hWnd);
+		ShowWindow(hParent, SW_SHOWNOACTIVATE);
+		break;
+	}
+
+	case WM_CLOSE:
+		DestroyWindow(hWnd);
+		break;
+
+	case WM_DESTROY:
+	{
+		// 隐藏父窗口，避免残影
+		HWND hParent = GetParent(hWnd);
+		ShowWindow(hParent, SW_HIDE);
+		PostQuitMessage(0);
+		break;
+	}
+
+	default:
+		return DefWindowProc(hWnd, uMsg, wParam, lparam);
+	}
+	return 0;
+}
+</code></pre>
+<p>剩下的就是在窗口上播放一个短视频了。还有的人甚至在上面放置浏览器，这不是一个好注意，浏览器太占用内存资源，会比较卡。</p>
+<h2 id="扩展问题">扩展问题</h2>
+<p>至此，一个简单的动态壁纸功能就实现了。如果要完美，还需要考虑以下问题<br>
+1、当桌面窗口大小变化时（修改分辨率），壁纸也要跟着变化。<br>
+2、用户执行全屏程序时，应停止播放动态壁纸以便节省资源。<br>
+3、交互功能，一般不用实现交互功能，如果要做，可以考虑HOOK、消息钩子的手段。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://zhuanlan.zhihu.com/p/37877070">如何实现一个 windows 桌面动态壁纸</a><br>
+<a href="https://zhuanlan.zhihu.com/p/45204045">自定义·自制HTML壁纸</a><br>
+<a href="https://www.codeproject.com/Articles/856020/Draw-Behind-Desktop-Icons-in-Windows-plus">Draw Behind Desktop Icons in Windows 8+</a><br>
+<a href="https://stackoverflow.com/questions/56132584/draw-on-windows-10-wallpaper-in-c">Draw on Windows 10 wallpaper in C++</a><br>
+<a href="https://stackoverflow.com/questions/1683791/drawing-on-the-desktop-background-as-wallpaper-replacement-windows-c">Drawing on the desktop background as wallpaper replacement (Windows/C#)</a></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Windows原版系统镜像（简体中文）]]></title>
         <id>https://ashe27.github.io/post/UovaQcel9/</id>
@@ -1081,59 +1160,6 @@ int _tmain(int argc, _TCHAR* argv[])
 <p>V2.0.1001版本的驱动在Win7 x64下无法使用，提示无法验证驱动签名。V1.5.1015版本可用。</p>
 <h2 id="参考">参考</h2>
 <p><a href="https://stackoverflow.com/questions/24396644/programmatically-mount-a-microsoft-virtual-hard-drive-vhd">https://stackoverflow.com/questions/24396644/programmatically-mount-a-microsoft-virtual-hard-drive-vhd</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[U盘启动盘工具的工作原理]]></title>
-        <id>https://ashe27.github.io/post/3iNjV54lB/</id>
-        <link href="https://ashe27.github.io/post/3iNjV54lB/">
-        </link>
-        <updated>2021-08-03T09:22:19.000Z</updated>
-        <content type="html"><![CDATA[<p>目前市面上所有启动盘制作工具都可以说是套壳工具，核心都是依赖于finst和 <a href="https://www.disktool.cn/">分区助手</a> 或 <a href="https://www.diskgenius.cn/">DiskGenius</a>。</p>
-<h2 id="legacy引导支持">Legacy引导支持</h2>
-<p>fbinst的作用是在U盘上分出一个自创格式的分区，也就是所谓的 <a href="https://baike.baidu.com/item/UD%E5%8C%BA/17608149">UD分区</a>，这个分区不被系统识别，所以有较强的防病毒作用，只能通过fbinst来编辑分区文件。缺点是不支持UEFI引导。<br>
-fbinst工具有1.6和1.7两个版本，互相不兼容，且只有1.6版本有命令行支持，所以所有启动盘制作工具都是用的1.6版本。</p>
-<p>用命令行来划分UD区，并添加进去一个ISO文件的例子</p>
-<pre><code>:: 在第1块磁盘上，格式化并创建UD区，分配300m空间
-fbinst.exe (hd1) format --force --fat32 --align --extended 300m
-:: 添加菜单文件
-fbinst.exe (hd1) add-menu fb.cfg fb.cfg
-:: 添加grldr引导管理器
-fbinst.exe (hd1) add grldr grldr -e
-:: 添加ISO文件
-fbinst.exe (hd1) add wepe.iso wepe.iso -e
-</code></pre>
-<p>fb.cfg菜单</p>
-<pre><code>default 0
-timeout 0
-menu F1 grldr &quot;grldr&quot;
-</code></pre>
-<p>软件内置了grldr程序，但不是较新的版本，新的版本可以去 <a href="http://grub4dos.chenall.net/">http://grub4dos.chenall.net/</a> 下载。然后手动添加到UD区并编辑内容为</p>
-<pre><code>map /wepe.iso (0xff)
-map --hook
-chainloader (0xff)
-</code></pre>
-<p>然后导出这个编辑过后的grldr即可，以后就可以通过命令行导入了。更多用法可以自行百度，这里不深究。<br>
-这样，这个U盘就支持Legacy引导了。</p>
-<h2 id="uefi引导支持">UEFI引导支持</h2>
-<p>UEFI引导还需要再划出一个分区，一般是使用 <a href="https://www.disktool.cn/">分区助手</a> 或 <a href="https://www.diskgenius.cn/">DiskGenius</a> 来做。<br>
-并将支持UEFI引导的ISO文件解压到这个分区中，比如用分区助手大概是这样</p>
-<pre><code>:: 格式化
-PartAssist.exe /hd:1 /fmt:0 /fs:fat32
-:: 在U盘末尾分出300mb空间
-PartAssistexe /hd:1 /resize:0 /reduce-right:300 /align
-:: 在刚才的空间上创建一个隐藏分区
-PartAssist.exe /hd:1 /cre /pri /size:auto /end /fs:fat16 /hide /align /label:EFI
-:: 从EFI文件夹拷贝所有文件到隐藏分区
-PartAssist /hd:1 /whide:1 /src:D:\fbinst\EFI
-</code></pre>
-<p>这样，这个U盘就支持UEFI引导了。</p>
-<h2 id="用户数据区">用户数据区</h2>
-<p>用户数据区也就是用户用来存放数据的分区，系统可见，不需要额外操作。<br>
-经过上面两轮操作后，U盘就有了三个分区：UD分区、EFI分区、用户数据分区。</p>
-<p>最终就实现了市面上U盘制作工具所谓的三分区方案。<br>
-<img src="https://ashe27.github.io/post-images/1627984548568.png" alt="" loading="lazy"></p>
-<p>系统启动、封装相关技术可以去 <a href="http://wuyou.net/">无忧启动</a> 论坛和 <a href="https://www.itsk.com/">IT天空</a> 网站学习。</p>
 ]]></content>
     </entry>
 </feed>
