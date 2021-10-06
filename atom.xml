@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-10-06T05:30:06.737Z</updated>
+    <updated>2021-10-06T05:37:05.715Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -352,12 +352,12 @@
 <li>
 <p>Windows 7 Home Basic with Service Pack 1 (x86)<br>
 <a href="ed2k://%7Cfile%7Ccn_windows_7_home_basic_with_sp1_x86_dvd_u_676500.iso%7C2653276160%7C843E7A78F2126FAC726CF5342710082D%7C/">cn_windows_7_home_basic_with_sp1_x86_dvd_u_676500.iso</a></p>
-</li>
-</ul>
 <p><a href="ed2k://%7Cfile%7Cen_windows_7_home_basic_with_sp1_x86_dvd_u_676470.iso%7C2564476928%7CD81F244E43E2341765653AB0A52AE7B8%7C/">en_windows_7_home_basic_with_sp1_x86_dvd_u_676470.iso</a></p>
-<ul>
-<li>Windows 7 Starter with Service Pack 1 (x86)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_7_starter_with_sp1_x86_dvd_u_678536.iso%7C2653276160%7CB0A788EA28B2491B4587A561A8CB5B19%7C/">cn_windows_7_starter_with_sp1_x86_dvd_u_678536.iso</a></li>
+</li>
+<li>
+<p>Windows 7 Starter with Service Pack 1 (x86)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_7_starter_with_sp1_x86_dvd_u_678536.iso%7C2653276160%7CB0A788EA28B2491B4587A561A8CB5B19%7C/">cn_windows_7_starter_with_sp1_x86_dvd_u_678536.iso</a></p>
+</li>
 </ul>
 <hr>
 <h1 id="windows-server-2008">Windows Server 2008</h1>
