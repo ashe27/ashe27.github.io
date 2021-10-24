@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-10-06T05:37:05.715Z</updated>
+    <updated>2021-10-24T14:13:50.368Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -96,7 +96,18 @@
         <link href="https://ashe27.github.io/post/UovaQcel9/">
         </link>
         <updated>2021-08-21T02:49:27.000Z</updated>
-        <content type="html"><![CDATA[<hr>
+        <content type="html"><![CDATA[<h1 id="windows-11">Windows 11</h1>
+<ul>
+<li>
+<p>Windows 11 (consumer editions) (x64) - DVD (Chinese-Simplified)<br>
+<a href="ed2k://%7Cfile%7Czh-cn_windows_11_consumer_editions_x64_dvd_904f13e4.iso%7C5517273088%7CDFD1AE88E36516B87382FC3D3D3F46AD%7C/">zh-cn_windows_11_consumer_editions_x64_dvd_904f13e4.iso</a></p>
+</li>
+<li>
+<p>Windows 11 (business editions) (x64) - DVD (Chinese-Simplified)<br>
+<a href="ed2k://%7Cfile%7Czh-cn_windows_11_business_editions_x64_dvd_f5f6bcbd.iso%7C5413181440%7C88CA1AE28F5F8A238647561B5C00E511%7C/">zh-cn_windows_11_business_editions_x64_dvd_f5f6bcbd.iso</a></p>
+</li>
+</ul>
+<hr>
 <h1 id="windows-server-2019">Windows Server 2019</h1>
 <hr>
 <h1 id="windows-server-2016">Windows Server 2016</h1>
