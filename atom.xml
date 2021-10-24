@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-10-24T14:29:11.362Z</updated>
+    <updated>2021-10-24T14:38:52.726Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -99,10 +99,12 @@
         <content type="html"><![CDATA[<h1 id="windows-11">Windows 11</h1>
 <ul>
 <li>
-<p>Windows 11 (consumer editions), version 21H2 (updated October 2021) (x64) - DVD (Chinese-Simplified)<a href="ed2k://%7Cfile%7Czh-cn_windows_11_consumer_editions_version_21h2_updated_october_2021_x64_dvd_47addd14.iso%7C5523668992%7C64F5B433CC2A9814DC4D04DC265E4D3B%7C/">zh-cn_windows_11_consumer_editions_version_21h2_updated_october_2021_x64_dvd_47addd14.iso</a></p>
+<p>Windows 11 (consumer editions), version 21H2 (updated October 2021) (x64) - DVD<br>
+(Chinese-Simplified)<a href="ed2k://%7Cfile%7Czh-cn_windows_11_consumer_editions_version_21h2_updated_october_2021_x64_dvd_47addd14.iso%7C5523668992%7C64F5B433CC2A9814DC4D04DC265E4D3B%7C/">zh-cn_windows_11_consumer_editions_version_21h2_updated_october_2021_x64_dvd_47addd14.iso</a></p>
 </li>
 <li>
-<p>Windows 11 (business editions), version 21H2 (updated October 2021) (x64) - DVD (Chinese-Simplified)<a href="ed2k://%7Cfile%7Czh-cn_windows_11_business_editions_version_21h2_updated_october_2021_x64_dvd_a84e149f.iso%7C5419143168%7CB0C4BE7271CD65B2173326239D4F8BA2%7C/">zh-cn_windows_11_business_editions_version_21h2_updated_october_2021_x64_dvd_a84e149f.iso</a></p>
+<p>Windows 11 (business editions), version 21H2 (updated October 2021) (x64) - DVD<br>
+(Chinese-Simplified)<a href="ed2k://%7Cfile%7Czh-cn_windows_11_business_editions_version_21h2_updated_october_2021_x64_dvd_a84e149f.iso%7C5419143168%7CB0C4BE7271CD65B2173326239D4F8BA2%7C/">zh-cn_windows_11_business_editions_version_21h2_updated_october_2021_x64_dvd_a84e149f.iso</a></p>
 </li>
 <li>
 <p>Windows 11 (consumer editions) (x64) - DVD (Chinese-Simplified)<br>
@@ -115,8 +117,28 @@
 </ul>
 <hr>
 <h1 id="windows-server-2019">Windows Server 2019</h1>
+<ul>
+<li>
+<p>Windows Server 2019 (x64) - DVD (Chinese-Simplified)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_server_2019_x64_dvd_4de40f33.iso%7C5086887936%7C7DCDDD6B0C60A0D019B6A93D8F2B6D31%7C/">cn_windows_server_2019_x64_dvd_4de40f33.iso</a></p>
+</li>
+<li>
+<p>Windows Server 2019 Essentials (x64) - DVD (Chinese-Simplified)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_server_2019_essentials_x64_dvd_5b386b0b.iso%7C4836911104%7CCBA4E3F0C66107AD6B64E4DA077D004F%7C/">cn_windows_server_2019_essentials_x64_dvd_5b386b0b.iso</a></p>
+</li>
+</ul>
 <hr>
 <h1 id="windows-server-2016">Windows Server 2016</h1>
+<ul>
+<li>
+<p>Windows Server 2016 (x64) - DVD (Chinese-Simplified)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_server_2016_x64_dvd_9718765.iso%7C6176450560%7CCF1B73D220F1160DE850D9E1979DBD50%7C/">cn_windows_server_2016_x64_dvd_9718765.iso</a></p>
+</li>
+<li>
+<p>Windows Server 2019 Essentials (x64) - DVD (Chinese-Simplified)<br>
+<a href="ed2k://%7Cfile%7Ccn_windows_server_2016_essentials_x64_dvd_9327779.iso%7C4902592512%7C4693ECE5FEEDE3FE349FC9E7AB467CE4%7C/">cn_windows_server_2016_essentials_x64_dvd_9327779.iso</a></p>
+</li>
+</ul>
 <hr>
 <h1 id="windows-10">Windows 10</h1>
 <ul>
