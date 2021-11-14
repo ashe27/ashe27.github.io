@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-11-14T06:01:06.298Z</updated>
+    <updated>2021-11-14T06:01:33.868Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -29,7 +29,7 @@
 </ul>
 <h2 id="windows脚本">Windows脚本</h2>
 <p>新建一个<code>.vbs</code>文件，内容如下</p>
-<pre><code class="language-vbs">Set oShell = CreateObject(&quot;WScript.Shell&quot;)
+<pre><code class="language-vbscript">Set oShell = CreateObject(&quot;WScript.Shell&quot;)
 Set oFS = CreateObject(&quot;Scripting.FileSystemObject&quot;)
 sHomeFolder = oShell.ExpandEnvironmentStrings(&quot;%USERPROFILE%&quot;)
 sJBDataFolder = oShell.ExpandEnvironmentStrings(&quot;%APPDATA%&quot;) + &quot;\JetBrains&quot;
