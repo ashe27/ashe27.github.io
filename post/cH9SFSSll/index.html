@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Jetbrains IDE 重置试用期脚本 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1636869524791">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="试用期重置脚本仅适用于2021.2及以下版本，因为在新版本中已经取消了试用功能。
+常用IDE直链地址
+
+https://download.jetbrains.com/idea/ideaIU-2021.2.2.exe
+https://down..." />
+    <meta name="keywords" content="工具软件" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1636869524791" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Jetbrains IDE 重置试用期脚本</h2>
+            <div class="post-date">2021-11-14</div>
+            
+            <div class="post-content" v-pre>
+              <p>试用期重置脚本仅适用于2021.2及以下版本，因为在新版本中已经取消了试用功能。</p>
+<p>常用IDE直链地址</p>
+<ul>
+<li><a href="https://download.jetbrains.com/idea/ideaIU-2021.2.2.exe">https://download.jetbrains.com/idea/ideaIU-2021.2.2.exe</a></li>
+<li><a href="https://download.jetbrains.com/cpp/CLion-2021.2.2.exe">https://download.jetbrains.com/cpp/CLion-2021.2.2.exe</a></li>
+<li><a href="https://download.jetbrains.com/webide/PhpStorm-2021.2.2.exe">https://download.jetbrains.com/webide/PhpStorm-2021.2.2.exe</a></li>
+<li><a href="https://download.jetbrains.com/webstorm/WebStorm-2021.2.2.exe">https://download.jetbrains.com/webstorm/WebStorm-2021.2.2.exe</a></li>
+<li><a href="https://download.jetbrains.com/go/goland-2021.2.2.exe">https://download.jetbrains.com/go/goland-2021.2.2.exe</a></li>
+<li><a href="https://download.jetbrains.com/python/pycharm-professional-2021.2.2.exe">https://download.jetbrains.com/python/pycharm-professional-2021.2.2.exe</a></li>
+<li><a href="https://download.jetbrains.com/objc/AppCode-2021.2.2.dmg">https://download.jetbrains.com/objc/AppCode-2021.2.2.dmg</a></li>
+</ul>
+<h2 id="windows脚本">Windows脚本</h2>
+<p>新建一个vbs文件，内容如下</p>
+<pre><code class="language-vbs">Set oShell = CreateObject(&quot;WScript.Shell&quot;)
+Set oFS = CreateObject(&quot;Scripting.FileSystemObject&quot;)
+sHomeFolder = oShell.ExpandEnvironmentStrings(&quot;%USERPROFILE%&quot;)
+sJBDataFolder = oShell.ExpandEnvironmentStrings(&quot;%APPDATA%&quot;) + &quot;\JetBrains&quot;
+
+Set re = New RegExp
+re.Global     = True
+re.IgnoreCase = True
+re.Pattern    = &quot;\.?(IntelliJIdea|GoLand|CLion|PyCharm|DataGrip|RubyMine|AppCode|PhpStorm|WebStorm|Rider).*&quot;
+
+Sub removeEval(ByVal file, ByVal sEvalPath)
+	bMatch = re.Test(file.Name)
+    If Not bMatch Then
+		Exit Sub
+	End If
+
+	If oFS.FolderExists(sEvalPath) Then
+		oFS.DeleteFolder sEvalPath, True 
+	End If
+End Sub
+
+If oFS.FolderExists(sHomeFolder) Then
+	For Each oFile In oFS.GetFolder(sHomeFolder).SubFolders
+    	removeEval oFile, sHomeFolder + &quot;\&quot; + oFile.Name + &quot;\config\eval&quot;
+	Next
+End If
+
+If oFS.FolderExists(sJBDataFolder) Then
+	For Each oFile In oFS.GetFolder(sJBDataFolder).SubFolders
+	    removeEval oFile, sJBDataFolder + &quot;\&quot; + oFile.Name + &quot;\eval&quot;
+	Next
+End If
+
+On Error Resume Next
+oShell.RegDelete &quot;HKEY_CURRENT_USER\Software\JavaSoft\Prefs\/Jet/Brains./User/Id/On/Machine&quot;
+oShell.RegDelete &quot;HKEY_CURRENT_USER\Software\JavaSoft\Prefs\jetbrains\device_id&quot;
+oShell.RegDelete &quot;HKEY_CURRENT_USER\Software\JavaSoft\Prefs\jetbrains\user_id_on_machine&quot;
+oFs.DeleteFile sJBDataFolder + &quot;\bl&quot;
+oFs.DeleteFile sJBDataFolder + &quot;\crl&quot;
+oFs.DeleteFile sJBDataFolder + &quot;\PermanentUserId&quot;
+oFs.DeleteFile sJBDataFolder + &quot;\PermanentDeviceId&quot;
+
+MsgBox &quot;done&quot;
+</code></pre>
+<p>双击运行脚本即可重置30天试用期。</p>
+<h2 id="linux脚本">Linux脚本</h2>
+<p>新建.sh文件，内容如下</p>
+<pre><code class="language-bash">#!/bin/sh
+# reset jetbrains ide evals
+
+OS_NAME=$(uname -s)
+JB_PRODUCTS=&quot;IntelliJIdea CLion PhpStorm GoLand PyCharm WebStorm Rider DataGrip RubyMine AppCode&quot;
+
+if [ $OS_NAME == &quot;Darwin&quot; ]; then
+	echo 'macOS:'
+
+	for PRD in $JB_PRODUCTS; do
+    	rm -rf ~/Library/Preferences/${PRD}*/eval
+    	rm -rf ~/Library/Application\ Support/JetBrains/${PRD}*/eval
+	done
+
+	plutil -remove &quot;/.JetBrains\.UserIdOnMachine&quot; ~/Library/Preferences/com.apple.java.util.prefs.plist &gt;/dev/null
+    plutil -remove &quot;/.jetbrains/.user_id_on_machine&quot; ~/Library/Preferences/com.apple.java.util.prefs.plist &gt;/dev/null
+    plutil -remove &quot;/.jetbrains/.device_id&quot; ~/Library/Preferences/com.apple.java.util.prefs.plist &gt;/dev/null
+elif [ $OS_NAME == &quot;Linux&quot; ]; then
+	echo 'Linux:'
+
+	for PRD in $JB_PRODUCTS; do
+    	rm -rf ~/.${PRD}*/config/eval
+    	rm -rf ~/.config/JetBrains/${PRD}*/eval
+	done
+
+	sed -i '/key=&quot;JetBrains\.UserIdOnMachine&quot;/d' ~/.java/.userPrefs/prefs.xml
+	sed -i '/key=&quot;device_id&quot;/d' ~/.java/.userPrefs/jetbrains/prefs.xml
+	sed -i '/key=&quot;user_id_on_machine&quot;/d' ~/.java/.userPrefs/jetbrains/prefs.xml
+else
+	echo 'unsupport'
+	exit
+fi
+
+echo 'done.'
+</code></pre>
+<h2 id="其他方式">其他方式</h2>
+<p>新版本破解方法参考：<br>
+<a href="https://www.exception.site/essay/idea-reset-eval">https://www.exception.site/essay/idea-reset-eval</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/520fi4i5c/" class="tag">
+                    工具软件
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/RMrCXIzEz/">
+                  <h3 class="post-title">
+                    动态壁纸实现原理
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>
