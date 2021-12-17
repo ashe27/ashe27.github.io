@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>关于 | ashe&#39;s blog</title>
+<title>Sciter：react中子组件通知父组件的三种方法 | ashe&#39;s blog</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -18,9 +18,11 @@
 
 
 
-    <meta name="description" content="一个专注于Windows编程的程序员。
-" />
-    <meta name="keywords" content="" />
+    <meta name="description" content="通过属性传递回调函数
+传统的解决方案，通过在子组件上定义类似onXXX的属性来传递一个回调函数给子组件。
+注意重点需要bind函数上下文，否则回调函数中this没有指向当前组件实例。
+export class Root extends El..." />
+    <meta name="keywords" content="Sciter" />
   </head>
   <body>
     <div id="app" class="main">
@@ -95,14 +97,71 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">关于</h2>
-            <div class="post-date">2019-01-25</div>
+            <h2 class="post-title">Sciter：react中子组件通知父组件的三种方法</h2>
+            <div class="post-date">2021-12-17</div>
             
             <div class="post-content" v-pre>
-              <p>一个专注于Windows编程的程序员。</p>
+              <h2 id="通过属性传递回调函数">通过属性传递回调函数</h2>
+<p>传统的解决方案，通过在子组件上定义类似<code>onXXX</code>的属性来传递一个回调函数给子组件。<br>
+注意重点需要<code>bind</code>函数上下文，否则回调函数中<code>this</code>没有指向当前组件实例。</p>
+<pre><code class="language-javascript">export class Root extends Element {
+    constructor(props) {
+        super();
+        this.doHandle= this.doHandle.bind(this); // 注意要绑定函数上下文
+    }
+
+    doHandle() {
+        console.log('doHandle');
+    }
+
+    render() {
+        return (
+            &lt;div&gt;
+                &lt;Child onFoo={this.doHandle}&gt;&lt;/Child&gt;
+            &lt;/div&gt;
+        )
+    }
+}
+</code></pre>
+<p>子组件中这样调用即可</p>
+<pre><code>this.props.onFoo();
+</code></pre>
+<h2 id="冒泡事件">冒泡事件</h2>
+<p>通过<code>Element</code>的<code>dispatchEvent</code>或<code>PostEvent</code>发送事件（dispatchEvent意味着同步事件，PostEvent意味着异步事件）。<br>
+在子组件中产生一个冒泡事件</p>
+<pre><code class="language-javascript">this.postEvent(new Event('myevent', { bubbles: true }));
+</code></pre>
+<p>父组件中捕获事件即可</p>
+<pre><code>['on myevent'](evt, ele) {
+    console.log('myevent');
+}
+</code></pre>
+<p><a href="https://github.com/c-smile/sciter-js-sdk/tree/main/docs/md/Element.md">https://github.com/c-smile/sciter-js-sdk/tree/main/docs/md/Element.md</a></p>
+<h2 id="全局事件">全局事件</h2>
+<p>sciter特有的特性，进程级别的事件，所有窗口都会收到事件。<br>
+发送全局事件：<code>Window.post(new Event('event-name'));</code><br>
+订阅全局事件：<code>Element.onGlobalEvent('event-name', callback);</code><br>
+<a href="https://github.com/c-smile/sciter-js-sdk/tree/main/samples.sciter/global-events">https://github.com/c-smile/sciter-js-sdk/tree/main/samples.sciter/global-events</a></p>
 
             </div>
             
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/a4ikEvgX5/" class="tag">
+                    Sciter
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/windows-server/">
+                  <h3 class="post-title">
+                    Windows Server 原版系统镜像
+                  </h3>
+                </a>
+              </div>
             
 
             
