@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-12-17T05:35:36.801Z</updated>
+    <updated>2021-12-18T04:04:05.062Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -1329,10 +1329,10 @@ C:\Program Files\Internet Explorer\Signup\install.ins
     </entry>
     <entry>
         <title type="html"><![CDATA[慎用 IsNetworkAlive 检测网络]]></title>
-        <id>https://ashe27.github.io/post/hzdYve5My/</id>
-        <link href="https://ashe27.github.io/post/hzdYve5My/">
+        <id>https://ashe27.github.io/post/uT8pkw6Fy/</id>
+        <link href="https://ashe27.github.io/post/uT8pkw6Fy/">
         </link>
-        <updated>2021-08-13T07:36:04.000Z</updated>
+        <updated>2021-08-13T04:03:50.000Z</updated>
         <content type="html"><![CDATA[<p>使用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive</a> 函数检测网络是否已连接的代码</p>
 <pre><code class="language-cpp">do {
 	DWORD dwFlags = NETWORK_ALIVE_WAN;
@@ -1345,13 +1345,13 @@ C:\Program Files\Internet Explorer\Signup\install.ins
 } while (true);
 </code></pre>
 <p>但这个函数是依赖于 SENS 服务的， 一旦服务处于停止状态，函数就无法正常工作<br>
-<img src="https://ashe27.github.io/post-images/1628841424163.png" alt="" loading="lazy"><br>
+<img src="https://img2020.cnblogs.com/blog/139098/202112/139098-20211218115642402-639045998.png" alt="" loading="lazy"><br>
 如果要使用这个函数，起码要在此之前先检查 SENS 服务的运行状态，当服务处于运行中时再使用此函数。<br>
 但是即便如此，函数也无法保证网络已经接入互联网，因为如果系统上有虚拟网卡的话则会产生误判，较为典型的情况是系统上装有VMWare虚拟机或VPN等软件的时候，它们通常会创建若干虚拟网卡，这都影响了 <a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive</a> 函数的工作，所以不要用它来检测网络状态。</p>
 <h2 id="参考">参考</h2>
-<p><a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive function</a></p>
-<p><a href="https://docs.microsoft.com/en-us/windows/win32/sens/about-system-event-notification-service">About System Event Notification Service</a></p>
-<p><a href="https://www.cnblogs.com/kybs0/p/12971567.html">获取网络连接状态（二） IsNetworkAlive</a></p>
+<p><a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive function</a><br>
+<a href="https://docs.microsoft.com/en-us/windows/win32/sens/about-system-event-notification-service">About System Event Notification Service</a><br>
+<a href="https://www.cnblogs.com/kybs0/p/12971567.html">获取网络连接状态（二） IsNetworkAlive</a></p>
 ]]></content>
     </entry>
 </feed>
