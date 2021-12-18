@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>工具软件 | ashe&#39;s blog</title>
+<title>命令行方式清理IE缓存 | ashe&#39;s blog</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -18,7 +18,13 @@
 
 
 
-    <meta name="description" content="好记性不如烂笔头">
+    <meta name="description" content="
+原文链接：https://stackoverflow.com/questions/12621969/clear-cache-of-browser-by-command-line
+
+要求IE7+
+Deletes History Only
+r..." />
+    <meta name="keywords" content="Windows" />
   </head>
   <body>
     <div id="app" class="main">
@@ -92,43 +98,52 @@
 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
-          <h2 class="current-tag">标签: 工具软件</h2>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://ashe27.github.io/post/cH9SFSSll/">
-                  <h2 class="post-title">Jetbrains IDE 重置试用期脚本</h2>
-                </a>
-                <div class="post-date">
-                  2021-11-14
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://ashe27.github.io/post/vsCMLcwdS/">
-                  <h2 class="post-title">支持以 SYSTEM 账户执行程序的工具软件</h2>
-                </a>
-                <div class="post-date">
-                  2021-08-12
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
+          <div class="post-detail">
+            <h2 class="post-title">命令行方式清理IE缓存</h2>
+            <div class="post-date">2021-12-18</div>
+            
+            <div class="post-content" v-pre>
+              <blockquote>
+<p>原文链接：<a href="https://stackoverflow.com/questions/12621969/clear-cache-of-browser-by-command-line">https://stackoverflow.com/questions/12621969/clear-cache-of-browser-by-command-line</a></p>
+</blockquote>
+<p>要求IE7+</p>
+<h2 id="deletes-history-only">Deletes History Only</h2>
+<p><code>rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 1</code></p>
+<h2 id="deletes-cookies-only">Deletes Cookies Only</h2>
+<p><code>rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 2</code></p>
+<h2 id="deletes-temporary-internet-files-only">Deletes Temporary Internet Files Only</h2>
+<p><code>rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 8</code></p>
+<h2 id="deletes-form-data-only">Deletes Form Data Only</h2>
+<p><code>rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 16</code></p>
+<h2 id="deletes-password-history-only">Deletes Password History Only</h2>
+<p><code>rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 32</code></p>
+<h2 id="deletes-all-history">Deletes ALL History</h2>
+<p><code>rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 255</code></p>
 
-          <div class="pagination-container">
-  
-  
-</div>
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/toQX3shSu/" class="tag">
+                    Windows
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/windows-server/">
+                  <h3 class="post-title">
+                    Windows Server 原版系统镜像
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
 
         </div>
       </div>
