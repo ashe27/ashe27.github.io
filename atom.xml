@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-12-18T15:13:37.491Z</updated>
+    <updated>2021-12-18T15:23:43.413Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,112 +10,6 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, ashe&apos;s blog</rights>
-    <entry>
-        <title type="html"><![CDATA[用未公开函数 NtShutdownSystem 快速重启、关机]]></title>
-        <id>https://ashe27.github.io/post/l3otPa3Q_/</id>
-        <link href="https://ashe27.github.io/post/l3otPa3Q_/">
-        </link>
-        <updated>2021-12-18T15:13:24.000Z</updated>
-        <content type="html"><![CDATA[<p>在WinPE环境下，无法使用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-exitwindowsex">ExitWindowsEx</a> 函数来关机，需要使用未公开的API <a href="http://undocumented.ntinternals.net/UserMode/Undocumented%20Functions/Hardware/NtShutdownSystem.html">NtShutdownSystem</a><br>
-注意，要先启用 <a href="https://docs.microsoft.com/zh-cn/windows/win32/secauthz/privilege-constants#se_shutdown_name">SE_SHUTDOWN_NAME</a> 特权</p>
-<pre><code class="language-cpp">typedef long NTSTATUS;
-
-typedef enum _SHUTDOWN_ACTION
-{
-	ShutdownNoReboot,
-	ShutdownReboot,
-	ShutdownPowerOff
-} SHUTDOWN_ACTION, * PSHUTDOWN_ACTION;
-
-typedef NTSTATUS(NTAPI* NTSHUTDOWNSYSTEM)(SHUTDOWN_ACTION);
-
-void reboot()
-{
-	HMODULE hModule = GetModuleHandleW(L&quot;ntdll.dll&quot;);
-	if (hModule) {
-		auto proc = (NTSHUTDOWNSYSTEM)GetProcAddress(hModule, &quot;NtShutdownSystem&quot;);
-		if (proc) {
-			proc(ShutdownReboot);
-		}
-	}
-}
-</code></pre>
-<p>这个函数不像 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-exitwindowsex">ExitWindowsEx</a> 那样要通知 <a href="https://baike.baidu.com/item/csrss.exe/551700">csrss.exe</a> 和 <a href="https://baike.baidu.com/item/winlogon/11002823">winlogon.exe</a> 进程，而是直接关机，非常快。所以在关机前应该注意保存工作数据。</p>
-<h2 id="参考">参考</h2>
-<p><a href="https://bbs.pediy.com/thread-97539.htm">玩玩360——ExitWindowsEx大法</a></p>
-<p><a href="https://kinglix.wordpress.com/2011/08/29/hello-world">ExitWindowsEx , NtShutdownSystem to shutdown or restart to windows</a></p>
-<p><a href="http://undocumented.ntinternals.net/index.html?page=UserMode%2FUndocumented%20Functions%2FHardware%2FNtShutdownSystem.html">http://undocumented.ntinternals.net/index.html?page=UserMode%2FUndocumented%20Functions%2FHardware%2FNtShutdownSystem.html</a></p>
-<p><a href="http://www.codewarrior.cn/ntdoc/winnt/ex/NtShutdownSystem.htm">http://www.codewarrior.cn/ntdoc/winnt/ex/NtShutdownSystem.htm</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[慎用 IsNetworkAlive 检测网络]]></title>
-        <id>https://ashe27.github.io/post/yePbJTyaC/</id>
-        <link href="https://ashe27.github.io/post/yePbJTyaC/">
-        </link>
-        <updated>2021-12-18T15:06:04.000Z</updated>
-        <content type="html"><![CDATA[<p>使用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive</a> 函数检测网络是否已连接的代码</p>
-<pre><code class="language-cpp">do {
-	DWORD dwFlags = NETWORK_ALIVE_WAN;
-	BOOL bSuccess = IsNetworkAlive(&amp;dwFlags);
-	if ((GetLastError() == ERROR_SUCCESS) &amp;&amp; bSuccess)
-		break;
-
-	std::cout &lt;&lt; &quot;wait...&quot; &lt;&lt; std::endl;
-	std::this_thread::sleep_for(std::chrono::seconds(1));
-} while (true);
-</code></pre>
-<p>但这个函数是依赖于 SENS 服务的， 一旦服务处于停止状态，函数就无法正常工作<br>
-<img src="https://ashe27.github.io/post-images/1639840113138.png" alt="" loading="lazy"><br>
-如果要使用这个函数，起码要在此之前先检查 SENS 服务的运行状态，当服务处于运行中时再使用此函数。<br>
-但是即便如此，函数也无法保证网络已经接入互联网，因为如果系统上有虚拟网卡的话则会产生误判，较为典型的情况是系统上装有VMWare虚拟机或VPN等软件的时候，它们通常会创建若干虚拟网卡，这都影响了 <a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive</a> 函数的工作，所以不要用它来检测网络状态。</p>
-<h2 id="参考">参考</h2>
-<p><a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive function</a><br>
-<a href="https://docs.microsoft.com/en-us/windows/win32/sens/about-system-event-notification-service">About System Event Notification Service</a><br>
-<a href="https://www.cnblogs.com/kybs0/p/12971567.html">获取网络连接状态（二） IsNetworkAlive</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[手动安装Composer]]></title>
-        <id>https://ashe27.github.io/post/NbCqe6jb7/</id>
-        <link href="https://ashe27.github.io/post/NbCqe6jb7/">
-        </link>
-        <updated>2021-12-18T15:05:24.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="下载composer">下载composer</h2>
-<p>下载：<a href="https://install.phpcomposer.com/composer.phar">https://install.phpcomposer.com/composer.phar</a></p>
-<h2 id="安装">安装</h2>
-<p>将<code>composer.phar</code>移动到<code>php.exe</code>同一目录下。<br>
-将<code>composer.phar</code>所在目录添加到系统环境变量。<br>
-新建一个批处理文件<code>composer.bat</code></p>
-<pre><code class="language-bash">@php &quot;%~dp0composer.phar&quot; %*
-</code></pre>
-<p>这样就能使用<code>composer</code>命令了。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[命令行方式清理IE缓存]]></title>
-        <id>https://ashe27.github.io/post/mlvs7eXZ3/</id>
-        <link href="https://ashe27.github.io/post/mlvs7eXZ3/">
-        </link>
-        <updated>2021-12-18T15:03:12.000Z</updated>
-        <content type="html"><![CDATA[<blockquote>
-<p>原文链接：<a href="https://stackoverflow.com/questions/12621969/clear-cache-of-browser-by-command-line">https://stackoverflow.com/questions/12621969/clear-cache-of-browser-by-command-line</a></p>
-</blockquote>
-<p>要求IE7+</p>
-<h2 id="deletes-history-only">Deletes History Only</h2>
-<p><code>rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 1</code></p>
-<h2 id="deletes-cookies-only">Deletes Cookies Only</h2>
-<p><code>rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 2</code></p>
-<h2 id="deletes-temporary-internet-files-only">Deletes Temporary Internet Files Only</h2>
-<p><code>rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 8</code></p>
-<h2 id="deletes-form-data-only">Deletes Form Data Only</h2>
-<p><code>rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 16</code></p>
-<h2 id="deletes-password-history-only">Deletes Password History Only</h2>
-<p><code>rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 32</code></p>
-<h2 id="deletes-all-history">Deletes ALL History</h2>
-<p><code>rundll32.exe InetCpl.cpl,ClearMyTracksByProcess 255</code></p>
-]]></content>
-    </entry>
     <entry>
         <title type="html"><![CDATA[Windows Server 原版系统镜像]]></title>
         <id>https://ashe27.github.io/post/windows-server/</id>
@@ -1155,6 +1049,363 @@ echo 'done.'
 <li>MS-DOS 6.22<br>
 <a href="ed2k://%7Cfile%7CSC_MSDOS622sc.exe%7C10020288%7C0B2B0878B8BBD2233D23022EE5339637%7C/">SC_MSDOS622sc.exe</a></li>
 </ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[WinINet 代理设置与注册表位置]]></title>
+        <id>https://ashe27.github.io/post/18OY8R7kO/</id>
+        <link href="https://ashe27.github.io/post/18OY8R7kO/">
+        </link>
+        <updated>2021-08-20T04:00:57.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="按用户代理时的注册表位置">按用户代理时的注册表位置</h1>
+<p>Windows系统默认是&quot;按用户代理&quot;的，意味着每个系统账户都有属于自己独立的代理设置。我们可以运行命令<code>Inetcpl.cpl</code>来打开IE选项窗口，在&quot;连接&quot;选项卡中点击&quot;局域网设置&quot;便可以显示代理设置界面，<br>
+代理设置最终会保存在注册表中。</p>
+<h2 id="自动配置部分">自动配置部分</h2>
+<figure data-type="image" tabindex="1"><img src="https://ashe27.github.io/post-images/1629342427593.png" alt="" loading="lazy"></figure>
+<pre><code>[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings]
+&quot;AutoDetect&quot;=dword:00000001
+&quot;AutoConfigURL&quot;=&quot;http://localhost/test.pac&quot;
+&quot;ProxyEnable&quot;=dword:00000001
+&quot;ProxyServer&quot;=&quot;127.0.0.1:7890&quot;
+&quot;ProxyOverride&quot;=&quot;&lt;local&gt;&quot;
+</code></pre>
+<ul>
+<li>
+<p>AutoDetect<br>
+自动检测设置开关，通过 <a href="https://docs.microsoft.com/en-us/sysinternals/downloads/procmon">Process Monitor</a> 监测发现，打开选项设置窗口后会将其值同步到<code>DefaultConnectionSettings</code>并删除<code>AutoDetect</code>，看上去是一种&quot;升级&quot;操作，将旧设置迁移至新位置，所以尽量还是以<code>DefaultConnectionSettings</code>为准。</p>
+</li>
+<li>
+<p>AutoConfigURL<br>
+PAC文件URL。如果没有值或值为空，表示未启用状态，会尝试从<code>DefaultConnectionSettings</code>获取最近一次的值并显示。<br>
+需要注意的是，PAC 地址应该是一个使用HTTP协议的地址，而不应使用本地文件路径，否则会无法加载，原因见 <a href="https://docs.microsoft.com/en-us/troubleshoot/browsers/cannot-read-pac-file">Windows 10 does not read a PAC file referenced by a file protocol</a>。并且服务器应该为其指定MIME类型为<code>application/x-ns-proxy-autoconfig</code>。</p>
+</li>
+<li>
+<p>ProxyEnable<br>
+是否启用代理。</p>
+</li>
+<li>
+<p>ProxyServer<br>
+各协议所使用的代理服务器，用分号分隔。如果不指定具体协议而直接写上服务器与端口号，则表示所有协议使用同一个代理。</p>
+</li>
+<li>
+<p>ProxyOverride<br>
+禁止使用代理服务器的地址列表，通常指定为本地地址。支持通配符，用分号分隔。它同时也是&quot;对于本地地址不使用代理服务器&quot;选项的开关。</p>
+</li>
+</ul>
+<h2 id="代理服务器部分">代理服务器部分</h2>
+<figure data-type="image" tabindex="2"><img src="https://ashe27.github.io/post-images/1629343344669.png" alt="" loading="lazy"></figure>
+<pre><code>[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings]
+&quot;ProxyEnable&quot;=dword:00000001
+&quot;ProxyServer&quot;=&quot;http=127.0.0.1:7890;https=127.0.0.1:7890;ftp=127.0.0.1:7890;socks=127.0.0.1:7890&quot;
+&quot;ProxyOverride&quot;=&quot;localhost;127.*;10.*;172.16.*;172.17.*;172.18.*;172.19.*;172.20.*;172.21.*;172.22.*;172.23.*;172.24.*;172.25.*;172.26.*;172.27.*;172.28.*;172.29.*;172.30.*;172.31.*;192.168.*;&lt;local&gt;&quot;
+</code></pre>
+<ul>
+<li>
+<p>ProxyEnable<br>
+是否启用代理。</p>
+</li>
+<li>
+<p>ProxyServer<br>
+各协议所使用的代理服务器，用分号分隔。如果不指定具体协议而直接写上服务器与端口号，则表示所有协议使用同一个代理。</p>
+</li>
+<li>
+<p>ProxyOverride<br>
+禁止使用代理服务器的地址列表，通常指定为本地地址。支持通配符，用分号分隔。它同时也是&quot;对于本地地址不使用代理服务器&quot;选项的开关。</p>
+</li>
+</ul>
+<p><strong>在IE浏览器中，启动浏览器、开关或关闭代理设置窗口都会将设置同步到<code>DefaultConnectionSettings</code>键值中，读取代理设置时都会以<code>DefaultConnectionSettings</code>中的值为准（缓存代理设置的作用）。</strong><br>
+<strong>而对于非IE浏览器，则以<code>Internet Settings</code>中的设置为准。</strong></p>
+<hr>
+<h2 id=""></h2>
+<h1 id="按计算机代理时的注册表位置">按计算机代理时的注册表位置</h1>
+<p>运行命令<code>gpedit.msc</code>打开策略编辑器，依次打开&quot;计算机配置&quot;、&quot;管理模板&quot;、&quot;Windows 组件&quot;、&quot;Internet Explorer&quot;，找到&quot;按计算机(而不是按用户)进行代理&quot;，启用这个选项将会在注册表保存一个值</p>
+<pre><code>[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings]
+&quot;ProxySettingsPerUser&quot;=dword:00000000
+</code></pre>
+<p>值不存在或是非0值，意味着&quot;按用户代理&quot;，否则就是&quot;按计算机代理&quot;。<br>
+当系统变为&quot;按计算机代理&quot;后，代理设置的注册表根位置将从<code>HKEY_CURRENT_USER</code>变为<code>HKEY_LOCAL_MACHINE</code>。而且必须使用管理员方式运行IE才能成功修改代理设置。<br>
+<strong>要注意的是，按计算机代理后<code>WinINet</code>不会再读取<code>Internet Settings</code>下的设置了，而是直接读取<code>DefaultConnectionSettings</code></strong>。</p>
+<h1 id="解密defaultconnectionsettings">解密DefaultConnectionSettings</h1>
+<p>它是一个未公开的结构体，我们可以在泄露的Windows 2003源码中找到蛛丝马迹，<br>
+头文件 <a href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/dll/proxreg.cxx">proxreg.cxx</a> 中的结构体 <a href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/inc/proxreg.h#L69">INTERNET_PROXY_INFO_EX</a> 就是它了，函数 <a href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/dll/proxreg.cxx#L889">WriteProxySettings</a> 用于将这个结构体写入注册表，而 <a href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/dll/proxreg.cxx#L721#L721">ReadProxySettings</a> 将<code>DefaultConnectionSettings</code>读取到结构体中，这就是一个序列化，反序列化的过程。</p>
+<p>开始的4字节表示结构体大小，同时也用于标识结构体版本，XP到Win10为止仅修改过一次，所以目前只有两种可能的值：0x3C和0x46。<br>
+根据源码中的定义，IE5和IE6都是0x3C，也就是第一版的结构体</p>
+<pre><code>#define INTERNET_PROXY_INFO_EX_VERSION      60      // 60 := IE 5.x &amp; 6.0 format
+</code></pre>
+<p>XP系统自带的是IE6，实际查看一下也确实如此<br>
+<img src="https://ashe27.github.io/post-images/1629429506257.png" alt="" loading="lazy"><br>
+从Vista的IE7开始，结构体就升级了，变为了0x46。<br>
+我编写了一个010 Editor的模板，这样看起来比较直观</p>
+<pre><code>//------------------------------------------------
+//--- 010 Editor v9.0 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+enum PROXY_TYPE {
+    PROXY_TYPE_DIRECT = 1,
+    PROXY_TYPE_PROXY = 2,
+    PROXY_TYPE_AUTO_PROXY_URL = 4,
+    PROXY_TYPE_AUTO_DETECT = 8
+};
+
+struct INTERNET_PROXY_INFO_EX_1 {
+    DWORD dwStructSize &lt;comment=&quot;结构版本&quot;&gt;;;
+    DWORD dwCurrentSettingsVersion &lt;comment=&quot;计数器，每次修改会增加&quot;&gt;;
+    PROXY_TYPE dwFlags &lt;comment=&quot;代理方式&quot;&gt;;
+    DWORD cbProxy &lt;comment=&quot;代理服务器字符串长度&quot;&gt;;
+    CHAR szProxy[cbProxy] &lt;comment=&quot;代理服务器地址&quot;&gt;;;
+    DWORD cbProxyBypass &lt;comment=&quot;代理忽略列表字符串长度&quot;&gt;;
+    CHAR szProxyBypass[cbProxyBypass] &lt;comment=&quot;代理忽略列表&quot;&gt;;
+    DWORD cbAutoConfigUrl;
+    CHAR szAutoConfigUrl[cbAutoConfigUrl];
+    DWORD dwAutoDiscoveryFlags;
+    DWORD cbLastKnownGoodAutoConfigUrl;
+    CHAR szLastKnownGoodAutoConfigUrl[cbLastKnownGoodAutoConfigUrl];
+    FILETIME ftLastKnownDetectTime;
+    DWORD dwDetectedInterfaceIpCount;
+    DWORD arrDetectedInterfaceIp[dwDetectedInterfaceIpCount];
+    DWORD cbAutoconfigSecondaryUrl;
+    CHAR szAutoconfigSecondaryUrl[cbAutoconfigSecondaryUrl];
+    DWORD dwAutoconfigReloadDelayMins;
+};
+
+struct INTERNET_PROXY_INFO_EX_2 {
+    INTERNET_PROXY_INFO_EX_1 info1;
+    DWORD dwUnknown;
+};
+
+local DWORD dwVersion = ReadUInt();
+if (dwVersion == 0x3C) {
+    INTERNET_PROXY_INFO_EX_1 info;
+} else {
+    INTERNET_PROXY_INFO_EX_2 info;
+}
+</code></pre>
+<p><img src="https://ashe27.github.io/post-images/1629431873468.png" alt="" loading="lazy"><br>
+从头部的4字节看，0x46 - 0x3C = 0xA，也就是在其dll内部的结构体多了10字节，但是持久化到注册表后只多了4字节。</p>
+<ul>
+<li>dwFlags<br>
+dwFlags实际上就是常量<code>PROXY_TYPE_DIRECT</code>和其他三个值的组合。</li>
+</ul>
+<pre><code>#define PROXY_TYPE_DIRECT                               0x00000001   // direct to net
+#define PROXY_TYPE_PROXY                                0x00000002   // via named proxy
+#define PROXY_TYPE_AUTO_PROXY_URL                       0x00000004   // autoproxy URL
+#define PROXY_TYPE_AUTO_DETECT                          0x00000008   // use autoproxy detection
+</code></pre>
+<ul>
+<li>自动配置URL<br>
+自动代理的URL有两个，一个主一个次，但是我们在IE设置中只能设置一个主要的，次要的URL是怎么配置进去的呢？这就是通过之前的一篇文章 <a href="/post/Rn9thta4F/">IE自动部署工具包IEAK</a> 中介绍过的INS文件写入进去的</li>
+</ul>
+<pre><code>[URL]
+AutoDetect=1
+AutoConfig=1
+AutoConfigTime=1
+AutoConfigURL=http://localhost/test1.pac
+AutoConfigJSURL=http://localhost/test2.pac
+</code></pre>
+<p>其中<code>AutoConfigJSURL</code>就是次选代理URL。但是经过测试发现，次选URL永远用不上，当<code>AutoConfigURL</code>无法访问时，网络会产生直连，而没有寻找次选代理URL。</p>
+<h1 id="总结">总结</h1>
+<ol>
+<li>按用户代理时，<a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 以<code>Internet Settings</code>中的值为准。但IE是个例外，IE以<code>DefaultConnectionSettings</code>中的值为准。</li>
+<li>按计算机代理时，<a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 以<code>DefaultConnectionSettings</code>中的值为准，在<code>Internet Settings</code>下的设置没有任何效果。</li>
+<li>64位系统下，如果用直接修改注册表的方式改代理，要注意注册表<code>WOW6432Node</code>下的位置也要一起改。</li>
+</ol>
+<h1 id="相关阅读">相关阅读</h1>
+<p><a href="https://support.microsoft.com/en-us/topic/how-to-disable-automatic-proxy-caching-in-internet-explorer-92735c9c-8a26-d0d8-7f8a-1b46595cbaba">How to disable automatic proxy caching in Internet Explorer</a></p>
+<h1 id="参考">参考</h1>
+<p><a href="https://stackoverflow.com/questions/4283027/whats-the-format-of-the-defaultconnectionsettings-value-in-the-windows-registry">https://stackoverflow.com/questions/4283027/whats-the-format-of-the-defaultconnectionsettings-value-in-the-windows-registry</a></p>
+<p><a href="https://stackoverflow.com/questions/1674119/what-key-in-windows-registry-disables-ie-connection-parameter-automatically-det">https://stackoverflow.com/questions/1674119/what-key-in-windows-registry-disables-ie-connection-parameter-automatically-det</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[WinINet 的代理策略]]></title>
+        <id>https://ashe27.github.io/post/2dhPgdQCU/</id>
+        <link href="https://ashe27.github.io/post/2dhPgdQCU/">
+        </link>
+        <updated>2021-08-19T01:26:10.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="什么是系统代理">什么是系统代理</h2>
+<p>我们在网上冲浪时，无时无刻都在使用着基于HTTP协议的应用程序，使用最多的就是浏览器了。<br>
+面向开发者而言，微软提供了 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 和 <a href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 两套网络API。<a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 是 <a href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 的超集。<br>
+我们在桌面上使用的应用程序几乎都是用的 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a>，而 <a href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 通常用于一些无GUI的服务程序中。<br>
+关于 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 和 <a href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 的差别可以查看官方手册 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/wininet-vs-winhttp">WinINet vs. WinHTTP</a>。<br>
+本文所讨论的是 <a href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 的代理机制。</p>
+<h2 id="wininet的代理策略">WinINet的代理策略</h2>
+<p>API函数 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenw">InternetOpenW</a> 决定了程序如何使用代理，重点在第2个参数<code>AccessType</code>，解释如下：<br>
+<code>INTERNET_OPEN_TYPE_DIRECT</code>：直连，不走代理。<br>
+<code>INTERNET_OPEN_TYPE_PRECONFIG</code>：从注册表获取代理设置并使用。<br>
+<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>：从注册表获取代理设置并使用，但不使用&quot;自动配置&quot;代理设置。<br>
+<code>INTERNET_OPEN_TYPE_PROXY</code>：绕过注册表的代理设置，直连代理服务器，代理服务器由第3个参数指定。<br>
+第1个和第4个参数很好理解，说下第2个和第3个参数，WinINet的代理机制分两种，一种是<code>自动配置</code>，另一种是<code>代理服务器</code><br>
+<img src="https://ashe27.github.io/post-images/1629336801688.png" alt="" loading="lazy"><br>
+<code>自动配置</code>基于 <a href="https://zh.wikipedia.org/wiki/%E4%BB%A3%E7%90%86%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE">PAC</a> 技术来实现代理。而<code>代理服务器</code>则是比较传统的方式，通过指定地址和协议来代理的，虽然也可以指定黑名单IP禁止代理，但灵活性是不如 <a href="https://zh.wikipedia.org/wiki/%E4%BB%A3%E7%90%86%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE">PAC</a> 代理技术的。<br>
+当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数时，表示<strong>优先使用&quot;自动配置&quot;代理，否则使用&quot;代理服务器&quot;的设置</strong>。<br>
+而当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>作为参数时，表示<strong>跳过&quot;自动配置&quot;代理，直接使用&quot;代理服务器&quot;的设置</strong>。<br>
+最常见的浏览器和绝大多数应用通常是使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数，用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>的情况比较少见。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[IE自动部署工具包IEAK]]></title>
+        <id>https://ashe27.github.io/post/Rn9thta4F/</id>
+        <link href="https://ashe27.github.io/post/Rn9thta4F/">
+        </link>
+        <updated>2021-08-18T15:20:31.000Z</updated>
+        <content type="html"><![CDATA[<p>Internet Explorer Administration Kit (IEAK)是一个IE的管理工具包，可自定义配置生成一个IE安装包或仅设置的包，一般是给网管人员部署使用的，可以帮助管理员快速统一部署IE。<br>
+适用于IE11的工具包下载地址：<a href="https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads">https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads</a></p>
+<h2 id="ins配置文件">INS配置文件</h2>
+<p>我们用它配置&quot;链接&quot;相关设置<br>
+<img src="https://ashe27.github.io/post-images/1629300058002.png" alt="" loading="lazy"><br>
+最终会生成一个安装包，其中有一个INS文件内容大概是这样</p>
+<pre><code>[Branding]
+CompanyName=Microsoft Corporation
+Wizard_Version=11.00.18362.1
+Version=11,00,18362,1
+Custom_Key=MICROSO
+Global=1
+IE4 Welcome Msg=1
+Platform=2
+GUID={7211FFE6-C149-11D0-AFF0-00AA003758BB}
+Type=0
+NoClear=1
+[URL]
+AutoDetect=0
+AutoConfig=1
+AutoConfigTime=1
+AutoConfigURL=http://localhost/ie.ins
+AutoConfigJSURL=http://localhost/test1.pac
+[Proxy]
+HTTP_Proxy_Server=
+FTP_Proxy_Server=
+Secure_Proxy_Server=
+Socks_Proxy_Server=
+Use_Same_Proxy=1
+Proxy_Enable=0
+Proxy_Override=&quot;&lt;local&gt;&quot;
+</code></pre>
+<p>一个有效的ins文件必须有<code>[Branding]</code>节，我们也可以不用IEAK生成，而是直接从<code>C:\Program Files\Internet Explorer\SIGNUP\install.ins</code>拷贝一份进行手动修改也是可以的。</p>
+<pre><code>[Branding]
+CompanyName=
+Wizard_Version=11.00.19041.1
+Version=11,00,19041,1
+Custom_Key=MICROSO
+Global=1
+IE4 Welcome Msg=1
+Platform=2
+GUID={7211FFE6-C149-11D0-AFF0-00AA003758BB}
+Type=0
+NoClear=1
+NoDial=0
+FavoritesDelete=0
+FavoritesOnTop=0
+User Agent=
+[URL]
+FirstHomePage=https://www.google.com
+</code></pre>
+<p>这个例子添加了FirstHomePage字段，首次打开IE就会打开该首页。</p>
+<p>运行部署安装包后会在IE目录下生成一个INS文件，并提示注销登录后生效</p>
+<pre><code>C:\Program Files\Internet Explorer\CUSTOM\INSTALL.INS
+</code></pre>
+<p>注销是为了让设置生效，实际上我们可以使用其他手段立即生效，有两种方法</p>
+<h3 id="重置ie">重置IE</h3>
+<p>配置文件只有在IE初始化时会被访问，我们可以重置IE来让它再次载入配置文件。<br>
+运行命令<code>RunDll32.exe inetcpl.cpl,ResetIEtoDefaults</code>可以弹出重置对话框，确认重置后IE会依次从以下位置来获取配置</p>
+<pre><code>C:\Program Files\Internet Explorer\Custom\install.ins
+C:\Program Files\Internet Explorer\Signup\install.ins
+</code></pre>
+<h3 id="brandinternetexplorer">BrandInternetExplorer</h3>
+<p><code>iedkcs32.dll</code>有一个导出函数<code>BrandInternetExplorer</code>可以使得IE下次启动时载入指定的INS配置文件。<br>
+<code>rundll32.exe iedkcs32.dll,BrandInternetExplorer /ins:&quot;D:\test.ins&quot;</code></p>
+<h2 id="参考">参考</h2>
+<p><a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpie/8206de0e-2d1e-4a02-977b-b8614c5350d9">INS File Format</a></p>
+<p><a href="https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/">https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[从磁盘上加载证书文件]]></title>
+        <id>https://ashe27.github.io/post/6geICBPwL/</id>
+        <link href="https://ashe27.github.io/post/6geICBPwL/">
+        </link>
+        <updated>2021-08-13T03:45:15.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="方式一">方式一</h2>
+<p>将证书视为存储库，通过 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore">CertOpenStore</a> 打开，枚举出第一个证书即可。<br>
+一个例子</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+T decodeObject(DWORD dwEncodingType, const PCERT_EXTENSION pExt)
+{
+	T pInfo = nullptr;
+	DWORD cbInfo = 0;
+	if (!CryptDecodeObjectEx(dwEncodingType, pExt-&gt;pszObjId, pExt-&gt;Value.pbData, pExt-&gt;Value.cbData, CRYPT_DECODE_ALLOC_FLAG | CRYPT_DECODE_NOCOPY_FLAG, nullptr, &amp;pInfo, &amp;cbInfo))
+		return nullptr;
+	return pInfo;
+}
+
+// 证书既是存储库
+HCERTSTORE hCertStore = CertOpenStore(CERT_STORE_PROV_FILENAME_A, dwEncodingType, NULL, CERT_STORE_OPEN_EXISTING_FLAG | CERT_STORE_READONLY_FLAG, &quot;ca.cer&quot;);
+if (hCertStore) {
+	// 取出第一个证书
+	PCCERT_CONTEXT pCertContext = CertEnumCertificatesInStore(hCertStore, nullptr);
+	if (pCertContext) {
+		// 遍历扩展信息
+		for (DWORD i = 0; i &lt; pCertContext-&gt;pCertInfo-&gt;cExtension; ++i) {
+			const PCERT_EXTENSION pExt = pCertContext-&gt;pCertInfo-&gt;rgExtension + i;
+			if (strcmp(pExt-&gt;pszObjId, szOID_KEY_USAGE) == 0) {
+				// 密钥用法
+				const auto pInfo = decodeObject&lt;PCRYPT_BIT_BLOB&gt;(dwEncodingType, pExt);
+				LocalFree(pInfo);
+			} else if(strcmp(pExt-&gt;pszObjId, szOID_BASIC_CONSTRAINTS2) == 0) {
+				// 基本约束
+				const auto pInfo = decodeObject&lt;PCERT_BASIC_CONSTRAINTS2_INFO&gt;(dwEncodingType, pExt);
+				LocalFree(pInfo);
+			} else if (strcmp(pExt-&gt;pszObjId, szOID_ENHANCED_KEY_USAGE) == 0) {
+				// 增强型密钥用法
+				auto pInfo = decodeObject&lt;PCTL_USAGE&gt;(dwEncodingType, pExt);
+				LocalFree(pInfo);
+			} else if (strcmp(pExt-&gt;pszObjId, szOID_SUBJECT_ALT_NAME2) == 0) {
+				// 使用者可选名称
+				const auto pInfo = decodeObject&lt;PCERT_ALT_NAME_INFO&gt;(dwEncodingType, pExt);
+				LocalFree(pInfo);
+			}
+		}
+	}
+	CertCloseStore(hCertStore, 0);
+}
+</code></pre>
+<h2 id="方式二">方式二</h2>
+<p>在 <a href="https://docs.microsoft.com/en-us/windows/win32/seccrypto/cryptoapi-system-architecture">CryptoAPI</a> 中，一个证书文件用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构描述，所以只要将证书文件转换为 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构即可。<br>
+<a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certcreatecertificatecontext">CertCreateCertificateContext</a> 函数可以做到，它从内存中读取证书数据并转换为 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构。<br>
+但是要注意，这个函数只接受DER编码格式的证书，而我们常用的一般是PEM格式（以BEGIN开头，END结尾，中间是BASE64编码），所以要进行转换。<br>
+转换可以用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptstringtobinarya">CryptStringToBinaryA</a> 函数搞定。<br>
+一个简单的例子</p>
+<pre><code class="language-cpp">const DWORD dwEncodingType = X509_ASN_ENCODING;
+
+// 打开证书
+HANDLE hFile = CreateFileW(L&quot;ca.cer&quot;, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+LARGE_INTEGER fileSize;
+GetFileSizeEx(hFile, &amp;fileSize);
+
+// 读取证书内容
+BYTE* buffer = new BYTE[fileSize.QuadPart];
+DWORD dwWritten;
+ReadFile(hFile, buffer, fileSize.QuadPart, &amp;dwWritten, nullptr);
+
+// PEM转DER
+BYTE* bin = new BYTE[dwWritten];
+DWORD flags;
+BOOL ok = CryptStringToBinaryA((LPCSTR)buffer, dwWritten, CRYPT_STRING_BASE64HEADER, bin, &amp;dwWritten, NULL, &amp;flags);
+
+// 获得证书上下文
+PCCERT_CONTEXT pCert = CertCreateCertificateContext(dwEncodingType, bin, dwWritten);
+</code></pre>
+<h2 id="参考">参考</h2>
+<p><a href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/dd743310(v=vs.85)">Load a Certificate from a File</a></p>
+<p><a href="https://stackoverflow.com/questions/34623247/certcreatecertificatecontext-returns-crypt-e-asn1-badtag-8009310b">CertCreateCertificateContext returns CRYPT_E_ASN1_BADTAG / 8009310b</a></p>
 ]]></content>
     </entry>
 </feed>
