@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>工具软件 | ashe&#39;s blog</title>
+<title>慎用 IsNetworkAlive 检测网络 | ashe&#39;s blog</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -18,7 +18,11 @@
 
 
 
-    <meta name="description" content="好记性不如烂笔头">
+    <meta name="description" content="使用 IsNetworkAlive 函数检测网络是否已连接的代码
+do {
+	DWORD dwFlags = NETWORK_ALIVE_WAN;
+	BOOL bSuccess = IsNetworkAlive(&amp;dwFlags);..." />
+    <meta name="keywords" content="Windows编程" />
   </head>
   <body>
     <div id="app" class="main">
@@ -92,43 +96,55 @@
 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
-          <h2 class="current-tag">标签: 工具软件</h2>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://ashe27.github.io/post/cH9SFSSll/">
-                  <h2 class="post-title">Jetbrains IDE 重置试用期脚本</h2>
-                </a>
-                <div class="post-date">
-                  2021-11-14
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://ashe27.github.io/post/vsCMLcwdS/">
-                  <h2 class="post-title">支持以 SYSTEM 账户执行程序的工具软件</h2>
-                </a>
-                <div class="post-date">
-                  2021-08-12
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
+          <div class="post-detail">
+            <h2 class="post-title">慎用 IsNetworkAlive 检测网络</h2>
+            <div class="post-date">2021-12-18</div>
+            
+            <div class="post-content" v-pre>
+              <p>使用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive</a> 函数检测网络是否已连接的代码</p>
+<pre><code class="language-cpp">do {
+	DWORD dwFlags = NETWORK_ALIVE_WAN;
+	BOOL bSuccess = IsNetworkAlive(&amp;dwFlags);
+	if ((GetLastError() == ERROR_SUCCESS) &amp;&amp; bSuccess)
+		break;
 
-          <div class="pagination-container">
-  
-  
-</div>
+	std::cout &lt;&lt; &quot;wait...&quot; &lt;&lt; std::endl;
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+} while (true);
+</code></pre>
+<p>但这个函数是依赖于 SENS 服务的， 一旦服务处于停止状态，函数就无法正常工作<br>
+<img src="https://img2020.cnblogs.com/blog/139098/202112/139098-20211218115642402-639045998.png" alt="" loading="lazy"><br>
+如果要使用这个函数，起码要在此之前先检查 SENS 服务的运行状态，当服务处于运行中时再使用此函数。<br>
+但是即便如此，函数也无法保证网络已经接入互联网，因为如果系统上有虚拟网卡的话则会产生误判，较为典型的情况是系统上装有VMWare虚拟机或VPN等软件的时候，它们通常会创建若干虚拟网卡，这都影响了 <a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive</a> 函数的工作，所以不要用它来检测网络状态。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive function</a><br>
+<a href="https://docs.microsoft.com/en-us/windows/win32/sens/about-system-event-notification-service">About System Event Notification Service</a><br>
+<a href="https://www.cnblogs.com/kybs0/p/12971567.html">获取网络连接状态（二） IsNetworkAlive</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/X2BDcznSs/" class="tag">
+                    Windows编程
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/NbCqe6jb7/">
+                  <h3 class="post-title">
+                    手动安装Composer
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
 
         </div>
       </div>

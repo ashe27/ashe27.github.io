@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>工具软件 | ashe&#39;s blog</title>
+<title>手动安装Composer | ashe&#39;s blog</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -18,7 +18,12 @@
 
 
 
-    <meta name="description" content="好记性不如烂笔头">
+    <meta name="description" content="下载composer
+下载：https://install.phpcomposer.com/composer.phar
+安装
+将composer.phar移动到php.exe同一目录下。
+将composer.phar所在目录添加到系统环境变..." />
+    <meta name="keywords" content="PHP" />
   </head>
   <body>
     <div id="app" class="main">
@@ -92,43 +97,45 @@
 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
-          <h2 class="current-tag">标签: 工具软件</h2>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://ashe27.github.io/post/cH9SFSSll/">
-                  <h2 class="post-title">Jetbrains IDE 重置试用期脚本</h2>
-                </a>
-                <div class="post-date">
-                  2021-11-14
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
-            <article class="post-item">
-              <div class="left">
-                <a href="https://ashe27.github.io/post/vsCMLcwdS/">
-                  <h2 class="post-title">支持以 SYSTEM 账户执行程序的工具软件</h2>
-                </a>
-                <div class="post-date">
-                  2021-08-12
-                </div>
-                <div class="post-abstract">
-                  
-                </div>
-              </div>
-              
-            </article>
-          
+          <div class="post-detail">
+            <h2 class="post-title">手动安装Composer</h2>
+            <div class="post-date">2021-12-18</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="下载composer">下载composer</h2>
+<p>下载：<a href="https://install.phpcomposer.com/composer.phar">https://install.phpcomposer.com/composer.phar</a></p>
+<h2 id="安装">安装</h2>
+<p>将<code>composer.phar</code>移动到<code>php.exe</code>同一目录下。<br>
+将<code>composer.phar</code>所在目录添加到系统环境变量。<br>
+新建一个批处理文件<code>composer.bat</code></p>
+<pre><code class="language-bash">@php &quot;%~dp0composer.phar&quot; %*
+</code></pre>
+<p>这样就能使用<code>composer</code>命令了。</p>
 
-          <div class="pagination-container">
-  
-  
-</div>
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/ZpIKqk6BL/" class="tag">
+                    PHP
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/mlvs7eXZ3/">
+                  <h3 class="post-title">
+                    命令行方式清理IE缓存
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
 
         </div>
       </div>
