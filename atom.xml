@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-12-18T04:04:05.062Z</updated>
+    <updated>2021-12-18T04:11:10.750Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -1328,30 +1328,84 @@ C:\Program Files\Internet Explorer\Signup\install.ins
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[慎用 IsNetworkAlive 检测网络]]></title>
-        <id>https://ashe27.github.io/post/uT8pkw6Fy/</id>
-        <link href="https://ashe27.github.io/post/uT8pkw6Fy/">
+        <title type="html"><![CDATA[从磁盘上加载证书文件]]></title>
+        <id>https://ashe27.github.io/post/6geICBPwL/</id>
+        <link href="https://ashe27.github.io/post/6geICBPwL/">
         </link>
-        <updated>2021-08-13T04:03:50.000Z</updated>
-        <content type="html"><![CDATA[<p>使用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive</a> 函数检测网络是否已连接的代码</p>
-<pre><code class="language-cpp">do {
-	DWORD dwFlags = NETWORK_ALIVE_WAN;
-	BOOL bSuccess = IsNetworkAlive(&amp;dwFlags);
-	if ((GetLastError() == ERROR_SUCCESS) &amp;&amp; bSuccess)
-		break;
+        <updated>2021-08-13T03:45:15.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="方式一">方式一</h2>
+<p>将证书视为存储库，通过 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore">CertOpenStore</a> 打开，枚举出第一个证书即可。<br>
+一个例子</p>
+<pre><code class="language-cpp">template &lt;typename T&gt;
+T decodeObject(DWORD dwEncodingType, const PCERT_EXTENSION pExt)
+{
+	T pInfo = nullptr;
+	DWORD cbInfo = 0;
+	if (!CryptDecodeObjectEx(dwEncodingType, pExt-&gt;pszObjId, pExt-&gt;Value.pbData, pExt-&gt;Value.cbData, CRYPT_DECODE_ALLOC_FLAG | CRYPT_DECODE_NOCOPY_FLAG, nullptr, &amp;pInfo, &amp;cbInfo))
+		return nullptr;
+	return pInfo;
+}
 
-	std::cout &lt;&lt; &quot;wait...&quot; &lt;&lt; std::endl;
-	std::this_thread::sleep_for(std::chrono::seconds(1));
-} while (true);
+// 证书既是存储库
+HCERTSTORE hCertStore = CertOpenStore(CERT_STORE_PROV_FILENAME_A, dwEncodingType, NULL, CERT_STORE_OPEN_EXISTING_FLAG | CERT_STORE_READONLY_FLAG, &quot;ca.cer&quot;);
+if (hCertStore) {
+	// 取出第一个证书
+	PCCERT_CONTEXT pCertContext = CertEnumCertificatesInStore(hCertStore, nullptr);
+	if (pCertContext) {
+		// 遍历扩展信息
+		for (DWORD i = 0; i &lt; pCertContext-&gt;pCertInfo-&gt;cExtension; ++i) {
+			const PCERT_EXTENSION pExt = pCertContext-&gt;pCertInfo-&gt;rgExtension + i;
+			if (strcmp(pExt-&gt;pszObjId, szOID_KEY_USAGE) == 0) {
+				// 密钥用法
+				const auto pInfo = decodeObject&lt;PCRYPT_BIT_BLOB&gt;(dwEncodingType, pExt);
+				LocalFree(pInfo);
+			} else if(strcmp(pExt-&gt;pszObjId, szOID_BASIC_CONSTRAINTS2) == 0) {
+				// 基本约束
+				const auto pInfo = decodeObject&lt;PCERT_BASIC_CONSTRAINTS2_INFO&gt;(dwEncodingType, pExt);
+				LocalFree(pInfo);
+			} else if (strcmp(pExt-&gt;pszObjId, szOID_ENHANCED_KEY_USAGE) == 0) {
+				// 增强型密钥用法
+				auto pInfo = decodeObject&lt;PCTL_USAGE&gt;(dwEncodingType, pExt);
+				LocalFree(pInfo);
+			} else if (strcmp(pExt-&gt;pszObjId, szOID_SUBJECT_ALT_NAME2) == 0) {
+				// 使用者可选名称
+				const auto pInfo = decodeObject&lt;PCERT_ALT_NAME_INFO&gt;(dwEncodingType, pExt);
+				LocalFree(pInfo);
+			}
+		}
+	}
+	CertCloseStore(hCertStore, 0);
+}
 </code></pre>
-<p>但这个函数是依赖于 SENS 服务的， 一旦服务处于停止状态，函数就无法正常工作<br>
-<img src="https://img2020.cnblogs.com/blog/139098/202112/139098-20211218115642402-639045998.png" alt="" loading="lazy"><br>
-如果要使用这个函数，起码要在此之前先检查 SENS 服务的运行状态，当服务处于运行中时再使用此函数。<br>
-但是即便如此，函数也无法保证网络已经接入互联网，因为如果系统上有虚拟网卡的话则会产生误判，较为典型的情况是系统上装有VMWare虚拟机或VPN等软件的时候，它们通常会创建若干虚拟网卡，这都影响了 <a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive</a> 函数的工作，所以不要用它来检测网络状态。</p>
+<h2 id="方式二">方式二</h2>
+<p>在 <a href="https://docs.microsoft.com/en-us/windows/win32/seccrypto/cryptoapi-system-architecture">CryptoAPI</a> 中，一个证书文件用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构描述，所以只要将证书文件转换为 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构即可。<br>
+<a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certcreatecertificatecontext">CertCreateCertificateContext</a> 函数可以做到，它从内存中读取证书数据并转换为 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构。<br>
+但是要注意，这个函数只接受DER编码格式的证书，而我们常用的一般是PEM格式（以BEGIN开头，END结尾，中间是BASE64编码），所以要进行转换。<br>
+转换可以用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptstringtobinarya">CryptStringToBinaryA</a> 函数搞定。<br>
+一个简单的例子</p>
+<pre><code class="language-cpp">const DWORD dwEncodingType = X509_ASN_ENCODING;
+
+// 打开证书
+HANDLE hFile = CreateFileW(L&quot;ca.cer&quot;, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+LARGE_INTEGER fileSize;
+GetFileSizeEx(hFile, &amp;fileSize);
+
+// 读取证书内容
+BYTE* buffer = new BYTE[fileSize.QuadPart];
+DWORD dwWritten;
+ReadFile(hFile, buffer, fileSize.QuadPart, &amp;dwWritten, nullptr);
+
+// PEM转DER
+BYTE* bin = new BYTE[dwWritten];
+DWORD flags;
+BOOL ok = CryptStringToBinaryA((LPCSTR)buffer, dwWritten, CRYPT_STRING_BASE64HEADER, bin, &amp;dwWritten, NULL, &amp;flags);
+
+// 获得证书上下文
+PCCERT_CONTEXT pCert = CertCreateCertificateContext(dwEncodingType, bin, dwWritten);
+</code></pre>
 <h2 id="参考">参考</h2>
-<p><a href="https://docs.microsoft.com/en-us/windows/win32/api/sensapi/nf-sensapi-isnetworkalive">IsNetworkAlive function</a><br>
-<a href="https://docs.microsoft.com/en-us/windows/win32/sens/about-system-event-notification-service">About System Event Notification Service</a><br>
-<a href="https://www.cnblogs.com/kybs0/p/12971567.html">获取网络连接状态（二） IsNetworkAlive</a></p>
+<p><a href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/dd743310(v=vs.85)">Load a Certificate from a File</a></p>
+<p><a href="https://stackoverflow.com/questions/34623247/certcreatecertificatecontext-returns-crypt-e-asn1-badtag-8009310b">CertCreateCertificateContext returns CRYPT_E_ASN1_BADTAG / 8009310b</a></p>
 ]]></content>
     </entry>
 </feed>
