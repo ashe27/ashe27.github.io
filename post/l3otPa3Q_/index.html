@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Windows11 原版系统镜像 | ashe&#39;s blog</title>
+<title>用未公开函数 NtShutdownSystem 快速重启、关机 | ashe&#39;s blog</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -18,12 +18,12 @@
 
 
 
-    <meta name="description" content="Windows 11 21H2
-2021年10月
+    <meta name="description" content="在WinPE环境下，无法使用 ExitWindowsEx 函数来关机，需要使用未公开的API NtShutdownSystem
+注意，要先启用 SE_SHUTDOWN_NAME 特权
+typedef long NTSTATUS;
 
-
-Windows 11 (consumer editions), version 21H2 (updated October 2021) (x64) - DVD (Chinese-Simp..." />
-    <meta name="keywords" content="Windows" />
+type..." />
+    <meta name="keywords" content="Windows编程" />
   </head>
   <body>
     <div id="app" class="main">
@@ -98,40 +98,47 @@ Windows 11 (consumer editions), version 21H2 (updated October 2021) (x64) - DVD 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">Windows11 原版系统镜像</h2>
-            <div class="post-date">2021-11-17</div>
+            <h2 class="post-title">用未公开函数 NtShutdownSystem 快速重启、关机</h2>
+            <div class="post-date">2021-12-18</div>
             
             <div class="post-content" v-pre>
-              <h1 id="windows-11-21h2">Windows 11 21H2</h1>
-<h2 id="2021年10月">2021年10月</h2>
-<ul>
-<li>
-<p>Windows 11 (consumer editions), version 21H2 (updated October 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_11_consumer_editions_version_21h2_updated_october_2021_x64_dvd_47addd14.iso%7C5523668992%7C64F5B433CC2A9814DC4D04DC265E4D3B%7C/">zh-cn_windows_11_consumer_editions_version_21h2_updated_october_2021_x64_dvd_47addd14.iso</a></p>
-</li>
-<li>
-<p>Windows 11 (business editions), version 21H2 (updated October 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_11_business_editions_version_21h2_updated_october_2021_x64_dvd_a84e149f.iso%7C5419143168%7CB0C4BE7271CD65B2173326239D4F8BA2%7C/">zh-cn_windows_11_business_editions_version_21h2_updated_october_2021_x64_dvd_a84e149f.iso</a></p>
-</li>
-</ul>
-<h1 id="windows-11">Windows 11</h1>
-<ul>
-<li>
-<p>Windows 11 (consumer editions) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_11_consumer_editions_x64_dvd_904f13e4.iso%7C5517273088%7CDFD1AE88E36516B87382FC3D3D3F46AD%7C/">zh-cn_windows_11_consumer_editions_x64_dvd_904f13e4.iso</a></p>
-</li>
-<li>
-<p>Windows 11 (business editions) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_11_business_editions_x64_dvd_f5f6bcbd.iso%7C5413181440%7C88CA1AE28F5F8A238647561B5C00E511%7C/">zh-cn_windows_11_business_editions_x64_dvd_f5f6bcbd.iso</a></p>
-</li>
-</ul>
+              <p>在WinPE环境下，无法使用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-exitwindowsex">ExitWindowsEx</a> 函数来关机，需要使用未公开的API <a href="http://undocumented.ntinternals.net/UserMode/Undocumented%20Functions/Hardware/NtShutdownSystem.html">NtShutdownSystem</a><br>
+注意，要先启用 <a href="https://docs.microsoft.com/zh-cn/windows/win32/secauthz/privilege-constants#se_shutdown_name">SE_SHUTDOWN_NAME</a> 特权</p>
+<pre><code class="language-cpp">typedef long NTSTATUS;
+
+typedef enum _SHUTDOWN_ACTION
+{
+	ShutdownNoReboot,
+	ShutdownReboot,
+	ShutdownPowerOff
+} SHUTDOWN_ACTION, * PSHUTDOWN_ACTION;
+
+typedef NTSTATUS(NTAPI* NTSHUTDOWNSYSTEM)(SHUTDOWN_ACTION);
+
+void reboot()
+{
+	HMODULE hModule = GetModuleHandleW(L&quot;ntdll.dll&quot;);
+	if (hModule) {
+		auto proc = (NTSHUTDOWNSYSTEM)GetProcAddress(hModule, &quot;NtShutdownSystem&quot;);
+		if (proc) {
+			proc(ShutdownReboot);
+		}
+	}
+}
+</code></pre>
+<p>这个函数不像 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-exitwindowsex">ExitWindowsEx</a> 那样要通知 <a href="https://baike.baidu.com/item/csrss.exe/551700">csrss.exe</a> 和 <a href="https://baike.baidu.com/item/winlogon/11002823">winlogon.exe</a> 进程，而是直接关机，非常快。所以在关机前应该注意保存工作数据。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://bbs.pediy.com/thread-97539.htm">玩玩360——ExitWindowsEx大法</a></p>
+<p><a href="https://kinglix.wordpress.com/2011/08/29/hello-world">ExitWindowsEx , NtShutdownSystem to shutdown or restart to windows</a></p>
+<p><a href="http://undocumented.ntinternals.net/index.html?page=UserMode%2FUndocumented%20Functions%2FHardware%2FNtShutdownSystem.html">http://undocumented.ntinternals.net/index.html?page=UserMode%2FUndocumented%20Functions%2FHardware%2FNtShutdownSystem.html</a></p>
+<p><a href="http://www.codewarrior.cn/ntdoc/winnt/ex/NtShutdownSystem.htm">http://www.codewarrior.cn/ntdoc/winnt/ex/NtShutdownSystem.htm</a></p>
 
             </div>
             
               <div class="tag-container">
                 
-                  <a href="https://ashe27.github.io/tag/toQX3shSu/" class="tag">
-                    Windows
+                  <a href="https://ashe27.github.io/tag/X2BDcznSs/" class="tag">
+                    Windows编程
                   </a>
                 
               </div>
@@ -139,9 +146,9 @@ Windows 11 (consumer editions), version 21H2 (updated October 2021) (x64) - DVD 
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://ashe27.github.io/post/windows10/">
+                <a href="https://ashe27.github.io/post/yePbJTyaC/">
                   <h3 class="post-title">
-                    Windows10 原版系统镜像
+                    慎用 IsNetworkAlive 检测网络
                   </h3>
                 </a>
               </div>
