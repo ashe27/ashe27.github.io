@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-12-21T04:45:42.376Z</updated>
+    <updated>2021-12-24T17:28:46.646Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,6 +10,167 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, ashe&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[常用杀软、沙盒进程]]></title>
+        <id>https://ashe27.github.io/post/VUy3aewsX/</id>
+        <link href="https://ashe27.github.io/post/VUy3aewsX/">
+        </link>
+        <updated>2021-12-24T17:27:30.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="360安全卫士">360安全卫士</h2>
+<p>下载地址：<a href="https://www.360.cn">https://www.360.cn</a></p>
+<h3 id="进程">进程</h3>
+<ul>
+<li>ZhuDongFangYu.exe</li>
+<li>360Tray.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务">服务</h3>
+<ul>
+<li>ZhuDongFangYu</li>
+</ul>
+<h3 id="驱动">驱动</h3>
+<ul>
+<li>360Hvm</li>
+<li>DsArk</li>
+<li>360Box64</li>
+<li>360FsFlt</li>
+<li>360netmon</li>
+<li>360AntiHijack</li>
+<li>360AntiHacker</li>
+<li>360AntiExploit</li>
+<li>BAPIDRV</li>
+<li>360Sensor</li>
+<li>360qpesv</li>
+<li>360reskit64</li>
+</ul>
+<h2 id="腾讯电脑管家">腾讯电脑管家</h2>
+<p>下载地址：<a href="https://guanjia.qq.com/page/product_download.html">https://guanjia.qq.com/page/product_download.html</a></p>
+<h3 id="进程-2">进程</h3>
+<ul>
+<li>QQPCRTP.exe</li>
+<li>QQPCTray.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务-2">服务</h3>
+<ul>
+<li>QQPCRTP<br>
+电脑管家实时防护服务</li>
+</ul>
+<h3 id="驱动-2">驱动</h3>
+<ul>
+<li>QQSysMonX64（64位系统）</li>
+<li>TFsFlt</li>
+</ul>
+<h2 id="火绒安全软件">火绒安全软件</h2>
+<p>下载地址：<a href="https://www.huorong.cn/person5.html">https://www.huorong.cn/person5.html</a></p>
+<h3 id="进程-3">进程</h3>
+<ul>
+<li>HipsDaemon.exe</li>
+<li>HipsTray.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务-3">服务</h3>
+<ul>
+<li>HipsDaemon</li>
+</ul>
+<h3 id="驱动-3">驱动</h3>
+<ul>
+<li>sysdiag</li>
+<li>hrwfpdrv</li>
+<li>hrdevmon</li>
+</ul>
+<h2 id="金山毒霸">金山毒霸</h2>
+<p>下载地址：<a href="https://www.ijinshan.com">https://www.ijinshan.com</a></p>
+<h3 id="进程-4">进程</h3>
+<ul>
+<li>kxescore.exe</li>
+<li>kxetray.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务-4">服务</h3>
+<ul>
+<li>kxescore<br>
+金山毒霸核心服务</li>
+</ul>
+<h3 id="驱动-4">驱动</h3>
+<ul>
+<li>bootsafe</li>
+<li>KAVBootC</li>
+<li>kisnetm</li>
+<li>KDHacker</li>
+<li>kisknl</li>
+<li>ksapi64</li>
+<li>ksthlp64</li>
+<li>kisnetflt</li>
+</ul>
+<h2 id="智量">智量</h2>
+<p>下载地址：<a href="https://www.wisevector.com">https://www.wisevector.com</a></p>
+<h3 id="进程-5">进程</h3>
+<ul>
+<li>WiseVectorSvc.exe</li>
+<li>WiseVector.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务-5">服务</h3>
+<ul>
+<li>智量安全服务</li>
+</ul>
+<h3 id="驱动-5">驱动</h3>
+<ul>
+<li>WiseVectorHIPS</li>
+<li>WiseVectorFW</li>
+</ul>
+<h2 id="奇安信安全防护">奇安信安全防护</h2>
+<p>下载地址：<a href="http://www.pc6.com/softview/SoftView_1108605.html">http://www.pc6.com/softview/SoftView_1108605.html</a></p>
+<h3 id="进程-6">进程</h3>
+<ul>
+<li>QAXEngManager.exe</li>
+<li>QAXSecurity.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务-6">服务</h3>
+<ul>
+<li>QaxEngManager</li>
+<li>QAXDefender</li>
+</ul>
+<h3 id="驱动-6">驱动</h3>
+<ul>
+<li>QKNetFilter</li>
+<li>QesEngEx</li>
+<li>QKSeureIO</li>
+<li>QaxNfDrv</li>
+</ul>
+<h2 id="瑞星杀毒软件">瑞星杀毒软件</h2>
+<p>下载地址：<a href="http://buy.rising.com.cn">http://buy.rising.com.cn</a></p>
+<h3 id="进程-7">进程</h3>
+<ul>
+<li>RsMgrSvc.exe</li>
+<li>ravmond.exe</li>
+<li>rsmain.exe</li>
+<li>rstray.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务-7">服务</h3>
+<ul>
+<li>RsMgrSvc</li>
+<li>RsRavMon</li>
+</ul>
+<h3 id="驱动-7">驱动</h3>
+<ul>
+<li>sysmon</li>
+<li>rspot</li>
+</ul>
+<h2 id="影子系统">影子系统</h2>
+<h3 id="进程-8">进程</h3>
+<ul>
+<li>PsFunctionService.exe</li>
+<li>PowerRemind.exe</li>
+</ul>
+<h3 id="服务-8">服务</h3>
+<ul>
+<li>PsFunctionService</li>
+</ul>
+<h3 id="驱动-8">驱动</h3>
+<ul>
+<li>PsDkCovr</li>
+<li>PsVfilt</li>
+<li>PsLFilt</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Windows Server 原版系统镜像]]></title>
         <id>https://ashe27.github.io/post/windows-server/</id>
@@ -1325,87 +1486,6 @@ C:\Program Files\Internet Explorer\Signup\install.ins
 <h2 id="参考">参考</h2>
 <p><a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpie/8206de0e-2d1e-4a02-977b-b8614c5350d9">INS File Format</a></p>
 <p><a href="https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/">https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[从磁盘上加载证书文件]]></title>
-        <id>https://ashe27.github.io/post/6geICBPwL/</id>
-        <link href="https://ashe27.github.io/post/6geICBPwL/">
-        </link>
-        <updated>2021-08-13T03:45:15.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="方式一">方式一</h2>
-<p>将证书视为存储库，通过 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore">CertOpenStore</a> 打开，枚举出第一个证书即可。<br>
-一个例子</p>
-<pre><code class="language-cpp">template &lt;typename T&gt;
-T decodeObject(DWORD dwEncodingType, const PCERT_EXTENSION pExt)
-{
-	T pInfo = nullptr;
-	DWORD cbInfo = 0;
-	if (!CryptDecodeObjectEx(dwEncodingType, pExt-&gt;pszObjId, pExt-&gt;Value.pbData, pExt-&gt;Value.cbData, CRYPT_DECODE_ALLOC_FLAG | CRYPT_DECODE_NOCOPY_FLAG, nullptr, &amp;pInfo, &amp;cbInfo))
-		return nullptr;
-	return pInfo;
-}
-
-// 证书既是存储库
-HCERTSTORE hCertStore = CertOpenStore(CERT_STORE_PROV_FILENAME_A, dwEncodingType, NULL, CERT_STORE_OPEN_EXISTING_FLAG | CERT_STORE_READONLY_FLAG, &quot;ca.cer&quot;);
-if (hCertStore) {
-	// 取出第一个证书
-	PCCERT_CONTEXT pCertContext = CertEnumCertificatesInStore(hCertStore, nullptr);
-	if (pCertContext) {
-		// 遍历扩展信息
-		for (DWORD i = 0; i &lt; pCertContext-&gt;pCertInfo-&gt;cExtension; ++i) {
-			const PCERT_EXTENSION pExt = pCertContext-&gt;pCertInfo-&gt;rgExtension + i;
-			if (strcmp(pExt-&gt;pszObjId, szOID_KEY_USAGE) == 0) {
-				// 密钥用法
-				const auto pInfo = decodeObject&lt;PCRYPT_BIT_BLOB&gt;(dwEncodingType, pExt);
-				LocalFree(pInfo);
-			} else if(strcmp(pExt-&gt;pszObjId, szOID_BASIC_CONSTRAINTS2) == 0) {
-				// 基本约束
-				const auto pInfo = decodeObject&lt;PCERT_BASIC_CONSTRAINTS2_INFO&gt;(dwEncodingType, pExt);
-				LocalFree(pInfo);
-			} else if (strcmp(pExt-&gt;pszObjId, szOID_ENHANCED_KEY_USAGE) == 0) {
-				// 增强型密钥用法
-				auto pInfo = decodeObject&lt;PCTL_USAGE&gt;(dwEncodingType, pExt);
-				LocalFree(pInfo);
-			} else if (strcmp(pExt-&gt;pszObjId, szOID_SUBJECT_ALT_NAME2) == 0) {
-				// 使用者可选名称
-				const auto pInfo = decodeObject&lt;PCERT_ALT_NAME_INFO&gt;(dwEncodingType, pExt);
-				LocalFree(pInfo);
-			}
-		}
-	}
-	CertCloseStore(hCertStore, 0);
-}
-</code></pre>
-<h2 id="方式二">方式二</h2>
-<p>在 <a href="https://docs.microsoft.com/en-us/windows/win32/seccrypto/cryptoapi-system-architecture">CryptoAPI</a> 中，一个证书文件用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构描述，所以只要将证书文件转换为 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构即可。<br>
-<a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certcreatecertificatecontext">CertCreateCertificateContext</a> 函数可以做到，它从内存中读取证书数据并转换为 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构。<br>
-但是要注意，这个函数只接受DER编码格式的证书，而我们常用的一般是PEM格式（以BEGIN开头，END结尾，中间是BASE64编码），所以要进行转换。<br>
-转换可以用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptstringtobinarya">CryptStringToBinaryA</a> 函数搞定。<br>
-一个简单的例子</p>
-<pre><code class="language-cpp">const DWORD dwEncodingType = X509_ASN_ENCODING;
-
-// 打开证书
-HANDLE hFile = CreateFileW(L&quot;ca.cer&quot;, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-LARGE_INTEGER fileSize;
-GetFileSizeEx(hFile, &amp;fileSize);
-
-// 读取证书内容
-BYTE* buffer = new BYTE[fileSize.QuadPart];
-DWORD dwWritten;
-ReadFile(hFile, buffer, fileSize.QuadPart, &amp;dwWritten, nullptr);
-
-// PEM转DER
-BYTE* bin = new BYTE[dwWritten];
-DWORD flags;
-BOOL ok = CryptStringToBinaryA((LPCSTR)buffer, dwWritten, CRYPT_STRING_BASE64HEADER, bin, &amp;dwWritten, NULL, &amp;flags);
-
-// 获得证书上下文
-PCCERT_CONTEXT pCert = CertCreateCertificateContext(dwEncodingType, bin, dwWritten);
-</code></pre>
-<h2 id="参考">参考</h2>
-<p><a href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/dd743310(v=vs.85)">Load a Certificate from a File</a></p>
-<p><a href="https://stackoverflow.com/questions/34623247/certcreatecertificatecontext-returns-crypt-e-asn1-badtag-8009310b">CertCreateCertificateContext returns CRYPT_E_ASN1_BADTAG / 8009310b</a></p>
 ]]></content>
     </entry>
 </feed>

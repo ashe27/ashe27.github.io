@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>常用杀软、沙盒进程 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1640366924747">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="360安全卫士
+下载地址：https://www.360.cn
+进程
+
+ZhuDongFangYu.exe
+360Tray.exe（软件退出后消失）
+
+服务
+
+ZhuDongFangYu
+
+驱动
+
+360Hvm
+DsArk
+360Box64..." />
+    <meta name="keywords" content="系统安全,工具软件" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1640366924747" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">常用杀软、沙盒进程</h2>
+            <div class="post-date">2021-12-25</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="360安全卫士">360安全卫士</h2>
+<p>下载地址：<a href="https://www.360.cn">https://www.360.cn</a></p>
+<h3 id="进程">进程</h3>
+<ul>
+<li>ZhuDongFangYu.exe</li>
+<li>360Tray.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务">服务</h3>
+<ul>
+<li>ZhuDongFangYu</li>
+</ul>
+<h3 id="驱动">驱动</h3>
+<ul>
+<li>360Hvm</li>
+<li>DsArk</li>
+<li>360Box64</li>
+<li>360FsFlt</li>
+<li>360netmon</li>
+<li>360AntiHijack</li>
+<li>360AntiHacker</li>
+<li>360AntiExploit</li>
+<li>BAPIDRV</li>
+<li>360Sensor</li>
+<li>360qpesv</li>
+<li>360reskit64</li>
+</ul>
+<h2 id="腾讯电脑管家">腾讯电脑管家</h2>
+<p>下载地址：<a href="https://guanjia.qq.com/page/product_download.html">https://guanjia.qq.com/page/product_download.html</a></p>
+<h3 id="进程-2">进程</h3>
+<ul>
+<li>QQPCRTP.exe</li>
+<li>QQPCTray.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务-2">服务</h3>
+<ul>
+<li>QQPCRTP<br>
+电脑管家实时防护服务</li>
+</ul>
+<h3 id="驱动-2">驱动</h3>
+<ul>
+<li>QQSysMonX64（64位系统）</li>
+<li>TFsFlt</li>
+</ul>
+<h2 id="火绒安全软件">火绒安全软件</h2>
+<p>下载地址：<a href="https://www.huorong.cn/person5.html">https://www.huorong.cn/person5.html</a></p>
+<h3 id="进程-3">进程</h3>
+<ul>
+<li>HipsDaemon.exe</li>
+<li>HipsTray.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务-3">服务</h3>
+<ul>
+<li>HipsDaemon</li>
+</ul>
+<h3 id="驱动-3">驱动</h3>
+<ul>
+<li>sysdiag</li>
+<li>hrwfpdrv</li>
+<li>hrdevmon</li>
+</ul>
+<h2 id="金山毒霸">金山毒霸</h2>
+<p>下载地址：<a href="https://www.ijinshan.com">https://www.ijinshan.com</a></p>
+<h3 id="进程-4">进程</h3>
+<ul>
+<li>kxescore.exe</li>
+<li>kxetray.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务-4">服务</h3>
+<ul>
+<li>kxescore<br>
+金山毒霸核心服务</li>
+</ul>
+<h3 id="驱动-4">驱动</h3>
+<ul>
+<li>bootsafe</li>
+<li>KAVBootC</li>
+<li>kisnetm</li>
+<li>KDHacker</li>
+<li>kisknl</li>
+<li>ksapi64</li>
+<li>ksthlp64</li>
+<li>kisnetflt</li>
+</ul>
+<h2 id="智量">智量</h2>
+<p>下载地址：<a href="https://www.wisevector.com">https://www.wisevector.com</a></p>
+<h3 id="进程-5">进程</h3>
+<ul>
+<li>WiseVectorSvc.exe</li>
+<li>WiseVector.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务-5">服务</h3>
+<ul>
+<li>智量安全服务</li>
+</ul>
+<h3 id="驱动-5">驱动</h3>
+<ul>
+<li>WiseVectorHIPS</li>
+<li>WiseVectorFW</li>
+</ul>
+<h2 id="奇安信安全防护">奇安信安全防护</h2>
+<p>下载地址：<a href="http://www.pc6.com/softview/SoftView_1108605.html">http://www.pc6.com/softview/SoftView_1108605.html</a></p>
+<h3 id="进程-6">进程</h3>
+<ul>
+<li>QAXEngManager.exe</li>
+<li>QAXSecurity.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务-6">服务</h3>
+<ul>
+<li>QaxEngManager</li>
+<li>QAXDefender</li>
+</ul>
+<h3 id="驱动-6">驱动</h3>
+<ul>
+<li>QKNetFilter</li>
+<li>QesEngEx</li>
+<li>QKSeureIO</li>
+<li>QaxNfDrv</li>
+</ul>
+<h2 id="瑞星杀毒软件">瑞星杀毒软件</h2>
+<p>下载地址：<a href="http://buy.rising.com.cn">http://buy.rising.com.cn</a></p>
+<h3 id="进程-7">进程</h3>
+<ul>
+<li>RsMgrSvc.exe</li>
+<li>ravmond.exe</li>
+<li>rsmain.exe</li>
+<li>rstray.exe（软件退出后消失）</li>
+</ul>
+<h3 id="服务-7">服务</h3>
+<ul>
+<li>RsMgrSvc</li>
+<li>RsRavMon</li>
+</ul>
+<h3 id="驱动-7">驱动</h3>
+<ul>
+<li>sysmon</li>
+<li>rspot</li>
+</ul>
+<h2 id="影子系统">影子系统</h2>
+<h3 id="进程-8">进程</h3>
+<ul>
+<li>PsFunctionService.exe</li>
+<li>PowerRemind.exe</li>
+</ul>
+<h3 id="服务-8">服务</h3>
+<ul>
+<li>PsFunctionService</li>
+</ul>
+<h3 id="驱动-8">驱动</h3>
+<ul>
+<li>PsDkCovr</li>
+<li>PsVfilt</li>
+<li>PsLFilt</li>
+</ul>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/mJ8GiZQbj/" class="tag">
+                    系统安全
+                  </a>
+                
+                  <a href="https://ashe27.github.io/tag/520fi4i5c/" class="tag">
+                    工具软件
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/windows-server/">
+                  <h3 class="post-title">
+                    Windows Server 原版系统镜像
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>
