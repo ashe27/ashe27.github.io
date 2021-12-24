@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-12-24T17:38:23.929Z</updated>
+    <updated>2021-12-24T17:46:06.017Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -175,6 +175,21 @@
 <li>PsDkCovr</li>
 <li>PsVfilt</li>
 <li>PsLFilt</li>
+</ul>
+<hr>
+<h2 id="avira小红伞">Avira（小红伞）</h2>
+<h3 id="进程-9">进程</h3>
+<ul>
+<li>avguard.exe</li>
+</ul>
+<h3 id="服务-9">服务</h3>
+<ul>
+<li>AviraSecurity</li>
+<li>AntiVirService</li>
+</ul>
+<h3 id="驱动-9">驱动</h3>
+<ul>
+<li>avkmgr</li>
 </ul>
 ]]></content>
     </entry>
