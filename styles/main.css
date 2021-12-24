@@ -451,7 +451,7 @@ a {
   margin-bottom: 24px;
 }
 .post-detail .post-title {
-  font-size: 40px;
+  font-size: 28px;
 }
 .post-detail .post-date {
   font-size: 18px;
@@ -770,8 +770,20 @@ a {
   max-width: none;
 }
 
-.post-title {
+.post-detail .post-title {
   font-size: 28px;
+}
+
+.post-content h2 {
+font-size: 22px;
+}
+
+.post-content h3 {
+font-size: 20px;
+}
+
+.post-content h4 {
+font-size: 18px;
 }
 
 .post-detail .post-content p {
