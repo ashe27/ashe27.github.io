@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>关于 | ashe&#39;s blog</title>
+<title>修改函数返回地址改变程序执行流程 | ashe&#39;s blog</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -18,9 +18,14 @@
 
 
 
-    <meta name="description" content="一个专注于Windows编程的程序员。
-" />
-    <meta name="keywords" content="" />
+    <meta name="description" content="
+原文链接：https://blog.csdn.net/yiftss/article/details/89474622
+
+C语言代码实现
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+..." />
+    <meta name="keywords" content="Windows编程" />
   </head>
   <body>
     <div id="app" class="main">
@@ -95,14 +100,60 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h1 class="post-title">关于</h1>
-            <div class="post-date">2019-01-25</div>
+            <h1 class="post-title">修改函数返回地址改变程序执行流程</h1>
+            <div class="post-date">2021-12-27</div>
             
             <div class="post-content" v-pre>
-              <p>一个专注于Windows编程的程序员。</p>
+              <blockquote>
+<p>原文链接：<a href="https://blog.csdn.net/yiftss/article/details/89474622">https://blog.csdn.net/yiftss/article/details/89474622</a></p>
+</blockquote>
+<p>C语言代码实现</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+ 
+void function()
+{
+	printf(&quot;hello,function!\n&quot;);
+	getchar();
+	exit(0);
+}
+ 
+void test()
+{
+	__asm
+	{
+		mov eax,function
+		mov [ebp+4],eax
+	}
+}
+ 
+int main()
+{
+	test();
+	printf(&quot;hello,world!\n&quot;);
+	return 0;
+}
+</code></pre>
 
             </div>
             
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/X2BDcznSs/" class="tag">
+                    Windows编程
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/VUy3aewsX/">
+                  <h3 class="post-title">
+                    常用杀软、沙盒进程
+                  </h3>
+                </a>
+              </div>
             
 
             

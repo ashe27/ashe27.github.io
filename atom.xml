@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-12-25T07:32:14.587Z</updated>
+    <updated>2021-12-27T06:45:32.328Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,6 +10,44 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, ashe&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[修改函数返回地址改变程序执行流程]]></title>
+        <id>https://ashe27.github.io/post/wH82Ux61B/</id>
+        <link href="https://ashe27.github.io/post/wH82Ux61B/">
+        </link>
+        <updated>2021-12-27T06:43:38.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>原文链接：<a href="https://blog.csdn.net/yiftss/article/details/89474622">https://blog.csdn.net/yiftss/article/details/89474622</a></p>
+</blockquote>
+<p>C语言代码实现</p>
+<pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+ 
+void function()
+{
+	printf(&quot;hello,function!\n&quot;);
+	getchar();
+	exit(0);
+}
+ 
+void test()
+{
+	__asm
+	{
+		mov eax,function
+		mov [ebp+4],eax
+	}
+}
+ 
+int main()
+{
+	test();
+	printf(&quot;hello,world!\n&quot;);
+	return 0;
+}
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[常用杀软、沙盒进程]]></title>
         <id>https://ashe27.github.io/post/VUy3aewsX/</id>
@@ -1565,82 +1603,6 @@ AutoConfigJSURL=http://localhost/test2.pac
 当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数时，表示<strong>优先使用&quot;自动配置&quot;代理，否则使用&quot;代理服务器&quot;的设置</strong>。<br>
 而当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>作为参数时，表示<strong>跳过&quot;自动配置&quot;代理，直接使用&quot;代理服务器&quot;的设置</strong>。<br>
 最常见的浏览器和绝大多数应用通常是使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数，用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>的情况比较少见。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[IE自动部署工具包IEAK]]></title>
-        <id>https://ashe27.github.io/post/Rn9thta4F/</id>
-        <link href="https://ashe27.github.io/post/Rn9thta4F/">
-        </link>
-        <updated>2021-08-18T15:20:31.000Z</updated>
-        <content type="html"><![CDATA[<p>Internet Explorer Administration Kit (IEAK)是一个IE的管理工具包，可自定义配置生成一个IE安装包或仅设置的包，一般是给网管人员部署使用的，可以帮助管理员快速统一部署IE。<br>
-适用于IE11的工具包下载地址：<a href="https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads">https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads</a></p>
-<h2 id="ins配置文件">INS配置文件</h2>
-<p>我们用它配置&quot;链接&quot;相关设置<br>
-<img src="https://ashe27.github.io/post-images/1629300058002.png" alt="" loading="lazy"><br>
-最终会生成一个安装包，其中有一个INS文件内容大概是这样</p>
-<pre><code>[Branding]
-CompanyName=Microsoft Corporation
-Wizard_Version=11.00.18362.1
-Version=11,00,18362,1
-Custom_Key=MICROSO
-Global=1
-IE4 Welcome Msg=1
-Platform=2
-GUID={7211FFE6-C149-11D0-AFF0-00AA003758BB}
-Type=0
-NoClear=1
-[URL]
-AutoDetect=0
-AutoConfig=1
-AutoConfigTime=1
-AutoConfigURL=http://localhost/ie.ins
-AutoConfigJSURL=http://localhost/test1.pac
-[Proxy]
-HTTP_Proxy_Server=
-FTP_Proxy_Server=
-Secure_Proxy_Server=
-Socks_Proxy_Server=
-Use_Same_Proxy=1
-Proxy_Enable=0
-Proxy_Override=&quot;&lt;local&gt;&quot;
-</code></pre>
-<p>一个有效的ins文件必须有<code>[Branding]</code>节，我们也可以不用IEAK生成，而是直接从<code>C:\Program Files\Internet Explorer\SIGNUP\install.ins</code>拷贝一份进行手动修改也是可以的。</p>
-<pre><code>[Branding]
-CompanyName=
-Wizard_Version=11.00.19041.1
-Version=11,00,19041,1
-Custom_Key=MICROSO
-Global=1
-IE4 Welcome Msg=1
-Platform=2
-GUID={7211FFE6-C149-11D0-AFF0-00AA003758BB}
-Type=0
-NoClear=1
-NoDial=0
-FavoritesDelete=0
-FavoritesOnTop=0
-User Agent=
-[URL]
-FirstHomePage=https://www.google.com
-</code></pre>
-<p>这个例子添加了FirstHomePage字段，首次打开IE就会打开该首页。</p>
-<p>运行部署安装包后会在IE目录下生成一个INS文件，并提示注销登录后生效</p>
-<pre><code>C:\Program Files\Internet Explorer\CUSTOM\INSTALL.INS
-</code></pre>
-<p>注销是为了让设置生效，实际上我们可以使用其他手段立即生效，有两种方法</p>
-<h3 id="重置ie">重置IE</h3>
-<p>配置文件只有在IE初始化时会被访问，我们可以重置IE来让它再次载入配置文件。<br>
-运行命令<code>RunDll32.exe inetcpl.cpl,ResetIEtoDefaults</code>可以弹出重置对话框，确认重置后IE会依次从以下位置来获取配置</p>
-<pre><code>C:\Program Files\Internet Explorer\Custom\install.ins
-C:\Program Files\Internet Explorer\Signup\install.ins
-</code></pre>
-<h3 id="brandinternetexplorer">BrandInternetExplorer</h3>
-<p><code>iedkcs32.dll</code>有一个导出函数<code>BrandInternetExplorer</code>可以使得IE下次启动时载入指定的INS配置文件。<br>
-<code>rundll32.exe iedkcs32.dll,BrandInternetExplorer /ins:&quot;D:\test.ins&quot;</code></p>
-<h2 id="参考">参考</h2>
-<p><a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpie/8206de0e-2d1e-4a02-977b-b8614c5350d9">INS File Format</a></p>
-<p><a href="https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/">https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/</a></p>
 ]]></content>
     </entry>
 </feed>
