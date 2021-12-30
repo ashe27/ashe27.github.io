@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-12-30T06:34:29.253Z</updated>
+    <updated>2021-12-30T07:50:08.293Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -310,17 +310,62 @@
 <li>avkmgr</li>
 </ul>
 <hr>
-<h2 id="影子系统">影子系统</h2>
+<h2 id="mcafee">McAfee</h2>
+<p>下载地址：<a href="https://www.mcafee.com/zh-hk/index.html">https://www.mcafee.com/zh-hk/index.html</a></p>
 <h3 id="进程-15">进程</h3>
+<ul>
+<li>avguard.exe</li>
+</ul>
+<h3 id="服务-15">服务</h3>
+<ul>
+<li>mfemms</li>
+<li>mfevtp</li>
+<li>mfefire</li>
+<li>McAPExe</li>
+<li>mccspsvc</li>
+<li>PEFService</li>
+<li>McAfee WebAdvisor</li>
+</ul>
+<h3 id="驱动-15">驱动</h3>
+<ul>
+<li>mfencbdc</li>
+<li>mfehidk</li>
+<li>mfeaack</li>
+<li>mfeplk</li>
+<li>mfefirek</li>
+<li>mfewfpk</li>
+<li>McPvDrv</li>
+</ul>
+<hr>
+<h2 id="bitdefender">BitDefender</h2>
+<p>下载地址：<a href="http://www.bitdefender-cn.com/downloads/">http://www.bitdefender-cn.com/downloads/</a></p>
+<h3 id="进程-16">进程</h3>
+<h3 id="服务-16">服务</h3>
+<ul>
+<li>BDProtSrv</li>
+<li>BDAuxSrv</li>
+<li>VSSERV</li>
+</ul>
+<hr>
+<h2 id="f-secure">F-Secure</h2>
+<p>下载地址：<a href="https://www.f-secure.com/en/home/download">https://www.f-secure.com/en/home/download</a></p>
+<h2 id="服务-17">服务</h2>
+<ul>
+<li>fshoster</li>
+<li>fsnethoster</li>
+</ul>
+<hr>
+<h2 id="影子系统">影子系统</h2>
+<h3 id="进程-17">进程</h3>
 <ul>
 <li>PsFunctionService.exe</li>
 <li>PowerRemind.exe</li>
 </ul>
-<h3 id="服务-15">服务</h3>
+<h3 id="服务-18">服务</h3>
 <ul>
 <li>PsFunctionService</li>
 </ul>
-<h3 id="驱动-15">驱动</h3>
+<h3 id="驱动-16">驱动</h3>
 <ul>
 <li>PsDkCovr</li>
 <li>PsVfilt</li>
