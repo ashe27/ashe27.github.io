@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2021-12-30T07:50:08.293Z</updated>
+    <updated>2021-12-31T07:52:27.889Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -355,17 +355,32 @@
 <li>fsnethoster</li>
 </ul>
 <hr>
+<h2 id="comodo">Comodo</h2>
+<p>下载地址：<a href="https://download-cn.comodo.com/cis/download/installs/1000/standalone/cispremium_only_installer.exe">https://download-cn.comodo.com/cis/download/installs/1000/standalone/cispremium_only_installer.exe</a></p>
+<h2 id="服务-18">服务</h2>
+<ul>
+<li>CmdAgent</li>
+<li>cmdvirth</li>
+</ul>
+<h2 id="驱动-16">驱动</h2>
+<ul>
+<li>cmderd</li>
+<li>cmdGuard</li>
+<li>cmdhlp</li>
+<li>inspect</li>
+</ul>
+<hr>
 <h2 id="影子系统">影子系统</h2>
 <h3 id="进程-17">进程</h3>
 <ul>
 <li>PsFunctionService.exe</li>
 <li>PowerRemind.exe</li>
 </ul>
-<h3 id="服务-18">服务</h3>
+<h3 id="服务-19">服务</h3>
 <ul>
 <li>PsFunctionService</li>
 </ul>
-<h3 id="驱动-16">驱动</h3>
+<h3 id="驱动-17">驱动</h3>
 <ul>
 <li>PsDkCovr</li>
 <li>PsVfilt</li>
