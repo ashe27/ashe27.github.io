@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-01-17T10:09:29.924Z</updated>
+    <updated>2022-01-17T10:11:46.143Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -1458,7 +1458,7 @@ echo 'done.'
         <link href="https://ashe27.github.io/post/18OY8R7kO/">
         </link>
         <updated>2021-08-20T04:00:57.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="按用户代理时的注册表位置">按用户代理时的注册表位置</h1>
+        <content type="html"><![CDATA[<h2 id="按用户代理时的注册表位置">按用户代理时的注册表位置</h2>
 <p>Windows系统默认是&quot;按用户代理&quot;的，意味着每个系统账户都有属于自己独立的代理设置。我们可以运行命令<code>Inetcpl.cpl</code>来打开IE选项窗口，在&quot;连接&quot;选项卡中点击&quot;局域网设置&quot;便可以显示代理设置界面，<br>
 代理设置最终会保存在注册表中。</p>
 <h2 id="自动配置部分">自动配置部分</h2>
