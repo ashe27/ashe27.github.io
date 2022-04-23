@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-04-23T15:36:20.803Z</updated>
+    <updated>2022-04-23T15:41:02.379Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,6 +10,56 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, ashe&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Dear ImGui学习：使用 WantCaptureMouse 检查鼠标消息]]></title>
+        <id>https://ashe27.github.io/post/FrAOfjdrv/</id>
+        <link href="https://ashe27.github.io/post/FrAOfjdrv/">
+        </link>
+        <updated>2022-04-23T15:40:46.000Z</updated>
+        <content type="html"><![CDATA[<p><code>WantCaptureMouse</code>是类<code>ImGuiIO</code>的成员方法，源码中对于<code>WantCaptureMouse</code>的注释是这么写的：</p>
+<blockquote>
+<p>Set when Dear ImGui will use mouse inputs, in this case do not dispatch them to your main game/application (either way, always pass on mouse inputs to imgui). (e.g. unclicked mouse is hovering over an imgui window, widget is active, mouse was clicked over an imgui window, etc.).</p>
+</blockquote>
+<p>简单地说就是可以用来它判断鼠标是否在 imgui 窗口内，大部分使用场景是用来覆盖游戏引擎自身的鼠标数据。<br>
+比如我在游戏内show出窗口时，默认情况下鼠标在窗口上的点击都会传递给游戏处理，而此时我需要避免将 imgui 的鼠标事件传递给游戏处理，那么就可以通过<code>WantCaptureMouse</code>来判断</p>
+<pre><code class="language-cpp">LRESULT WINAPI MyWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam)) {
+        return ERROR_SUCCESS;
+    }
+
+    const ImGuiIO&amp; io = ImGui::GetIO();
+    if (io.WantCaptureMouse &amp;&amp; (uMsg == WM_LBUTTONDOWN || uMsg == WM_LBUTTONUP || uMsg == WM_RBUTTONDOWN || uMsg == WM_RBUTTONUP || uMsg == WM_MBUTTONDOWN || uMsg == WM_MBUTTONUP || uMsg == WM_MOUSEWHEEL || uMsg == WM_MOUSEMOVE)) {
+        return ERROR_SUCCESS;
+    }
+
+    return CallWindowProcW(g_pOldWindowProc, hWnd, uMsg, wParam, lParam);
+}
+</code></pre>
+<p>鼠标在 imgui 窗口外时，imgui 默认会渲染指针样式，再加上游戏引擎渲染的指针样式，就出现了游戏内同时有两个指针的问题，所以我们在渲染时也可以通过<code>WantCaptureMouse</code>来检查，避免在 imgui 窗口外二次渲染指针。</p>
+<pre><code class="language-cpp">ImGui_ImplDX11_NewFrame();
+ImGui_ImplWin32_NewFrame();
+ImGui::NewFrame();
+
+// 鼠标不在imgui窗口内就不要渲染指针了
+const ImGuiIO&amp; io = ImGui::GetIO();
+if (!io.WantCaptureMouse) {
+    ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+}
+
+ImGui::Begin(&quot;Demo&quot;);
+ImGui::Text(&quot;FPS:%.1f&quot;, io.Framerate);
+ImGui::End();
+
+ImGui::Render();
+</code></pre>
+<p><strong>注意，永远不要手动去设置 WantCaptureMouse。</strong></p>
+<h2 id="参考">参考</h2>
+<p><a href="https://github.com/ocornut/imgui/issues/4593">io.WantCaptureMouse is not working. So im using an alternative bool. But i still want to understand what im doing wrong.</a><br>
+<a href="https://github.com/ocornut/imgui/issues/5061">How to use imgui in an existing win32 dx11 application properly.</a><br>
+<a href="https://www.unknowncheats.me/forum/direct3d/340355-mouse-input-imgui-window.html">Mouse input going through ImGui window</a></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[常用杀软、沙盒进程]]></title>
         <id>https://ashe27.github.io/post/VUy3aewsX/</id>
@@ -1688,82 +1738,6 @@ AutoConfigJSURL=http://localhost/test2.pac
 当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数时，表示<strong>优先使用&quot;自动配置&quot;代理，否则使用&quot;代理服务器&quot;的设置</strong>。<br>
 而当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>作为参数时，表示<strong>跳过&quot;自动配置&quot;代理，直接使用&quot;代理服务器&quot;的设置</strong>。<br>
 最常见的浏览器和绝大多数应用通常是使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数，用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>的情况比较少见。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[IE自动部署工具包IEAK]]></title>
-        <id>https://ashe27.github.io/post/Rn9thta4F/</id>
-        <link href="https://ashe27.github.io/post/Rn9thta4F/">
-        </link>
-        <updated>2021-08-18T15:20:31.000Z</updated>
-        <content type="html"><![CDATA[<p>Internet Explorer Administration Kit (IEAK)是一个IE的管理工具包，可自定义配置生成一个IE安装包或仅设置的包，一般是给网管人员部署使用的，可以帮助管理员快速统一部署IE。<br>
-适用于IE11的工具包下载地址：<a href="https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads">https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads</a></p>
-<h2 id="ins配置文件">INS配置文件</h2>
-<p>我们用它配置&quot;链接&quot;相关设置<br>
-<img src="https://ashe27.github.io/post-images/1629300058002.png" alt="" loading="lazy"><br>
-最终会生成一个安装包，其中有一个INS文件内容大概是这样</p>
-<pre><code>[Branding]
-CompanyName=Microsoft Corporation
-Wizard_Version=11.00.18362.1
-Version=11,00,18362,1
-Custom_Key=MICROSO
-Global=1
-IE4 Welcome Msg=1
-Platform=2
-GUID={7211FFE6-C149-11D0-AFF0-00AA003758BB}
-Type=0
-NoClear=1
-[URL]
-AutoDetect=0
-AutoConfig=1
-AutoConfigTime=1
-AutoConfigURL=http://localhost/ie.ins
-AutoConfigJSURL=http://localhost/test1.pac
-[Proxy]
-HTTP_Proxy_Server=
-FTP_Proxy_Server=
-Secure_Proxy_Server=
-Socks_Proxy_Server=
-Use_Same_Proxy=1
-Proxy_Enable=0
-Proxy_Override=&quot;&lt;local&gt;&quot;
-</code></pre>
-<p>一个有效的ins文件必须有<code>[Branding]</code>节，我们也可以不用IEAK生成，而是直接从<code>C:\Program Files\Internet Explorer\SIGNUP\install.ins</code>拷贝一份进行手动修改也是可以的。</p>
-<pre><code>[Branding]
-CompanyName=
-Wizard_Version=11.00.19041.1
-Version=11,00,19041,1
-Custom_Key=MICROSO
-Global=1
-IE4 Welcome Msg=1
-Platform=2
-GUID={7211FFE6-C149-11D0-AFF0-00AA003758BB}
-Type=0
-NoClear=1
-NoDial=0
-FavoritesDelete=0
-FavoritesOnTop=0
-User Agent=
-[URL]
-FirstHomePage=https://www.google.com
-</code></pre>
-<p>这个例子添加了FirstHomePage字段，首次打开IE就会打开该首页。</p>
-<p>运行部署安装包后会在IE目录下生成一个INS文件，并提示注销登录后生效</p>
-<pre><code>C:\Program Files\Internet Explorer\CUSTOM\INSTALL.INS
-</code></pre>
-<p>注销是为了让设置生效，实际上我们可以使用其他手段立即生效，有两种方法</p>
-<h3 id="重置ie">重置IE</h3>
-<p>配置文件只有在IE初始化时会被访问，我们可以重置IE来让它再次载入配置文件。<br>
-运行命令<code>RunDll32.exe inetcpl.cpl,ResetIEtoDefaults</code>可以弹出重置对话框，确认重置后IE会依次从以下位置来获取配置</p>
-<pre><code>C:\Program Files\Internet Explorer\Custom\install.ins
-C:\Program Files\Internet Explorer\Signup\install.ins
-</code></pre>
-<h3 id="brandinternetexplorer">BrandInternetExplorer</h3>
-<p><code>iedkcs32.dll</code>有一个导出函数<code>BrandInternetExplorer</code>可以使得IE下次启动时载入指定的INS配置文件。<br>
-<code>rundll32.exe iedkcs32.dll,BrandInternetExplorer /ins:&quot;D:\test.ins&quot;</code></p>
-<h2 id="参考">参考</h2>
-<p><a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpie/8206de0e-2d1e-4a02-977b-b8614c5350d9">INS File Format</a></p>
-<p><a href="https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/">https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/</a></p>
 ]]></content>
     </entry>
 </feed>
