@@ -766,7 +766,11 @@ a {
         margin-left: 280px;
       }
     
-      .post-item {
+      body {
+    font-family: -apple-system,SF UI Text,Arial,PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,sans-serif;
+}
+
+.post-item {
     padding-bottom: 0;
 }
 
