@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>在.NET 2.0中使用C#新特性 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1650791692427">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+<link rel="stylesheet" href="/assets/highlight/styles/atom-one-dark.min.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="我们有时有这样的需求：在.NET Framework 2.0中用上较新的C#特性，以提高开发效率及幸福感。
+现代C#的某些特性需要框架支持，而微软官方已经放弃对.NET Framework 2.0的支持，某些特性甚至完全不支持.NET Fr..." />
+    <meta name="keywords" content="C#,.NET Framework" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1650791692427" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h1 class="post-title">在.NET 2.0中使用C#新特性</h1>
+            <div class="post-date">2022-04-15</div>
+            
+            <div class="post-content" v-pre>
+              <p>我们有时有这样的需求：在.NET Framework 2.0中用上较新的C#特性，以提高开发效率及幸福感。<br>
+现代C#的某些特性需要框架支持，而微软官方已经放弃对.NET Framework 2.0的支持，某些特性甚至完全不支持.NET Framework。<br>
+为了在.NET Framework 2.0中使用上新特性，可以使用第三方库。</p>
+<p><strong>改变语言版本</strong></p>
+<p>在开始介绍之前，我们最好将语言版本改至最高。<br>
+默认情况下，.NET Framework使用 <a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-version-history#c-version-73">C# 7.3</a> 版本。为了用上最新的语言特性，我们编辑工程文件<code>.csproj</code>，添加<code>&lt;LangVersion&gt;</code>属性</p>
+<pre><code class="language-xml">&lt;Project ToolsVersion=&quot;15.0&quot; xmlns=&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;&gt;
+  &lt;PropertyGroup&gt;
+    ...
+    &lt;LangVersion&gt;latest&lt;/LangVersion&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+</code></pre>
+<p><code>latest</code>意味着使用编译器支持的最高语言版本</p>
+<blockquote>
+<p>若要了解当前使用的语言版本，请在代码中添加 #error version（区分大小写）。 这样做可使编译器报告编译器错误 CS8304，并显示一条消息，其中包含正在使用的编译器版本和当前选择的语言版本。</p>
+</blockquote>
+<hr>
+<h2 id="net-framework-35-特性">.NET Framework 3.5 特性</h2>
+<h3 id="无参数action委托">无参数Action委托</h3>
+<p>介绍：<br>
+<a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.action?view=netframework-3.5">https://docs.microsoft.com/zh-cn/dotnet/api/system.action?view=netframework-3.5</a></p>
+<p>解决方案1：<a href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
+解决方案2：<a href="https://www.nuget.org/packages/NetLegacySupport.Action/">NetLegacySupport.Action</a></p>
+<h3 id="扩展方法">扩展方法</h3>
+<p>介绍：<br>
+<a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/programming-guide/classes-and-structs/extension-methods">https://docs.microsoft.com/zh-cn/dotnet/csharp/programming-guide/classes-and-structs/extension-methods</a></p>
+<p>解决方案1：<a href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
+解决方案2：<a href="https://www.nuget.org/packages/DevLib.Legacy">DevLib.Legacy</a></p>
+<hr>
+<h2 id="net-framework-40-特性">.NET Framework 4.0 特性</h2>
+<h3 id="tuple类">Tuple类</h3>
+<p>介绍：<br>
+<a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.tuple?view=netframework-4.0">https://docs.microsoft.com/zh-cn/dotnet/api/system.tuple?view=netframework-4.0</a></p>
+<p>解决方案1：<a href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
+解决方案2：<a href="https://www.nuget.org/packages/NetLegacySupport.Tuple">NetLegacySupport.Tuple</a></p>
+<h3 id="threadlocal">ThreadLocal</h3>
+<p>介绍：<br>
+<a href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadlocal-1">https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadlocal-1</a></p>
+<p>解决方案1：<a href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a></p>
+<hr>
+<h2 id="net-framework-47-特性">.NET Framework 4.7 特性</h2>
+<h3 id="valuetuple-结构">ValueTuple 结构</h3>
+<p>介绍：<br>
+<a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.valuetuple?view=netframework-4.7">https://docs.microsoft.com/zh-cn/dotnet/api/system.valuetuple?view=netframework-4.7</a><br>
+<a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/builtin-types/value-tuples">https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/builtin-types/value-tuples</a></p>
+<p>解决方案1：<a href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
+解决方案2：<a href="https://www.nuget.org/packages/Portable.System.ValueTuple">Portable.System.ValueTuple</a></p>
+<hr>
+<h2 id="不支持-net-framework-的特性">不支持 .NET Framework 的特性</h2>
+<h3 id="range-结构">Range 结构</h3>
+<p>介绍：<br>
+<a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.range">https://docs.microsoft.com/zh-cn/dotnet/api/system.range</a></p>
+<p>解决方案1：<a href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a></p>
+<h3 id="index-结构">Index 结构</h3>
+<p>介绍：<br>
+<a href="https://docs.microsoft.com/zh-cn/dotnet/api/system.index">https://docs.microsoft.com/zh-cn/dotnet/api/system.index</a></p>
+<p>解决方案1：<a href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a></p>
+<h3 id="仅初始化属性init-only-properties">仅初始化属性（Init-only properties）</h3>
+<p>介绍：<br>
+<a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-9#init-only-setters">https://docs.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-9#init-only-setters</a><br>
+<a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/init">https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/init</a></p>
+<p>解决方案1：<a href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
+解决方案2：<a href="https://www.nuget.org/packages/IsExternalInit">IsExternalInit</a></p>
+<hr>
+<h2 id="参考">参考</h2>
+<p><a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/configure-language-version">C# 语言版本控制</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/qxR8_Edo9/" class="tag">
+                    C#
+                  </a>
+                
+                  <a href="https://ashe27.github.io/tag/Xxvz3VKXKD/" class="tag">
+                    .NET Framework
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/windows-server/">
+                  <h3 class="post-title">
+                    Windows Server 原版系统镜像
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="/assets/highlight/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll()
+  </script>
+
+
+
+
+
+  </body>
+</html>
