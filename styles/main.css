@@ -816,6 +816,11 @@ color: #4d4d4d;
   font-size: 10pt;
 }
 
+.tag {
+    font-size: 1px;
+    border-radius: 0;
+}
+
 .next-post .post-title {
     font-size: 16px;
 }
