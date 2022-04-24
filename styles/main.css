@@ -766,7 +766,11 @@ a {
         margin-left: 280px;
       }
     
-      .post-detail .post-title {
+      .post-item .left .post-title {
+    font-size: 18px;
+}
+
+.post-detail .post-title {
   font-size: 22px;
 }
 
