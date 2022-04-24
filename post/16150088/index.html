@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>编译时检测.NET Framework框架版本 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://ashe27.github.io/favicon.ico?v=1650792118108">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+<link rel="stylesheet" href="/assets/highlight/styles/atom-one-dark.min.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="在新的.NET框架下，官方自带了一些用于判断框架版本的条件变量（C#预处理器指令）
+但是在老的编译系统上没有此功能，所以只能模拟实现。
+终于在 stackoverflow 上找到了答案，思路很不错，在.csproj工程文件中利用框架的Sys..." />
+    <meta name="keywords" content=".NET Framework" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://ashe27.github.io/images/avatar.png?v=1650792118108" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h1 class="post-title">编译时检测.NET Framework框架版本</h1>
+            <div class="post-date">2022-04-15</div>
+            
+            <div class="post-content" v-pre>
+              <p>在新的.NET框架下，官方自带了一些用于判断框架版本的条件变量（<a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/preprocessor-directives">C#预处理器指令</a>）</p>
+<p>但是在老的编译系统上没有此功能，所以只能模拟实现。</p>
+<p>终于在 stackoverflow 上找到了答案，思路很不错，在<code>.csproj</code>工程文件中利用框架的<code>System.Version</code>去动态比较版本号，然后定义相关的条件变量。</p>
+<h2 id="解决方案">解决方案</h2>
+<p>在原答案的基础上修改了一下，兼容了微软官方的条件变量。</p>
+<p>创建一个新文件<code>FrameworkSymbols.Common.prop</code>，内容如下</p>
+<pre><code class="language-xml">&lt;Project xmlns=&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.8')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET48;NET48_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.7.2')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET472;NET472_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.7.1')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET471;NET471_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.7')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET47;NET47_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.6.2')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET462;NET462_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.6.1')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET461;NET461_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.6')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET46;NET46_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.5.2')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET452;NET452_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.5.1')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET451;NET451_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.5')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET45;NET45_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.0')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET40;NET40_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('3.5')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET35;NET35_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('3.0')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET30;NET30_OR_GREATER&lt;/DefineConstants&gt;
+    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('2.0')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET20;NET20_OR_GREATER&lt;/DefineConstants&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+</code></pre>
+<p>在工程文件中导入</p>
+<pre><code class="language-xml">&lt;Project&gt;
+    ...
+    &lt;Import Project=&quot;FrameworkSymbols.Common.prop&quot; /&gt;
+&lt;/Project&gt;
+</code></pre>
+<p>使用</p>
+<pre><code class="language-csharp">#if NET20
+    Console.WriteLine(&quot;NET20&quot;);
+#endif
+...
+#if NET35_OR_GREATER
+    Console.WriteLine(&quot;NET35_OR_GREATER&quot;);
+#endif
+</code></pre>
+<hr>
+<h2 id="参考">参考</h2>
+<p><a href="https://stackoverflow.com/questions/3436526/detect-target-framework-version-at-compile-time">Detect target framework version at compile time</a></p>
+<p><a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/preprocessor-directives">C#预处理器指令</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/Xxvz3VKXKD/" class="tag">
+                    .NET Framework
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/windows-server/">
+                  <h3 class="post-title">
+                    Windows Server 原版系统镜像
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="/assets/highlight/highlight.min.js"></script>
+  <script>
+    hljs.highlightAll()
+  </script>
+
+
+
+
+
+  </body>
+</html>
