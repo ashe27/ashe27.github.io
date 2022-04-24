@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-04-24T01:07:08.522Z</updated>
+    <updated>2022-04-24T01:10:34.152Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,6 +10,96 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, ashe&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[VMware Workstation 下载地址]]></title>
+        <id>https://ashe27.github.io/post/aU1377x4l/</id>
+        <link href="https://ashe27.github.io/post/aU1377x4l/">
+        </link>
+        <updated>2022-04-24T01:09:15.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="最新版">最新版</h2>
+<p>Windows：https://www.vmware.com/go/getworkstation-win<br>
+Linux：https://www.vmware.com/go/getworkstation-linux</p>
+<hr>
+<h2 id="v16">v16</h2>
+<p>https://download3.vmware.com/software/WKST-1623-WIN-New/VMware-workstation-full-16.2.3-19376536.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.2-19200509.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.1-18811642.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.0-18760230.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.2-17966106.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.1-17801498.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.0-17198959.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.0.0-16894299.exe</p>
+<hr>
+<h2 id="v15">v15</h2>
+<p>https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.6-16341506.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.5-16285975.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.2-15785246.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.1-15018445.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.0-14665864.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.1.0-13591040.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.4-12990004.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.3-12422535.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.2-10952284.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.1-10737736.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.0-10134415.exe</p>
+<hr>
+<h2 id="v14">v14</h2>
+<p>https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.8-14921873.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.7-12989993.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.6-12368378.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.5-10950780.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.4-10722678.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.3-9474260.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.2-8497320.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.1-7528167.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.0-7370693.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.0.0-6661328.exe</p>
+<hr>
+<h2 id="v12">v12</h2>
+<p>https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.9-7535481.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.8-7098237.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.7-5813279.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.6-5528349.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.5-5234757.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.4-5192485.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.3-5115892.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.2-4638234.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.1-4542065.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.0-4352439.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.1.1-3770994.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.1.0-3272444.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.0.1-3160714.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.0.0-2985596.exe</p>
+<hr>
+<h2 id="v11">v11</h2>
+<p>https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.4-3848939.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.3-3206955.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.2-2780323.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.1-2771112.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.0-2496824.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.0.0-2305329.exe</p>
+<hr>
+<h2 id="v10">v10</h2>
+<p>https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.7-2844087.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.6-2700073.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.5-2443746.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.4-2249910.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.3-1895310.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.2-1744117.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.1-1379776.exe<br>
+https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.0-1295980.exe</p>
+<hr>
+<h2 id="v9">v9</h2>
+<p>https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.4-1945795.exe<br>
+https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.3-1410761.exe<br>
+https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.2-1031769.exe<br>
+https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.1-894247.exe<br>
+https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.0-812388.exe</p>
+<hr>
+<h2 id="参考">参考</h2>
+<p>https://github.com/201853910/VMwareWorkstation/releases</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Dear ImGui学习：使用 WantCaptureMouse 检查鼠标消息]]></title>
         <id>https://ashe27.github.io/post/Qg_pGRmEg/</id>
@@ -1357,82 +1447,6 @@ AutoConfigJSURL=http://localhost/test2.pac
 当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数时，表示<strong>优先使用&quot;自动配置&quot;代理，否则使用&quot;代理服务器&quot;的设置</strong>。<br>
 而当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>作为参数时，表示<strong>跳过&quot;自动配置&quot;代理，直接使用&quot;代理服务器&quot;的设置</strong>。<br>
 最常见的浏览器和绝大多数应用通常是使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数，用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>的情况比较少见。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[IE自动部署工具包IEAK]]></title>
-        <id>https://ashe27.github.io/post/Rn9thta4F/</id>
-        <link href="https://ashe27.github.io/post/Rn9thta4F/">
-        </link>
-        <updated>2021-08-18T15:20:31.000Z</updated>
-        <content type="html"><![CDATA[<p>Internet Explorer Administration Kit (IEAK)是一个IE的管理工具包，可自定义配置生成一个IE安装包或仅设置的包，一般是给网管人员部署使用的，可以帮助管理员快速统一部署IE。<br>
-适用于IE11的工具包下载地址：<a href="https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads">https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads</a></p>
-<h2 id="ins配置文件">INS配置文件</h2>
-<p>我们用它配置&quot;链接&quot;相关设置<br>
-<img src="https://ashe27.github.io/post-images/1629300058002.png" alt="" loading="lazy"><br>
-最终会生成一个安装包，其中有一个INS文件内容大概是这样</p>
-<pre><code>[Branding]
-CompanyName=Microsoft Corporation
-Wizard_Version=11.00.18362.1
-Version=11,00,18362,1
-Custom_Key=MICROSO
-Global=1
-IE4 Welcome Msg=1
-Platform=2
-GUID={7211FFE6-C149-11D0-AFF0-00AA003758BB}
-Type=0
-NoClear=1
-[URL]
-AutoDetect=0
-AutoConfig=1
-AutoConfigTime=1
-AutoConfigURL=http://localhost/ie.ins
-AutoConfigJSURL=http://localhost/test1.pac
-[Proxy]
-HTTP_Proxy_Server=
-FTP_Proxy_Server=
-Secure_Proxy_Server=
-Socks_Proxy_Server=
-Use_Same_Proxy=1
-Proxy_Enable=0
-Proxy_Override=&quot;&lt;local&gt;&quot;
-</code></pre>
-<p>一个有效的ins文件必须有<code>[Branding]</code>节，我们也可以不用IEAK生成，而是直接从<code>C:\Program Files\Internet Explorer\SIGNUP\install.ins</code>拷贝一份进行手动修改也是可以的。</p>
-<pre><code>[Branding]
-CompanyName=
-Wizard_Version=11.00.19041.1
-Version=11,00,19041,1
-Custom_Key=MICROSO
-Global=1
-IE4 Welcome Msg=1
-Platform=2
-GUID={7211FFE6-C149-11D0-AFF0-00AA003758BB}
-Type=0
-NoClear=1
-NoDial=0
-FavoritesDelete=0
-FavoritesOnTop=0
-User Agent=
-[URL]
-FirstHomePage=https://www.google.com
-</code></pre>
-<p>这个例子添加了FirstHomePage字段，首次打开IE就会打开该首页。</p>
-<p>运行部署安装包后会在IE目录下生成一个INS文件，并提示注销登录后生效</p>
-<pre><code>C:\Program Files\Internet Explorer\CUSTOM\INSTALL.INS
-</code></pre>
-<p>注销是为了让设置生效，实际上我们可以使用其他手段立即生效，有两种方法</p>
-<h3 id="重置ie">重置IE</h3>
-<p>配置文件只有在IE初始化时会被访问，我们可以重置IE来让它再次载入配置文件。<br>
-运行命令<code>RunDll32.exe inetcpl.cpl,ResetIEtoDefaults</code>可以弹出重置对话框，确认重置后IE会依次从以下位置来获取配置</p>
-<pre><code>C:\Program Files\Internet Explorer\Custom\install.ins
-C:\Program Files\Internet Explorer\Signup\install.ins
-</code></pre>
-<h3 id="brandinternetexplorer">BrandInternetExplorer</h3>
-<p><code>iedkcs32.dll</code>有一个导出函数<code>BrandInternetExplorer</code>可以使得IE下次启动时载入指定的INS配置文件。<br>
-<code>rundll32.exe iedkcs32.dll,BrandInternetExplorer /ins:&quot;D:\test.ins&quot;</code></p>
-<h2 id="参考">参考</h2>
-<p><a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpie/8206de0e-2d1e-4a02-977b-b8614c5350d9">INS File Format</a></p>
-<p><a href="https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/">https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/</a></p>
 ]]></content>
     </entry>
 </feed>
