@@ -766,8 +766,16 @@ a {
         margin-left: 280px;
       }
     
-      .post-item .left .post-title {
+      .post-item {
+    padding-bottom: 0;
+}
+
+.post-item .left .post-title {
     font-size: 18px;
+}
+
+.post-item .left .post-date {
+    font-size: 16px;
 }
 
 .post-detail .post-title {
