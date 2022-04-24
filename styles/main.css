@@ -325,7 +325,7 @@ a {
   background-color: #7c8280;
   background-size: cover;
   background-position: center;
-  background-image: url('../media/images/sidebar-bg.jpg');
+  background-image: url('https://pic.rmb.bdstatic.com/bjh/6dab936c5ade7ea1e5f86fd1fa8f0195.jpeg');
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
