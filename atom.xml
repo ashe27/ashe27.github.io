@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-04-24T09:22:45.920Z</updated>
+    <updated>2022-04-24T09:24:04.931Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -335,6 +335,51 @@ Linux：<a href="https://www.vmware.com/go/getworkstation-linux">https://www.vmw
 <h2 id="参考">参考</h2>
 <p><a href="https://stackoverflow.com/questions/3436526/detect-target-framework-version-at-compile-time">Detect target framework version at compile time</a></p>
 <p><a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/preprocessor-directives">C#预处理器指令</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[.NET Framework 离线安装包下载地址]]></title>
+        <id>https://ashe27.github.io/post/16113133/</id>
+        <link href="https://ashe27.github.io/post/16113133/">
+        </link>
+        <updated>2022-04-07T08:53:00.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="net-framework-20-service-pack-1">.NET Framework 2.0 Service Pack 1</h2>
+<p>x86：<a href="https://download.microsoft.com/download/0/8/c/08c19fa4-4c4f-4ffb-9d6c-150906578c9e/NetFx20SP1_x86.exe">https://download.microsoft.com/download/0/8/c/08c19fa4-4c4f-4ffb-9d6c-150906578c9e/NetFx20SP1_x86.exe</a></p>
+<p>x64：<a href="https://download.microsoft.com/download/9/8/6/98610406-c2b7-45a4-bdc3-9db1b1c5f7e2/NetFx20SP1_x64.exe">https://download.microsoft.com/download/9/8/6/98610406-c2b7-45a4-bdc3-9db1b1c5f7e2/NetFx20SP1_x64.exe</a></p>
+<h2 id="net-framework-30-service-pack-1">.NET Framework 3.0 Service Pack 1</h2>
+<p>在线安装：<a href="https://download.microsoft.com/download/4/9/0/49001df1-af88-4a4d-b10f-2d5e3a8ea5f3/dotnetfx30SP1setup.exe">https://download.microsoft.com/download/4/9/0/49001df1-af88-4a4d-b10f-2d5e3a8ea5f3/dotnetfx30SP1setup.exe</a></p>
+<h2 id="net-framework-35">.NET Framework 3.5</h2>
+<p><a href="https://download.microsoft.com/download/6/0/f/60fc5854-3cb8-4892-b6db-bd4f42510f28/dotnetfx35.exe">https://download.microsoft.com/download/6/0/f/60fc5854-3cb8-4892-b6db-bd4f42510f28/dotnetfx35.exe</a></p>
+<h2 id="net-framework-35-service-pack-1">.NET Framework 3.5 Service Pack 1</h2>
+<p><a href="https://download.microsoft.com/download/2/0/E/20E90413-712F-438C-988E-FDAA79A8AC3D/dotnetfx35.exe">https://download.microsoft.com/download/2/0/E/20E90413-712F-438C-988E-FDAA79A8AC3D/dotnetfx35.exe</a></p>
+<h2 id="net-framework-4">.NET Framework 4</h2>
+<p>4.0是最后支持XP的版本。</p>
+<p><a href="https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe">https://download.microsoft.com/download/9/5/A/95A9616B-7A37-4AF6-BC36-D6EA96C8DAAE/dotNetFx40_Full_x86_x64.exe</a></p>
+<p>x86：<a href="https://download.microsoft.com/download/5/6/4/5641DA81-E6FA-4550-9F80-A1D862D9CFAA/dotNetFx40_Full_x86.exe">https://download.microsoft.com/download/5/6/4/5641DA81-E6FA-4550-9F80-A1D862D9CFAA/dotNetFx40_Full_x86.exe</a></p>
+<p>ia64：<a href="https://download.microsoft.com/download/6/5/A/65A3CE73-4F35-43A1-83FA-2D11D90163A9/dotNetFx40_Full_x86_ia64.exe">https://download.microsoft.com/download/6/5/A/65A3CE73-4F35-43A1-83FA-2D11D90163A9/dotNetFx40_Full_x86_ia64.exe</a></p>
+<h2 id="net-framework-4-client-profile">.NET Framework 4 Client Profile</h2>
+<p><a href="https://download.microsoft.com/download/5/6/2/562A10F9-C9F4-4313-A044-9C94E0A8FAC8/dotNetFx40_Client_x86_x64.exe">https://download.microsoft.com/download/5/6/2/562A10F9-C9F4-4313-A044-9C94E0A8FAC8/dotNetFx40_Client_x86_x64.exe</a></p>
+<h2 id="net-framework-45">.NET Framework 4.5</h2>
+<p><a href="https://download.microsoft.com/download/b/a/4/ba4a7e71-2906-4b2d-a0e1-80cf16844f5f/dotnetfx45_full_x86_x64.exe">https://download.microsoft.com/download/b/a/4/ba4a7e71-2906-4b2d-a0e1-80cf16844f5f/dotnetfx45_full_x86_x64.exe</a></p>
+<h2 id="net-framework-451">.NET Framework 4.5.1</h2>
+<p><a href="https://download.microsoft.com/download/1/6/7/167F0D79-9317-48AE-AEDB-17120579F8E2/NDP451-KB2858728-x86-x64-AllOS-ENU.exe">https://download.microsoft.com/download/1/6/7/167F0D79-9317-48AE-AEDB-17120579F8E2/NDP451-KB2858728-x86-x64-AllOS-ENU.exe</a></p>
+<h2 id="net-framework-452">.NET Framework 4.5.2</h2>
+<p><a href="https://download.microsoft.com/download/E/2/1/E21644B5-2DF2-47C2-91BD-63C560427900/NDP452-KB2901907-x86-x64-AllOS-ENU.exe">https://download.microsoft.com/download/E/2/1/E21644B5-2DF2-47C2-91BD-63C560427900/NDP452-KB2901907-x86-x64-AllOS-ENU.exe</a></p>
+<h2 id="net-framework-46">.NET Framework 4.6</h2>
+<p><a href="https://download.microsoft.com/download/C/3/A/C3A5200B-D33C-47E9-9D70-2F7C65DAAD94/NDP46-KB3045557-x86-x64-AllOS-ENU.exe">https://download.microsoft.com/download/C/3/A/C3A5200B-D33C-47E9-9D70-2F7C65DAAD94/NDP46-KB3045557-x86-x64-AllOS-ENU.exe</a></p>
+<h2 id="net-framework-461">.NET Framework 4.6.1</h2>
+<p><a href="https://download.microsoft.com/download/E/4/1/E4173890-A24A-4936-9FC9-AF930FE3FA40/NDP461-KB3102436-x86-x64-AllOS-ENU.exe">https://download.microsoft.com/download/E/4/1/E4173890-A24A-4936-9FC9-AF930FE3FA40/NDP461-KB3102436-x86-x64-AllOS-ENU.exe</a></p>
+<h2 id="net-framework-462">.NET Framework 4.6.2</h2>
+<p><a href="https://download.microsoft.com/download/F/9/4/F942F07D-F26F-4F30-B4E3-EBD54FABA377/NDP462-KB3151800-x86-x64-AllOS-ENU.exe">https://download.microsoft.com/download/F/9/4/F942F07D-F26F-4F30-B4E3-EBD54FABA377/NDP462-KB3151800-x86-x64-AllOS-ENU.exe</a></p>
+<h2 id="net-framework-47">.NET Framework 4.7</h2>
+<p><a href="https://download.microsoft.com/download/D/D/3/DD35CC25-6E9C-484B-A746-C5BE0C923290/NDP47-KB3186497-x86-x64-AllOS-ENU.exe">https://download.microsoft.com/download/D/D/3/DD35CC25-6E9C-484B-A746-C5BE0C923290/NDP47-KB3186497-x86-x64-AllOS-ENU.exe</a></p>
+<h2 id="net-framework-471">.NET Framework 4.7.1</h2>
+<p><a href="https://download.microsoft.com/download/9/E/6/9E63300C-0941-4B45-A0EC-0008F96DD480/NDP471-KB4033342-x86-x64-AllOS-ENU.exe">https://download.microsoft.com/download/9/E/6/9E63300C-0941-4B45-A0EC-0008F96DD480/NDP471-KB4033342-x86-x64-AllOS-ENU.exe</a></p>
+<h2 id="net-framework-472">.NET Framework 4.7.2</h2>
+<p><a href="https://download.microsoft.com/download/6/E/4/6E48E8AB-DC00-419E-9704-06DD46E5F81D/NDP472-KB4054530-x86-x64-AllOS-ENU.exe">https://download.microsoft.com/download/6/E/4/6E48E8AB-DC00-419E-9704-06DD46E5F81D/NDP472-KB4054530-x86-x64-AllOS-ENU.exe</a></p>
+<p><a href="https://download.visualstudio.microsoft.com/download/pr/1f5af042-d0e4-4002-9c59-9ba66bcf15f6/527a5cc66d3e5c7d3653b366f5add524/ndp472-kb4054530-x86-x64-allos-chs.exe">https://download.visualstudio.microsoft.com/download/pr/1f5af042-d0e4-4002-9c59-9ba66bcf15f6/527a5cc66d3e5c7d3653b366f5add524/ndp472-kb4054530-x86-x64-allos-chs.exe</a></p>
+<h2 id="net-framework-48">.NET Framework 4.8</h2>
+<p><a href="https://download.visualstudio.microsoft.com/download/pr/2d6bb6b2-226a-4baa-bdec-798822606ff1/8494001c276a4b96804cde7829c04d7f/ndp48-x86-x64-allos-enu.exe">https://download.visualstudio.microsoft.com/download/pr/2d6bb6b2-226a-4baa-bdec-798822606ff1/8494001c276a4b96804cde7829c04d7f/ndp48-x86-x64-allos-enu.exe</a></p>
 ]]></content>
     </entry>
     <entry>
@@ -976,86 +1021,6 @@ echo 'done.'
 <h2 id="其他方式">其他方式</h2>
 <p>新版本破解方法参考：<br>
 <a href="https://www.exception.site/essay/idea-reset-eval">https://www.exception.site/essay/idea-reset-eval</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[动态壁纸实现原理]]></title>
-        <id>https://ashe27.github.io/post/RMrCXIzEz/</id>
-        <link href="https://ashe27.github.io/post/RMrCXIzEz/">
-        </link>
-        <updated>2021-09-25T13:54:52.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="桌面窗口层次关系">桌面窗口层次关系</h2>
-<p>桌面窗口层次是这样的<br>
-<img src="https://ashe27.github.io/post-images/1632581286029.png" alt="" loading="lazy"></p>
-<h2 id="检查系统是否开启了aero">检查系统是否开启了Aero</h2>
-<p>动态壁纸技术需要系统开启Aero才行，原因下面会讲到。<br>
-检测系统是否开启了Aero可以使用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmiscompositionenabled">DwmIsCompositionEnabled</a> 函数。<br>
-只有在Win7及以前的系统上需要检测，Win8后这个函数总是返回 TRUE。</p>
-<h2 id="未公开的消息">未公开的消息</h2>
-<p>桌面窗口内部有一个神秘的消息：<code>WM_USER + 300</code>，数值为<code>0x52C</code>。<br>
-它收到这个消息后就会在其上创建两个窗口，并将图标层移动上去，然后窗口层次就变成这样了<br>
-<img src="https://ashe27.github.io/post-images/1632583220300.png" alt="" loading="lazy"><br>
-如果系统没有开启Aero，它收到消息后就不会创建这两个窗口，也就无法实现动态壁纸了，这就是系统必须开启Aero的原因。</p>
-<h2 id="创建壁纸窗口">创建壁纸窗口</h2>
-<p>最后一步就是创建一个Win32窗口了，然后将其父窗口设置为上面提到的Worker窗口（靠下面的那一个）。</p>
-<pre><code class="language-cpp">HWND createWindow(HWND hParent)
-{
-	// 获取父窗口尺寸
-	RECT rect;
-	GetWindowRect(hParent, &amp;rect);
-
-	// 创建动态壁纸窗口并挂到&quot;Worker&quot;窗口下
-	HWND hWnd = CreateWindowExW(0, CLASSNAME, L&quot;DynamicWallpaper&quot;, WS_CHILDWINDOW, 0, 0, rect.right, rect.bottom, hParent, nullptr, nullptr, nullptr);
-	ShowWindow(hWnd, SW_SHOWNOACTIVATE);
-
-	return hWnd;
-}
-</code></pre>
-<p>还有个细节要注意，当动态壁纸窗口销毁时需要将父窗口刷新一下，因为父窗口的扩展样式用到了<code>WS_EX_TRANSPARENT</code>，这是一个透明窗口，如果不刷新的话，动态壁纸窗口的残影会一直留在桌面上。<br>
-最简单的刷新办法是隐藏它，我们在窗口消息过程中处理即可</p>
-<pre><code class="language-cpp">LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lparam)
-{
-	switch (uMsg) {
-	case WM_CREATE:
-	{
-		// 上次隐藏了，这次再显示出来
-		HWND hParent = GetParent(hWnd);
-		ShowWindow(hParent, SW_SHOWNOACTIVATE);
-		break;
-	}
-
-	case WM_CLOSE:
-		DestroyWindow(hWnd);
-		break;
-
-	case WM_DESTROY:
-	{
-		// 隐藏父窗口，避免残影
-		HWND hParent = GetParent(hWnd);
-		ShowWindow(hParent, SW_HIDE);
-		PostQuitMessage(0);
-		break;
-	}
-
-	default:
-		return DefWindowProc(hWnd, uMsg, wParam, lparam);
-	}
-	return 0;
-}
-</code></pre>
-<p>剩下的就是在窗口上播放一个短视频了。还有的人甚至在上面放置浏览器，这不是一个好注意，浏览器太占用内存资源，会比较卡。<br>
-至此，一个简单的动态壁纸功能就实现了。</p>
-<h2 id="思考">思考</h2>
-<p>如果要使软件更加完美，还需要考虑以下问题<br>
-1、当桌面窗口大小变化时（修改分辨率），壁纸也要跟着变化。<br>
-2、用户执行全屏程序时，应停止播放动态壁纸以便节省系统资源。<br>
-3、交互功能，一般不用实现交互功能，如果要做，可以考虑HOOK、消息钩子的手段。</p>
-<h2 id="参考">参考</h2>
-<p><a href="https://zhuanlan.zhihu.com/p/37877070">如何实现一个 windows 桌面动态壁纸</a><br>
-<a href="https://zhuanlan.zhihu.com/p/45204045">自定义·自制HTML壁纸</a><br>
-<a href="https://www.codeproject.com/Articles/856020/Draw-Behind-Desktop-Icons-in-Windows-plus">Draw Behind Desktop Icons in Windows 8+</a><br>
-<a href="https://stackoverflow.com/questions/56132584/draw-on-windows-10-wallpaper-in-c">Draw on Windows 10 wallpaper in C++</a><br>
-<a href="https://stackoverflow.com/questions/1683791/drawing-on-the-desktop-background-as-wallpaper-replacement-windows-c">Drawing on the desktop background as wallpaper replacement (Windows/C#)</a></p>
 ]]></content>
     </entry>
 </feed>
