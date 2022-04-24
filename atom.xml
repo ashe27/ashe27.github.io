@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-04-24T09:12:56.911Z</updated>
+    <updated>2022-04-24T09:13:24.204Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -745,7 +745,7 @@ Linux：<a href="https://www.vmware.com/go/getworkstation-linux">https://www.vmw
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Jetbrains IDE 重置试用期脚本]]></title>
+        <title type="html"><![CDATA[JetBrains IDE 重置试用期脚本]]></title>
         <id>https://ashe27.github.io/post/cH9SFSSll/</id>
         <link href="https://ashe27.github.io/post/cH9SFSSll/">
         </link>
