@@ -766,11 +766,7 @@ a {
         margin-left: 280px;
       }
     
-      .post-detail {
-  max-width: none;
-}
-
-.post-content h1 {
+      .post-content h1 {
 font-size: 26px;
 }
 
@@ -786,8 +782,16 @@ font-size: 20px;
 font-size: 18px;
 }
 
+.post-detail {
+  max-width: none;
+}
+
 .post-detail .post-content p {
   font-size: 16px;
 color: #4d4d4d;
+}
+
+.post-detail .post-content pre code {
+  font-size: 10pt;
 }
     
