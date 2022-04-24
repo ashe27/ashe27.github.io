@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-04-24T09:09:03.829Z</updated>
+    <updated>2022-04-24T09:10:38.441Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -12,8 +12,8 @@
     <rights>All rights reserved 2022, ashe&apos;s blog</rights>
     <entry>
         <title type="html"><![CDATA[Dear ImGui学习：使用 WantCaptureMouse 检查鼠标消息]]></title>
-        <id>https://ashe27.github.io/post/Qg_pGRmEg/</id>
-        <link href="https://ashe27.github.io/post/Qg_pGRmEg/">
+        <id>https://ashe27.github.io/post/16183345/</id>
+        <link href="https://ashe27.github.io/post/16183345/">
         </link>
         <updated>2022-04-23T11:57:28.000Z</updated>
         <content type="html"><![CDATA[<p><code>WantCaptureMouse</code>是类<code>ImGuiIO</code>的成员方法，源码中对于<code>WantCaptureMouse</code>的注释是这么写的：</p>
@@ -54,6 +54,7 @@ ImGui::End();
 ImGui::Render();
 </code></pre>
 <p><strong>注意，永远不要手动去设置 WantCaptureMouse。</strong></p>
+<hr>
 <h2 id="参考">参考</h2>
 <p><a href="https://github.com/ocornut/imgui/issues/4593">io.WantCaptureMouse is not working. So im using an alternative bool. But i still want to understand what im doing wrong.</a><br>
 <a href="https://github.com/ocornut/imgui/issues/5061">How to use imgui in an existing win32 dx11 application properly.</a><br>
