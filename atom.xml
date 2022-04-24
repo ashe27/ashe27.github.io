@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-04-24T01:23:28.507Z</updated>
+    <updated>2022-04-24T01:31:50.743Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -12,92 +12,92 @@
     <rights>All rights reserved 2022, ashe&apos;s blog</rights>
     <entry>
         <title type="html"><![CDATA[VMware Workstation 下载地址]]></title>
-        <id>https://ashe27.github.io/post/aU1377x4l/</id>
-        <link href="https://ashe27.github.io/post/aU1377x4l/">
+        <id>https://ashe27.github.io/post/VMware-Workstation/</id>
+        <link href="https://ashe27.github.io/post/VMware-Workstation/">
         </link>
         <updated>2022-04-24T01:09:15.000Z</updated>
         <content type="html"><![CDATA[<h2 id="最新版">最新版</h2>
-<p>Windows：https://www.vmware.com/go/getworkstation-win<br>
-Linux：https://www.vmware.com/go/getworkstation-linux</p>
+<p>Windows：<a href="https://www.vmware.com/go/getworkstation-win">https://www.vmware.com/go/getworkstation-win</a><br>
+Linux：<a href="https://www.vmware.com/go/getworkstation-linux">https://www.vmware.com/go/getworkstation-linux</a></p>
 <hr>
 <h2 id="v16">v16</h2>
-<p>https://download3.vmware.com/software/WKST-1623-WIN-New/VMware-workstation-full-16.2.3-19376536.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.2-19200509.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.1-18811642.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.0-18760230.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.2-17966106.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.1-17801498.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.0-17198959.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.0.0-16894299.exe</p>
+<p><a href="https://download3.vmware.com/software/WKST-1623-WIN-New/VMware-workstation-full-16.2.3-19376536.exe">https://download3.vmware.com/software/WKST-1623-WIN-New/VMware-workstation-full-16.2.3-19376536.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.2-19200509.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.2-19200509.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.1-18811642.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.1-18811642.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.0-18760230.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.0-18760230.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.2-17966106.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.2-17966106.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.1-17801498.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.1-17801498.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.0-17198959.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.0-17198959.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.0.0-16894299.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.0.0-16894299.exe</a></p>
 <hr>
 <h2 id="v15">v15</h2>
-<p>https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.6-16341506.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.5-16285975.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.2-15785246.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.1-15018445.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.0-14665864.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.1.0-13591040.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.4-12990004.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.3-12422535.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.2-10952284.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.1-10737736.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.0-10134415.exe</p>
+<p><a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.6-16341506.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.6-16341506.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.5-16285975.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.5-16285975.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.2-15785246.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.2-15785246.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.1-15018445.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.1-15018445.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.0-14665864.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.0-14665864.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.1.0-13591040.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.1.0-13591040.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.4-12990004.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.4-12990004.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.3-12422535.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.3-12422535.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.2-10952284.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.2-10952284.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.1-10737736.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.1-10737736.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.0-10134415.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.0-10134415.exe</a></p>
 <hr>
 <h2 id="v14">v14</h2>
-<p>https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.8-14921873.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.7-12989993.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.6-12368378.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.5-10950780.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.4-10722678.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.3-9474260.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.2-8497320.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.1-7528167.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.0-7370693.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.0.0-6661328.exe</p>
+<p><a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.8-14921873.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.8-14921873.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.7-12989993.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.7-12989993.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.6-12368378.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.6-12368378.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.5-10950780.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.5-10950780.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.4-10722678.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.4-10722678.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.3-9474260.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.3-9474260.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.2-8497320.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.2-8497320.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.1-7528167.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.1-7528167.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.0-7370693.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.0-7370693.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.0.0-6661328.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.0.0-6661328.exe</a></p>
 <hr>
 <h2 id="v12">v12</h2>
-<p>https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.9-7535481.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.8-7098237.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.7-5813279.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.6-5528349.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.5-5234757.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.4-5192485.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.3-5115892.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.2-4638234.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.1-4542065.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.0-4352439.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.1.1-3770994.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.1.0-3272444.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.0.1-3160714.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.0.0-2985596.exe</p>
+<p><a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.9-7535481.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.9-7535481.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.8-7098237.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.8-7098237.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.7-5813279.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.7-5813279.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.6-5528349.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.6-5528349.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.5-5234757.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.5-5234757.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.4-5192485.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.4-5192485.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.3-5115892.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.3-5115892.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.2-4638234.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.2-4638234.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.1-4542065.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.1-4542065.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.0-4352439.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.0-4352439.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.1.1-3770994.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.1.1-3770994.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.1.0-3272444.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.1.0-3272444.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.0.1-3160714.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.0.1-3160714.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.0.0-2985596.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.0.0-2985596.exe</a></p>
 <hr>
 <h2 id="v11">v11</h2>
-<p>https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.4-3848939.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.3-3206955.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.2-2780323.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.1-2771112.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.0-2496824.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.0.0-2305329.exe</p>
+<p><a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.4-3848939.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.4-3848939.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.3-3206955.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.3-3206955.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.2-2780323.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.2-2780323.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.1-2771112.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.1-2771112.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.0-2496824.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.0-2496824.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.0.0-2305329.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.0.0-2305329.exe</a></p>
 <hr>
 <h2 id="v10">v10</h2>
-<p>https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.7-2844087.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.6-2700073.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.5-2443746.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.4-2249910.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.3-1895310.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.2-1744117.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.1-1379776.exe<br>
-https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.0-1295980.exe</p>
+<p><a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.7-2844087.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.7-2844087.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.6-2700073.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.6-2700073.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.5-2443746.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.5-2443746.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.4-2249910.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.4-2249910.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.3-1895310.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.3-1895310.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.2-1744117.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.2-1744117.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.1-1379776.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.1-1379776.exe</a><br>
+<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.0-1295980.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.0-1295980.exe</a></p>
 <hr>
 <h2 id="v9">v9</h2>
-<p>https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.4-1945795.exe<br>
-https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.3-1410761.exe<br>
-https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.2-1031769.exe<br>
-https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.1-894247.exe<br>
-https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.0-812388.exe</p>
+<p><a href="https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.4-1945795.exe">https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.4-1945795.exe</a><br>
+<a href="https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.3-1410761.exe">https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.3-1410761.exe</a><br>
+<a href="https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.2-1031769.exe">https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.2-1031769.exe</a><br>
+<a href="https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.1-894247.exe">https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.1-894247.exe</a><br>
+<a href="https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.0-812388.exe">https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.0-812388.exe</a></p>
 <hr>
 <h2 id="参考">参考</h2>
-<p>https://github.com/201853910/VMwareWorkstation/releases</p>
+<p><a href="https://github.com/201853910/VMwareWorkstation/releases">https://github.com/201853910/VMwareWorkstation/releases</a></p>
 ]]></content>
     </entry>
     <entry>
