@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-04-24T00:25:06.012Z</updated>
+    <updated>2022-04-24T00:29:46.224Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,6 +10,56 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, ashe&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Dear ImGui学习：使用 WantCaptureMouse 检查鼠标消息]]></title>
+        <id>https://ashe27.github.io/post/Qg_pGRmEg/</id>
+        <link href="https://ashe27.github.io/post/Qg_pGRmEg/">
+        </link>
+        <updated>2022-04-24T00:29:28.000Z</updated>
+        <content type="html"><![CDATA[<p><code>WantCaptureMouse</code>是类<code>ImGuiIO</code>的成员方法，源码中对于<code>WantCaptureMouse</code>的注释是这么写的：</p>
+<blockquote>
+<p>Set when Dear ImGui will use mouse inputs, in this case do not dispatch them to your main game/application (either way, always pass on mouse inputs to imgui). (e.g. unclicked mouse is hovering over an imgui window, widget is active, mouse was clicked over an imgui window, etc.).</p>
+</blockquote>
+<p>简单地说就是可以用来它判断鼠标是否在 imgui 窗口内，大部分使用场景是用来覆盖游戏引擎自身的鼠标数据。<br>
+比如我在游戏内show出窗口时，默认情况下鼠标在窗口上的点击都会传递给游戏处理，而此时我需要避免将 imgui 的鼠标事件传递给游戏处理，那么就可以通过<code>WantCaptureMouse</code>来判断</p>
+<pre><code class="language-cpp">LRESULT WINAPI MyWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam)) {
+        return ERROR_SUCCESS;
+    }
+
+    const ImGuiIO&amp; io = ImGui::GetIO();
+    if (io.WantCaptureMouse &amp;&amp; (uMsg == WM_LBUTTONDOWN || uMsg == WM_LBUTTONUP || uMsg == WM_RBUTTONDOWN || uMsg == WM_RBUTTONUP || uMsg == WM_MBUTTONDOWN || uMsg == WM_MBUTTONUP || uMsg == WM_MOUSEWHEEL || uMsg == WM_MOUSEMOVE)) {
+        return ERROR_SUCCESS;
+    }
+
+    return CallWindowProcW(g_pOldWindowProc, hWnd, uMsg, wParam, lParam);
+}
+</code></pre>
+<p>鼠标在 imgui 窗口外时，imgui 默认会渲染指针样式，再加上游戏引擎渲染的指针样式，就出现了游戏内同时有两个指针的问题，所以我们在渲染时也可以通过<code>WantCaptureMouse</code>来检查，避免在 imgui 窗口外二次渲染指针。</p>
+<pre><code class="language-cpp">ImGui_ImplDX11_NewFrame();
+ImGui_ImplWin32_NewFrame();
+ImGui::NewFrame();
+
+// 鼠标不在imgui窗口内就不要渲染指针了
+const ImGuiIO&amp; io = ImGui::GetIO();
+if (!io.WantCaptureMouse) {
+    ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+}
+
+ImGui::Begin(&quot;Demo&quot;);
+ImGui::Text(&quot;FPS:%.1f&quot;, io.Framerate);
+ImGui::End();
+
+ImGui::Render();
+</code></pre>
+<p><strong>注意，永远不要手动去设置 WantCaptureMouse。</strong></p>
+<h2 id="参考">参考</h2>
+<p><a href="https://github.com/ocornut/imgui/issues/4593">io.WantCaptureMouse is not working. So im using an alternative bool. But i still want to understand what im doing wrong.</a><br>
+<a href="https://github.com/ocornut/imgui/issues/5061">How to use imgui in an existing win32 dx11 application properly.</a><br>
+<a href="https://www.unknowncheats.me/forum/direct3d/340355-mouse-input-imgui-window.html">Mouse input going through ImGui window</a></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Windows Server 原版系统镜像]]></title>
         <id>https://ashe27.github.io/post/windows-server/</id>
@@ -1383,87 +1433,6 @@ C:\Program Files\Internet Explorer\Signup\install.ins
 <h2 id="参考">参考</h2>
 <p><a href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpie/8206de0e-2d1e-4a02-977b-b8614c5350d9">INS File Format</a></p>
 <p><a href="https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/">https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[从磁盘上加载证书文件]]></title>
-        <id>https://ashe27.github.io/post/6geICBPwL/</id>
-        <link href="https://ashe27.github.io/post/6geICBPwL/">
-        </link>
-        <updated>2021-08-13T03:45:15.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="方式一">方式一</h2>
-<p>将证书视为存储库，通过 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore">CertOpenStore</a> 打开，枚举出第一个证书即可。<br>
-一个例子</p>
-<pre><code class="language-cpp">template &lt;typename T&gt;
-T decodeObject(DWORD dwEncodingType, const PCERT_EXTENSION pExt)
-{
-	T pInfo = nullptr;
-	DWORD cbInfo = 0;
-	if (!CryptDecodeObjectEx(dwEncodingType, pExt-&gt;pszObjId, pExt-&gt;Value.pbData, pExt-&gt;Value.cbData, CRYPT_DECODE_ALLOC_FLAG | CRYPT_DECODE_NOCOPY_FLAG, nullptr, &amp;pInfo, &amp;cbInfo))
-		return nullptr;
-	return pInfo;
-}
-
-// 证书既是存储库
-HCERTSTORE hCertStore = CertOpenStore(CERT_STORE_PROV_FILENAME_A, dwEncodingType, NULL, CERT_STORE_OPEN_EXISTING_FLAG | CERT_STORE_READONLY_FLAG, &quot;ca.cer&quot;);
-if (hCertStore) {
-	// 取出第一个证书
-	PCCERT_CONTEXT pCertContext = CertEnumCertificatesInStore(hCertStore, nullptr);
-	if (pCertContext) {
-		// 遍历扩展信息
-		for (DWORD i = 0; i &lt; pCertContext-&gt;pCertInfo-&gt;cExtension; ++i) {
-			const PCERT_EXTENSION pExt = pCertContext-&gt;pCertInfo-&gt;rgExtension + i;
-			if (strcmp(pExt-&gt;pszObjId, szOID_KEY_USAGE) == 0) {
-				// 密钥用法
-				const auto pInfo = decodeObject&lt;PCRYPT_BIT_BLOB&gt;(dwEncodingType, pExt);
-				LocalFree(pInfo);
-			} else if(strcmp(pExt-&gt;pszObjId, szOID_BASIC_CONSTRAINTS2) == 0) {
-				// 基本约束
-				const auto pInfo = decodeObject&lt;PCERT_BASIC_CONSTRAINTS2_INFO&gt;(dwEncodingType, pExt);
-				LocalFree(pInfo);
-			} else if (strcmp(pExt-&gt;pszObjId, szOID_ENHANCED_KEY_USAGE) == 0) {
-				// 增强型密钥用法
-				auto pInfo = decodeObject&lt;PCTL_USAGE&gt;(dwEncodingType, pExt);
-				LocalFree(pInfo);
-			} else if (strcmp(pExt-&gt;pszObjId, szOID_SUBJECT_ALT_NAME2) == 0) {
-				// 使用者可选名称
-				const auto pInfo = decodeObject&lt;PCERT_ALT_NAME_INFO&gt;(dwEncodingType, pExt);
-				LocalFree(pInfo);
-			}
-		}
-	}
-	CertCloseStore(hCertStore, 0);
-}
-</code></pre>
-<h2 id="方式二">方式二</h2>
-<p>在 <a href="https://docs.microsoft.com/en-us/windows/win32/seccrypto/cryptoapi-system-architecture">CryptoAPI</a> 中，一个证书文件用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构描述，所以只要将证书文件转换为 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构即可。<br>
-<a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certcreatecertificatecontext">CertCreateCertificateContext</a> 函数可以做到，它从内存中读取证书数据并转换为 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构。<br>
-但是要注意，这个函数只接受DER编码格式的证书，而我们常用的一般是PEM格式（以BEGIN开头，END结尾，中间是BASE64编码），所以要进行转换。<br>
-转换可以用 <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptstringtobinarya">CryptStringToBinaryA</a> 函数搞定。<br>
-一个简单的例子</p>
-<pre><code class="language-cpp">const DWORD dwEncodingType = X509_ASN_ENCODING;
-
-// 打开证书
-HANDLE hFile = CreateFileW(L&quot;ca.cer&quot;, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-LARGE_INTEGER fileSize;
-GetFileSizeEx(hFile, &amp;fileSize);
-
-// 读取证书内容
-BYTE* buffer = new BYTE[fileSize.QuadPart];
-DWORD dwWritten;
-ReadFile(hFile, buffer, fileSize.QuadPart, &amp;dwWritten, nullptr);
-
-// PEM转DER
-BYTE* bin = new BYTE[dwWritten];
-DWORD flags;
-BOOL ok = CryptStringToBinaryA((LPCSTR)buffer, dwWritten, CRYPT_STRING_BASE64HEADER, bin, &amp;dwWritten, NULL, &amp;flags);
-
-// 获得证书上下文
-PCCERT_CONTEXT pCert = CertCreateCertificateContext(dwEncodingType, bin, dwWritten);
-</code></pre>
-<h2 id="参考">参考</h2>
-<p><a href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/dd743310(v=vs.85)">Load a Certificate from a File</a></p>
-<p><a href="https://stackoverflow.com/questions/34623247/certcreatecertificatecontext-returns-crypt-e-asn1-badtag-8009310b">CertCreateCertificateContext returns CRYPT_E_ASN1_BADTAG / 8009310b</a></p>
 ]]></content>
     </entry>
 </feed>
