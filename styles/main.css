@@ -770,10 +770,6 @@ a {
   max-width: none;
 }
 
-.post-detail .post-title {
-  font-size: 26px;
-}
-
 .post-content h1 {
 font-size: 26px;
 }
@@ -792,5 +788,6 @@ font-size: 18px;
 
 .post-detail .post-content p {
   font-size: 16px;
+color: #4d4d4d;
 }
     
