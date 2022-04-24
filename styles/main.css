@@ -834,4 +834,8 @@ color: #4d4d4d;
 .archives-title, .tag-list-title, .current-tag {
     font-size: 22px;
 }
+
+.next-post {
+    margin-bottom: 0;
+}
     
