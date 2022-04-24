@@ -766,7 +766,16 @@ a {
         margin-left: 280px;
       }
     
-      .post-content h1 {
+      .post-detail .post-title {
+  font-size: 22px;
+}
+
+.post-detail .post-date {
+    font-size: 16px;
+    padding: 16px 0;
+}
+
+.post-content h1 {
 font-size: 22px;
 }
 
@@ -789,5 +798,9 @@ color: #4d4d4d;
 
 .post-detail .post-content pre code {
   font-size: 10pt;
+}
+
+.next-post .post-title {
+    font-size: 22px;
 }
     
