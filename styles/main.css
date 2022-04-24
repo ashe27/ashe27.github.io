@@ -830,4 +830,8 @@ color: #4d4d4d;
     border: none;
     border-bottom: 1px solid #ddd;
 }
+
+.archives-title, .tag-list-title, .current-tag {
+    font-size: 22px;
+}
     
