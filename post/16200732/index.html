@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>用 Boost.Locale 使软件支持多国语言 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.7.2/css/all.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="//files.cnblogs.com/files/cyds/favicon.ico">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+<link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css" rel="stylesheet">
+	  
+
+
+<link href="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
+
+
+
+    <meta name="description" content="用过Qt的人都知道它自带有多语言支持的功能，只要在源码中将需要翻译的字符串用tr包裹起来，就可以很轻松的利用其提供的 Qt Linguist 软件进行文字翻译。
+如果我们的工程并非Qt项目，那么可以考虑使用 gettext 解决方案。其实现..." />
+    <meta name="keywords" content="Boost,gettext" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://pic.rmb.bdstatic.com/bjh/d2ef74c9e80c2fe2c24d8e7ea0b7c753.png" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h1 class="post-title">用 Boost.Locale 使软件支持多国语言</h1>
+            <div class="post-date">2022-04-27</div>
+            
+            <div class="post-content" v-pre>
+              <p>用过Qt的人都知道它自带有多语言支持的功能，只要在源码中将需要翻译的字符串用<code>tr</code>包裹起来，就可以很轻松的利用其提供的 Qt Linguist 软件进行文字翻译。<br>
+如果我们的工程并非Qt项目，那么可以考虑使用 <a href="https://www.gnu.org/software/gettext/">gettext</a> 解决方案。其实现库<code>libintl</code>是C语言开发的，在 linux 系统上用的比较多。<br>
+在C++中，更适合使用 <a href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/index.html">Boost.Locale</a>，用于替代<code>libintl</code>。</p>
+<h2 id="基本用法">基本用法</h2>
+<p>需要了解的是，Boost.Locale 只是一个运行时，它本身并不生成语言文件。我们需要使用<code>gettext</code>的相关工具去进行提取和翻译工作。</p>
+<blockquote>
+<p>文本假设你已经知道了如何制作.mo等语言文件。</p>
+</blockquote>
+<p>一个简单的例子：</p>
+<pre><code class="language-cpp">#include &lt;boost/locale.hpp&gt;
+
+void test()
+{
+    boost::locale::generator gen;
+
+    // 指定多语言文件的根目录
+    gen.add_messages_path(R&quot;(.\languages)&quot;);
+
+    // 对应语言文件名，不需要写扩展名。等同于 foo.mo
+    gen.add_messages_domain(&quot;foo&quot;);
+
+    // generator 会去对应的文件夹下找语言文件。这里会尝试从 zh 和 zh_CN 文件夹下寻找文件
+    std::locale loc = gen.generate(&quot;zh_CN.GBK&quot;);
+
+    // 设置全局locale
+    std::locale::global(loc);
+
+    std::string str1 = boost::locale::translate(&quot;Love&quot;).str();
+    std::string str2 = boost::locale::gettext(&quot;Love&quot;);
+}
+</code></pre>
+<p>对于上面的例子，以下文件路径都是合法的</p>
+<pre><code>\languages\zh\LC_MESSAGES\foo.mo
+\languages\zh_CN\LC_MESSAGES\foo.mo
+</code></pre>
+<p>generate 方法使用空字符串作为参数时将采用<code>系统默认区域 + UTF8</code>编码</p>
+<pre><code class="language-cpp">// 重载了 () 操作符，等同于调用 generate 方法
+std::locale loc = gen(&quot;&quot;);
+
+// 验证
+auto&amp; info = std::use_facet&lt;boost::locale::info&gt;(loc);
+std::string v1 = info.name();     // zh_CN.UTF-8
+std::string v2 = info.language(); // zh
+std::string v3 = info.country();  // CN
+std::string v4 = info.encoding(); // utf-8
+bool v5 = info.utf8();            // true
+</code></pre>
+<p>翻译字符串主要是两个静态方法<code>translate</code>和<code>gettext</code>。<br>
+<code>translate</code>返回的是一个模板类<code>basic_message</code>，它允许原文延迟翻译，也就是只有在需要<code>string</code>的时候才会翻译。<br>
+而<code>gettext</code>方法是建立在<code>basic_message</code>之上的，它会立即构造一个<code>basic_message</code>并且调用<code>str()</code>方法得到字符串。</p>
+<pre><code class="language-cpp">template&lt;typename CharType&gt;
+std::basic_string&lt;CharType&gt; gettext(CharType const *id, std::locale const &amp;loc=std::locale())
+{
+    return basic_message&lt;CharType&gt;(id).str(loc);
+}
+</code></pre>
+<p>如果只是想立即得到译文，用<code>gettext</code>就够了。</p>
+<h2 id="gettext">gettext</h2>
+<ol>
+<li>获得译文，没有译文就返回原文</li>
+</ol>
+<pre><code class="language-cpp">std::string str = boost::locale::gettext(&quot;Love&quot;);
+</code></pre>
+<ol start="2">
+<li>第二个参数可以指定 locale</li>
+</ol>
+<pre><code class="language-cpp">std::string str = boost::locale::gettext(&quot;Love&quot;, de);
+</code></pre>
+<h3 id="dgettext">dgettext</h3>
+<p>从指定的 domain(文件) 中获取译文。</p>
+<pre><code class="language-cpp">std::string str1 = boost::locale::dgettext(&quot;foo2&quot;, &quot;Love&quot;);
+std::string str2 = boost::locale::dgettext(&quot;foo2&quot;, &quot;Love&quot;, gbk);
+</code></pre>
+<h3 id="ngettext">ngettext</h3>
+<p><code>ngettext</code>用于处理某些语言的复数形式</p>
+<pre><code class="language-cpp">auto count = 1;
+auto str = fmt::format(boost::locale::ngettext(&quot;1 file&quot;, &quot;{} files&quot;, count), count); // 1 file
+
+count = 2;
+str = fmt::format(boost::locale::ngettext(&quot;1 file&quot;, &quot;{} files&quot;, count), count); // 2 files
+</code></pre>
+<h3 id="pgettext">pgettext</h3>
+<p>根据上下文获得译文。上下文功能在某些场景下是有用的，它可以使同一个原文返回不同的译文。</p>
+<pre><code class="language-cpp">std::string str1 = boost::locale::pgettext(&quot;ctx1&quot;, &quot;Love&quot;);
+std::string str2 = boost::locale::pgettext(&quot;ctx2&quot;, &quot;Love&quot;, gbk);
+</code></pre>
+<h3 id="总结">总结</h3>
+<p><code>gettext</code>是高级别的方法，使用简单。还有扩展的的方法如<code>dgettext</code>、<code>ngettext</code>、<code>pgettext</code>等等。我们只要记住三个字母：</p>
+<ol>
+<li><code>d</code>表示<code>domain</code>，支持指定域（语言文件）。</li>
+<li><code>n</code>表示<code>number</code>，用于处理复数形式。</li>
+<li><code>p</code>表示<code>specific</code>，表示处理特定语境下的语句。</li>
+</ol>
+<p><code>gettext</code>所有的方法如下，看字母就知道怎么用了</p>
+<pre><code class="language-cpp">boost::locale::gettext()
+
+// d 开头
+boost::locale::dgettext()
+boost::locale::dngettext()
+boost::locale::dnpgettext()
+boost::locale::dpgettext()
+
+// n 开头
+boost::locale::ngettext()
+boost::locale::npgettext()
+
+// p 开头
+boost::locale::pgettext();
+</code></pre>
+<h2 id="translate">translate</h2>
+<p>前面说过，<code>translate</code>才是底层的API，主要用于需要延迟翻译的时候，使用方法和<code>gettext</code>差不多</p>
+<pre><code class="language-cpp">std::string str = boost::locale::translate(&quot;Love&quot;).str();
+// 等同于 gettext
+
+std::string str = boost::locale::translate(&quot;Love&quot;).str(&quot;domain&quot;);
+// 等同于 dgettext
+
+std::string str = boost::locale::translate(&quot;1 files&quot;, &quot;N files&quot;, 1).str();
+// 等同于 ngettext
+
+std::string str = boost::locale::translate(&quot;ctx&quot;, &quot;Love&quot;).str();
+// 等同于 pgettext
+</code></pre>
+<h2 id="实践">实践</h2>
+<p>软件首次运行时一般有三种选择</p>
+<ol>
+<li>默认采用英文显示。</li>
+<li>有安装程序的，在安装过程中让用户决定使用的语言。</li>
+<li>跟随系统区域设置决定使用哪种语言。</li>
+</ol>
+<p>对于第三种方式，我们需要获取计算机的区域设置。上面说过<code>generator</code>支持用空字符串来生成系统默认区域的locale，但是编码是用的UTF-8。<br>
+如果我们想获取系统的区域设置，可以用boost完成这项工作：</p>
+<pre><code class="language-cpp">std::string localeStr = boost::locale::util::get_system_locale();
+// 在简体中文Windows上，结果为 zh_CN.windows-936
+</code></pre>
+<p>然后将结果告诉<code>generator</code>，这样程序首次运行时将使用系统默认的语言显示了。</p>
+<pre><code class="language-cpp">std::locale loc = boost::locale::generator().generate(localeStr);
+</code></pre>
+<h2 id="参考">参考</h2>
+<p><a href="https://www.helywin.com/posts/20200814061352/">gettext使用</a><br>
+<a href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/locale_gen.html">Locale Generation</a><br>
+<a href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/messages_formatting.html">Messages Formatting (Translation)</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/CPpq6XOoW/" class="tag">
+                    Boost
+                  </a>
+                
+                  <a href="https://ashe27.github.io/tag/TLWATlTeXE/" class="tag">
+                    gettext
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/16183345/">
+                  <h3 class="post-title">
+                    Dear ImGui学习：使用 WantCaptureMouse 检查鼠标消息
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/languages/vbscript.min.js"></script>
+  <script>
+    hljs.highlightAll()
+  </script>
+
+
+
+
+
+  </body>
+</html>
