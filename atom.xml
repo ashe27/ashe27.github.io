@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-04-28T13:12:08.496Z</updated>
+    <updated>2022-04-30T14:48:38.423Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,6 +10,190 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, ashe&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[gettext 使用方法]]></title>
+        <id>https://ashe27.github.io/post/16205078/</id>
+        <link href="https://ashe27.github.io/post/16205078/">
+        </link>
+        <updated>2022-04-28T15:47:44.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="下载">下载</h2>
+<p>Windows版下载地址：<a href="https://mlocati.github.io/articles/gettext-iconv-windows.html">https://mlocati.github.io/articles/gettext-iconv-windows.html</a></p>
+<h2 id="翻译流程">翻译流程</h2>
+<ol>
+<li>在软件源码中使用相应的库将需要翻译的文字标记起来。比如C语言的<code>libintl</code>，适合C++的 <a href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/index.html">Boost.locale</a>。</li>
+<li>使用<code>xgettext.exe</code>工具提取源代码中被标记的语句，生成 pot（portable object template）文件。</li>
+<li>使用<code>msginit.exe</code>工具将 pot 文件转化成一个特定语言版本的 po（portable object）文件。或者使用<code>msgmerge.exe</code>将更新了的 pot 文件与旧的 po 文件合并生成新的 po 文件。</li>
+<li>编辑 po 文件（可使用 <a href="https://poedit.net">Poedit</a> 等工具），开始翻译工作。</li>
+<li>使用<code>msgfmt.exe</code>工具将<code>.po</code>文件转换成<code>.mo</code>（machine object)文件。</li>
+</ol>
+<h2 id="提取原文">提取原文</h2>
+<p>从源码中提取原文用到的工具是<code>xgettext</code>。</p>
+<h3 id="0x01-基本用法">0x01 基本用法</h3>
+<p>在源码中标记需要翻译的字符串</p>
+<pre><code class="language-cpp">std::string str1 = boost::locale::gettext(&quot;Love&quot;);
+</code></pre>
+<p>提取命令</p>
+<pre><code class="language-batch">xgettext.exe --from-code=&quot;UTF-8&quot; -o my.pot main.cpp
+</code></pre>
+<p><strong>知识点：</strong></p>
+<ol>
+<li>工具默认提取关键字<code>gettext</code>标记的字符串。</li>
+<li>工具默认认为源文件是 ASCII 文件。</li>
+</ol>
+<p>但既然是要做国际化支持，建议将源码文件改为 UTF-8 编码，通过参数<code>--from-code</code>来指示源文件的编码即可。生成的 pot 文件内容如下</p>
+<pre><code class="language-plain"># SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.
+#
+#, fuzzy
+msgid &quot;&quot;
+msgstr &quot;&quot;
+&quot;Project-Id-Version: PACKAGE VERSION\n&quot;
+&quot;Report-Msgid-Bugs-To: \n&quot;
+&quot;POT-Creation-Date: 2022-04-00 00:00+0800\n&quot;
+&quot;PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n&quot;
+&quot;Last-Translator: FULL NAME &lt;EMAIL@ADDRESS&gt;\n&quot;
+&quot;Language-Team: LANGUAGE &lt;LL@li.org&gt;\n&quot;
+&quot;Language: \n&quot;
+&quot;MIME-Version: 1.0\n&quot;
+&quot;Content-Type: text/plain; charset=CHARSET\n&quot;
+&quot;Content-Transfer-Encoding: 8bit\n&quot;
+
+#: C:/Demo/main.cpp:15
+msgid &quot;Love&quot;
+msgstr &quot;&quot;
+</code></pre>
+<h3 id="0x02-自定义提取关键字">0x02 自定义提取关键字</h3>
+<p><code>xgettext.exe</code>默认仅识别<code>gettext</code>关键字，但可以用<code>--keyword</code>参数指示额外的关键字以满足扩展需求</p>
+<pre><code class="language-cpp">#define _(STRING) boost::locale::gettext(STRING)
+
+auto str1 = _(&quot;underline&quot;);
+auto str2 = boost::locale::translate(&quot;boost&quot;);
+</code></pre>
+<p>命令：</p>
+<pre><code class="language-batch">xgettext --from-code=&quot;UTF-8&quot; --keyword=_ --keyword=translate -o gettext.pot main.cpp
+</code></pre>
+<h2 id="生成-po-文件">生成 po 文件</h2>
+<p>生成 po 文件用到的工具是<code>msginit</code>。</p>
+<h3 id="0x01-基本用法-2">0x01 基本用法</h3>
+<pre><code class="language-batch">msginit -i gettext.pot -o gettext.po
+</code></pre>
+<p>得到po文件内容大概如下：</p>
+<pre><code class="language-plain"># Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2022 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# &lt;EMAIL@ADDRESS&gt;, 2022.
+#
+msgid &quot;&quot;
+msgstr &quot;&quot;
+&quot;Project-Id-Version: PACKAGE VERSION\n&quot;
+&quot;Report-Msgid-Bugs-To: \n&quot;
+&quot;POT-Creation-Date: 2022-04-01 08:57+0800\n&quot;
+&quot;PO-Revision-Date: 2022-04-01 09:16+0800\n&quot;
+&quot;Last-Translator: &lt;EMAIL@ADDRESS&gt;\n&quot;
+&quot;Language-Team: Chinese (simplified)\n&quot;
+&quot;Language: zh_CN\n&quot;
+&quot;MIME-Version: 1.0\n&quot;
+&quot;Content-Type: text/plain; charset=GBK\n&quot;
+&quot;Content-Transfer-Encoding: 8bit\n&quot;
+&quot;Plural-Forms: nplurals=1; plural=0;\n&quot;
+
+#: C:/Demo/Application.cpp:45
+msgid &quot;Love&quot;
+msgstr &quot;&quot;
+
+#: C:/Demo/Application.cpp:46
+msgid &quot;underline&quot;
+msgstr &quot;&quot;
+
+#: C:/Demo/Application.cpp:47
+msgid &quot;boost&quot;
+msgstr &quot;&quot;
+</code></pre>
+<h3 id="0x02-指示目标语言及编码">0x02 指示目标语言及编码</h3>
+<p>输出的 po 文件默认使用本机区域设置，比如简体中文是<code>zh_CN.GBK</code>。<br>
+可以通过<code>--locale</code>参数指示 po 文件的语言和编码。格式遵循 <a href="https://baike.baidu.com/item/ISO%20639-1">ISO 639-1</a> 和 <a href="https://baike.baidu.com/item/ISO%203166-1/5269555">ISO 3166-1</a> 标准。<br>
+比如我想创建一个针对简体中文的翻译文件并采用 UTF-8 编码：</p>
+<pre><code class="language-batch">msginit --locale=zh_CN.UTF-8 -i gettext.pot -o zh_CN.po
+</code></pre>
+<p>但是<code>charset</code>却依然是GBK</p>
+<pre><code class="language-plain">...
+&quot;Content-Type: text/plain; charset=GBK\n&quot;
+...
+</code></pre>
+<p>google找到了答案：因为 pot 文件没有编码信息</p>
+<pre><code class="language-plain">&quot;Content-Type: text/plain; charset=CHARSET\n&quot;
+</code></pre>
+<p>明明在 xgettext 参数中指定了 UTF-8，为什么 pot 文件没有信息？</p>
+<pre><code class="language-plain">xgettext.exe --from-code=&quot;UTF-8&quot;
+</code></pre>
+<p>因为 xgettext 在提取原文过程中没有发现任何非 ASCII 字符，就会忽略掉 charset，也算是个BUG了。<br>
+当我手动修改 pot 文件编码后，再次生成 po 文件，charset 就变为了 UTF-8，但文件内容其实还是GBK。。。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/63597676b81cbde2eab69189c966bba1.png" alt="" loading="lazy"><br>
+所以，解决这个问题需要做两件事</p>
+<ol>
+<li>修改 po 文件的<code>charset</code>为UTF-8</li>
+<li>修改 po 文件编码为 UTF-8</li>
+</ol>
+<p>每次去手动修改有点傻，我们可以在源码中标记一个UTF-8字符，但是翻译的时候忽略它，这样就能保证 pot、po文件的<code>charset</code>为UTF-8。</p>
+<pre><code class="language-cpp">//TRANSLATOR:无需翻译
+boost::locale::pgettext(&quot;IGNORE&quot;, &quot;ø&quot;);
+</code></pre>
+<p>这样就解决了<code>charset</code>的问题。文件自身编码问题可以用<code>iconv.exe</code>来转换，它已经包含在<code>gettext</code>工具包中了，所以最终的命令是：</p>
+<pre><code class="language-batch">msginit -i test.pot -o zh_CN.po.tmp
+iconv -t utf-8 zh_CN.po.tmp &gt; zh_CN.po
+del zh_CN.po.tmp
+</code></pre>
+<h2 id="生成-mo-语言文件">生成 mo 语言文件</h2>
+<pre><code class="language-batch">msgfmt -o test.mo zh_CN.po
+</code></pre>
+<h2 id="更新-po-文件">更新 po 文件</h2>
+<p>在软件升级迭代的过程中，待翻译原文也会发生变化，如增加、删除等，这就需要将 pot 文件中变动的内容更新至 po 文件，而不是重新生成一个新的 po 文件。这就需要用到<code>msgmerge</code>。</p>
+<pre><code class="language-batch">msgmerge -U zh_CN.po test.pot
+</code></pre>
+<p><code>-U</code>表示更新现有 po 文件，按位置看，第一个文件就是被更新的目标文件。<br>
+当然也可以用<code>-o</code>参数创建一个新的 po 文件：</p>
+<pre><code class="language-batch">msgmerge -o new.po zh_CN.po test.pot
+</code></pre>
+<p><strong>知识点：</strong></p>
+<ol>
+<li>新文件中词条如果有译文，任何情况下都不会被覆盖。</li>
+<li>通过<code>compendium</code>参数指定翻译文件对空词条进行填充。</li>
+</ol>
+<pre><code class="language-batch">msgmerge --compendium dict.po -U target.po new.pot
+</code></pre>
+<p>注意，引用的文件可以是 pot 文件，也可以是 po 文件。</p>
+<h2 id="合并多个-po-文件">合并多个 po 文件</h2>
+<p>一个软件项目可能含有多个模块，每个模块都有自己的翻译文件，有大量重叠的内容，完全可以将多个 po 文件合并为一个。</p>
+<pre><code class="language-batch">msgcat -o all.po 1.po 2.po
+</code></pre>
+<p>默认合并规则：</p>
+<ul>
+<li>对于相同的原文，如果仅有一个被翻译了，则采用它。</li>
+<li>对于相同的原文，如果有不同的翻译，则会合并所有的翻译，需要人工处理</li>
+</ul>
+<pre><code class="language-plain">#: main.cpp:21 main.cpp:25
+#, fuzzy
+msgid &quot;Love&quot;
+msgstr &quot;&quot;
+&quot;#-#-#-#-#  1.po  #-#-#-#-#\n&quot;
+&quot;爱情\n&quot;
+&quot;#-#-#-#-#  2.po  #-#-#-#-#\n&quot;
+&quot;爱&quot;
+</code></pre>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/a6c4215b2b72a9ba139b57ff419faab2.png" alt="" loading="lazy"><br>
+如果想避免重复的翻译内容被合并，可以使用<code>use-first</code>参数，表示采用找到的第一个可用的翻译。</p>
+<pre><code class="language-batch">msgcat --use-first -o all.po 1.po 2.po
+</code></pre>
+<h2 id="参考">参考</h2>
+<p><a href="https://www.gnu.org/software/gettext/manual/html_node/msginit-Invocation.html">msginit</a><br>
+<a href="https://blog.csdn.net/haiiiiiyun/article/details/104970005">GNU gettext工具简介</a><br>
+<a href="https://www.helywin.com/posts/20200814061352/">gettext使用</a><br>
+<a href="https://peter.bloomfield.online/generate-utf-8-dictionaries-using-gettext/">Generate UTF-8 dictionaries using gettext</a></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[用 Boost.Locale 使软件支持多国语言]]></title>
         <id>https://ashe27.github.io/post/16200732/</id>
@@ -765,303 +949,6 @@ Linux：<a href="https://www.vmware.com/go/getworkstation-linux">https://www.vmw
 <li>
 <p>Windows 11 (business editions) (x64) - DVD (Chinese-Simplified)<br>
 <a href="ed2k://%7Cfile%7Czh-cn_windows_11_business_editions_x64_dvd_f5f6bcbd.iso%7C5413181440%7C88CA1AE28F5F8A238647561B5C00E511%7C/">zh-cn_windows_11_business_editions_x64_dvd_f5f6bcbd.iso</a></p>
-</li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Windows10 原版系统镜像]]></title>
-        <id>https://ashe27.github.io/post/windows10/</id>
-        <link href="https://ashe27.github.io/post/windows10/">
-        </link>
-        <updated>2021-11-17T05:43:37.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="windows-10-21h2">Windows 10 21H2</h1>
-<h2 id="2021年12月">2021年12月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer editions), version 21H2 (updated Dec 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_consumer_editions_version_21h2_updated_dec_2021_x64_dvd_de9c1d79.iso%7C5950310400%7CD9071F9F9DDF84DC196398A8479C12A2%7C/">zh-cn_windows_10_consumer_editions_version_21h2_updated_dec_2021_x64_dvd_de9c1d79.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer editions), version 21H2 (updated Dec 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_consumer_editions_version_21h2_updated_dec_2021_x86_dvd_4438ed61.iso%7C4281837568%7CC0DC6F42A07FD73322710C558CA9045C%7C/">zh-cn_windows_10_consumer_editions_version_21h2_updated_dec_2021_x86_dvd_4438ed61.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 21H2 (updated Dec 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_business_editions_version_21h2_updated_dec_2021_x64_dvd_9840f50d.iso%7C5827766272%7C2AB3FCD69BDC53A27201D1534C2CDFE3%7C/">zh-cn_windows_10_business_editions_version_21h2_updated_dec_2021_x64_dvd_9840f50d.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 21H2 (updated Dec 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_business_editions_version_21h2_updated_dec_2021_x86_dvd_0e919a95.iso%7C4194002944%7C909F356F6B066F83CC387D375739271A%7C/">zh-cn_windows_10_business_editions_version_21h2_updated_dec_2021_x86_dvd_0e919a95.iso</a></p>
-</li>
-</ul>
-<h2 id="2021年11月">2021年11月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer editions), version 21H2 (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_consumer_editions_version_21h2_x64_dvd_cf28838e.iso%7C5859952640%7C8B3EDE1AEEEAFAB777F6DFB46960ECE2%7C/">zh-cn_windows_10_consumer_editions_version_21h2_x64_dvd_cf28838e.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer editions), version 21H2 (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_consumer_editions_version_21h2_x86_dvd_511fdc1c.iso%7C4237803520%7CA4A26EEBD9A094F971529F71C382868E%7C/">zh-cn_windows_10_consumer_editions_version_21h2_x86_dvd_511fdc1c.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 21H2 (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_business_editions_version_21h2_x64_dvd_93b4cb1a.iso%7C5741860864%7CD552820112799588289F02F491E69DF6%7C/">zh-cn_windows_10_business_editions_version_21h2_x64_dvd_93b4cb1a.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 21H2 (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_business_editions_version_21h2_x86_dvd_09767ca7.iso%7C4156123136%7C84DD87354F43987DB2F79AF9489FC16C%7C/">zh-cn_windows_10_business_editions_version_21h2_x86_dvd_09767ca7.iso</a></p>
-</li>
-</ul>
-<h1 id="windows-10-21h1">Windows 10 21H1</h1>
-<h2 id="2021年10月">2021年10月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer editions), version 21H1 (updated October 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_consumer_editions_version_21h1_updated_october_2021_x64_dvd_ceec403f.iso%7C5855819776%7C0E930637C34075A16E23D1D3B69E4755%7C/">zh-cn_windows_10_consumer_editions_version_21h1_updated_october_2021_x64_dvd_ceec403f.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer editions), version 21H1 (updated October 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_consumer_editions_version_21h1_updated_october_2021_x86_dvd_b02b0d28.iso%7C4238387200%7CDC6FCD4A20C3238C850D8EB242516453%7C/">zh-cn_windows_10_consumer_editions_version_21h1_updated_october_2021_x86_dvd_b02b0d28.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 21H1 (updated October 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_business_editions_version_21h1_updated_october_2021_x64_dvd_f23f4816.iso%7C5743104000%7C0E6EE2C4A426B6BACB60F08F5F8A6796%7C/">zh-cn_windows_10_business_editions_version_21h1_updated_october_2021_x64_dvd_f23f4816.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 21H1 (updated October 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_business_editions_version_21h1_updated_october_2021_x86_dvd_8bcadde3.iso%7C4157609984%7C0499F500C807245B64EBD9EF4E4897AB%7C/">zh-cn_windows_10_business_editions_version_21h1_updated_october_2021_x86_dvd_8bcadde3.iso</a></p>
-</li>
-</ul>
-<h2 id="2021年9月">2021年9月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer editions), version 21H1 (updated Sep 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_consumer_editions_version_21h1_updated_sep_2021_x64_dvd_991b822f.iso%7C5823694848%7CAC1C0056604BB66643A25360AF585A7E%7C/">zh-cn_windows_10_consumer_editions_version_21h1_updated_sep_2021_x64_dvd_991b822f.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer editions), version 21H1 (updated Sep 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_consumer_editions_version_21h1_updated_sep_2021_x86_dvd_b64c8b01.iso%7C4221437952%7C9E85D3EA2D467AB36A9B0DDD6A7BADE3%7C/">zh-cn_windows_10_consumer_editions_version_21h1_updated_sep_2021_x86_dvd_b64c8b01.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 21H1 (updated Sep 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_business_editions_version_21h1_updated_sep_2021_x64_dvd_023d42d3.iso%7C5709488128%7CB09B1BA01F76C80E2BD8E798C9E89E7D%7C/">zh-cn_windows_10_business_editions_version_21h1_updated_sep_2021_x64_dvd_023d42d3.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 21H1 (updated Sep 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_business_editions_version_21h1_updated_sep_2021_x86_dvd_3a0314c9.iso%7C4140279808%7C01B1F60FBCCC8BA61F0208D0F4957949%7C/">zh-cn_windows_10_business_editions_version_21h1_updated_sep_2021_x86_dvd_3a0314c9.iso</a></p>
-</li>
-</ul>
-<h2 id="2021年8月">2021年8月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer edition), version 21H1 (updated Aug 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_consumer_editions_version_21h1_updated_aug_2021_x64_dvd_4de56d76.iso%7C5831573504%7CB5E8A86D6C148A11292EBE45C81773AB%7C/">zh-cn_windows_10_consumer_editions_version_21h1_updated_aug_2021_x64_dvd_4de56d76.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer edition), version 21H1 (updated Aug 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_consumer_editions_version_21h1_updated_aug_2021_x86_dvd_f699a023.iso%7C4223684608%7C9F7B716FB3FF1989C6958514442C6B0D%7C/">zh-cn_windows_10_consumer_editions_version_21h1_updated_aug_2021_x86_dvd_f699a023.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business edition), version 21H1 (updated Aug 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_business_editions_version_21h1_updated_aug_2021_x64_dvd_e77da303.iso%7C5718181888%7C95679849D8F40DA52EB6DAF3DE97283B%7C/">zh-cn_windows_10_business_editions_version_21h1_updated_aug_2021_x64_dvd_e77da303.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business edition), version 21H1 (updated Aug 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_business_editions_version_21h1_updated_aug_2021_x86_dvd_56839d97.iso%7C4143134720%7C8120F6554C30DE52E5994FE15E9CBE6D%7C/">zh-cn_windows_10_business_editions_version_21h1_updated_aug_2021_x86_dvd_56839d97.iso</a></p>
-</li>
-</ul>
-<h2 id="2021年7月">2021年7月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer edition), version 21H1 (updated Jul 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_consumer_editions_version_21h1_updated_jul_2021_x64_dvd_339520da.iso%7C5797066752%7C5824D69CFA131271621E8340EF745725%7C/">zh-cn_windows_10_consumer_editions_version_21h1_updated_jul_2021_x64_dvd_339520da.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer editions), version 21H1 (updated Jul 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_consumer_editions_version_21h1_updated_jul_2021_x86_dvd_84395ac8.iso%7C4199538688%7C10CA67918A3FECCF4B55F0D24F85D32B%7C/">zh-cn_windows_10_consumer_editions_version_21h1_updated_jul_2021_x86_dvd_84395ac8.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 21H1 (updated Jul 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_business_editions_version_21h1_updated_jul_2021_x64_dvd_f49026f5.iso%7C5682900992%7CD68E08920C0BD9295B8CA31FF72F1308%7C/">zh-cn_windows_10_business_editions_version_21h1_updated_jul_2021_x64_dvd_f49026f5.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 21H1 (updated Jul 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_10_business_editions_version_21h1_updated_jul_2021_x86_dvd_fd88dcae.iso%7C4115433472%7CE699EBC249B907292CB64B803BDE8BDA%7C/">zh-cn_windows_10_business_editions_version_21h1_updated_jul_2021_x86_dvd_fd88dcae.iso</a></p>
-</li>
-</ul>
-<h2 id="2021年6月">2021年6月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer edition), version 21H1 (updated Jun 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_21h1_updated_jun_2021_x64_dvd_9f28b97a.iso%7C5821403136%7C243BC0461B743EBF2F5B9B9B4FDC64C4%7C/">cn_windows_10_consumer_editions_version_21h1_updated_jun_2021_x64_dvd_9f28b97a.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer edition), version 21H1 (updated Jun 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_21h1_updated_jun_2021_x86_dvd_6a66f4e3.iso%7C4210823168%7C45164271E6135700F80850B50DFF9AC1%7C/">cn_windows_10_consumer_editions_version_21h1_updated_jun_2021_x86_dvd_6a66f4e3.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business edition), version 21H1 (updated Jun 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_21h1_updated_jun_2021_x64_dvd_9d9154fa.iso%7C5707534336%7C69E3B7C619BD8C09CFC2B2C19A91E13E%7C/">cn_windows_10_business_editions_version_21h1_updated_jun_2021_x64_dvd_9d9154fa.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business edition), version 21H1 (updated Jun 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_21h1_updated_jun_2021_x86_dvd_221c0541.iso%7C4126455808%7C93F9F107810DC0C0615C4C7CF1CD0E7D%7C/">cn_windows_10_business_editions_version_21h1_updated_jun_2021_x86_dvd_221c0541.iso</a></p>
-</li>
-</ul>
-<h2 id="2021年5月">2021年5月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer edition), version 21H1 (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_21h1_x64_dvd_1baf479d.iso%7C5807677440%7CE53960C7CAD323F60442A8AB9C269C2E%7C/">cn_windows_10_consumer_editions_version_21h1_x64_dvd_1baf479d.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer edition), version 21H1 (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_21h1_x86_dvd_5f857a50.iso%7C4199946240%7C2A21FDB6FFB903A0EF594A9F0FBFAEDB%7C/">cn_windows_10_consumer_editions_version_21h1_x86_dvd_5f857a50.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business edition), version 21H1 (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_21h1_x64_dvd_57455ea1.iso%7C5693655040%7C68EB323345DC095D367A19CB3A22342C%7C/">cn_windows_10_business_editions_version_21h1_x64_dvd_57455ea1.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business edition), version 21H1 (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_21h1_x86_dvd_88612df4.iso%7C4117594112%7C921B1032E884E7B10390B3CECF82E936%7C/">cn_windows_10_business_editions_version_21h1_x86_dvd_88612df4.iso</a></p>
-</li>
-</ul>
-<hr>
-<h1 id="windows-10-20h2">Windows 10 20H2</h1>
-<h2 id="2021年4月">2021年4月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer edition), version 20H2 (updated Apr 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_updated_april_2021_x64_dvd_ace7e59c.iso%7C6330411008%7C94F8A6EF403063C48EC5267133B7A3E1%7C/">cn_windows_10_consumer_editions_version_20h2_updated_april_2021_x64_dvd_ace7e59c.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer edition), version 20H2 (updated Apr 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_updated_april_2021_x86_dvd_f483b6ca.iso%7C4643172352%7C355CEA37FAD577D7283AB3739E1F7D6F%7C/">cn_windows_10_consumer_editions_version_20h2_updated_april_2021_x86_dvd_f483b6ca.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business edition), version 20H2 (updated Apr 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_updated_april_2021_x64_dvd_0a0fc490.iso%7C6165831680%7C9B4B918A840F845A43DD476FCEC3E421%7C/">cn_windows_10_business_editions_version_20h2_updated_april_2021_x64_dvd_0a0fc490.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business edition), version 20H2 (updated Apr 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_updated_april_2021_x86_dvd_0e94b33c.iso%7C4538742784%7CA738DBE77137DB9AECD8C5650001174B%7C/">cn_windows_10_business_editions_version_20h2_updated_april_2021_x86_dvd_0e94b33c.iso</a></p>
-</li>
-</ul>
-<h2 id="2021年3月">2021年3月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer edition), version 20H2 (updated March 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_updated_march_2021_x64_dvd_44f9742b.iso%7C6239178752%7C95C7446B595A91FC39A425B0096BB50D%7C/">cn_windows_10_consumer_editions_version_20h2_updated_march_2021_x64_dvd_44f9742b.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer edition), version 20H2 (updated March 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_updated_march_2021_x86_dvd_fc7fc415.iso%7C4549464064%7C081DE7BAF95C348E1705C44DFF6B5EF3%7C/">cn_windows_10_consumer_editions_version_20h2_updated_march_2021_x86_dvd_fc7fc415.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business edition), version 20H2 (updated March 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_updated_march_2021_x64_dvd_ca61aaaa.iso%7C6074574848%7CB6741C4E4B09337471B02DC95E953992%7C/">cn_windows_10_business_editions_version_20h2_updated_march_2021_x64_dvd_ca61aaaa.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business edition), version 20H2 (updated March 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_updated_march_2021_x86_dvd_130708b1.iso%7C4442451968%7C1547797FBC448DB07CD0BC829EEACF69%7C/">cn_windows_10_business_editions_version_20h2_updated_march_2021_x86_dvd_130708b1.iso</a></p>
-</li>
-</ul>
-<h2 id="2021年2月">2021年2月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer edition), version 20H2 (updated Feb 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_updated_feb_2021_x64_dvd_8ddab99d.iso%7C6223781888%7C954B729026D6E420EE46FB2DC912F256%7C/">cn_windows_10_consumer_editions_version_20h2_updated_feb_2021_x64_dvd_8ddab99d.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer edition), version 20H2 (updated Feb 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_updated_feb_2021_x86_dvd_1402b453.iso%7C4549830656%7CBFF4DFA6EB3E19F16ADFB28AF813C784%7C/">cn_windows_10_consumer_editions_version_20h2_updated_feb_2021_x86_dvd_1402b453.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business edition), version 20H2 (updated Feb 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_updated_feb_2021_x64_dvd_be28e70d.iso%7C6060609536%7C6EE4C60193418417843D7A2F4518C9D7%7C/">cn_windows_10_business_editions_version_20h2_updated_feb_2021_x64_dvd_be28e70d.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business edition), version 20H2 (updated Feb 2021) (x86) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_updated_feb_2021_x86_dvd_6eab91c5.iso%7C4439019520%7CA463802125944A0593263671554EB569%7C/">cn_windows_10_business_editions_version_20h2_updated_feb_2021_x86_dvd_6eab91c5.iso</a></p>
-</li>
-</ul>
-<h2 id="2021年1月">2021年1月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer editions), version 20H2 (updated Jan 2021) 64位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_updated_jan_2021_x64_dvd_0af89254.iso%7C6189598720%7CD478F8B7C7063A5A8A3CC20026917233%7C/">cn_windows_10_consumer_editions_version_20h2_updated_jan_2021_x64_dvd_0af89254.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer editions), version 20H2 (updated Jan 2021) 32位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_updated_jan_2021_x86_dvd_bd5d62ca.iso%7C4536780800%7C8AC38F94C6F3869E21C9ACC43970E3A1%7C/">cn_windows_10_consumer_editions_version_20h2_updated_jan_2021_x86_dvd_bd5d62ca.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 20H2 (updated Jan 2021) 64位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_updated_jan_2021_x64_dvd_b6eb1ee6.iso%7C6025357312%7C59B9788D4AA91EA4DA6FB25711CAC8C8%7C/">cn_windows_10_business_editions_version_20h2_updated_jan_2021_x64_dvd_b6eb1ee6.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 20H2 (updated Jan 2021) 32位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_updated_jan_2021_x86_dvd_6e0c098e.iso%7C4432150528%7C4DE6A91E5C9E6117B8B8D59E867D53BE%7C/">cn_windows_10_business_editions_version_20h2_updated_jan_2021_x86_dvd_6e0c098e.iso</a></p>
-</li>
-</ul>
-<h2 id="2020年12月">2020年12月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer editions), version 20H2 (updated Dec 2020) 64位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_updated_dec_2020_x64_dvd_b7d6e09d.iso%7C6153693184%7C5AB32B0C213635697DEC0AAB90134190%7C/">cn_windows_10_consumer_editions_version_20h2_updated_dec_2020_x64_dvd_b7d6e09d.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer editions), version 20H2 (updated Dec 2020) 32位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_updated_dec_2020_x86_dvd_54423d3b.iso%7C4515301376%7C5F44A47247858DA416222227DC0ECC4D%7C/">cn_windows_10_consumer_editions_version_20h2_updated_dec_2020_x86_dvd_54423d3b.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 20H2 (updated Dec 2020) 64位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_updated_dec_2020_x64_dvd_547eb680.iso%7C5982177280%7C92A9D6278AFBBC51B90E2CF4EF005FAB%7C/">cn_windows_10_business_editions_version_20h2_updated_dec_2020_x64_dvd_547eb680.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 20H2 (updated Dec 2020) 32位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_updated_dec_2020_x86_dvd_3d9c120e.iso%7C4412436480%7CDB53280FF7FBB1356964CFB9C980A5DF%7C/">cn_windows_10_business_editions_version_20h2_updated_dec_2020_x86_dvd_3d9c120e.iso</a></p>
-</li>
-</ul>
-<h2 id="2020年11月">2020年11月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer editions), version 20H2 (updated Nov 2020) 64位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_updated_nov_2020_x64_dvd_07bf0300.iso%7C6144505856%7CCD5DD0DDF0154B87D8D6E3815B9A76AB%7C/">cn_windows_10_consumer_editions_version_20h2_updated_nov_2020_x64_dvd_07bf0300.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer editions), version 20H2 (updated Nov 2020) 32位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_updated_nov_2020_x86_dvd_969f3dac.iso%7C4512890880%7C4095DD2091D6FDEF670B44C987850F3C%7C/">cn_windows_10_consumer_editions_version_20h2_updated_nov_2020_x86_dvd_969f3dac.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 20H2 (updated Nov 2020) 64位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_updated_nov_2020_x64_dvd_87114b18.iso%7C5979973632%7CE5F56644711E10C88BE478D91A521FAA%7C/">cn_windows_10_business_editions_version_20h2_updated_nov_2020_x64_dvd_87114b18.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 20H2 (updated Nov 2020) 32位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_updated_nov_2020_x86_dvd_65268d14.iso%7C4400846848%7C01BED2B072BCE1D25E0A09EF482A7DF5%7C/">cn_windows_10_business_editions_version_20h2_updated_nov_2020_x86_dvd_65268d14.iso</a></p>
-</li>
-</ul>
-<h2 id="2020年10月">2020年10月</h2>
-<ul>
-<li>
-<p>Windows 10 (consumer editions), version 20H2 64位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_x64_dvd_d4f7a83e.iso%7C6044921856%7CC71BFC9033EC0C9510E51744833AD84A%7C/">cn_windows_10_consumer_editions_version_20h2_x64_dvd_d4f7a83e.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (consumer editions), version 20H2 32位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_consumer_editions_version_20h2_x86_dvd_a66fccd6.iso%7C4467089408%7C79F2990664D883F34177BE57130C79A6%7C/">cn_windows_10_consumer_editions_version_20h2_x86_dvd_a66fccd6.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 20H2 64位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_x64_dvd_f978664f.iso%7C5895442432%7CC60D042B4D4DDEEC5F0F2CCA6479CA7B%7C/">cn_windows_10_business_editions_version_20h2_x64_dvd_f978664f.iso</a></p>
-</li>
-<li>
-<p>Windows 10 (business editions), version 20H2 32位 - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_10_business_editions_version_20h2_x86_dvd_63a5dc14.iso%7C4359421952%7CCA18157C27EE7E26A7F88E1901D8BA7D%7C/">cn_windows_10_business_editions_version_20h2_x86_dvd_63a5dc14.iso</a></p>
 </li>
 </ul>
 ]]></content>

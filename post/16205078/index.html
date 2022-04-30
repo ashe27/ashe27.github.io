@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>gettext 使用方法 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.7.2/css/all.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="//files.cnblogs.com/files/cyds/favicon.ico">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+<link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css" rel="stylesheet">
+	  
+
+
+<link href="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
+
+
+
+    <meta name="description" content="下载
+Windows版下载地址：https://mlocati.github.io/articles/gettext-iconv-windows.html
+翻译流程
+
+在软件源码中使用相应的库将需要翻译的文字标记起来。比如C语言的libin..." />
+    <meta name="keywords" content="本地化,gettext" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://pic.rmb.bdstatic.com/bjh/d2ef74c9e80c2fe2c24d8e7ea0b7c753.png" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h1 class="post-title">gettext 使用方法</h1>
+            <div class="post-date">2022-04-28</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="下载">下载</h2>
+<p>Windows版下载地址：<a href="https://mlocati.github.io/articles/gettext-iconv-windows.html">https://mlocati.github.io/articles/gettext-iconv-windows.html</a></p>
+<h2 id="翻译流程">翻译流程</h2>
+<ol>
+<li>在软件源码中使用相应的库将需要翻译的文字标记起来。比如C语言的<code>libintl</code>，适合C++的 <a href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/index.html">Boost.locale</a>。</li>
+<li>使用<code>xgettext.exe</code>工具提取源代码中被标记的语句，生成 pot（portable object template）文件。</li>
+<li>使用<code>msginit.exe</code>工具将 pot 文件转化成一个特定语言版本的 po（portable object）文件。或者使用<code>msgmerge.exe</code>将更新了的 pot 文件与旧的 po 文件合并生成新的 po 文件。</li>
+<li>编辑 po 文件（可使用 <a href="https://poedit.net">Poedit</a> 等工具），开始翻译工作。</li>
+<li>使用<code>msgfmt.exe</code>工具将<code>.po</code>文件转换成<code>.mo</code>（machine object)文件。</li>
+</ol>
+<h2 id="提取原文">提取原文</h2>
+<p>从源码中提取原文用到的工具是<code>xgettext</code>。</p>
+<h3 id="0x01-基本用法">0x01 基本用法</h3>
+<p>在源码中标记需要翻译的字符串</p>
+<pre><code class="language-cpp">std::string str1 = boost::locale::gettext(&quot;Love&quot;);
+</code></pre>
+<p>提取命令</p>
+<pre><code class="language-batch">xgettext.exe --from-code=&quot;UTF-8&quot; -o my.pot main.cpp
+</code></pre>
+<p><strong>知识点：</strong></p>
+<ol>
+<li>工具默认提取关键字<code>gettext</code>标记的字符串。</li>
+<li>工具默认认为源文件是 ASCII 文件。</li>
+</ol>
+<p>但既然是要做国际化支持，建议将源码文件改为 UTF-8 编码，通过参数<code>--from-code</code>来指示源文件的编码即可。生成的 pot 文件内容如下</p>
+<pre><code class="language-plain"># SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.
+#
+#, fuzzy
+msgid &quot;&quot;
+msgstr &quot;&quot;
+&quot;Project-Id-Version: PACKAGE VERSION\n&quot;
+&quot;Report-Msgid-Bugs-To: \n&quot;
+&quot;POT-Creation-Date: 2022-04-00 00:00+0800\n&quot;
+&quot;PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n&quot;
+&quot;Last-Translator: FULL NAME &lt;EMAIL@ADDRESS&gt;\n&quot;
+&quot;Language-Team: LANGUAGE &lt;LL@li.org&gt;\n&quot;
+&quot;Language: \n&quot;
+&quot;MIME-Version: 1.0\n&quot;
+&quot;Content-Type: text/plain; charset=CHARSET\n&quot;
+&quot;Content-Transfer-Encoding: 8bit\n&quot;
+
+#: C:/Demo/main.cpp:15
+msgid &quot;Love&quot;
+msgstr &quot;&quot;
+</code></pre>
+<h3 id="0x02-自定义提取关键字">0x02 自定义提取关键字</h3>
+<p><code>xgettext.exe</code>默认仅识别<code>gettext</code>关键字，但可以用<code>--keyword</code>参数指示额外的关键字以满足扩展需求</p>
+<pre><code class="language-cpp">#define _(STRING) boost::locale::gettext(STRING)
+
+auto str1 = _(&quot;underline&quot;);
+auto str2 = boost::locale::translate(&quot;boost&quot;);
+</code></pre>
+<p>命令：</p>
+<pre><code class="language-batch">xgettext --from-code=&quot;UTF-8&quot; --keyword=_ --keyword=translate -o gettext.pot main.cpp
+</code></pre>
+<h2 id="生成-po-文件">生成 po 文件</h2>
+<p>生成 po 文件用到的工具是<code>msginit</code>。</p>
+<h3 id="0x01-基本用法-2">0x01 基本用法</h3>
+<pre><code class="language-batch">msginit -i gettext.pot -o gettext.po
+</code></pre>
+<p>得到po文件内容大概如下：</p>
+<pre><code class="language-plain"># Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2022 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# &lt;EMAIL@ADDRESS&gt;, 2022.
+#
+msgid &quot;&quot;
+msgstr &quot;&quot;
+&quot;Project-Id-Version: PACKAGE VERSION\n&quot;
+&quot;Report-Msgid-Bugs-To: \n&quot;
+&quot;POT-Creation-Date: 2022-04-01 08:57+0800\n&quot;
+&quot;PO-Revision-Date: 2022-04-01 09:16+0800\n&quot;
+&quot;Last-Translator: &lt;EMAIL@ADDRESS&gt;\n&quot;
+&quot;Language-Team: Chinese (simplified)\n&quot;
+&quot;Language: zh_CN\n&quot;
+&quot;MIME-Version: 1.0\n&quot;
+&quot;Content-Type: text/plain; charset=GBK\n&quot;
+&quot;Content-Transfer-Encoding: 8bit\n&quot;
+&quot;Plural-Forms: nplurals=1; plural=0;\n&quot;
+
+#: C:/Demo/Application.cpp:45
+msgid &quot;Love&quot;
+msgstr &quot;&quot;
+
+#: C:/Demo/Application.cpp:46
+msgid &quot;underline&quot;
+msgstr &quot;&quot;
+
+#: C:/Demo/Application.cpp:47
+msgid &quot;boost&quot;
+msgstr &quot;&quot;
+</code></pre>
+<h3 id="0x02-指示目标语言及编码">0x02 指示目标语言及编码</h3>
+<p>输出的 po 文件默认使用本机区域设置，比如简体中文是<code>zh_CN.GBK</code>。<br>
+可以通过<code>--locale</code>参数指示 po 文件的语言和编码。格式遵循 <a href="https://baike.baidu.com/item/ISO%20639-1">ISO 639-1</a> 和 <a href="https://baike.baidu.com/item/ISO%203166-1/5269555">ISO 3166-1</a> 标准。<br>
+比如我想创建一个针对简体中文的翻译文件并采用 UTF-8 编码：</p>
+<pre><code class="language-batch">msginit --locale=zh_CN.UTF-8 -i gettext.pot -o zh_CN.po
+</code></pre>
+<p>但是<code>charset</code>却依然是GBK</p>
+<pre><code class="language-plain">...
+&quot;Content-Type: text/plain; charset=GBK\n&quot;
+...
+</code></pre>
+<p>google找到了答案：因为 pot 文件没有编码信息</p>
+<pre><code class="language-plain">&quot;Content-Type: text/plain; charset=CHARSET\n&quot;
+</code></pre>
+<p>明明在 xgettext 参数中指定了 UTF-8，为什么 pot 文件没有信息？</p>
+<pre><code class="language-plain">xgettext.exe --from-code=&quot;UTF-8&quot;
+</code></pre>
+<p>因为 xgettext 在提取原文过程中没有发现任何非 ASCII 字符，就会忽略掉 charset，也算是个BUG了。<br>
+当我手动修改 pot 文件编码后，再次生成 po 文件，charset 就变为了 UTF-8，但文件内容其实还是GBK。。。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/63597676b81cbde2eab69189c966bba1.png" alt="" loading="lazy"><br>
+所以，解决这个问题需要做两件事</p>
+<ol>
+<li>修改 po 文件的<code>charset</code>为UTF-8</li>
+<li>修改 po 文件编码为 UTF-8</li>
+</ol>
+<p>每次去手动修改有点傻，我们可以在源码中标记一个UTF-8字符，但是翻译的时候忽略它，这样就能保证 pot、po文件的<code>charset</code>为UTF-8。</p>
+<pre><code class="language-cpp">//TRANSLATOR:无需翻译
+boost::locale::pgettext(&quot;IGNORE&quot;, &quot;ø&quot;);
+</code></pre>
+<p>这样就解决了<code>charset</code>的问题。文件自身编码问题可以用<code>iconv.exe</code>来转换，它已经包含在<code>gettext</code>工具包中了，所以最终的命令是：</p>
+<pre><code class="language-batch">msginit -i test.pot -o zh_CN.po.tmp
+iconv -t utf-8 zh_CN.po.tmp &gt; zh_CN.po
+del zh_CN.po.tmp
+</code></pre>
+<h2 id="生成-mo-语言文件">生成 mo 语言文件</h2>
+<pre><code class="language-batch">msgfmt -o test.mo zh_CN.po
+</code></pre>
+<h2 id="更新-po-文件">更新 po 文件</h2>
+<p>在软件升级迭代的过程中，待翻译原文也会发生变化，如增加、删除等，这就需要将 pot 文件中变动的内容更新至 po 文件，而不是重新生成一个新的 po 文件。这就需要用到<code>msgmerge</code>。</p>
+<pre><code class="language-batch">msgmerge -U zh_CN.po test.pot
+</code></pre>
+<p><code>-U</code>表示更新现有 po 文件，按位置看，第一个文件就是被更新的目标文件。<br>
+当然也可以用<code>-o</code>参数创建一个新的 po 文件：</p>
+<pre><code class="language-batch">msgmerge -o new.po zh_CN.po test.pot
+</code></pre>
+<p><strong>知识点：</strong></p>
+<ol>
+<li>新文件中词条如果有译文，任何情况下都不会被覆盖。</li>
+<li>通过<code>compendium</code>参数指定翻译文件对空词条进行填充。</li>
+</ol>
+<pre><code class="language-batch">msgmerge --compendium dict.po -U target.po new.pot
+</code></pre>
+<p>注意，引用的文件可以是 pot 文件，也可以是 po 文件。</p>
+<h2 id="合并多个-po-文件">合并多个 po 文件</h2>
+<p>一个软件项目可能含有多个模块，每个模块都有自己的翻译文件，有大量重叠的内容，完全可以将多个 po 文件合并为一个。</p>
+<pre><code class="language-batch">msgcat -o all.po 1.po 2.po
+</code></pre>
+<p>默认合并规则：</p>
+<ul>
+<li>对于相同的原文，如果仅有一个被翻译了，则采用它。</li>
+<li>对于相同的原文，如果有不同的翻译，则会合并所有的翻译，需要人工处理</li>
+</ul>
+<pre><code class="language-plain">#: main.cpp:21 main.cpp:25
+#, fuzzy
+msgid &quot;Love&quot;
+msgstr &quot;&quot;
+&quot;#-#-#-#-#  1.po  #-#-#-#-#\n&quot;
+&quot;爱情\n&quot;
+&quot;#-#-#-#-#  2.po  #-#-#-#-#\n&quot;
+&quot;爱&quot;
+</code></pre>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/a6c4215b2b72a9ba139b57ff419faab2.png" alt="" loading="lazy"><br>
+如果想避免重复的翻译内容被合并，可以使用<code>use-first</code>参数，表示采用找到的第一个可用的翻译。</p>
+<pre><code class="language-batch">msgcat --use-first -o all.po 1.po 2.po
+</code></pre>
+<h2 id="参考">参考</h2>
+<p><a href="https://www.gnu.org/software/gettext/manual/html_node/msginit-Invocation.html">msginit</a><br>
+<a href="https://blog.csdn.net/haiiiiiyun/article/details/104970005">GNU gettext工具简介</a><br>
+<a href="https://www.helywin.com/posts/20200814061352/">gettext使用</a><br>
+<a href="https://peter.bloomfield.online/generate-utf-8-dictionaries-using-gettext/">Generate UTF-8 dictionaries using gettext</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/o6pjmb2hc/" class="tag">
+                    本地化
+                  </a>
+                
+                  <a href="https://ashe27.github.io/tag/TLWATlTeXE/" class="tag">
+                    gettext
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/16200732/">
+                  <h3 class="post-title">
+                    用 Boost.Locale 使软件支持多国语言
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/languages/vbscript.min.js"></script>
+  <script>
+    hljs.highlightAll()
+  </script>
+
+
+
+
+
+  </body>
+</html>
