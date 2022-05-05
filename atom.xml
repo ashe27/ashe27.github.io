@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-04-30T14:56:51.476Z</updated>
+    <updated>2022-05-05T15:03:45.919Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,6 +10,66 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, ashe&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[VS 与 UTF-8编码]]></title>
+        <id>https://ashe27.github.io/post/16226233/</id>
+        <link href="https://ashe27.github.io/post/16226233/">
+        </link>
+        <updated>2022-05-05T15:03:25.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="与编码有关的几个地方">与编码有关的几个地方</h2>
+<ul>
+<li>源文件编码。</li>
+<li>工程设置中的<code>字符集</code>选项。</li>
+<li>编译选项<code>/source-charset</code>和<code>/execution-charset</code>。</li>
+<li>编译指令<code>#pragma execution_character_set(&quot;utf-8&quot;)</code>，已过时。</li>
+</ul>
+<p>实际上<code>字符集</code>设置只是决定双引号字符要不要加上<code>L</code>前缀，比如指定为<code>Unicode</code>字符集时，<code>&quot;Hello&quot;</code>将变为<code>L&quot;Hello&quot;</code>。</p>
+<h2 id="结论">结论</h2>
+<p>经过一番试验后得出：</p>
+<ul>
+<li>源文件编码不影响可执行文件编码，编译器默认使用本机编码识别源文件，或者<code>UTF-8 BOM</code>也可以。其他编码则需要通过编译选项<code>/source-charset</code>告知编译器，比如<code>UTF-8</code>则需要添加选项<code>/source-charset:utf-8</code>。</li>
+<li>宽字符总是<code>UTF-16</code>编码，不受任何选项影响。</li>
+<li>窄字符采用<code>/execution-charset</code>选项指定的编码，未指定时则采用本机编码。</li>
+<li><code>/utf-8</code>选项等于同时设置<code>/source-charset:utf-8</code>和<code>/execution-charset:utf-8</code>。</li>
+<li>在<code>Visual Studio 2013</code>及以下版本中，使用<code>#pragma execution_character_set(&quot;utf-8&quot;)</code>指令设置窄字符的编码方式，仅支持<code>UTF-8</code>。</li>
+</ul>
+<h2 id="使用-utf-8-版-win32-api">使用 UTF-8 版 Win32 API</h2>
+<p>当可执行文件字符编码为<code>UTF-8</code>时，与 Win32 API 交互就会出现乱码</p>
+<pre><code class="language-cpp">::MessageBoxA(m_hWnd, &quot;123456你好&quot;, &quot;&quot;, 64);
+</code></pre>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/012c753ce92ff7709dfd79b87b914972.png" alt="" loading="lazy"><br>
+因为历史原因，Windows 不支持<code>UTF-8</code>字符集，不过在较新的<code>Windows 10 1903</code>上已经开始支持了，但需要程序显示指明编码方式。<br>
+为程序添加一个特别的清单文件，这会告知 Windows 系统，程序使用了<code>UTF-8</code>字符集。</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot;?&gt;
+&lt;assembly manifestVersion=&quot;1.0&quot; xmlns=&quot;urn:schemas-microsoft-com:asm.v1&quot;&gt;
+  &lt;assemblyIdentity type=&quot;win32&quot; name=&quot;...&quot; version=&quot;6.0.0.0&quot;/&gt;
+  &lt;application&gt;
+    &lt;windowsSettings&gt;
+      &lt;activeCodePage xmlns=&quot;http://schemas.microsoft.com/SMI/2019/WindowsSettings&quot;&gt;UTF-8&lt;/activeCodePage&gt;
+    &lt;/windowsSettings&gt;
+  &lt;/application&gt;
+&lt;/assembly&gt;
+</code></pre>
+<p>注意，它仅在<code>Windows 10 1903</code>以上的系统上有效。</p>
+<h2 id="建议">建议</h2>
+<ul>
+<li>不需要跨平台时，将源文件保存为<code>UTF-8 BOM</code>编码。</li>
+<li>不需要跨平台时，尽量使用宽字符，因为有少数 Win32 API 仅有宽字符的版本，而且 COM 接口都是宽字符。在需要与<code>UTF-8</code>交互的地方用 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte">WideCharToMultiByte</a> 转换。</li>
+<li>需要跨平台时，将源文件保存为<code>UTF-8</code>编码，并添加<code>/utf-8</code>选项，在与 Win32 API 交互的地方用 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar">MultiByteToWideChar</a> 转换。</li>
+</ul>
+<p>在未来某年 Windows 7 彻底消失后，就可以为程序添加 UTF-8 清单文件，将程序全面转换到 UTF-8。</p>
+<h2 id="vs扩展">VS扩展</h2>
+<p>VS总是使用本机编码保存文件，我们可以通过第三方扩展来强制保存为<code>UTF-8 BOM</code>。<br>
+For VS2015-2019：<a href="https://marketplace.visualstudio.com/items?itemName=WinstonFeng.FormatonSave">Format on Save</a><br>
+For VS2022：<a href="https://marketplace.visualstudio.com/items?itemName=WinstonFeng.VSFormatOnSave2022">Format on Save for VS2022</a></p>
+<h2 id="参考">参考</h2>
+<p><a href="https://docs.microsoft.com/zh-cn/cpp/build/reference/source-charset-set-source-character-set">设置源字符集</a><br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/build/reference/execution-charset-set-execution-character-set">设置执行字符集</a><br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8">将源和执行字符集设置为 UTF-8</a><br>
+<a href="https://docs.microsoft.com/zh-cn/windows/apps/design/globalizing/use-utf8-code-page">在 Windows 应用中使用 UTF-8 代码页</a><br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/preprocessor/execution-character-set">execution_character_set</a></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[gettext 使用方法]]></title>
         <id>https://ashe27.github.io/post/16205078/</id>
@@ -897,59 +957,6 @@ Linux：<a href="https://www.vmware.com/go/getworkstation-linux">https://www.vmw
 <ul>
 <li>Windows Server 2003 Service Pack 2 (x86) - CD (Chinese-Simplified)<br>
 <a href="ed2k://%7Cfile%7Ccn_windows_server_2003_sp2_x86_cd.iso%7C390135808%7C4C38E53EF100F80683810CAC1044CA70%7C/">cn_windows_server_2003_sp2_x86_cd.iso</a></li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Windows11 原版系统镜像]]></title>
-        <id>https://ashe27.github.io/post/windows11/</id>
-        <link href="https://ashe27.github.io/post/windows11/">
-        </link>
-        <updated>2021-11-17T05:44:59.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="windows-11-21h2">Windows 11 21H2</h1>
-<h2 id="2021年12月">2021年12月</h2>
-<ul>
-<li>
-<p>Windows 11 (consumer editions), (updated Dec 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_11_consumer_editions_updated_dec_2021_x64_dvd_aecd9187.iso%7C5634115584%7C0C7FA4A60366258156EF2EFDE2780D7C%7C/">zh-cn_windows_11_consumer_editions_updated_dec_2021_x64_dvd_aecd9187.iso</a></p>
-</li>
-<li>
-<p>Windows 11 (business editions), (updated Dec 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_11_business_editions_updated_dec_2021_x64_dvd_ff426bea.iso%7C5520793600%7CF563A821456E1392358A2E081C2521D5%7C/">zh-cn_windows_11_business_editions_updated_dec_2021_x64_dvd_ff426bea.iso</a></p>
-</li>
-</ul>
-<h2 id="2021年11月">2021年11月</h2>
-<ul>
-<li>
-<p>Windows 11 (consumer editions), (updated Nov 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_11_consumer_editions_updated_nov_2021_x64_dvd_4f3f7e50.iso%7C5587222528%7C1918BA6A8AC8A68927F3683D5F869572%7C/">zh-cn_windows_11_consumer_editions_updated_nov_2021_x64_dvd_4f3f7e50.iso</a></p>
-</li>
-<li>
-<p>Windows 11 (business editions), (updated Nov 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_11_business_editions_updated_nov_2021_x64_dvd_c2a36e5c.iso%7C5480054784%7C342C9195970A21C4D037A015D8E266D3%7C/">zh-cn_windows_11_business_editions_updated_nov_2021_x64_dvd_c2a36e5c.iso</a></p>
-</li>
-</ul>
-<h2 id="2021年10月">2021年10月</h2>
-<ul>
-<li>
-<p>Windows 11 (consumer editions), version 21H2 (updated October 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_11_consumer_editions_version_21h2_updated_october_2021_x64_dvd_47addd14.iso%7C5523668992%7C64F5B433CC2A9814DC4D04DC265E4D3B%7C/">zh-cn_windows_11_consumer_editions_version_21h2_updated_october_2021_x64_dvd_47addd14.iso</a></p>
-</li>
-<li>
-<p>Windows 11 (business editions), version 21H2 (updated October 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_11_business_editions_version_21h2_updated_october_2021_x64_dvd_a84e149f.iso%7C5419143168%7CB0C4BE7271CD65B2173326239D4F8BA2%7C/">zh-cn_windows_11_business_editions_version_21h2_updated_october_2021_x64_dvd_a84e149f.iso</a></p>
-</li>
-</ul>
-<h1 id="windows-11">Windows 11</h1>
-<ul>
-<li>
-<p>Windows 11 (consumer editions) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_11_consumer_editions_x64_dvd_904f13e4.iso%7C5517273088%7CDFD1AE88E36516B87382FC3D3D3F46AD%7C/">zh-cn_windows_11_consumer_editions_x64_dvd_904f13e4.iso</a></p>
-</li>
-<li>
-<p>Windows 11 (business editions) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_11_business_editions_x64_dvd_f5f6bcbd.iso%7C5413181440%7C88CA1AE28F5F8A238647561B5C00E511%7C/">zh-cn_windows_11_business_editions_x64_dvd_f5f6bcbd.iso</a></p>
-</li>
 </ul>
 ]]></content>
     </entry>
