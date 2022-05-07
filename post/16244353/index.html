@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>MFC学习：设置窗口标题 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.7.2/css/all.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="//files.cnblogs.com/files/cyds/favicon.ico">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+<link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css" rel="stylesheet">
+	  
+
+
+<link href="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
+
+
+
+    <meta name="description" content="默认情况下，MFC的主窗口标题由文档标题和Frame标题组成，格式为：file - frame。
+设置标题
+设置窗口标题用 CWnd::SetWindowText 方法。
+设置文档标题
+新建一个文档时，MFC 会使用字符串资源AFX_IDS..." />
+    <meta name="keywords" content="MFC" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://pic.rmb.bdstatic.com/bjh/d2ef74c9e80c2fe2c24d8e7ea0b7c753.png" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h1 class="post-title">MFC学习：设置窗口标题</h1>
+            <div class="post-date">2022-05-07</div>
+            
+            <div class="post-content" v-pre>
+              <p>默认情况下，MFC的主窗口标题由<strong>文档标题和Frame标题组成</strong>，格式为：<code>file - frame</code>。</p>
+<h2 id="设置标题">设置标题</h2>
+<p>设置窗口标题用 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwnd-class?#setwindowtext">CWnd::SetWindowText</a> 方法。</p>
+<h2 id="设置文档标题">设置文档标题</h2>
+<p>新建一个文档时，MFC 会使用字符串资源<code>AFX_IDS_UNTITLED</code>作为文档的默认标题，接着会触发 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#onnewdocument">CDocument::OnNewDocument</a> 方法，我们可以在文件新建成功后使用 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#settitle">CDocument::SetTitle</a> 方法来设置标题。</p>
+<pre><code class="language-cpp">BOOL CMFCApplication2Doc::OnNewDocument()
+{
+    if (!CDocument::OnNewDocument())
+        return FALSE;
+
+    this-&gt;SetTitle(_T(&quot;新文件&quot;));
+    return TRUE;
+}
+</code></pre>
+<p>如果是<code>打开文档</code>就不能在 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#onopendocument">CDocument::OnOpenDocument</a> 中处理，因为 MFC 在打开文档后会使用文件名作为标题</p>
+<pre><code class="language-cpp">...
+TCHAR szTitle[_MAX_FNAME];
+if (AfxGetFileTitle(szFullPath, szTitle, _MAX_FNAME) == 0)
+    SetTitle(szTitle);
+...
+</code></pre>
+<p>最早的修改时机是在 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#setpathname">CDocument::SetPathName</a> 中，我们可以重载它</p>
+<pre><code class="language-cpp">void SetPathName(LPCTSTR lpszPathName, BOOL bAddToMRU) override
+{
+    CDocument::SetPathName(lpszPathName, bAddToMRU);
+    this-&gt;SetTitle(_T(&quot;new title&quot;));
+}
+</code></pre>
+<p>但是更建议在 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#ondocumentevent">CDocument::OnDocumentEvent</a> 中处理</p>
+<pre><code class="language-cpp">void OnDocumentEvent(DocumentEvent deEvent) override
+{
+    if (deEvent == onAfterNewDocument || deEvent == onAfterOpenDocument) {
+        this-&gt;SetTitle(_T(&quot;new title&quot;));
+    }
+}
+</code></pre>
+<h2 id="固定窗口标题">固定窗口标题</h2>
+<p>我们有时候希望应用程序标题是固定的，不会随着文档变化，可以通过以下几种方式来做。</p>
+<h3 id="方式一">方式一</h3>
+<p>因为文档在设置标题后会触发 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cframewndex-class?#onupdateframetitle">CFrameWndEx::OnUpdateFrameTitle</a> 方法，而这个方法会改变窗口标题，所以我们覆盖它即可避免被影响。<br>
+在 <a href="CFrameWndEx::OnCreate">CFrameWndEx::OnCreate</a> 中设置固定标题</p>
+<pre><code class="language-cpp">this-&gt;SetWindowText(_T(&quot;title&quot;));
+</code></pre>
+<p>重载 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cframewndex-class?#onupdateframetitle">CFrameWndEx::OnUpdateFrameTitle</a> 方法，不调用父类操作。</p>
+<pre><code class="language-cpp">void CMainFrame::OnUpdateFrameTitle(BOOL bAddToTitle)
+{
+    // Ignore
+}
+</code></pre>
+<h3 id="方式二">方式二</h3>
+<p>跟进<code>OnUpdateFrameTitle</code>后：</p>
+<pre><code class="language-cpp">void CFrameWnd::OnUpdateFrameTitle(BOOL bAddToTitle)
+{
+    if ((GetStyle() &amp; FWS_ADDTOTITLE) == 0)
+        return;     // leave it alone!
+
+    // allow hook to set the title (used for OLE support)
+    if (m_pNotifyHook != NULL &amp;&amp; m_pNotifyHook-&gt;OnUpdateFrameTitle())
+        return;
+
+    CDocument* pDocument = GetActiveDocument();
+    if (bAddToTitle &amp;&amp; pDocument != NULL)
+        UpdateFrameTitleForDocument(pDocument-&gt;GetTitle());
+    else
+        UpdateFrameTitleForDocument(NULL);
+}
+</code></pre>
+<p>这里发现了一个新东西<code>FWS_ADDTOTITLE</code>，如果窗口样式不包含它的话就退出函数了，所以我们也可以在创建<code>Frame</code>时去除这个Flag</p>
+<pre><code class="language-cpp">BOOL CMainFrame::PreCreateWindow(CREATESTRUCT&amp; cs)
+{
+    if (!CFrameWndEx::PreCreateWindow(cs))
+        return FALSE;
+
+    cs.style &amp;= ~FWS_ADDTOTITLE;
+    return TRUE;
+}
+</code></pre>
+<p>所以这个方式和方式一是一样的，本质上就是忽略<code>OnUpdateFrameTitle</code>的默认行为。</p>
+<h3 id="方式三">方式三</h3>
+<p>继续跟进源码</p>
+<pre><code class="language-cpp">void CFrameWnd::UpdateFrameTitleForDocument(LPCTSTR lpszDocName)
+{
+    CString WindowText;
+
+    if (GetStyle() &amp; FWS_PREFIXTITLE)
+    {
+        // get name of currently active view
+        if (lpszDocName != NULL)
+        {
+            WindowText += lpszDocName;
+
+            // add current window # if needed
+            if (m_nWindow &gt; 0)
+            {
+                TCHAR szText[32];
+
+                // :%d will produce a maximum of 11 TCHARs
+                _stprintf_s(szText, _countof(szText), _T(&quot;:%d&quot;), m_nWindow);
+                WindowText += szText;
+            }
+            WindowText += _T(&quot; - &quot;);
+        }
+        WindowText += m_strTitle;
+    }
+    else
+    {
+        // get name of currently active view
+        WindowText += m_strTitle;
+        if (lpszDocName != NULL)
+        {
+            WindowText += _T(&quot; - &quot;);
+            WindowText += lpszDocName;
+
+            // add current window # if needed
+            if (m_nWindow &gt; 0)
+            {
+                TCHAR szText[32];
+
+                // :%d will produce a maximum of 11 TCHARs
+                _stprintf_s(szText, _countof(szText), _T(&quot;:%d&quot;), m_nWindow);
+                WindowText += szText;
+            }
+        }
+    }
+
+    // set title if changed, but don't remove completely
+    // Note: will be excessive for MDI Frame with maximized child
+    AfxSetWindowText(m_hWnd, (LPCTSTR) WindowText);
+}
+</code></pre>
+<p>逻辑很简单，只要我们将<code>OnUpdateFrameTitle</code>方法唯一的参数设置为<code>FALSE</code>，就可以让<code>Frame</code>的 <strong>控件标题</strong> 作为窗口标题。<br>
+首先设置<code>Frame</code>的控件标题，通过 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cframewnd-class?#settitle">CFrameWnd::SetTitle</a> 方法。</p>
+<pre><code class="language-cpp">this-&gt;SetTitle(_T(&quot;title&quot;));
+</code></pre>
+<p>然后将<code>OnUpdateFrameTitle</code>的参数设置为<code>FALSE</code></p>
+<pre><code class="language-cpp">void CMainFrame::OnUpdateFrameTitle(BOOL bAddToTitle)
+{
+    __super::OnUpdateFrameTitle(FALSE);
+}
+</code></pre>
+<h2 id="frame-默认标题从哪来">Frame 默认标题从哪来？</h2>
+<p>如果我们不做任何设置，Frame 始终会有一个默认标题，这个标题字符串从哪来？还是看源码</p>
+<pre><code class="language-cpp">BOOL CFrameWnd::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle,
+    CWnd* pParentWnd, CCreateContext* pContext)
+{
+...
+    CString strFullString;
+    if (strFullString.LoadString(nIDResource))
+        AfxExtractSubString(m_strTitle, strFullString, 0);    // first sub-string
+...
+}
+</code></pre>
+<p>原来在创建 MFC 工程时，资源文件中生成了它</p>
+<pre><code class="language-plain">STRINGTABLE
+BEGIN
+    IDR_MAINFRAME    &quot;MFCApplication2\n\nMFCApplication2\n\n\nMFCApplication2.Document\nMFCApplication2.Document&quot;
+END
+</code></pre>
+<p>这是一个用<code>\n</code>分隔的字符串列表，第一个子串就是默认标题。<br>
+关于其他子串的解释可以查看 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdoctemplate-class#getdocstring">CDocTemplate::GetDocString</a> 的解释。</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/0Bi6RefVM/" class="tag">
+                    MFC
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/16226233/">
+                  <h3 class="post-title">
+                    VS 与 UTF-8 编码
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/languages/vbscript.min.js"></script>
+  <script>
+    hljs.highlightAll()
+  </script>
+
+
+
+
+
+  </body>
+</html>

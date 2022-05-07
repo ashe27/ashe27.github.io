@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-05-05T15:04:21.389Z</updated>
+    <updated>2022-05-07T14:22:58.035Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,6 +10,174 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, ashe&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[MFC学习：设置窗口标题]]></title>
+        <id>https://ashe27.github.io/post/16244353/</id>
+        <link href="https://ashe27.github.io/post/16244353/">
+        </link>
+        <updated>2022-05-07T14:22:39.000Z</updated>
+        <content type="html"><![CDATA[<p>默认情况下，MFC的主窗口标题由<strong>文档标题和Frame标题组成</strong>，格式为：<code>file - frame</code>。</p>
+<h2 id="设置标题">设置标题</h2>
+<p>设置窗口标题用 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwnd-class?#setwindowtext">CWnd::SetWindowText</a> 方法。</p>
+<h2 id="设置文档标题">设置文档标题</h2>
+<p>新建一个文档时，MFC 会使用字符串资源<code>AFX_IDS_UNTITLED</code>作为文档的默认标题，接着会触发 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#onnewdocument">CDocument::OnNewDocument</a> 方法，我们可以在文件新建成功后使用 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#settitle">CDocument::SetTitle</a> 方法来设置标题。</p>
+<pre><code class="language-cpp">BOOL CMFCApplication2Doc::OnNewDocument()
+{
+    if (!CDocument::OnNewDocument())
+        return FALSE;
+
+    this-&gt;SetTitle(_T(&quot;新文件&quot;));
+    return TRUE;
+}
+</code></pre>
+<p>如果是<code>打开文档</code>就不能在 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#onopendocument">CDocument::OnOpenDocument</a> 中处理，因为 MFC 在打开文档后会使用文件名作为标题</p>
+<pre><code class="language-cpp">...
+TCHAR szTitle[_MAX_FNAME];
+if (AfxGetFileTitle(szFullPath, szTitle, _MAX_FNAME) == 0)
+    SetTitle(szTitle);
+...
+</code></pre>
+<p>最早的修改时机是在 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#setpathname">CDocument::SetPathName</a> 中，我们可以重载它</p>
+<pre><code class="language-cpp">void SetPathName(LPCTSTR lpszPathName, BOOL bAddToMRU) override
+{
+    CDocument::SetPathName(lpszPathName, bAddToMRU);
+    this-&gt;SetTitle(_T(&quot;new title&quot;));
+}
+</code></pre>
+<p>但是更建议在 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#ondocumentevent">CDocument::OnDocumentEvent</a> 中处理</p>
+<pre><code class="language-cpp">void OnDocumentEvent(DocumentEvent deEvent) override
+{
+    if (deEvent == onAfterNewDocument || deEvent == onAfterOpenDocument) {
+        this-&gt;SetTitle(_T(&quot;new title&quot;));
+    }
+}
+</code></pre>
+<h2 id="固定窗口标题">固定窗口标题</h2>
+<p>我们有时候希望应用程序标题是固定的，不会随着文档变化，可以通过以下几种方式来做。</p>
+<h3 id="方式一">方式一</h3>
+<p>因为文档在设置标题后会触发 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cframewndex-class?#onupdateframetitle">CFrameWndEx::OnUpdateFrameTitle</a> 方法，而这个方法会改变窗口标题，所以我们覆盖它即可避免被影响。<br>
+在 <a href="CFrameWndEx::OnCreate">CFrameWndEx::OnCreate</a> 中设置固定标题</p>
+<pre><code class="language-cpp">this-&gt;SetWindowText(_T(&quot;title&quot;));
+</code></pre>
+<p>重载 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cframewndex-class?#onupdateframetitle">CFrameWndEx::OnUpdateFrameTitle</a> 方法，不调用父类操作。</p>
+<pre><code class="language-cpp">void CMainFrame::OnUpdateFrameTitle(BOOL bAddToTitle)
+{
+    // Ignore
+}
+</code></pre>
+<h3 id="方式二">方式二</h3>
+<p>跟进<code>OnUpdateFrameTitle</code>后：</p>
+<pre><code class="language-cpp">void CFrameWnd::OnUpdateFrameTitle(BOOL bAddToTitle)
+{
+    if ((GetStyle() &amp; FWS_ADDTOTITLE) == 0)
+        return;     // leave it alone!
+
+    // allow hook to set the title (used for OLE support)
+    if (m_pNotifyHook != NULL &amp;&amp; m_pNotifyHook-&gt;OnUpdateFrameTitle())
+        return;
+
+    CDocument* pDocument = GetActiveDocument();
+    if (bAddToTitle &amp;&amp; pDocument != NULL)
+        UpdateFrameTitleForDocument(pDocument-&gt;GetTitle());
+    else
+        UpdateFrameTitleForDocument(NULL);
+}
+</code></pre>
+<p>这里发现了一个新东西<code>FWS_ADDTOTITLE</code>，如果窗口样式不包含它的话就退出函数了，所以我们也可以在创建<code>Frame</code>时去除这个Flag</p>
+<pre><code class="language-cpp">BOOL CMainFrame::PreCreateWindow(CREATESTRUCT&amp; cs)
+{
+    if (!CFrameWndEx::PreCreateWindow(cs))
+        return FALSE;
+
+    cs.style &amp;= ~FWS_ADDTOTITLE;
+    return TRUE;
+}
+</code></pre>
+<p>所以这个方式和方式一是一样的，本质上就是忽略<code>OnUpdateFrameTitle</code>的默认行为。</p>
+<h3 id="方式三">方式三</h3>
+<p>继续跟进源码</p>
+<pre><code class="language-cpp">void CFrameWnd::UpdateFrameTitleForDocument(LPCTSTR lpszDocName)
+{
+    CString WindowText;
+
+    if (GetStyle() &amp; FWS_PREFIXTITLE)
+    {
+        // get name of currently active view
+        if (lpszDocName != NULL)
+        {
+            WindowText += lpszDocName;
+
+            // add current window # if needed
+            if (m_nWindow &gt; 0)
+            {
+                TCHAR szText[32];
+
+                // :%d will produce a maximum of 11 TCHARs
+                _stprintf_s(szText, _countof(szText), _T(&quot;:%d&quot;), m_nWindow);
+                WindowText += szText;
+            }
+            WindowText += _T(&quot; - &quot;);
+        }
+        WindowText += m_strTitle;
+    }
+    else
+    {
+        // get name of currently active view
+        WindowText += m_strTitle;
+        if (lpszDocName != NULL)
+        {
+            WindowText += _T(&quot; - &quot;);
+            WindowText += lpszDocName;
+
+            // add current window # if needed
+            if (m_nWindow &gt; 0)
+            {
+                TCHAR szText[32];
+
+                // :%d will produce a maximum of 11 TCHARs
+                _stprintf_s(szText, _countof(szText), _T(&quot;:%d&quot;), m_nWindow);
+                WindowText += szText;
+            }
+        }
+    }
+
+    // set title if changed, but don't remove completely
+    // Note: will be excessive for MDI Frame with maximized child
+    AfxSetWindowText(m_hWnd, (LPCTSTR) WindowText);
+}
+</code></pre>
+<p>逻辑很简单，只要我们将<code>OnUpdateFrameTitle</code>方法唯一的参数设置为<code>FALSE</code>，就可以让<code>Frame</code>的 <strong>控件标题</strong> 作为窗口标题。<br>
+首先设置<code>Frame</code>的控件标题，通过 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cframewnd-class?#settitle">CFrameWnd::SetTitle</a> 方法。</p>
+<pre><code class="language-cpp">this-&gt;SetTitle(_T(&quot;title&quot;));
+</code></pre>
+<p>然后将<code>OnUpdateFrameTitle</code>的参数设置为<code>FALSE</code></p>
+<pre><code class="language-cpp">void CMainFrame::OnUpdateFrameTitle(BOOL bAddToTitle)
+{
+    __super::OnUpdateFrameTitle(FALSE);
+}
+</code></pre>
+<h2 id="frame-默认标题从哪来">Frame 默认标题从哪来？</h2>
+<p>如果我们不做任何设置，Frame 始终会有一个默认标题，这个标题字符串从哪来？还是看源码</p>
+<pre><code class="language-cpp">BOOL CFrameWnd::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle,
+    CWnd* pParentWnd, CCreateContext* pContext)
+{
+...
+    CString strFullString;
+    if (strFullString.LoadString(nIDResource))
+        AfxExtractSubString(m_strTitle, strFullString, 0);    // first sub-string
+...
+}
+</code></pre>
+<p>原来在创建 MFC 工程时，资源文件中生成了它</p>
+<pre><code class="language-plain">STRINGTABLE
+BEGIN
+    IDR_MAINFRAME    &quot;MFCApplication2\n\nMFCApplication2\n\n\nMFCApplication2.Document\nMFCApplication2.Document&quot;
+END
+</code></pre>
+<p>这是一个用<code>\n</code>分隔的字符串列表，第一个子串就是默认标题。<br>
+关于其他子串的解释可以查看 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdoctemplate-class#getdocstring">CDocTemplate::GetDocString</a> 的解释。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[VS 与 UTF-8 编码]]></title>
         <id>https://ashe27.github.io/post/16226233/</id>
@@ -774,190 +942,6 @@ Linux：<a href="https://www.vmware.com/go/getworkstation-linux">https://www.vmw
 <p><a href="https://download.visualstudio.microsoft.com/download/pr/1f5af042-d0e4-4002-9c59-9ba66bcf15f6/527a5cc66d3e5c7d3653b366f5add524/ndp472-kb4054530-x86-x64-allos-chs.exe">https://download.visualstudio.microsoft.com/download/pr/1f5af042-d0e4-4002-9c59-9ba66bcf15f6/527a5cc66d3e5c7d3653b366f5add524/ndp472-kb4054530-x86-x64-allos-chs.exe</a></p>
 <h2 id="net-framework-48">.NET Framework 4.8</h2>
 <p><a href="https://download.visualstudio.microsoft.com/download/pr/2d6bb6b2-226a-4baa-bdec-798822606ff1/8494001c276a4b96804cde7829c04d7f/ndp48-x86-x64-allos-enu.exe">https://download.visualstudio.microsoft.com/download/pr/2d6bb6b2-226a-4baa-bdec-798822606ff1/8494001c276a4b96804cde7829c04d7f/ndp48-x86-x64-allos-enu.exe</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Windows Server 原版系统镜像]]></title>
-        <id>https://ashe27.github.io/post/windows-server/</id>
-        <link href="https://ashe27.github.io/post/windows-server/">
-        </link>
-        <updated>2021-11-17T06:02:20.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="windows-server-2022">Windows Server 2022</h1>
-<h3 id="2021年10月">2021年10月</h3>
-<ul>
-<li>Windows Server 2022 (Updated October 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_server_version_2022_updated_october_2021_x64_dvd_5799fd5a.iso%7C5235499008%7CECB48EE4E81AAB20F44B4E365E17439C%7C/">zh-cn_windows_server_version_2022_updated_october_2021_x64_dvd_5799fd5a.iso</a></li>
-</ul>
-<h3 id="2021年9月">2021年9月</h3>
-<ul>
-<li>
-<p>Windows Server 2022 (Updated SEP 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_server_2022_x64_dvd_6c73507d.iso%7C5805221888%7C8D72A80C08CEFD49AB831C0AD08EE69C%7C/">zh-cn_windows_server_version_2022_updated_sep_2021_x64_dvd_b4b9f360.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2022 (Updated Aug 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_server_version_2022_updated_sep_2021_x64_dvd_d125a8d5.iso%7C5240166400%7C1F8B4C146B58ABC2C142C259F6B122B4%7C/">zh-cn_windows_server_version_2022_updated_sep_2021_x64_dvd_d125a8d5.iso</a></p>
-</li>
-</ul>
-<h3 id="2021年8月">2021年8月</h3>
-<ul>
-<li>
-<p>Windows Server 2022 (Updated Aug 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_server_2022_x64_dvd_6c73507d.iso%7C5805221888%7C8D72A80C08CEFD49AB831C0AD08EE69C%7C/">zh-cn_windows_server_2022_x64_dvd_6c73507d.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2022 (Updated Aug 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7CSW_DVD9_Win_Server_STD_CORE_2022__64Bit_ChnSimp_DC_STD_MLF_X22-74289.ISO%7C5807917056%7C85B27E24BA5F90C6A705D35EF89D0135%7C/">SW_DVD9_Win_Server_STD_CORE_2022__64Bit_ChnSimp_DC_STD_MLF_X22-74289.ISO</a></p>
-</li>
-</ul>
-<hr>
-<h1 id="windows-server-2019">Windows Server 2019</h1>
-<h3 id="2021年8月-2">2021年8月</h3>
-<ul>
-<li>Windows Server 2019 (updated Aug 2021) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Czh-cn_windows_server_2019_updated_aug_2021_x64_dvd_c122423d.iso%7C5828352000%7C093A7F555431EA3B10D46743D813E795%7C/">zh-cn_windows_server_2019_updated_aug_2021_x64_dvd_c122423d.iso</a></li>
-</ul>
-<h3 id="2020年7月">2020年7月</h3>
-<ul>
-<li>Windows Server 2019 (Updated July 2020) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2019_updated_july_2020_x64_dvd_2c9b67da.iso%7C5675251712%7C19AE348F0D321785007D95B7D2FAF320%7C/">cn_windows_server_2019_updated_july_2020_x64_dvd_2c9b67da.iso</a></li>
-</ul>
-<h3 id="2020年1月">2020年1月</h3>
-<ul>
-<li>Windows Server 2019 (updated Jan 2020) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2019_updated_jan_2020_x64_dvd_4bbe2c37.iso%7C5608552448%7C39C663ABF26079240030395C7CB3F975%7C/">cn_windows_server_2019_updated_jan_2020_x64_dvd_4bbe2c37.iso</a></li>
-</ul>
-<h3 id="2019年3月">2019年3月</h3>
-<ul>
-<li>Windows Server 2019 (updated March 2019) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2019_updated_march_2019_x64_dvd_c1ffb46c.iso%7C5347280896%7C49FCF8C558517608537E0396854560D6%7C/">cn_windows_server_2019_updated_march_2019_x64_dvd_c1ffb46c.iso</a></li>
-</ul>
-<h3 id="2018年11月">2018年11月</h3>
-<ul>
-<li>Windows Server 2019 (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2019_x64_dvd_4de40f33.iso%7C5086887936%7C7DCDDD6B0C60A0D019B6A93D8F2B6D31%7C/">cn_windows_server_2019_x64_dvd_4de40f33.iso</a></li>
-</ul>
-<hr>
-<h1 id="windows-server-2016">Windows Server 2016</h1>
-<h3 id="2018年2月">2018年2月</h3>
-<ul>
-<li>
-<p>Windows Server 2016 (Updated Feb 2018) (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2016_updated_feb_2018_x64_dvd_11636703.iso%7C6294265856%7C4077CEBEBB40AFA5A66017D2EC7A9CD5%7C/">cn_windows_server_2016_updated_feb_2018_x64_dvd_11636703.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2016 VL (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2016_vl_x64_dvd_11636695.iso%7C6302720000%7C44742A3D464B9765203E2A4DB73FF704%7C/">cn_windows_server_2016_vl_x64_dvd_11636695.iso</a></p>
-</li>
-</ul>
-<h3 id="2017年1月">2017年1月</h3>
-<ul>
-<li>Windows Server 2016 (x64) - DVD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2016_x64_dvd_9718765.iso%7C6176450560%7CCF1B73D220F1160DE850D9E1979DBD50%7C/">cn_windows_server_2016_x64_dvd_9718765.iso</a></li>
-</ul>
-<hr>
-<h1 id="windows-server-2012-r2">Windows Server 2012 R2</h1>
-<h3 id="2014年12月">2014年12月</h3>
-<ul>
-<li>
-<p>Windows Server 2012 R2 with Update (x64)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2012_r2_with_update_x64_dvd_6052725.iso%7C5545705472%7C121EC13B53882E501C1438237E70810D%7C/">cn_windows_server_2012_r2_with_update_x64_dvd_6052725.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2012 R2 VL with Update (x64)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2012_r2_vl_with_update_x64_dvd_6052729.iso%7C5545527296%7CBD499EBCABF406AB82293DD8A5803493%7C/">cn_windows_server_2012_r2_vl_with_update_x64_dvd_6052729.iso</a></p>
-</li>
-</ul>
-<h3 id="2013年9月">2013年9月</h3>
-<ul>
-<li>
-<p>Windows Server 2012 R2 (x64)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2012_r2_x64_dvd_2707961.iso%7C4413020160%7C010CD94AD1F2951567646C99580DD595%7C/">cn_windows_server_2012_r2_x64_dvd_2707961.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2012 R2 VL (x64)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2012_r2_vl_x64_dvd_2979220.iso%7C4453249024%7C1F71685C7E33ED30FDC439C7FE0E4E5A%7C/">cn_windows_server_2012_r2_vl_x64_dvd_2979220.iso</a></p>
-</li>
-</ul>
-<hr>
-<h1 id="windows-server-2012">Windows Server 2012</h1>
-<h3 id="2012年9月">2012年9月</h3>
-<ul>
-<li>
-<p>Windows Server 2012 (x64)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2012_x64_dvd_915588.iso%7C3826081792%7C6A56281311F9FE6973F66CF36E2F50BE%7C/">cn_windows_server_2012_x64_dvd_915588.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2012 VL (x64)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2012_vl_x64_dvd_917962.iso%7C3827054592%7C2F40F8D0D60B86E9FFA551624D5A5257%7C/">cn_windows_server_2012_vl_x64_dvd_917962.iso</a></p>
-</li>
-</ul>
-<hr>
-<h1 id="windows-server-2008-r2">Windows Server 2008 R2</h1>
-<h3 id="2011年2月">2011年2月</h3>
-<ul>
-<li>
-<p>Windows Server 2008 R2 Standard, Enterprise, Datacenter, and Web with Service Pack 1 (x64)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2008_r2_standard_enterprise_datacenter_and_web_with_sp1_x64_dvd_617598.iso%7C3368839168%7CD282F613A80C2F45FF23B79212A3CF67%7C/">cn_windows_server_2008_r2_standard_enterprise_datacenter_and_web_with_sp1_x64_dvd_617598.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2008 R2 Standard, Enterprise, Datacenter, and Web with Service Pack 1, VL Build (x64)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2008_r2_standard_enterprise_datacenter_and_web_with_sp1_vl_build_x64_dvd_617396.iso%7C3368962048%7C7C210CAC37A05F459758BCC1F4478F9E%7C/">cn_windows_server_2008_r2_standard_enterprise_datacenter_and_web_with_sp1_vl_build_x64_dvd_617396.iso</a></p>
-</li>
-</ul>
-<h3 id="2009年8月">2009年8月</h3>
-<ul>
-<li>
-<p>Windows Server 2008 R2 Standard, Enterprise, Datacenter, and Web (x64)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2008_r2_standard_enterprise_datacenter_web_x64_dvd_x15-50360.iso%7C3270336512%7C994401AF40CF454135F4F9510829405D%7C/">cn_windows_server_2008_r2_standard_enterprise_datacenter_web_x64_dvd_x15-50360.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2008 R2 Standard, Enterprise, Datacenter, and Web, VL Build (x64)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2008_r2_standard_enterprise_datacenter_web_vl_build_x64_dvd_x15-59777.iso%7C3270465536%7C1C7FDB37C0CEC1765A52CD49B2227CBE%7C/">cn_windows_server_2008_r2_standard_enterprise_datacenter_web_vl_build_x64_dvd_x15-59777.iso</a></p>
-</li>
-</ul>
-<hr>
-<h1 id="windows-server-2003-r2">Windows Server 2003 R2</h1>
-<h3 id="2007年4月">2007年4月</h3>
-<ul>
-<li>
-<p>Windows Server 2003 R2, Standard Edition with SP2<br>
-<a href="ed2k://%7Cfile%7Ccn_win_srv_2003_r2_standard_with_sp2_cd1_X13-13927.iso%7C636440576%7CE4657FA463E5BAF6367AC9B888731E95%7C/">cn_win_srv_2003_r2_standard_with_sp2_cd1_X13-13927.iso</a><br>
-<a href="ed2k://%7Cfile%7Ccn_win_srv_2003_r2_standard_with_sp2_cd2_X13-13942.iso%7C129697792%7C5BC51A4C9BEA3B339DA30387964A43CA%7C/">cn_win_srv_2003_r2_standard_with_sp2_cd2_X13-13942.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2003 R2, Standard Edition with SP2 - VL<br>
-<a href="ed2k://%7Cfile%7Ccn_win_srv_2003_r2_standard_with_sp2_vl_cd1_X13-46532.iso%7C636440576%7CB39CCD2AE1E7EEC42328FD475A376778%7C/">cn_win_srv_2003_r2_standard_with_sp2_vl_cd1_X13-46532.iso</a><br>
-<a href="ed2k://%7Cfile%7Ccn_win_srv_2003_r2_standard_with_sp2_vl_cd2_X13-13942.iso%7C129697792%7C5BC51A4C9BEA3B339DA30387964A43CA%7C/">cn_win_srv_2003_r2_standard_with_sp2_vl_cd2_X13-13942.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2003 R2, Standard x64 Edition with SP2<br>
-<a href="ed2k://%7Cfile%7Ccn_win_srv_2003_r2_standard_x64_with_sp2_cd1_X13-28810.iso%7C646285312%7CE72B80540955703098E6AEF1DE434BAF%7C/">cn_win_srv_2003_r2_standard_x64_with_sp2_cd1_X13-28810.iso</a><br>
-<a href="ed2k://%7Cfile%7Ccn_win_srv_2003_r2_standard_x64_with_sp2_cd2_X13-28819.iso%7C179202048%7C0D66FCFAFBAE092B8F92DDC337B4CC54%7C/">cn_win_srv_2003_r2_standard_x64_with_sp2_cd2_X13-28819.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2003 R2, Standard x64 Edition with SP2 - VL<br>
-<a href="ed2k://%7Cfile%7Ccn_win_srv_2003_r2_standard_x64_with_sp2_vl_cd1_X13-47363.iso%7C646281216%7C401FEF8B592F58BDAE69821512FA9681%7C/">cn_win_srv_2003_r2_standard_x64_with_sp2_vl_cd1_X13-47363.iso</a><br>
-<a href="ed2k://%7Cfile%7Ccn_win_srv_2003_r2_standard_x64_with_sp2_vl_cd2_X13-28819.iso%7C179202048%7C0D66FCFAFBAE092B8F92DDC337B4CC54%7C/">cn_win_srv_2003_r2_standard_x64_with_sp2_vl_cd2_X13-28819.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2003 R2, Enterprise Edition with SP2 - VL<br>
-<a href="ed2k://%7Cfile%7Ccn_win_srv_2003_r2_enterprise_with_sp2_vl_cd1_X13-46432.iso%7C637917184%7C284DC0E76945125035B9208B9199E465%7C/">cn_win_srv_2003_r2_enterprise_with_sp2_vl_cd1_X13-46432.iso</a><br>
-<a href="ed2k://%7Cfile%7Ccn_win_srv_2003_r2_enterprise_with_sp2_vl_cd2_X13-13895.iso%7C129703936%7C512C89A5839FFC8A3F3124ACB9E9CB75%7C/">cn_win_srv_2003_r2_enterprise_with_sp2_vl_cd2_X13-13895.iso</a></p>
-</li>
-<li>
-<p>Windows Server 2003 R2, Enterprise x64 Edition with SP2 - VL<br>
-<a href="ed2k://%7Cfile%7Ccn_win_srv_2003_r2_enterprise_x64_with_sp2_vl_cd1_X13-47314.iso%7C647686144%7C107F10D2A7FF12FFF0602FF60602BB37%7C/">cn_win_srv_2003_r2_enterprise_x64_with_sp2_vl_cd1_X13-47314.iso</a><br>
-<a href="ed2k://%7Cfile%7Ccn_win_srv_2003_r2_enterprise_x64_with_sp2_vl_cd2_X13-35321.iso%7C179204096%7C651EDB26E33E1AD0F14430245D4D44C6%7C/">cn_win_srv_2003_r2_enterprise_x64_with_sp2_vl_cd2_X13-35321.iso</a></p>
-</li>
-</ul>
-<hr>
-<h1 id="windows-server-2003">Windows Server 2003</h1>
-<h3 id="2011年10月">2011年10月</h3>
-<ul>
-<li>Windows Server 2003 Service Pack 2 (x86) - CD (Chinese-Simplified)<br>
-<a href="ed2k://%7Cfile%7Ccn_windows_server_2003_sp2_x86_cd.iso%7C390135808%7C4C38E53EF100F80683810CAC1044CA70%7C/">cn_windows_server_2003_sp2_x86_cd.iso</a></li>
-</ul>
 ]]></content>
     </entry>
 </feed>
