@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-05-08T11:52:49.078Z</updated>
+    <updated>2022-05-08T14:37:17.270Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -11,7 +11,7 @@
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, ashe&apos;s blog</rights>
     <entry>
-        <title type="html"><![CDATA[Dear ImGui学习：不要为组件设置相同的标签]]></title>
+        <title type="html"><![CDATA[Dear ImGui学习：组件ID]]></title>
         <id>https://ashe27.github.io/post/16246612/</id>
         <link href="https://ashe27.github.io/post/16246612/">
         </link>
@@ -61,7 +61,7 @@ ImGui::PopID();
 <li>不同窗口之间的相同ID不会冲突。</li>
 <li>如果需要一个空<code>Label</code>就必须设置一个ID。</li>
 </ul>
-<pre><code class="language-cpp">mGui::Button(&quot;##id&quot;)
+<pre><code class="language-cpp">ImGui::Button(&quot;##id&quot;)
 </code></pre>
 <ul>
 <li>使用<code>###</code>来禁止将<code>Label</code>部分纳入为ID。</li>

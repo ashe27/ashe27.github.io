@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>Dear ImGui学习：不要为组件设置相同的标签 | ashe&#39;s blog</title>
+<title>Dear ImGui学习：组件ID | ashe&#39;s blog</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -101,7 +101,7 @@ if (ImGui::Butt..." />
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h1 class="post-title">Dear ImGui学习：不要为组件设置相同的标签</h1>
+            <h1 class="post-title">Dear ImGui学习：组件ID</h1>
             <div class="post-date">2022-05-08</div>
             
             <div class="post-content" v-pre>
@@ -150,7 +150,7 @@ ImGui::PopID();
 <li>不同窗口之间的相同ID不会冲突。</li>
 <li>如果需要一个空<code>Label</code>就必须设置一个ID。</li>
 </ul>
-<pre><code class="language-cpp">mGui::Button(&quot;##id&quot;)
+<pre><code class="language-cpp">ImGui::Button(&quot;##id&quot;)
 </code></pre>
 <ul>
 <li>使用<code>###</code>来禁止将<code>Label</code>部分纳入为ID。</li>
