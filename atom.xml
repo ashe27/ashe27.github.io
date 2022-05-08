@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-05-08T14:37:17.270Z</updated>
+    <updated>2022-05-08T14:48:37.660Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -16,8 +16,8 @@
         <link href="https://ashe27.github.io/post/16246612/">
         </link>
         <updated>2022-05-08T11:52:30.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="问题起因">问题起因</h2>
-<p>演示代码</p>
+        <content type="html"><![CDATA[<h2 id="问题">问题</h2>
+<p>问题代码</p>
 <pre><code class="language-cpp">if (ImGui::Button(&quot;Test1&quot;)) {
     ::OutputDebugStringA(&quot;Btn1 clicked&quot;);
 }
