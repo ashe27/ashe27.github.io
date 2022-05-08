@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Dear ImGui学习：不要为组件设置相同的标签 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.7.2/css/all.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="//files.cnblogs.com/files/cyds/favicon.ico">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+<link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css" rel="stylesheet">
+	  
+
+
+<link href="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
+
+
+
+    <meta name="description" content="问题起因
+演示代码
+if (ImGui::Button(&quot;Test1&quot;)) {
+    ::OutputDebugStringA(&quot;Btn1 clicked&quot;);
+}
+
+if (ImGui::Butt..." />
+    <meta name="keywords" content="Dear ImGui" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://pic.rmb.bdstatic.com/bjh/d2ef74c9e80c2fe2c24d8e7ea0b7c753.png" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h1 class="post-title">Dear ImGui学习：不要为组件设置相同的标签</h1>
+            <div class="post-date">2022-05-08</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="问题起因">问题起因</h2>
+<p>演示代码</p>
+<pre><code class="language-cpp">if (ImGui::Button(&quot;Test1&quot;)) {
+    ::OutputDebugStringA(&quot;Btn1 clicked&quot;);
+}
+
+if (ImGui::Button(&quot;Test1&quot;)) {
+    ::OutputDebugStringA(&quot;Btn2 clicked&quot;);
+}
+</code></pre>
+<p>点击第二个按钮是没有效果的，谷歌了一番后找到了原因，因为 Dear ImGui 有一个栈机制。<br>
+在内部 Dear ImGui 需要靠唯一的ID来追踪组件，而 Dear ImGui 默认将组件的<code>Label</code>参数当作是唯一ID，所以当有相同的<code>Label</code>时就产生了冲突。</p>
+<p>在 Demo 中有个 Stack Tool 可以直观地查看栈情况。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/22a617af8ac5edbe7194e4a5ca8f6844.png" alt="" loading="lazy"></p>
+<h2 id="解决方案">解决方案</h2>
+<h3 id="方法一用来标记唯一id">方法一：用<code>##</code>来标记唯一ID</h3>
+<pre><code class="language-cpp">if (ImGui::Button(&quot;Test1##id1&quot;)) {
+    ::OutputDebugStringA(&quot;Btn1 clicked&quot;);
+}
+
+if (ImGui::Button(&quot;Test1##id2&quot;)) {
+    ::OutputDebugStringA(&quot;Btn2 clicked&quot;);
+}
+</code></pre>
+<p><code>##</code>后面的字符串不会显示在组件上，这样就保证了栈里的ID是唯一的。</p>
+<h3 id="方法二使用-pushidpopid-方法">方法二：使用 PushID/PopID 方法</h3>
+<pre><code class="language-cpp">ImGui::PushID(0);
+if (ImGui::Button(&quot;Test1&quot;)) {
+    ::OutputDebugStringA(&quot;Btn1 clicked&quot;);
+}
+ImGui::PopID();
+
+ImGui::PushID(1);
+if (ImGui::Button(&quot;Test1&quot;)) {
+    ::OutputDebugStringA(&quot;Btn2 clicked&quot;);
+}
+ImGui::PopID();
+</code></pre>
+<p><code>PushID</code>和<code>PopID</code>成对使用，参数可以是数字，也可以是字符串，要保证唯一性。</p>
+<h2 id="知识点">知识点</h2>
+<ul>
+<li>只有可交互式的组件才需要ID，比如<code>Button</code>、<code>Input</code>等等。</li>
+<li>不同窗口之间的相同ID不会冲突。</li>
+<li>如果需要一个空<code>Label</code>就必须设置一个ID。</li>
+</ul>
+<pre><code class="language-cpp">mGui::Button(&quot;##id&quot;)
+</code></pre>
+<ul>
+<li>使用<code>###</code>来禁止将<code>Label</code>部分纳入为ID。</li>
+</ul>
+<pre><code class="language-cpp">sprintf(buf, &quot;My game (%f FPS)###MyGame&quot;, fps);
+Begin(buf);
+</code></pre>
+<p>这样在栈里的实际ID是&quot;MyGame&quot;，而不是整个字符串。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://github.com/ocornut/imgui/issues/74">Buttons with identical labels do not work</a><br>
+<a href="https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-about-the-id-stack-system">About the ID Stack system</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/vvpiSGUDK/" class="tag">
+                    Dear ImGui
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/16244353/">
+                  <h3 class="post-title">
+                    MFC学习：设置窗口标题
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/languages/vbscript.min.js"></script>
+  <script>
+    hljs.highlightAll()
+  </script>
+
+
+
+
+
+  </body>
+</html>
