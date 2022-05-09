@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-05-09T11:50:09.241Z</updated>
+    <updated>2022-05-09T16:31:27.749Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,6 +10,80 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, ashe&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Comctl32公共控件]]></title>
+        <id>https://ashe27.github.io/post/16251848/</id>
+        <link href="https://ashe27.github.io/post/16251848/">
+        </link>
+        <updated>2022-05-09T16:31:04.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="comctl32-是什么">Comctl32 是什么？</h2>
+<p><code>Comctl</code>的全称是<code>Common Controls</code>，也就是公共控件的意思，属于Windows系统的一部分，提供了一组标准的UI控件，如<code>Button</code>、<code>ListView</code>等等。<br>
+微软工具 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=4635">Control Spy</a> 用于查看所有公共控件。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/b9b960fa5c60a68914f6d648f6670337.png" alt="" loading="lazy"></p>
+<h2 id="comctl32-版本">Comctl32 版本</h2>
+<h3 id="v5和v6的区别">v5和v6的区别</h3>
+<p>主要有两个大版本，5和6，最明显的两个区别：</p>
+<ol>
+<li>外观，一个是古老的<code>Windows 98</code>风格，一个是跟随系统的风格。<br>
+<code>5.X</code>的控件样式，是固定的样式。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/2af67dda865e6188452bb5ed4fb16705.png" alt="" loading="lazy"><br>
+<code>6.X</code>的控件样式，会随着系统主题变化。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/838afc5f0b2d9af9e5c54abb5b8535e1.png" alt="" loading="lazy"></li>
+<li>兼容性，<code>6.0</code>以后的某些控件对使用<code>多字节字符集</code>的应用有兼容性问题。</li>
+</ol>
+<h3 id="获取正在使用的-comctl32-版本号">获取正在使用的 Comctl32 版本号</h3>
+<p>Comctl32.dll有一个导出函数<code>DllGetVersion</code>可以获取当前版本号。</p>
+<pre><code class="language-cpp">DWORD GetVersion(HMODULE h)
+{
+    DWORD dwVersion = 0;
+    auto pDllGetVersion = reinterpret_cast&lt;DLLGETVERSIONPROC&gt;(GetProcAddress(h, &quot;DllGetVersion&quot;));
+    if (pDllGetVersion) {
+        DLLVERSIONINFO dvi{};
+        dvi.cbSize = sizeof(dvi);
+        HRESULT hr = (*pDllGetVersion)(&amp;dvi);
+        if (SUCCEEDED(hr)) {
+            dwVersion = PACKVERSION(dvi.dwMajorVersion, dvi.dwMinorVersion);
+        }
+    }
+    return dwVersion;
+}
+
+DWORD dwVer = GetVersion(GetModuleHandleA(&quot;ComCtl32.dll&quot;));
+</code></pre>
+<p>在<code>Windows XP SP3</code>上得到的值是<code>0x00050052</code>，意味版本号是<code>5.82</code><br>
+<img src="https://pic.rmb.bdstatic.com/bjh/66f87196c66a7afba2f4242f4e0c4639.png" alt="" loading="lazy"></p>
+<h3 id="链接指定的-comctl32-版本">链接指定的 Comctl32 版本</h3>
+<p>在新建一个 MFC 工程时，默认会生成这样一段代码：</p>
+<pre><code class="language-cpp">#ifdef _UNICODE
+#if defined _M_IX86
+#pragma comment(linker,&quot;/manifestdependency:\&quot;type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\&quot;&quot;)
+#elif defined _M_X64
+#pragma comment(linker,&quot;/manifestdependency:\&quot;type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='amd64' publicKeyToken='6595b64144ccf1df' language='*'\&quot;&quot;)
+#else
+#pragma comment(linker,&quot;/manifestdependency:\&quot;type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\&quot;&quot;)
+#endif
+#endif
+</code></pre>
+<p>使用编译器指令添加了清单文件以支持链接到指定的 Comctl32 版本。注意这里要求程序采用 Unicode 字符集，原因上面说了，因为<code>v6</code>对多字节字符集支持有兼容性问题，所以不要用，<code>多字节字符集</code>的程序应该用<code>v5</code>，但这舍弃了现代的外观样式。</p>
+<p>当程序指定链接到<code>v6</code>或更高版本后，还需要在程序内定义一个宏<code>_WIN32_IE</code>，如果没有定义它，编译时会将这个值设置为<code>0x500</code>，这将影响程序正在使用的与控件有关的结构体大小。试想一下，如果程序链接到<code>v6</code>版的 Comctl32，但没有定义<code>_WIN32_IE</code>宏，使用了较旧的SDK，这可能会引起程序异常。<br>
+支持的值看这里：<a href="https://docs.microsoft.com/en-us/windows/win32/controls/common-control-versions#project-versions">https://docs.microsoft.com/en-us/windows/win32/controls/common-control-versions#project-versions</a></p>
+<p><code>Windows XP SP3</code>已经自带了<code>v6</code>版，所以我们可以放心的将程序链接到<code>v6</code>版本。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/8c28fd17f2310383ce6466ae69f666ec.png" alt="" loading="lazy"></p>
+<h2 id="initcommoncontrolsex">InitCommonControlsEx</h2>
+<p>在新建一个 MFC 工程时，初始化第一行代码就是关于公共控件初始化的代码</p>
+<pre><code class="language-cpp">INITCOMMONCONTROLSEX InitCtrls;
+InitCtrls.dwSize = sizeof(InitCtrls);
+InitCtrls.dwICC = ICC_WIN95_CLASSES;
+InitCommonControlsEx(&amp;InitCtrls);
+</code></pre>
+<p>但在今天，初始化行为并不是必须的，因为在创建控件时，Comctl32 内部会在首次自动注册控件类，历史原因可以看文章末尾的链接。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://docs.microsoft.com/zh-cn/windows/win32/controls/common-controls-intro">关于公共控件</a><br>
+<a href="https://www.geoffchappell.com/studies/windows/shell/comctl32/api/commctrl/initcommoncontrolsex.htm">InitCommonControlsEx</a><br>
+<a href="https://stackoverflow.com/questions/20078118/is-common-control-6-supported-in-mbcs-applications">Is common control 6 supported in MBCS applications?</a><br>
+<a href="https://stackoverflow.com/questions/60790673/cedit-works-in-comctrl32-version-5-82-but-not-with-6-10">CEdit works in ComCtrl32 Version 5.82 but not with 6.10</a></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Dear ImGui学习：组件ID]]></title>
         <id>https://ashe27.github.io/post/16246612/</id>
@@ -910,58 +984,6 @@ Linux：<a href="https://www.vmware.com/go/getworkstation-linux">https://www.vmw
 <hr>
 <h2 id="参考">参考</h2>
 <p><a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/configure-language-version">C# 语言版本控制</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[编译时检测.NET Framework框架版本]]></title>
-        <id>https://ashe27.github.io/post/16150088/</id>
-        <link href="https://ashe27.github.io/post/16150088/">
-        </link>
-        <updated>2022-04-15T09:04:00.000Z</updated>
-        <content type="html"><![CDATA[<p>在新的.NET框架下，官方自带了一些用于判断框架版本的条件变量（<a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/preprocessor-directives">C#预处理器指令</a>）</p>
-<p>但是在老的编译系统上没有此功能，所以只能模拟实现。</p>
-<p>终于在 stackoverflow 上找到了答案，思路很不错，在<code>.csproj</code>工程文件中利用框架的<code>System.Version</code>去动态比较版本号，然后定义相关的条件变量。</p>
-<h2 id="解决方案">解决方案</h2>
-<p>在原答案的基础上修改了一下，兼容了微软官方的条件变量。</p>
-<p>创建一个新文件<code>FrameworkSymbols.Common.prop</code>，内容如下</p>
-<pre><code class="language-xml">&lt;Project xmlns=&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;&gt;
-  &lt;PropertyGroup&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.8')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET48;NET48_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.7.2')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET472;NET472_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.7.1')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET471;NET471_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.7')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET47;NET47_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.6.2')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET462;NET462_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.6.1')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET461;NET461_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.6')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET46;NET46_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.5.2')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET452;NET452_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.5.1')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET451;NET451_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.5')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET45;NET45_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('4.0')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET40;NET40_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('3.5')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET35;NET35_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('3.0')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET30;NET30_OR_GREATER&lt;/DefineConstants&gt;
-    &lt;DefineConstants Condition=&quot;$([System.Version]::Parse('$(TargetFrameworkVersion.Substring(1))').CompareTo($([System.Version]::Parse('2.0')))) &amp;gt;= 0&quot;&gt;$(DefineConstants);NET20;NET20_OR_GREATER&lt;/DefineConstants&gt;
-  &lt;/PropertyGroup&gt;
-&lt;/Project&gt;
-</code></pre>
-<p>在工程文件中导入</p>
-<pre><code class="language-xml">&lt;Project&gt;
-    ...
-    &lt;Import Project=&quot;FrameworkSymbols.Common.prop&quot; /&gt;
-&lt;/Project&gt;
-</code></pre>
-<p>使用</p>
-<pre><code class="language-csharp">#if NET20
-    Console.WriteLine(&quot;NET20&quot;);
-#endif
-...
-#if NET35_OR_GREATER
-    Console.WriteLine(&quot;NET35_OR_GREATER&quot;);
-#endif
-</code></pre>
-<hr>
-<h2 id="参考">参考</h2>
-<p><a href="https://stackoverflow.com/questions/3436526/detect-target-framework-version-at-compile-time">Detect target framework version at compile time</a></p>
-<p><a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/preprocessor-directives">C#预处理器指令</a></p>
 ]]></content>
     </entry>
 </feed>

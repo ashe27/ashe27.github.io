@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Comctl32公共控件 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.7.2/css/all.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="//files.cnblogs.com/files/cyds/favicon.ico">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+<link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css" rel="stylesheet">
+	  
+
+
+<link href="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
+
+
+
+    <meta name="description" content="Comctl32 是什么？
+Comctl的全称是Common Controls，也就是公共控件的意思，属于Windows系统的一部分，提供了一组标准的UI控件，如Button、ListView等等。
+微软工具 Control Spy 用于查..." />
+    <meta name="keywords" content="Windows编程" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://pic.rmb.bdstatic.com/bjh/d2ef74c9e80c2fe2c24d8e7ea0b7c753.png" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h1 class="post-title">Comctl32公共控件</h1>
+            <div class="post-date">2022-05-10</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="comctl32-是什么">Comctl32 是什么？</h2>
+<p><code>Comctl</code>的全称是<code>Common Controls</code>，也就是公共控件的意思，属于Windows系统的一部分，提供了一组标准的UI控件，如<code>Button</code>、<code>ListView</code>等等。<br>
+微软工具 <a href="https://www.microsoft.com/en-us/download/details.aspx?id=4635">Control Spy</a> 用于查看所有公共控件。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/b9b960fa5c60a68914f6d648f6670337.png" alt="" loading="lazy"></p>
+<h2 id="comctl32-版本">Comctl32 版本</h2>
+<h3 id="v5和v6的区别">v5和v6的区别</h3>
+<p>主要有两个大版本，5和6，最明显的两个区别：</p>
+<ol>
+<li>外观，一个是古老的<code>Windows 98</code>风格，一个是跟随系统的风格。<br>
+<code>5.X</code>的控件样式，是固定的样式。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/2af67dda865e6188452bb5ed4fb16705.png" alt="" loading="lazy"><br>
+<code>6.X</code>的控件样式，会随着系统主题变化。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/838afc5f0b2d9af9e5c54abb5b8535e1.png" alt="" loading="lazy"></li>
+<li>兼容性，<code>6.0</code>以后的某些控件对使用<code>多字节字符集</code>的应用有兼容性问题。</li>
+</ol>
+<h3 id="获取正在使用的-comctl32-版本号">获取正在使用的 Comctl32 版本号</h3>
+<p>Comctl32.dll有一个导出函数<code>DllGetVersion</code>可以获取当前版本号。</p>
+<pre><code class="language-cpp">DWORD GetVersion(HMODULE h)
+{
+    DWORD dwVersion = 0;
+    auto pDllGetVersion = reinterpret_cast&lt;DLLGETVERSIONPROC&gt;(GetProcAddress(h, &quot;DllGetVersion&quot;));
+    if (pDllGetVersion) {
+        DLLVERSIONINFO dvi{};
+        dvi.cbSize = sizeof(dvi);
+        HRESULT hr = (*pDllGetVersion)(&amp;dvi);
+        if (SUCCEEDED(hr)) {
+            dwVersion = PACKVERSION(dvi.dwMajorVersion, dvi.dwMinorVersion);
+        }
+    }
+    return dwVersion;
+}
+
+DWORD dwVer = GetVersion(GetModuleHandleA(&quot;ComCtl32.dll&quot;));
+</code></pre>
+<p>在<code>Windows XP SP3</code>上得到的值是<code>0x00050052</code>，意味版本号是<code>5.82</code><br>
+<img src="https://pic.rmb.bdstatic.com/bjh/66f87196c66a7afba2f4242f4e0c4639.png" alt="" loading="lazy"></p>
+<h3 id="链接指定的-comctl32-版本">链接指定的 Comctl32 版本</h3>
+<p>在新建一个 MFC 工程时，默认会生成这样一段代码：</p>
+<pre><code class="language-cpp">#ifdef _UNICODE
+#if defined _M_IX86
+#pragma comment(linker,&quot;/manifestdependency:\&quot;type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\&quot;&quot;)
+#elif defined _M_X64
+#pragma comment(linker,&quot;/manifestdependency:\&quot;type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='amd64' publicKeyToken='6595b64144ccf1df' language='*'\&quot;&quot;)
+#else
+#pragma comment(linker,&quot;/manifestdependency:\&quot;type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\&quot;&quot;)
+#endif
+#endif
+</code></pre>
+<p>使用编译器指令添加了清单文件以支持链接到指定的 Comctl32 版本。注意这里要求程序采用 Unicode 字符集，原因上面说了，因为<code>v6</code>对多字节字符集支持有兼容性问题，所以不要用，<code>多字节字符集</code>的程序应该用<code>v5</code>，但这舍弃了现代的外观样式。</p>
+<p>当程序指定链接到<code>v6</code>或更高版本后，还需要在程序内定义一个宏<code>_WIN32_IE</code>，如果没有定义它，编译时会将这个值设置为<code>0x500</code>，这将影响程序正在使用的与控件有关的结构体大小。试想一下，如果程序链接到<code>v6</code>版的 Comctl32，但没有定义<code>_WIN32_IE</code>宏，使用了较旧的SDK，这可能会引起程序异常。<br>
+支持的值看这里：<a href="https://docs.microsoft.com/en-us/windows/win32/controls/common-control-versions#project-versions">https://docs.microsoft.com/en-us/windows/win32/controls/common-control-versions#project-versions</a></p>
+<p><code>Windows XP SP3</code>已经自带了<code>v6</code>版，所以我们可以放心的将程序链接到<code>v6</code>版本。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/8c28fd17f2310383ce6466ae69f666ec.png" alt="" loading="lazy"></p>
+<h2 id="initcommoncontrolsex">InitCommonControlsEx</h2>
+<p>在新建一个 MFC 工程时，初始化第一行代码就是关于公共控件初始化的代码</p>
+<pre><code class="language-cpp">INITCOMMONCONTROLSEX InitCtrls;
+InitCtrls.dwSize = sizeof(InitCtrls);
+InitCtrls.dwICC = ICC_WIN95_CLASSES;
+InitCommonControlsEx(&amp;InitCtrls);
+</code></pre>
+<p>但在今天，初始化行为并不是必须的，因为在创建控件时，Comctl32 内部会在首次自动注册控件类，历史原因可以看文章末尾的链接。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://docs.microsoft.com/zh-cn/windows/win32/controls/common-controls-intro">关于公共控件</a><br>
+<a href="https://www.geoffchappell.com/studies/windows/shell/comctl32/api/commctrl/initcommoncontrolsex.htm">InitCommonControlsEx</a><br>
+<a href="https://stackoverflow.com/questions/20078118/is-common-control-6-supported-in-mbcs-applications">Is common control 6 supported in MBCS applications?</a><br>
+<a href="https://stackoverflow.com/questions/60790673/cedit-works-in-comctrl32-version-5-82-but-not-with-6-10">CEdit works in ComCtrl32 Version 5.82 but not with 6.10</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/X2BDcznSs/" class="tag">
+                    Windows编程
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/16246612/">
+                  <h3 class="post-title">
+                    Dear ImGui学习：组件ID
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/languages/vbscript.min.js"></script>
+  <script>
+    hljs.highlightAll()
+  </script>
+
+
+
+
+
+  </body>
+</html>
