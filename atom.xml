@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-05-15T08:50:39.524Z</updated>
+    <updated>2022-05-15T08:52:39.694Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -17,7 +17,7 @@
         </link>
         <updated>2022-05-15T08:50:25.000Z</updated>
         <content type="html"><![CDATA[<h2 id="双光标问题">双光标问题</h2>
-<p>像游戏窗口注入 ImGui 窗口后，默认情况下就会出现双光标。<br>
+<p>向游戏窗口注入 ImGui 窗口后，默认情况下就会出现双光标。<br>
 <img src="https://pic.rmb.bdstatic.com/bjh/be508fcee683d16f23191aae290ab444.png" alt="" loading="lazy"></p>
 <h2 id="解决">解决</h2>
 <p>更新光标的地方在<code>imgui_impl_win32.cpp</code>文件中</p>
