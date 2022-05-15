@@ -219,8 +219,8 @@ io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 <h3 id="方式二">方式二</h3>
 <p>从<code>ImGui_ImplWin32_UpdateMouseCursor</code>的逻辑看，当<code>io.MouseDrawCursor</code>为<code>true</code>时，ImGui 就不会使用系统光标，而是自行绘制光标</p>
 <pre><code class="language-cpp">ImGui::CreateContext();
-ImGuiIO&amp; io = ImGui::GetIO();
-io.MouseDrawCursor = true;  // 屏蔽系统光标，ImGui 自行绘制
+io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange; // 屏蔽系统光标
+io.MouseDrawCursor = true;  // ImGui 自行绘制
 </code></pre>
 <p>此时就需要在每一帧创建后指定光标类型</p>
 <pre><code class="language-cpp">ImGui::NewFrame();
