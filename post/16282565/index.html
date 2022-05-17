@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>CFileDialog 扩展名注意事项 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.7.2/css/all.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="//files.cnblogs.com/files/cyds/favicon.ico">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+<link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css" rel="stylesheet">
+	  
+
+
+<link href="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
+
+
+
+    <meta name="description" content="在 MFC 中，打开和保存对话框都是用 CFileDialog 来实现的，构造函数的第一个参数决定了是&quot;打开&quot;还是&quot;保存&quot;。
+打开对话框
+一个简单的对话框如下
+CFileDialog dlg(TRUE..." />
+    <meta name="keywords" content="MFC" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://pic.rmb.bdstatic.com/bjh/d2ef74c9e80c2fe2c24d8e7ea0b7c753.png" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h1 class="post-title">CFileDialog 扩展名注意事项</h1>
+            <div class="post-date">2022-05-17</div>
+            
+            <div class="post-content" v-pre>
+              <p>在 MFC 中，<code>打开</code>和<code>保存</code>对话框都是用 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cfiledialog-class">CFileDialog</a> 来实现的，构造函数的第一个参数决定了是&quot;打开&quot;还是&quot;保存&quot;。</p>
+<h2 id="打开对话框">打开对话框</h2>
+<p>一个简单的对话框如下</p>
+<pre><code class="language-cpp">CFileDialog dlg(TRUE, nullptr, nullptr, 0, _T(&quot;ALL|*.*||&quot;));
+if (dlg.DoModal() == IDOK) {
+    const auto ext = dlg.GetFileExt();
+    const auto fileName = dlg.GetFileName();
+}
+</code></pre>
+<p>这个对话框有两个问题：</p>
+<ol>
+<li>用户如果未输入扩展名，<code>ext</code>将为空。</li>
+<li>允许用户输入不存在的文件名。</li>
+</ol>
+<h3 id="解决问题一">解决问题一</h3>
+<p>可以将第二个参数为默认的扩展名，当用户没有输入扩展名的时候，会自动附加默认扩展名。</p>
+<pre><code class="language-cpp">CFileDialog dlg(TRUE, _T(&quot;txt&quot;), nullptr, 0, _T(&quot;ALL|*.*||&quot;));
+if (dlg.DoModal() == IDOK) {
+    const auto ext = dlg.GetFileExt();
+    const auto fileName = dlg.GetFileName();
+}
+</code></pre>
+<p>输入<code>123</code>，会得到文件名<code>123.txt</code>。</p>
+<ul>
+<li>过滤器优先于默认扩展名。如果用户未输入文件名，但是选择了有效的过滤器：</li>
+</ul>
+<pre><code class="language-cpp">CFileDialog dlg(TRUE, _T(&quot;ini&quot;), nullptr, 0, _T(&quot;ALL|*.*|TXT|*.txt||&quot;));
+if (dlg.DoModal() == IDOK) {
+    const auto ext = dlg.GetFileExt();
+    const auto fileName = dlg.GetFileName();
+}
+</code></pre>
+<p>如果用户选择了<code>txt</code>过滤器，但是输入<code>123</code>作为文件名，将会得到<code>123.txt</code>，而不是<code>123.ini</code>。</p>
+<ul>
+<li>如果过滤器有多个扩展名，则采用第一个：</li>
+</ul>
+<pre><code class="language-cpp">CFileDialog dlg(TRUE, _T(&quot;ini&quot;), nullptr, 0, _T(&quot;ALL|*.*|TXT|*.txt;*.doc||&quot;));
+if (dlg.DoModal() == IDOK) {
+    const auto ext = dlg.GetFileExt();
+    const auto fileName = dlg.GetFileName();
+}
+</code></pre>
+<p>输入了<code>123</code>作为文件名，得到<code>123.txt</code>。</p>
+<ul>
+<li>当默认扩展名为<code>nullptr</code>时，即使选择了过滤器也不会追加扩展名。</li>
+</ul>
+<pre><code class="language-cpp">CFileDialog dlg(TRUE, nullptr, nullptr, 0, _T(&quot;ALL|*.*|TXT|*.txt||&quot;));
+if (dlg.DoModal() == IDOK) {
+    const auto ext = dlg.GetFileExt();
+    const auto fileName = dlg.GetFileName();
+}
+</code></pre>
+<p>选择过滤器<code>txt</code>，输入<code>123</code>作为文件名将会得到<code>123</code>文件名，而不是<code>123.txt</code>。</p>
+<h3 id="解决问题二">解决问题二</h3>
+<p>可以在第四个参数上指定<code>OFN_FILEMUSTEXIST</code>，意味着必须输入一个存在的文件名</p>
+<pre><code class="language-cpp">CFileDialog dlg(TRUE, nullptr, nullptr, OFN_FILEMUSTEXIST, _T(&quot;ALL|*.*||&quot;));
+if (dlg.DoModal() == IDOK) {
+    const auto ext = dlg.GetFileExt();
+    const auto fileName = dlg.GetFileName();
+}
+</code></pre>
+<p>如果用户输入<code>123</code>且文件不存在就会出现警告，这样可以保证<code>DoModal</code>返回时文件名必然有效。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/45c55e9fea121b211b903ed96a6f6c88.png" alt="" loading="lazy"></p>
+<h2 id="保存对话框">保存对话框</h2>
+<ul>
+<li>当默认扩展名为<code>nullptr</code>时，即使选择了过滤器也不会追加扩展名。</li>
+</ul>
+<pre><code class="language-cpp">CFileDialog dlg(FALSE, nullptr, nullptr, OFN_OVERWRITEPROMPT, _T(&quot;TXT|*.txt||&quot;));
+if (dlg.DoModal() == IDOK) {
+    const auto ext = dlg.GetFileExt();  // &quot;&quot;
+    const auto fileName = dlg.GetFileName(); // &quot;123&quot;
+}
+</code></pre>
+<p>输入<code>123</code>得到<code>123</code>。</p>
+<ul>
+<li>以用户输入的扩展名为准。</li>
+</ul>
+<pre><code class="language-cpp">CFileDialog dlg(FALSE, _T(&quot;&quot;), nullptr, OFN_OVERWRITEPROMPT, _T(&quot;TXT|*.txt||&quot;));
+if (dlg.DoModal() == IDOK) {
+    const auto ext = dlg.GetFileExt();
+    const auto fileName = dlg.GetFileName();
+}
+</code></pre>
+<p>输入<code>123.doc</code>得到<code>123.doc</code>，而不是<code>123.txt</code>。</p>
+<h2 id="总结">总结</h2>
+<ol>
+<li>如果用户输入了扩展名，则以用户输入的文件名为最终值。</li>
+<li>如果用户未输入扩展名，且设置了默认扩展名，就先采用过滤器中的扩展名，只有用户选择通配符<code>*.*</code>时才采用默认扩展名。</li>
+<li>如果用户未输入扩展名，且默认扩展名设置为<code>nullptr</code>，则在任何情况下不会自动追加扩展名。</li>
+</ol>
+<h3 id="对于打开对话框">对于打开对话框</h3>
+<p>相信没有人会愿意打开不存在的文件，那么<code>OFN_FILEMUSTEXIST</code>几乎是必选项，而这正好也确保了文件名是正确的，所以默认扩展名可有可无。</p>
+<h3 id="对于保存对话框">对于保存对话框</h3>
+<p>建议总是设置一个默认扩展名。如果默认扩展名为<code>nullptr</code>，即使选择了有效的过滤器，对话框则也不会追加扩展名，用户必须手动输入才行。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cfiledialog-class">CFileDialog 类</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/0Bi6RefVM/" class="tag">
+                    MFC
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/16273544/">
+                  <h3 class="post-title">
+                    Dear ImGui游戏窗口双光标问题
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/languages/vbscript.min.js"></script>
+  <script>
+    hljs.highlightAll()
+  </script>
+
+
+
+
+
+  </body>
+</html>
