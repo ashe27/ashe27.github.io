@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-05-17T14:21:22.961Z</updated>
+    <updated>2022-05-18T00:34:05.350Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -102,9 +102,9 @@ if (dlg.DoModal() == IDOK) {
 <p>输入<code>123.doc</code>得到<code>123.doc</code>，而不是<code>123.txt</code>。</p>
 <h2 id="总结">总结</h2>
 <ol>
-<li>如果用户输入了扩展名，则以用户输入的文件名为最终值。</li>
+<li>如果用户输入了扩展名，则以用户输入为最终值。</li>
 <li>如果用户未输入扩展名，且设置了默认扩展名，就先采用过滤器中的扩展名，只有用户选择通配符<code>*.*</code>时才采用默认扩展名。</li>
-<li>如果用户未输入扩展名，且默认扩展名设置为<code>nullptr</code>，则在任何情况下不会自动追加扩展名。</li>
+<li>默认扩展名为<code>nullptr</code>时，在任何情况下都不会自动追加扩展名。</li>
 </ol>
 <h3 id="对于打开对话框">对于打开对话框</h3>
 <p>相信没有人会愿意打开不存在的文件，那么<code>OFN_FILEMUSTEXIST</code>几乎是必选项，而这正好也确保了文件名是正确的，所以默认扩展名可有可无。</p>
