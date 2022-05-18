@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>XP下MFC程序本地化的坑 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.7.2/css/all.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="//files.cnblogs.com/files/cyds/favicon.ico">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+<link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css" rel="stylesheet">
+	  
+
+
+<link href="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
+
+
+
+    <meta name="description" content="MFC 的本地化方案
+在 MFC 程序中，本地化是通过资源文件来完成的。菜单栏、对话框、字符串，图片等等资源都支持多个语言的副本。
+
+在框架内部，是通过 CreateDialog、DialogBox、LoadMenu、LoadString、..." />
+    <meta name="keywords" content="MFC,本地化,Windows编程" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://pic.rmb.bdstatic.com/bjh/d2ef74c9e80c2fe2c24d8e7ea0b7c753.png" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h1 class="post-title">XP下MFC程序本地化的坑</h1>
+            <div class="post-date">2022-05-18</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="mfc-的本地化方案">MFC 的本地化方案</h2>
+<p>在 MFC 程序中，本地化是通过资源文件来完成的。菜单栏、对话框、字符串，图片等等资源都支持多个语言的副本。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/42bf226a228cc0b444c82c19daf6a806.png" alt="" loading="lazy"><br>
+在框架内部，是通过 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-createdialoga">CreateDialog</a>、<a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreadlocale">DialogBox</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenua">LoadMenu</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa">LoadString</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-findresourcea">FindResource</a> 来查找资源的。比如查找字符串：</p>
+<pre><code class="language-cpp">inline const ATLSTRINGRESOURCEIMAGE* AtlGetStringResourceImage(
+	_In_ HINSTANCE hInstance,
+	_In_ UINT id) throw()
+{
+	HRSRC hResource;
+	/*
+		The and operation (&amp; static_cast&lt;WORD&gt;(~0)) protects the expression from being greater
+		than WORD - this would cause a runtime error when the application is compiled with /RTCc flag.
+	*/
+	hResource = ::FindResourceW(hInstance, MAKEINTRESOURCEW( (((id&gt;&gt;4)+1) &amp; static_cast&lt;WORD&gt;(~0)) ), (LPWSTR) RT_STRING);
+	if( hResource == NULL )
+	{
+		return( NULL );
+	}
+
+	return _AtlGetStringResourceImage( hInstance, hResource, id );
+}
+</code></pre>
+<p>这些函数有个特点：<strong>跟根据当前线程语言环境来定位资源</strong>。<br>
+当一个线程创建时，它使用用户语言环境，该值由 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-getuserdefaultlcid">GetUserDefaultLCID</a> 返回。<br>
+也就是说，在默认情况下资源加载是根据用户的区域设置来的决定。</p>
+<h2 id="改变线程语言环境">改变线程语言环境</h2>
+<p>使用 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreadlocale">SetThreadLocale</a> 可以改变当前线程的区域设置，从而改变 MFC 加载资源的语言。</p>
+<pre><code class="language-cpp">::SetThreadLocale(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));  // 将语言环境改为 英语(美国)
+
+CString title;
+title.LoadString(AFX_IDS_APP_TITLE); // 会尝试加载 英语(美国) 字符资源
+</code></pre>
+<p>但是这个函数有明显的缺点，会影响所有涉及到字符串操作的地方，比如在中文系统上，线程语言改为英文，为用户提供一个通用对话框：</p>
+<pre><code class="language-cpp">::SetThreadLocale(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
+CFileDialog dlg...
+...
+</code></pre>
+<p>如果此时用户选了一个带有中文字符的路径，对话框将会得到一些乱码路径，问题还不仅仅只是这里而已。<br>
+<strong>所以不要使用 SetThreadLocale 来修改语言环境，除非你清楚自己在做什么。</strong><br>
+正确做法应该是自行通过 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winbase/nf-winbase-findresourceexa">FindResourceEx</a> 来查找资源，这个函数不受线程语言影响，可以指定语言，但是也无法再使用 MFC 自带的一些加载资源的方法了。</p>
+<h2 id="线程ui语言">线程UI语言</h2>
+<p>从 Vista 开始，提出了一个线程UI语言的概念，这解决了上面提到的<code>SetThreadLocale</code>影响全局的问题。通过 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreaduilanguage">SetThreadUILanguage</a> 或 <a href="https://docs.microsoft.com/zh-CN/windows/win32/api/winnls/nf-winnls-setthreadpreferreduilanguages">SetThreadPreferredUILanguages</a> 来改变当前线程的UI语言，而它仅仅只影响资源加载时的语言版本，不会影响线程的语言设置</p>
+<pre><code class="language-cpp">LCID loc = ::GetThreadLocale();  // 2052
+::SetThreadUILanguage(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
+loc = ::GetThreadLocale(); // 还是 2052
+</code></pre>
+<p>但在 XP 系统下，这个函数等同于<code>SetThreadLocale</code></p>
+<pre><code class="language-cpp">LCID loc = ::GetThreadLocale();  // 2052
+::SetThreadUILanguage(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
+loc = ::GetThreadLocale(); // 1033
+</code></pre>
+<p>所以在 XP 下也不要用它。</p>
+<h2 id="xp下的多语言解决方案">XP下的多语言解决方案</h2>
+<p>因为 XP 系统没有将线程语言和UI语言分离，所以不可以使用<code>SetThreadLocale</code>或<code>SetThreadUILanguage</code>去解决UI多语言问题。<br>
+有其他两个方案选择：</p>
+<ol>
+<li>为每种语言单独制作一个资源型DLL，在APP初始化前用 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/application-information-and-management?#afxsetresourcehandle">AfxSetResourceHandle</a> 设置特定语言DLL的句柄，这样之后任何资源加载都会从这里获取。</li>
+<li>非常规手段，Hook<code>FindResource</code>函数，然后转发给<code>FindResourceEx</code>，因为<code>FindResourceEx</code>可以指定语言。</li>
+</ol>
+<p>第一种方法属于正规手段，但是很繁琐，工程会比较多。<br>
+第二种方法理论上可行，但没有实践，不再展开讨论。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://docs.microsoft.com/zh-cn/windows/win32/intl/user-interface-language-management">用户界面语言管理</a><br>
+<a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreadlocale">SetThreadLocale function</a><br>
+<a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreaduilanguage">SetThreadUILanguage function</a><br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/build/creating-a-resource-only-dll">创建纯资源 DLL</a><br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/mfc/tn057-localization-of-mfc-components">MFC 组件的本地化</a><br>
+<a href="https://blog.csdn.net/m0_37824357/article/details/122001614">MFC基于对话框使用dll进行多语言切换</a></p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/0Bi6RefVM/" class="tag">
+                    MFC
+                  </a>
+                
+                  <a href="https://ashe27.github.io/tag/o6pjmb2hc/" class="tag">
+                    本地化
+                  </a>
+                
+                  <a href="https://ashe27.github.io/tag/X2BDcznSs/" class="tag">
+                    Windows编程
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/16282565/">
+                  <h3 class="post-title">
+                    CFileDialog 扩展名注意事项
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/languages/vbscript.min.js"></script>
+  <script>
+    hljs.highlightAll()
+  </script>
+
+
+
+
+
+  </body>
+</html>

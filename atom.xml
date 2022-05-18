@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-05-18T00:36:17.856Z</updated>
+    <updated>2022-05-18T13:53:59.226Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -10,6 +10,82 @@
     <logo>https://ashe27.github.io/images/avatar.png</logo>
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, ashe&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[XP下MFC程序本地化的坑]]></title>
+        <id>https://ashe27.github.io/post/16286455/</id>
+        <link href="https://ashe27.github.io/post/16286455/">
+        </link>
+        <updated>2022-05-18T13:53:29.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="mfc-的本地化方案">MFC 的本地化方案</h2>
+<p>在 MFC 程序中，本地化是通过资源文件来完成的。菜单栏、对话框、字符串，图片等等资源都支持多个语言的副本。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/42bf226a228cc0b444c82c19daf6a806.png" alt="" loading="lazy"><br>
+在框架内部，是通过 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-createdialoga">CreateDialog</a>、<a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreadlocale">DialogBox</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenua">LoadMenu</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa">LoadString</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-findresourcea">FindResource</a> 来查找资源的。比如查找字符串：</p>
+<pre><code class="language-cpp">inline const ATLSTRINGRESOURCEIMAGE* AtlGetStringResourceImage(
+	_In_ HINSTANCE hInstance,
+	_In_ UINT id) throw()
+{
+	HRSRC hResource;
+	/*
+		The and operation (&amp; static_cast&lt;WORD&gt;(~0)) protects the expression from being greater
+		than WORD - this would cause a runtime error when the application is compiled with /RTCc flag.
+	*/
+	hResource = ::FindResourceW(hInstance, MAKEINTRESOURCEW( (((id&gt;&gt;4)+1) &amp; static_cast&lt;WORD&gt;(~0)) ), (LPWSTR) RT_STRING);
+	if( hResource == NULL )
+	{
+		return( NULL );
+	}
+
+	return _AtlGetStringResourceImage( hInstance, hResource, id );
+}
+</code></pre>
+<p>这些函数有个特点：<strong>跟根据当前线程语言环境来定位资源</strong>。<br>
+当一个线程创建时，它使用用户语言环境，该值由 <a href="https://docs.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-getuserdefaultlcid">GetUserDefaultLCID</a> 返回。<br>
+也就是说，在默认情况下资源加载是根据用户的区域设置来的决定。</p>
+<h2 id="改变线程语言环境">改变线程语言环境</h2>
+<p>使用 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreadlocale">SetThreadLocale</a> 可以改变当前线程的区域设置，从而改变 MFC 加载资源的语言。</p>
+<pre><code class="language-cpp">::SetThreadLocale(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));  // 将语言环境改为 英语(美国)
+
+CString title;
+title.LoadString(AFX_IDS_APP_TITLE); // 会尝试加载 英语(美国) 字符资源
+</code></pre>
+<p>但是这个函数有明显的缺点，会影响所有涉及到字符串操作的地方，比如在中文系统上，线程语言改为英文，为用户提供一个通用对话框：</p>
+<pre><code class="language-cpp">::SetThreadLocale(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
+CFileDialog dlg...
+...
+</code></pre>
+<p>如果此时用户选了一个带有中文字符的路径，对话框将会得到一些乱码路径，问题还不仅仅只是这里而已。<br>
+<strong>所以不要使用 SetThreadLocale 来修改语言环境，除非你清楚自己在做什么。</strong><br>
+正确做法应该是自行通过 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winbase/nf-winbase-findresourceexa">FindResourceEx</a> 来查找资源，这个函数不受线程语言影响，可以指定语言，但是也无法再使用 MFC 自带的一些加载资源的方法了。</p>
+<h2 id="线程ui语言">线程UI语言</h2>
+<p>从 Vista 开始，提出了一个线程UI语言的概念，这解决了上面提到的<code>SetThreadLocale</code>影响全局的问题。通过 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreaduilanguage">SetThreadUILanguage</a> 或 <a href="https://docs.microsoft.com/zh-CN/windows/win32/api/winnls/nf-winnls-setthreadpreferreduilanguages">SetThreadPreferredUILanguages</a> 来改变当前线程的UI语言，而它仅仅只影响资源加载时的语言版本，不会影响线程的语言设置</p>
+<pre><code class="language-cpp">LCID loc = ::GetThreadLocale();  // 2052
+::SetThreadUILanguage(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
+loc = ::GetThreadLocale(); // 还是 2052
+</code></pre>
+<p>但在 XP 系统下，这个函数等同于<code>SetThreadLocale</code></p>
+<pre><code class="language-cpp">LCID loc = ::GetThreadLocale();  // 2052
+::SetThreadUILanguage(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
+loc = ::GetThreadLocale(); // 1033
+</code></pre>
+<p>所以在 XP 下也不要用它。</p>
+<h2 id="xp下的多语言解决方案">XP下的多语言解决方案</h2>
+<p>因为 XP 系统没有将线程语言和UI语言分离，所以不可以使用<code>SetThreadLocale</code>或<code>SetThreadUILanguage</code>去解决UI多语言问题。<br>
+有其他两个方案选择：</p>
+<ol>
+<li>为每种语言单独制作一个资源型DLL，在APP初始化前用 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/application-information-and-management?#afxsetresourcehandle">AfxSetResourceHandle</a> 设置特定语言DLL的句柄，这样之后任何资源加载都会从这里获取。</li>
+<li>非常规手段，Hook<code>FindResource</code>函数，然后转发给<code>FindResourceEx</code>，因为<code>FindResourceEx</code>可以指定语言。</li>
+</ol>
+<p>第一种方法属于正规手段，但是很繁琐，工程会比较多。<br>
+第二种方法理论上可行，但没有实践，不再展开讨论。</p>
+<h2 id="参考">参考</h2>
+<p><a href="https://docs.microsoft.com/zh-cn/windows/win32/intl/user-interface-language-management">用户界面语言管理</a><br>
+<a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreadlocale">SetThreadLocale function</a><br>
+<a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreaduilanguage">SetThreadUILanguage function</a><br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/build/creating-a-resource-only-dll">创建纯资源 DLL</a><br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/mfc/tn057-localization-of-mfc-components">MFC 组件的本地化</a><br>
+<a href="https://blog.csdn.net/m0_37824357/article/details/122001614">MFC基于对话框使用dll进行多语言切换</a></p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[CFileDialog 扩展名注意事项]]></title>
         <id>https://ashe27.github.io/post/16282565/</id>
@@ -1007,96 +1083,6 @@ ImGui::Render();
 <p><a href="https://github.com/ocornut/imgui/issues/4593">io.WantCaptureMouse is not working. So im using an alternative bool. But i still want to understand what im doing wrong.</a><br>
 <a href="https://github.com/ocornut/imgui/issues/5061">How to use imgui in an existing win32 dx11 application properly.</a><br>
 <a href="https://www.unknowncheats.me/forum/direct3d/340355-mouse-input-imgui-window.html">Mouse input going through ImGui window</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[VMware Workstation 下载地址]]></title>
-        <id>https://ashe27.github.io/post/VMware-Workstation/</id>
-        <link href="https://ashe27.github.io/post/VMware-Workstation/">
-        </link>
-        <updated>2022-04-21T16:00:00.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="最新版">最新版</h2>
-<p>Windows：<a href="https://www.vmware.com/go/getworkstation-win">https://www.vmware.com/go/getworkstation-win</a><br>
-Linux：<a href="https://www.vmware.com/go/getworkstation-linux">https://www.vmware.com/go/getworkstation-linux</a></p>
-<hr>
-<h2 id="v16">v16</h2>
-<p><a href="https://download3.vmware.com/software/WKST-1623-WIN-New/VMware-workstation-full-16.2.3-19376536.exe">https://download3.vmware.com/software/WKST-1623-WIN-New/VMware-workstation-full-16.2.3-19376536.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.2-19200509.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.2-19200509.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.1-18811642.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.1-18811642.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.0-18760230.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.2.0-18760230.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.2-17966106.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.2-17966106.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.1-17801498.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.1-17801498.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.0-17198959.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.1.0-17198959.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.0.0-16894299.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-16.0.0-16894299.exe</a></p>
-<hr>
-<h2 id="v15">v15</h2>
-<p><a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.6-16341506.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.6-16341506.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.5-16285975.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.5-16285975.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.2-15785246.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.2-15785246.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.1-15018445.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.1-15018445.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.0-14665864.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.5.0-14665864.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.1.0-13591040.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.1.0-13591040.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.4-12990004.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.4-12990004.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.3-12422535.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.3-12422535.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.2-10952284.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.2-10952284.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.1-10737736.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.1-10737736.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.0-10134415.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-15.0.0-10134415.exe</a></p>
-<hr>
-<h2 id="v14">v14</h2>
-<p><a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.8-14921873.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.8-14921873.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.7-12989993.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.7-12989993.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.6-12368378.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.6-12368378.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.5-10950780.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.5-10950780.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.4-10722678.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.4-10722678.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.3-9474260.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.3-9474260.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.2-8497320.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.2-8497320.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.1-7528167.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.1-7528167.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.0-7370693.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.0-7370693.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.0.0-6661328.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.0.0-6661328.exe</a></p>
-<hr>
-<h2 id="v12">v12</h2>
-<p><a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.9-7535481.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.9-7535481.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.8-7098237.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.8-7098237.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.7-5813279.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.7-5813279.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.6-5528349.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.6-5528349.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.5-5234757.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.5-5234757.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.4-5192485.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.4-5192485.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.3-5115892.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.3-5115892.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.2-4638234.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.2-4638234.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.1-4542065.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.1-4542065.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.0-4352439.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.0-4352439.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.1.1-3770994.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.1.1-3770994.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.1.0-3272444.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.1.0-3272444.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.0.1-3160714.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.0.1-3160714.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.0.0-2985596.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.0.0-2985596.exe</a></p>
-<hr>
-<h2 id="v11">v11</h2>
-<p><a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.4-3848939.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.4-3848939.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.3-3206955.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.3-3206955.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.2-2780323.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.2-2780323.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.1-2771112.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.1-2771112.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.0-2496824.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.1.0-2496824.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.0.0-2305329.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-11.0.0-2305329.exe</a></p>
-<hr>
-<h2 id="v10">v10</h2>
-<p><a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.7-2844087.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.7-2844087.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.6-2700073.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.6-2700073.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.5-2443746.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.5-2443746.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.4-2249910.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.4-2249910.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.3-1895310.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.3-1895310.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.2-1744117.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.2-1744117.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.1-1379776.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.1-1379776.exe</a><br>
-<a href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.0-1295980.exe">https://download3.vmware.com/software/wkst/file/VMware-workstation-full-10.0.0-1295980.exe</a></p>
-<hr>
-<h2 id="v9">v9</h2>
-<p><a href="https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.4-1945795.exe">https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.4-1945795.exe</a><br>
-<a href="https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.3-1410761.exe">https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.3-1410761.exe</a><br>
-<a href="https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.2-1031769.exe">https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.2-1031769.exe</a><br>
-<a href="https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.1-894247.exe">https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.1-894247.exe</a><br>
-<a href="https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.0-812388.exe">https://download2.vmware.com/software/wkst/VMware-workstation-full-9.0.0-812388.exe</a></p>
-<hr>
-<h2 id="参考">参考</h2>
-<p><a href="https://github.com/201853910/VMwareWorkstation/releases">https://github.com/201853910/VMwareWorkstation/releases</a></p>
 ]]></content>
     </entry>
 </feed>
