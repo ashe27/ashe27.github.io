@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>MFC学习：管理程序配置 | ashe&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.7.2/css/all.min.css" rel="stylesheet">
+<link rel="shortcut icon" href="//files.cnblogs.com/files/cyds/favicon.ico">
+<link rel="stylesheet" href="https://ashe27.github.io/styles/main.css">
+<link href="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css" rel="stylesheet">
+	  
+
+
+<link href="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js"></script>
+
+
+
+    <meta name="description" content="CWinApp 的配置管理接口
+CWinApp与设置相关的接口有
+CWinApp::WriteProfileInt
+CWinApp::WriteProfileString
+CWinApp::WriteProfileBinary
+看看Writ..." />
+    <meta name="keywords" content="MFC" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://ashe27.github.io">
+        <img src="https://pic.rmb.bdstatic.com/bjh/d2ef74c9e80c2fe2c24d8e7ea0b7c753.png" class="site-logo">
+        <h1 class="site-title">ashe&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/ashe27" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      好记性不如烂笔头
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://ashe27.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h1 class="post-title">MFC学习：管理程序配置</h1>
+            <div class="post-date">2022-05-19</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="cwinapp-的配置管理接口">CWinApp 的配置管理接口</h2>
+<p><code>CWinApp</code>与设置相关的接口有<br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#writeprofileint">CWinApp::WriteProfileInt</a><br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#writeprofilestring">CWinApp::WriteProfileString</a><br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#writeprofilebinary">CWinApp::WriteProfileBinary</a></p>
+<p>看看<code>WriteProfileInt</code>的实现</p>
+<pre><code class="language-cpp">BOOL CWinApp::WriteProfileInt(LPCTSTR lpszSection, LPCTSTR lpszEntry,
+	int nValue)
+{
+	ASSERT(lpszSection != NULL);
+	ASSERT(lpszEntry != NULL);
+	if (m_pszRegistryKey != NULL)
+	{
+		HKEY hSecKey = GetSectionKey(lpszSection);
+		if (hSecKey == NULL)
+			return FALSE;
+		LONG lResult = RegSetValueEx(hSecKey, lpszEntry, NULL, REG_DWORD,
+			(LPBYTE)&amp;nValue, sizeof(nValue));
+		RegCloseKey(hSecKey);
+		return lResult == ERROR_SUCCESS;
+	}
+	else
+	{
+		ASSERT(m_pszProfileName != NULL);
+
+		TCHAR szT[16];
+		_stprintf_s(szT, _countof(szT), _T(&quot;%d&quot;), nValue);
+		return ::WritePrivateProfileString(lpszSection, lpszEntry, szT,
+			m_pszProfileName);
+	}
+}
+</code></pre>
+<p>知识点：</p>
+<ol>
+<li>优先考虑写入到注册表，但如果未设置<code>m_pszRegistryKey</code>值，则会写入到 ini 文件中。</li>
+<li><code>m_pszRegistryKey</code>默认值是<code>nullptr</code>，可以用 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#setregistrykey">CWinApp::SetRegistryKey</a> 修改它。</li>
+<li><code>m_pszProfileName</code>是在程序启动时初始化的，默认用程序的文件名加上<code>INI</code>后缀。MFC 没有提供函数修改它，但是可以直接对其赋值。</li>
+</ol>
+<pre><code class="language-cpp">void CWinApp::SetCurrentHandles()
+{
+    ...
+    if (m_pszProfileName == NULL)
+	{
+        Checked::tcscat_s(szExeName, _countof(szExeName), _T(&quot;.INI&quot;)); // will be enough room in buffer
+        BOOL bEnable = AfxEnableMemoryTracking(FALSE);
+        m_pszProfileName = _tcsdup(szExeName);
+        AfxEnableMemoryTracking(bEnable);
+        if(!m_pszProfileName)
+        {
+            AfxThrowMemoryException();
+        }
+    }
+}
+</code></pre>
+<ol start="4">
+<li>如果<code>m_pszProfileName</code>仅仅只有文件名，文件会保存到<code>C:\Windows</code>目录下，所以建议用相对路径的形式<code>.\Config.ini</code>，或着绝对路径。</li>
+<li>当使用注册表保存时，<code>m_pszProfileName</code>就变为了<code>Key</code></li>
+</ol>
+<pre><code class="language-cpp">this-&gt;SetRegistryKey(_T(&quot;XX公司&quot;));
+this-&gt;WriteProfileInt(_T(&quot;root&quot;), _T(&quot;entry&quot;), 123);
+</code></pre>
+<p>如果程序文件名为<code>MyApp.exe</code>，最终写入的注册表位置为</p>
+<pre><code class="language-plain">Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\SOFTWARE\XX公司\MyApp\root]
+&quot;entry&quot;=dword:0000007b
+</code></pre>
+<p>INI文件例子：</p>
+<pre><code class="language-cpp">this-&gt;WriteProfileInt(_T(&quot;root&quot;), _T(&quot;item&quot;), 123);
+</code></pre>
+<p>ini 内容</p>
+<pre><code class="language-ini">[root]
+item=123
+</code></pre>
+<h2 id="cwinappex-的配置管理接口">CWinAppEx 的配置管理接口</h2>
+<p><code>CWinAppEx</code>在<code>CWinApp</code>的基础上，扩充了一些接口，相关函数同样以<code>Write</code>开头，扩展的方法是</p>
+<ul>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writeint">CWinAppEx::WriteInt</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writestring">CWinAppEx::WriteString</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writebinary">CWinAppEx::WriteBinary</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writeobject">CWinAppEx::WriteObject</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionint">CWinAppEx::WriteSectionInt</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionstring">CWinAppEx::WriteSectionString</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionbinary">CWinAppEx::WriteSectionBinary</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionobject">CWinAppEx::WriteSectionObject</a></li>
+</ul>
+<p>方法中带<code>Section</code>的写入注册表位置是</p>
+<pre><code class="language-plain">HKEY_CURRENT_USER\SOFTWARE\{m_pszRegistryKey}\{m_pszProfileName}\{m_strRegSection}\Section
+</code></pre>
+<p>方法中不带<code>Section</code>的写入注册表位置是</p>
+<pre><code class="language-plain">HKEY_CURRENT_USER\SOFTWARE\{m_pszRegistryKey}\{m_pszProfileName}\{m_strRegSection}\
+</code></pre>
+<p>路径中<code>m_strRegSection</code>的默认值是<code>Workspace</code>，可以通过 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#setregistrybase">CWinAppEx::SetRegistryBase</a> 方法修改它。</p>
+<h2 id="总结">总结</h2>
+<ul>
+<li><code>CWinApp</code>的方法可选择写入注册表或是INI文件，默认情况下写INI文件。</li>
+<li><code>CWinAppEx</code>提供的方法只能写入注册表。</li>
+</ul>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://ashe27.github.io/tag/0Bi6RefVM/" class="tag">
+                    MFC
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://ashe27.github.io/post/16286455/">
+                  <h3 class="post-title">
+                    XP下MFC程序本地化研究
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+document.querySelectorAll('.post-content a[href^="http"]').forEach(el => el.setAttribute('target', '_blank'));
+</script>
+
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.5.1/languages/vbscript.min.js"></script>
+  <script>
+    hljs.highlightAll()
+  </script>
+
+
+
+
+
+  </body>
+</html>

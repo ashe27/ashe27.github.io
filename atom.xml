@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-05-18T13:53:59.226Z</updated>
+    <updated>2022-05-19T15:09:44.750Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -11,7 +11,113 @@
     <icon>https://ashe27.github.io/favicon.ico</icon>
     <rights>All rights reserved 2022, ashe&apos;s blog</rights>
     <entry>
-        <title type="html"><![CDATA[XP下MFC程序本地化的坑]]></title>
+        <title type="html"><![CDATA[MFC学习：管理程序配置]]></title>
+        <id>https://ashe27.github.io/post/16290668/</id>
+        <link href="https://ashe27.github.io/post/16290668/">
+        </link>
+        <updated>2022-05-19T15:09:19.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="cwinapp-的配置管理接口">CWinApp 的配置管理接口</h2>
+<p><code>CWinApp</code>与设置相关的接口有<br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#writeprofileint">CWinApp::WriteProfileInt</a><br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#writeprofilestring">CWinApp::WriteProfileString</a><br>
+<a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#writeprofilebinary">CWinApp::WriteProfileBinary</a></p>
+<p>看看<code>WriteProfileInt</code>的实现</p>
+<pre><code class="language-cpp">BOOL CWinApp::WriteProfileInt(LPCTSTR lpszSection, LPCTSTR lpszEntry,
+	int nValue)
+{
+	ASSERT(lpszSection != NULL);
+	ASSERT(lpszEntry != NULL);
+	if (m_pszRegistryKey != NULL)
+	{
+		HKEY hSecKey = GetSectionKey(lpszSection);
+		if (hSecKey == NULL)
+			return FALSE;
+		LONG lResult = RegSetValueEx(hSecKey, lpszEntry, NULL, REG_DWORD,
+			(LPBYTE)&amp;nValue, sizeof(nValue));
+		RegCloseKey(hSecKey);
+		return lResult == ERROR_SUCCESS;
+	}
+	else
+	{
+		ASSERT(m_pszProfileName != NULL);
+
+		TCHAR szT[16];
+		_stprintf_s(szT, _countof(szT), _T(&quot;%d&quot;), nValue);
+		return ::WritePrivateProfileString(lpszSection, lpszEntry, szT,
+			m_pszProfileName);
+	}
+}
+</code></pre>
+<p>知识点：</p>
+<ol>
+<li>优先考虑写入到注册表，但如果未设置<code>m_pszRegistryKey</code>值，则会写入到 ini 文件中。</li>
+<li><code>m_pszRegistryKey</code>默认值是<code>nullptr</code>，可以用 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#setregistrykey">CWinApp::SetRegistryKey</a> 修改它。</li>
+<li><code>m_pszProfileName</code>是在程序启动时初始化的，默认用程序的文件名加上<code>INI</code>后缀。MFC 没有提供函数修改它，但是可以直接对其赋值。</li>
+</ol>
+<pre><code class="language-cpp">void CWinApp::SetCurrentHandles()
+{
+    ...
+    if (m_pszProfileName == NULL)
+	{
+        Checked::tcscat_s(szExeName, _countof(szExeName), _T(&quot;.INI&quot;)); // will be enough room in buffer
+        BOOL bEnable = AfxEnableMemoryTracking(FALSE);
+        m_pszProfileName = _tcsdup(szExeName);
+        AfxEnableMemoryTracking(bEnable);
+        if(!m_pszProfileName)
+        {
+            AfxThrowMemoryException();
+        }
+    }
+}
+</code></pre>
+<ol start="4">
+<li>如果<code>m_pszProfileName</code>仅仅只有文件名，文件会保存到<code>C:\Windows</code>目录下，所以建议用相对路径的形式<code>.\Config.ini</code>，或着绝对路径。</li>
+<li>当使用注册表保存时，<code>m_pszProfileName</code>就变为了<code>Key</code></li>
+</ol>
+<pre><code class="language-cpp">this-&gt;SetRegistryKey(_T(&quot;XX公司&quot;));
+this-&gt;WriteProfileInt(_T(&quot;root&quot;), _T(&quot;entry&quot;), 123);
+</code></pre>
+<p>如果程序文件名为<code>MyApp.exe</code>，最终写入的注册表位置为</p>
+<pre><code class="language-plain">Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\SOFTWARE\XX公司\MyApp\root]
+&quot;entry&quot;=dword:0000007b
+</code></pre>
+<p>INI文件例子：</p>
+<pre><code class="language-cpp">this-&gt;WriteProfileInt(_T(&quot;root&quot;), _T(&quot;item&quot;), 123);
+</code></pre>
+<p>ini 内容</p>
+<pre><code class="language-ini">[root]
+item=123
+</code></pre>
+<h2 id="cwinappex-的配置管理接口">CWinAppEx 的配置管理接口</h2>
+<p><code>CWinAppEx</code>在<code>CWinApp</code>的基础上，扩充了一些接口，相关函数同样以<code>Write</code>开头，扩展的方法是</p>
+<ul>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writeint">CWinAppEx::WriteInt</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writestring">CWinAppEx::WriteString</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writebinary">CWinAppEx::WriteBinary</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writeobject">CWinAppEx::WriteObject</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionint">CWinAppEx::WriteSectionInt</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionstring">CWinAppEx::WriteSectionString</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionbinary">CWinAppEx::WriteSectionBinary</a></li>
+<li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionobject">CWinAppEx::WriteSectionObject</a></li>
+</ul>
+<p>方法中带<code>Section</code>的写入注册表位置是</p>
+<pre><code class="language-plain">HKEY_CURRENT_USER\SOFTWARE\{m_pszRegistryKey}\{m_pszProfileName}\{m_strRegSection}\Section
+</code></pre>
+<p>方法中不带<code>Section</code>的写入注册表位置是</p>
+<pre><code class="language-plain">HKEY_CURRENT_USER\SOFTWARE\{m_pszRegistryKey}\{m_pszProfileName}\{m_strRegSection}\
+</code></pre>
+<p>路径中<code>m_strRegSection</code>的默认值是<code>Workspace</code>，可以通过 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#setregistrybase">CWinAppEx::SetRegistryBase</a> 方法修改它。</p>
+<h2 id="总结">总结</h2>
+<ul>
+<li><code>CWinApp</code>的方法可选择写入注册表或是INI文件，默认情况下写INI文件。</li>
+<li><code>CWinAppEx</code>提供的方法只能写入注册表。</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[XP下MFC程序本地化研究]]></title>
         <id>https://ashe27.github.io/post/16286455/</id>
         <link href="https://ashe27.github.io/post/16286455/">
         </link>
@@ -19,7 +125,7 @@
         <content type="html"><![CDATA[<h2 id="mfc-的本地化方案">MFC 的本地化方案</h2>
 <p>在 MFC 程序中，本地化是通过资源文件来完成的。菜单栏、对话框、字符串，图片等等资源都支持多个语言的副本。<br>
 <img src="https://pic.rmb.bdstatic.com/bjh/42bf226a228cc0b444c82c19daf6a806.png" alt="" loading="lazy"><br>
-在框架内部，是通过 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-createdialoga">CreateDialog</a>、<a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreadlocale">DialogBox</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenua">LoadMenu</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa">LoadString</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-findresourcea">FindResource</a> 来查找资源的。比如查找字符串：</p>
+在框架内部，是通过 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-createdialoga">CreateDialog</a>、<a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-dialogboxa">DialogBox</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenua">LoadMenu</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa">LoadString</a>、<a href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-findresourcea">FindResource</a> 来查找资源的。比如查找字符串：</p>
 <pre><code class="language-cpp">inline const ATLSTRINGRESOURCEIMAGE* AtlGetStringResourceImage(
 	_In_ HINSTANCE hInstance,
 	_In_ UINT id) throw()
@@ -43,13 +149,14 @@
 也就是说，在默认情况下资源加载是根据用户的区域设置来的决定。</p>
 <h2 id="改变线程语言环境">改变线程语言环境</h2>
 <p>使用 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreadlocale">SetThreadLocale</a> 可以改变当前线程的区域设置，从而改变 MFC 加载资源的语言。</p>
-<pre><code class="language-cpp">::SetThreadLocale(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));  // 将语言环境改为 英语(美国)
+<pre><code class="language-cpp">// 将语言环境改为 英语(美国)
+::SetThreadLocale(MAKELCID(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), SORT_DEFAULT)); 
 
 CString title;
 title.LoadString(AFX_IDS_APP_TITLE); // 会尝试加载 英语(美国) 字符资源
 </code></pre>
 <p>但是这个函数有明显的缺点，会影响所有涉及到字符串操作的地方，比如在中文系统上，线程语言改为英文，为用户提供一个通用对话框：</p>
-<pre><code class="language-cpp">::SetThreadLocale(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
+<pre><code class="language-cpp">::SetThreadLocale(MAKELCID(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), SORT_DEFAULT));
 CFileDialog dlg...
 ...
 </code></pre>
@@ -62,21 +169,85 @@ CFileDialog dlg...
 ::SetThreadUILanguage(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
 loc = ::GetThreadLocale(); // 还是 2052
 </code></pre>
-<p>但在 XP 系统下，这个函数等同于<code>SetThreadLocale</code></p>
+<p>但在 XP 系统下，这个函数会同时设置<code>ThreadLocale</code></p>
 <pre><code class="language-cpp">LCID loc = ::GetThreadLocale();  // 2052
 ::SetThreadUILanguage(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US));
 loc = ::GetThreadLocale(); // 1033
+::SetThreadUILanguage(MAKELANGID(LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED));
+loc = ::GetThreadLocale(); // 还是 1033
 </code></pre>
-<p>所以在 XP 下也不要用它。</p>
+<p>设置为英语后就改不回来了，很奇怪，抱着好奇的心态用IDA看了一下</p>
+<pre><code class="language-cpp">LANGID __stdcall SetThreadUILanguage(LANGID LangId)
+{
+  int v1; // eax
+  UINT ConsoleOutputCP; // eax
+  int v3; // esi
+  LCID v4; // esi
+  LCID v6; // esi
+  LCID CurrentLocale; // [esp+8h] [ebp-3Ch]
+  UINT v8; // [esp+Ch] [ebp-38h]
+  int v9; // [esp+10h] [ebp-34h] BYREF
+  int v10; // [esp+14h] [ebp-30h] BYREF
+  int v11; // [esp+18h] [ebp-2Ch]
+  LCID Locale; // [esp+1Ch] [ebp-28h]
+  WCHAR LCData[16]; // [esp+20h] [ebp-24h] BYREF
+
+  LOWORD(v1) = GetUserDefaultUILanguage();
+  v11 = v1;
+  CurrentLocale = NtCurrentTeb()-&gt;CurrentLocale;
+  Locale = 1033;
+  ConsoleOutputCP = GetConsoleOutputCP();
+  v8 = ConsoleOutputCP;
+  if ( dword_7C88593C || (v6 = gSystemLocale) == 0 )
+  {
+    v3 = dword_7C885938;
+  }
+  else
+  {
+    GetLocaleInfoW(gSystemLocale, 0x1004u, LCData, 16);
+    NlsConvertStringToIntegerW(-1, &amp;dword_7C88593C);
+    GetLocaleInfoW(v6, 0xBu, LCData, 16);
+    NlsConvertStringToIntegerW(-1, &amp;dword_7C885940);
+    ConsoleOutputCP = v8;
+    v3 = v6 &amp; 0x3FF;
+    dword_7C885938 = v3;
+  }
+  if ( (_WORD)v11 )
+  {
+    v4 = (unsigned __int16)v11;
+    GetLocaleInfoW((unsigned __int16)v11, 0x1004u, LCData, 16);
+    NlsConvertStringToIntegerW(-1, &amp;v9);
+    GetLocaleInfoW(v4, 0xBu, LCData, 16);
+    NlsConvertStringToIntegerW(-1, &amp;v10);
+    v3 = dword_7C885938;
+    ConsoleOutputCP = v8;
+  }
+  if ( ConsoleOutputCP
+    &amp;&amp; v3 != 1
+    &amp;&amp; v3 != 13
+    &amp;&amp; v3 != 42
+    &amp;&amp; v3 != 30
+    &amp;&amp; (ConsoleOutputCP == dword_7C88593C || ConsoleOutputCP == dword_7C885940)
+    &amp;&amp; (ConsoleOutputCP == v9 || ConsoleOutputCP == v10) )
+  {
+    Locale = (unsigned __int16)v11;
+  }
+  if ( Locale != CurrentLocale &amp;&amp; !SetThreadLocale(Locale) )
+    return CurrentLocale;
+  return Locale;
+}
+</code></pre>
+<p>中间一大段不用看，看结尾两行的逻辑：只有在当前线程 LCID 不等于<code>英语(美国)</code>时才会调用<code>SetThreadLocale</code>，这解释了为什么设置为英语后就改不回去了。<br>
+因为<code>SetThreadUILanguage</code>在 Vista 后有不同的行为，所以也不能完全否定它的作用。</p>
 <h2 id="xp下的多语言解决方案">XP下的多语言解决方案</h2>
 <p>因为 XP 系统没有将线程语言和UI语言分离，所以不可以使用<code>SetThreadLocale</code>或<code>SetThreadUILanguage</code>去解决UI多语言问题。<br>
 有其他两个方案选择：</p>
 <ol>
-<li>为每种语言单独制作一个资源型DLL，在APP初始化前用 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/application-information-and-management?#afxsetresourcehandle">AfxSetResourceHandle</a> 设置特定语言DLL的句柄，这样之后任何资源加载都会从这里获取。</li>
-<li>非常规手段，Hook<code>FindResource</code>函数，然后转发给<code>FindResourceEx</code>，因为<code>FindResourceEx</code>可以指定语言。</li>
+<li>为每种语言单独制作一个资源型DLL，在APP初始化前用 <a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/application-information-and-management?#afxsetresourcehandle">AfxSetResourceHandle</a> 设置以下，这样之后任何资源加载都会从这个DLL中获取。</li>
+<li>非常规手段，Hook<code>FindResource</code>、<code>LoadMenu</code>等等与资源加载的相关函数，在资源加载前设置语言环境，资源加载后还原语言环境。</li>
 </ol>
-<p>第一种方法属于正规手段，但是很繁琐，工程会比较多。<br>
-第二种方法理论上可行，但没有实践，不再展开讨论。</p>
+<p>第一种方法属于正规手段，但是很繁琐，维护起来很麻烦。<br>
+第二种方法可以将所有资源集中在EXE中，维护更方便。不过除了<code>FindResourceEx</code>以外函数无法指定语言ID，所以每次加载资源时需要切换<code>ThreadLocale</code>。</p>
 <h2 id="参考">参考</h2>
 <p><a href="https://docs.microsoft.com/zh-cn/windows/win32/intl/user-interface-language-management">用户界面语言管理</a><br>
 <a href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreadlocale">SetThreadLocale function</a><br>
@@ -1032,57 +1203,6 @@ std::string str = boost::locale::translate(&quot;ctx&quot;, &quot;Love&quot;).st
 <p><a href="https://www.helywin.com/posts/20200814061352/">gettext使用</a><br>
 <a href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/locale_gen.html">Locale Generation</a><br>
 <a href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/messages_formatting.html">Messages Formatting (Translation)</a></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Dear ImGui学习：使用 WantCaptureMouse 检查鼠标消息]]></title>
-        <id>https://ashe27.github.io/post/16183345/</id>
-        <link href="https://ashe27.github.io/post/16183345/">
-        </link>
-        <updated>2022-04-23T11:57:28.000Z</updated>
-        <content type="html"><![CDATA[<p><code>WantCaptureMouse</code>是类<code>ImGuiIO</code>的成员方法，源码中对于<code>WantCaptureMouse</code>的注释是这么写的：</p>
-<blockquote>
-<p>Set when Dear ImGui will use mouse inputs, in this case do not dispatch them to your main game/application (either way, always pass on mouse inputs to imgui). (e.g. unclicked mouse is hovering over an imgui window, widget is active, mouse was clicked over an imgui window, etc.).</p>
-</blockquote>
-<p>简单地说就是可以用来它判断鼠标是否在 imgui 窗口内，大部分使用场景是用来覆盖游戏引擎自身的鼠标数据。<br>
-比如我在游戏内show出窗口时，默认情况下鼠标在窗口上的点击都会传递给游戏处理，而此时我需要避免将 imgui 的鼠标事件传递给游戏处理，那么就可以通过<code>WantCaptureMouse</code>来判断</p>
-<pre><code class="language-cpp">LRESULT WINAPI MyWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam)) {
-        return ERROR_SUCCESS;
-    }
-
-    const ImGuiIO&amp; io = ImGui::GetIO();
-    if (io.WantCaptureMouse &amp;&amp; (uMsg == WM_LBUTTONDOWN || uMsg == WM_LBUTTONUP || uMsg == WM_RBUTTONDOWN || uMsg == WM_RBUTTONUP || uMsg == WM_MBUTTONDOWN || uMsg == WM_MBUTTONUP || uMsg == WM_MOUSEWHEEL || uMsg == WM_MOUSEMOVE)) {
-        return ERROR_SUCCESS;
-    }
-
-    return CallWindowProcW(g_pOldWindowProc, hWnd, uMsg, wParam, lParam);
-}
-</code></pre>
-<p>鼠标在 imgui 窗口外时，imgui 默认会渲染指针样式，再加上游戏引擎渲染的指针样式，就出现了游戏内同时有两个指针的问题，所以我们在渲染时也可以通过<code>WantCaptureMouse</code>来检查，避免在 imgui 窗口外二次渲染指针。</p>
-<pre><code class="language-cpp">ImGui_ImplDX11_NewFrame();
-ImGui_ImplWin32_NewFrame();
-ImGui::NewFrame();
-
-// 鼠标不在imgui窗口内就不要渲染指针了
-const ImGuiIO&amp; io = ImGui::GetIO();
-if (!io.WantCaptureMouse) {
-    ImGui::SetMouseCursor(ImGuiMouseCursor_None);
-}
-
-ImGui::Begin(&quot;Demo&quot;);
-ImGui::Text(&quot;FPS:%.1f&quot;, io.Framerate);
-ImGui::End();
-
-ImGui::Render();
-</code></pre>
-<p><strong>注意，永远不要手动去设置 WantCaptureMouse。</strong></p>
-<hr>
-<h2 id="参考">参考</h2>
-<p><a href="https://github.com/ocornut/imgui/issues/4593">io.WantCaptureMouse is not working. So im using an alternative bool. But i still want to understand what im doing wrong.</a><br>
-<a href="https://github.com/ocornut/imgui/issues/5061">How to use imgui in an existing win32 dx11 application properly.</a><br>
-<a href="https://www.unknowncheats.me/forum/direct3d/340355-mouse-input-imgui-window.html">Mouse input going through ImGui window</a></p>
 ]]></content>
     </entry>
 </feed>
