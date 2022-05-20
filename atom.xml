@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-05-19T15:15:37.991Z</updated>
+    <updated>2022-05-20T03:43:20.246Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -103,7 +103,7 @@ item=123
 <li><a href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionobject">CWinAppEx::WriteSectionObject</a></li>
 </ul>
 <p>方法中带<code>Section</code>的写入注册表位置是</p>
-<pre><code class="language-plain">HKEY_CURRENT_USER\SOFTWARE\{m_pszRegistryKey}\{m_pszProfileName}\{m_strRegSection}\Section
+<pre><code class="language-plain">HKEY_CURRENT_USER\SOFTWARE\{m_pszRegistryKey}\{m_pszProfileName}\{m_strRegSection}\{Section}
 </code></pre>
 <p>方法中不带<code>Section</code>的写入注册表位置是</p>
 <pre><code class="language-plain">HKEY_CURRENT_USER\SOFTWARE\{m_pszRegistryKey}\{m_pszProfileName}\{m_strRegSection}\
