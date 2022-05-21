@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ashe27.github.io</id>
     <title>ashe&apos;s blog</title>
-    <updated>2022-05-20T03:43:20.246Z</updated>
+    <updated>2022-05-21T06:41:48.382Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://ashe27.github.io"/>
     <link rel="self" href="https://ashe27.github.io/atom.xml"/>
@@ -78,10 +78,7 @@
 this-&gt;WriteProfileInt(_T(&quot;root&quot;), _T(&quot;entry&quot;), 123);
 </code></pre>
 <p>如果程序文件名为<code>MyApp.exe</code>，最终写入的注册表位置为</p>
-<pre><code class="language-plain">Windows Registry Editor Version 5.00
-
-[HKEY_CURRENT_USER\SOFTWARE\XX公司\MyApp\root]
-&quot;entry&quot;=dword:0000007b
+<pre><code class="language-plain">HKEY_CURRENT_USER\SOFTWARE\{m_pszRegistryKey}\{m_pszProfileName}\
 </code></pre>
 <p>INI文件例子：</p>
 <pre><code class="language-cpp">this-&gt;WriteProfileInt(_T(&quot;root&quot;), _T(&quot;item&quot;), 123);
@@ -114,6 +111,8 @@ item=123
 <li><code>CWinApp</code>的方法可选择写入注册表或是INI文件，默认情况下写INI文件。</li>
 <li><code>CWinAppEx</code>提供的方法只能写入注册表，所以必须填充<code>m_pszRegistryKey</code>值。</li>
 </ul>
+<p>对于写注册表来说，<code>m_pszRegistryKey</code>一般填入组织名称，<code>m_pszProfileName</code>填入产品名称，<code>m_strRegSection</code>填入子模块名称。<br>
+<code>CWinApp</code>的以<code>WriteProfile</code>开头的方法虽然可以写注册表，但是因为没有<code>m_strRegSection</code>字段，没法按模块分别写入不同的位置，所以不建议使用，除非你的工程只有一个模块。</p>
 ]]></content>
     </entry>
     <entry>
