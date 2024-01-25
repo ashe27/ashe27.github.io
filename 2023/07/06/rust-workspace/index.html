@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Rust项目文件的组织方式 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Rust项目文件的组织方式</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2023-07-07 00:05:53
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Rust/" title="Rust">
+                    #Rust
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="创建工程的命令"><a href="#创建工程的命令" class="headerlink" title="创建工程的命令"></a>创建工程的命令</h2><p><code>cargo new hello --bin</code>：创建一个可执行文件项目。<code>--bin</code>是默认参数，可以不写。<br><code>cargo new mylib --lib</code>：创建一个静态库项目。</p>
+<h2 id="特殊的文件与目录"><a href="#特殊的文件与目录" class="headerlink" title="特殊的文件与目录"></a>特殊的文件与目录</h2><h3 id="main-rs"><a href="#main-rs" class="headerlink" title="main.rs"></a>main.rs</h3><p>通过<code>cargo new hello</code>命令建立一个新工程，目录是这样的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── Cargo.toml</span><br><span class="line">└── src</span><br><span class="line">    └── main.rs</span><br></pre></td></tr></table></figure>
+<p><code>main.rs</code>就是入口文件，最终生成一个可执行文件。适合小项目，单文件。</p>
+<h3 id="lib-rs"><a href="#lib-rs" class="headerlink" title="lib.rs"></a>lib.rs</h3><p>在<code>src</code>目录下添加一个名为<code>lib.rs</code>的文件</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="keyword">fn</span> <span class="title function_">hello_world</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;Hello, world!&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>main.rs</code>中调用</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> hello::hello_world;</span><br><span class="line"></span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="title function_ invoke__">hello_world</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 Rust 中，同时存在 main.rs 和 lib.rs 的工程类型被称为 “Binary crate with a library”（带有库的二进制 crate）。这种类型的工程既可以作为库被其他 crate 依赖，又可以作为可执行文件被直接运行。</p>
+<p>这种工程类型通常用于开发命令行工具或其他需要同时作为库和应用程序的工具。lib.rs 文件中定义的函数、类型和常量可以被其他 crate 导入和使用，而 main.rs 文件中则定义了可执行文件的入口函数。</p>
+<p>需要注意的是，main.rs 和 lib.rs 文件中的代码可以相互调用，因为它们在同一个 crate 中。如果 main.rs 和 lib.rs 分别位于不同的 crate 中，那么就需要在 Cargo.toml 文件中将这两个 crate 作为依赖项，并使用 extern crate 语句将它们导入到代码中。</p>
+<h3 id="src-bin"><a href="#src-bin" class="headerlink" title="src&#x2F;bin"></a>src&#x2F;bin</h3><p><code>src/bin</code>是一个特殊目录。它用于存放二进制文件的目录。每个位于该目录下的<code>.rs</code>文件都会被编译成一个独立的可执行文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── Cargo.toml</span><br><span class="line">└── src</span><br><span class="line">    └── bin</span><br><span class="line">        ├── app1.rs</span><br><span class="line">    	└── app2.rs</span><br></pre></td></tr></table></figure>
+<p>同时，在<code>src</code>目录下也可以存在<code>main.rs</code>和<code>lib.rs</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── Cargo.toml</span><br><span class="line">└── src/</span><br><span class="line">    ├── bin/</span><br><span class="line">    │   ├── app1.rs</span><br><span class="line">    │   └── app2.rs</span><br><span class="line">	├── main.rs</span><br><span class="line">    └── lib.rs</span><br></pre></td></tr></table></figure>
+<p>在这种组织方式下，src&#x2F;lib.rs 文件中定义的函数、类型和常量可以被 src&#x2F;bin 目录下的源文件导入和使用，形成一个完整的项目。</p>
+<h2 id="workspace-案例"><a href="#workspace-案例" class="headerlink" title="workspace 案例"></a>workspace 案例</h2><p>workspace（工作区）是指一个包含多个 crate 的项目，这些 crate 可以相互依赖和共享代码。工作区可以使得多个 crate 的开发、构建和测试更加方便和高效。<br>要创建一个 workspace，可以按照以下步骤进行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cargo new app1</span><br><span class="line">cargo new app2</span><br><span class="line">cargo new mylib --lib</span><br><span class="line">cargo new dynlib --lib</span><br></pre></td></tr></table></figure>
+<p>这样就创建了两个可执行文件，两个库。根目录下创建<code>Cargo.toml</code>文件，内容如下</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[workspace]</span></span><br><span class="line"><span class="attr">members</span> = [</span><br><span class="line">    <span class="string">&quot;app1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;app2&quot;</span>,</span><br><span class="line">    <span class="string">&quot;mylib&quot;</span>,</span><br><span class="line">    <span class="string">&quot;dynlib&quot;</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h3 id="创建DLL动态库工程"><a href="#创建DLL动态库工程" class="headerlink" title="创建DLL动态库工程"></a>创建DLL动态库工程</h3><p>我们将<code>dynlib</code>改为动态库工程，在<code>Cargo.toml</code>文件中添加如下配置，指定输出的文件类型为 DLL</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[lib]</span></span><br><span class="line"><span class="attr">crate-type</span> = [<span class="string">&quot;cdylib&quot;</span>]</span><br></pre></td></tr></table></figure>
+<p>源文件<code>lib.rs</code>中写一个导出函数</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[no_mangle]</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="keyword">fn</span> <span class="title function_">add</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123;</span><br><span class="line">    a + b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的DLL接口是标准的C ABI，其他语言也是可以调用的。</p>
+<h3 id="工程间的依赖"><a href="#工程间的依赖" class="headerlink" title="工程间的依赖"></a>工程间的依赖</h3><p>我们现在让<code>app1</code>依赖这个DLL工程并使用它，编辑<code>app1/Cargo.toml</code>文件，在<code>[dependencies]</code>下编译依赖项</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">dylib</span> = &#123; path = <span class="string">&quot;../dynlib&quot;</span> &#125;</span><br></pre></td></tr></table></figure>
+<p>调用方法</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[link(name = <span class="string">&quot;dynlib.dll&quot;</span>, kind=<span class="string">&quot;dylib&quot;</span>)]</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> &#123;</span><br><span class="line">    <span class="keyword">fn</span> <span class="title function_">add</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">fn</span> <span class="title function_">main</span>() &#123;</span><br><span class="line">    <span class="built_in">println!</span>(<span class="string">&quot;add = &#123;&#125;&quot;</span>, <span class="keyword">unsafe</span> &#123; <span class="title function_ invoke__">add</span>(<span class="number">5</span>, <span class="number">8</span>) &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>总之，大型工程推荐用这种结构来组织代码。<br>另外，工程类型可以是以下类型：</p>
+<ul>
+<li>bin：可执行文件。</li>
+<li>lib：Rust自己的库。</li>
+<li>staticlib：静态库，msvc会生成<code>.a</code>文件。</li>
+<li>dylib：动态库，但是只能Rust程序用。</li>
+<li>cdylib：动态库，标准C导出接口，所有其他程序都可以用。</li>
+</ul>
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://course.rs/cargo/reference/workspaces.html">工作空间 Workspace</a><br><a target="_blank" rel="noopener" href="https://rustcc.cn/article?id=98b96e69-7a5f-4bba-a38e-35bdd7a0a7dd">Rust 中的 bin, lib, rlib, a, so 概念介绍</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/07/05/XmlSerializer/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2023-07-07 00:05:53
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Rust/" title="Rust">
+                        #Rust
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/07/18/dotnet-probing/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%B7%A5%E7%A8%8B%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-text">创建工程的命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E7%9A%84%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95"><span class="toc-text">特殊的文件与目录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#main-rs"><span class="toc-text">main.rs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lib-rs"><span class="toc-text">lib.rs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#src-bin"><span class="toc-text">src&#x2F;bin</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#workspace-%E6%A1%88%E4%BE%8B"><span class="toc-text">workspace 案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BADLL%E5%8A%A8%E6%80%81%E5%BA%93%E5%B7%A5%E7%A8%8B"><span class="toc-text">创建DLL动态库工程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E7%A8%8B%E9%97%B4%E7%9A%84%E4%BE%9D%E8%B5%96"><span class="toc-text">工程间的依赖</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Rust%E9%A1%B9%E7%9B%AE%E6%96%87%E4%BB%B6%E7%9A%84%E7%BB%84%E7%BB%87%E6%96%B9%E5%BC%8F + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F07%2F06%2Frust-workspace%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/07/06/rust-workspace/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

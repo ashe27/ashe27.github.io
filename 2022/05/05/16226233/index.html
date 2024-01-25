@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      VS 与 UTF-8 编码 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">VS 与 UTF-8 编码</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2023-06-30 17:17:56
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/UTF-8/" title="UTF-8">
+                    #UTF-8
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="与编码有关的几个地方"><a href="#与编码有关的几个地方" class="headerlink" title="与编码有关的几个地方"></a>与编码有关的几个地方</h2><ul>
+<li>源文件编码。</li>
+<li>工程设置中的<code>字符集</code>选项。</li>
+<li>编译选项<code>/source-charset</code>和<code>/execution-charset</code>。</li>
+<li>编译指令<code>#pragma execution_character_set(&quot;utf-8&quot;) </code>，已过时。</li>
+</ul>
+<p>实际上<code>字符集</code>设置只是决定双引号字符要不要加上<code>L</code>前缀，比如指定为<code>Unicode</code>字符集时，<code>&quot;Hello&quot;</code>将变为<code>L&quot;Hello&quot;</code>。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>经过一番试验后得出：</p>
+<ul>
+<li>源文件编码不影响可执行文件编码，编译器默认使用本机编码识别源文件，或者<code>UTF-8 BOM</code>也可以。其他编码则需要通过编译选项<code>/source-charset</code>告知编译器，比如<code>UTF-8</code>则需要添加选项<code>/source-charset:utf-8</code>。</li>
+<li>宽字符总是<code>UTF-16</code>编码，不受任何选项影响。</li>
+<li>窄字符采用<code>/execution-charset</code>选项指定的编码，未指定时则采用本机编码。</li>
+<li><code>/utf-8</code>选项等于同时设置<code>/source-charset:utf-8</code>和<code>/execution-charset:utf-8</code>。</li>
+<li>在<code>Visual Studio 2013</code>及以下版本中，使用<code>#pragma execution_character_set(&quot;utf-8&quot;) </code>指令设置窄字符的编码方式，仅支持<code>UTF-8</code>。</li>
+</ul>
+<h2 id="使用-UTF-8-版-Win32-API"><a href="#使用-UTF-8-版-Win32-API" class="headerlink" title="使用 UTF-8 版 Win32 API"></a>使用 UTF-8 版 Win32 API</h2><p>当可执行文件字符编码为<code>UTF-8</code>时，与 Win32 API 交互就会出现乱码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">::<span class="built_in">MessageBoxA</span>(m_hWnd, <span class="string">&quot;123456你好&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="number">64</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/012c753ce92ff7709dfd79b87b914972.png"><br>因为历史原因，Windows 不支持<code>UTF-8</code>字符集，不过在较新的<code>Windows 10 1903</code>上已经开始支持了，但需要程序显示指明编码方式。<br>为程序添加一个特别的清单文件，这会告知 Windows 系统，程序使用了<code>UTF-8</code>字符集。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> standalone=<span class="string">&quot;yes&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">assembly</span> <span class="attr">manifestVersion</span>=<span class="string">&quot;1.0&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;urn:schemas-microsoft-com:asm.v1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">assemblyIdentity</span> <span class="attr">type</span>=<span class="string">&quot;win32&quot;</span> <span class="attr">name</span>=<span class="string">&quot;...&quot;</span> <span class="attr">version</span>=<span class="string">&quot;6.0.0.0&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">application</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">windowsSettings</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">activeCodePage</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/SMI/2019/WindowsSettings&quot;</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">activeCodePage</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">windowsSettings</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">assembly</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>注意，它仅在<code>Windows 10 1903</code>以上的系统上有效。</p>
+<h2 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h2><ul>
+<li>不需要跨平台时，将源文件保存为<code>UTF-8 BOM</code>编码。</li>
+<li>不需要跨平台时，尽量使用宽字符，因为有少数 Win32 API 仅有宽字符的版本，而且 COM 接口都是宽字符。在需要与<code>UTF-8</code>交互的地方用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte">WideCharToMultiByte</a> 转换。</li>
+<li>需要跨平台时，将源文件保存为<code>UTF-8</code>编码，并添加<code>/utf-8</code>选项，在与 Win32 API 交互的地方用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar">MultiByteToWideChar</a> 转换。</li>
+</ul>
+<p>在未来某年 Windows 7 彻底消失后，就可以为程序添加 UTF-8 清单文件，将程序全面转换到 UTF-8。</p>
+<h2 id="VS扩展"><a href="#VS扩展" class="headerlink" title="VS扩展"></a>VS扩展</h2><p>VS总是使用本机编码保存文件，我们可以通过第三方扩展来强制保存为<code>UTF-8 BOM</code>。<br>For VS2015-2019：<a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=WinstonFeng.FormatonSave">Format on Save</a><br>For VS2022：<a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=WinstonFeng.VSFormatOnSave2022">Format on Save for VS2022</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/build/reference/source-charset-set-source-character-set">设置源字符集</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/build/reference/execution-charset-set-execution-character-set">设置执行字符集</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/build/reference/utf-8-set-source-and-executable-character-sets-to-utf-8">将源和执行字符集设置为 UTF-8</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/apps/design/globalizing/use-utf8-code-page">在 Windows 应用中使用 UTF-8 代码页</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/preprocessor/execution-character-set">execution_character_set</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/04/28/16205078/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2023-06-30 17:17:56
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/UTF-8/" title="UTF-8">
+                        #UTF-8
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/05/07/16244353/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E7%BC%96%E7%A0%81%E6%9C%89%E5%85%B3%E7%9A%84%E5%87%A0%E4%B8%AA%E5%9C%B0%E6%96%B9"><span class="toc-text">与编码有关的几个地方</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-text">结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-UTF-8-%E7%89%88-Win32-API"><span class="toc-text">使用 UTF-8 版 Win32 API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E8%AE%AE"><span class="toc-text">建议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VS%E6%89%A9%E5%B1%95"><span class="toc-text">VS扩展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + VS%20%E4%B8%8E%20UTF-8%20%E7%BC%96%E7%A0%81 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F05%2F05%2F16226233%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/05/05/16226233/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
