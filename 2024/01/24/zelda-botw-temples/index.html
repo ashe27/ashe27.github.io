@@ -146,7 +146,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2024-01-25 10:48:19
+          2024-01-25 21:08:36
         </span>
         
               <span class="post-tags">
@@ -1166,7 +1166,8 @@
 <p>来到 IDA 中看看清楚：</p>
 <p><img src="/images/zelda-botw-temples/13.webp"></p>
 <p>我们只需要修改 if 判断语句即可，让它始终写入传送 flag。</p>
-<h2 id="金手指"><a href="#金手指" class="headerlink" title="金手指"></a>金手指</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[显示神庙位置]</span><br><span class="line">04000000 0109DFB8 D503201F</span><br><span class="line">04000000 0109DFD0 D503201F</span><br><span class="line">04000000 0109DFEC D503201F</span><br><span class="line"></span><br><span class="line">[显示高塔位置]</span><br><span class="line">04000000 0109FA38 D503201F</span><br><span class="line">04000000 0109FA50 D503201F</span><br><span class="line">04000000 0109FA6C D503201F</span><br><span class="line"></span><br><span class="line">[显示古代研究所位置]</span><br><span class="line">04000000 010A2118 D503201F</span><br><span class="line">04000000 010A2130 D503201F</span><br><span class="line">04000000 010A214C D503201F</span><br><span class="line"></span><br><span class="line">[显示神兽位置]</span><br><span class="line">04000000 010A1958 D503201F</span><br><span class="line">04000000 010A1970 D503201F</span><br><span class="line">04000000 010A198C D503201F</span><br><span class="line"></span><br><span class="line">[已显示地点可传送]</span><br><span class="line">04000000 0109CC38 1A881108</span><br></pre></td></tr></table></figure>
+<h2 id="金手指"><a href="#金手指" class="headerlink" title="金手指"></a>金手指</h2><p>前面的金手指都是用的 nop 指令，发现一个小问题，对于<code>托·库摩神庙</code>神庙有时候没有效果，依然不会显示。我怀疑在某种情况下这个神庙的逻辑没有走修改过的函数。<br>所以最终我改用了修改 flag 的方式做金手指，这样更稳妥。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[显示神庙位置]</span><br><span class="line">04000000 0109DFB8 D503201F</span><br><span class="line">04000000 0109DFD4 1A8B116A</span><br><span class="line">04000000 0109DFF0 1A8AC149</span><br><span class="line"></span><br><span class="line">[显示高塔位置]</span><br><span class="line">04000000 0109FA54 1A8B116A</span><br><span class="line">04000000 0109FA70 1A8AC149</span><br><span class="line"></span><br><span class="line">[显示古代研究所位置]</span><br><span class="line">04000000 010A2134 1A8B116A</span><br><span class="line">04000000 010A2150 1A8AC149</span><br><span class="line"></span><br><span class="line">[显示神兽位置]</span><br><span class="line">04000000 010A1974 1A8B116A</span><br><span class="line">04000000 010A1990 1A8AC149</span><br><span class="line"></span><br><span class="line">[已显示地点可传送]</span><br><span class="line">04000000 0109CC38 1A881108</span><br></pre></td></tr></table></figure>
 
 <h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><p><a target="_blank" rel="noopener" href="https://www.tekqart.com/thread-310724-1-1.html">『塞尔达-旷野之息』神庙高塔全标记初始存档及修改方法</a><br><a target="_blank" rel="noopener" href="https://www.tekqart.com/thread-289845-1-1.html">【金手指教程5】解鎖 FPS , MultiSearch 及 簡易找指針方法</a><br><a target="_blank" rel="noopener" href="https://www.tekqart.com/thread-308956-1-1.html">【金手指教程6】对比存档找出想要的资料</a></p>
 
@@ -1175,7 +1176,7 @@
         <div class="prev-or-next">
           <div class="post-foot-next">
             
-              <a href="/2024/01/14/jnoexs/" target="_self">
+              <a href="/2024/01/05/breeze-ida/" target="_self">
                 <i class="iconfont icon-chevronleft"></i>
                 <span>上一页</span>
               </a>
@@ -1184,7 +1185,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2024-01-25 10:48:19
+              2024-01-25 21:08:36
             </span>
             
                   <span class="post-tags">
