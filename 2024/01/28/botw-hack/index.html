@@ -11,7 +11,7 @@
   
   <title>
     
-      塞尔达传说：旷野之息作弊数据整理 
+      塞尔达传说：旷野之息数据整理 
       
       
       |
@@ -142,11 +142,11 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">塞尔达传说：旷野之息作弊数据整理</div>
+      <div class="post-title">塞尔达传说：旷野之息数据整理</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2024-02-04 08:09:47
+          2024-02-06 11:58:07
         </span>
         
               <span class="post-tags">
@@ -277,7 +277,10 @@
 <td>为 0 时可用</td>
 </tr>
 </tbody></table>
-<h2 id="料理"><a href="#料理" class="headerlink" title="料理"></a>料理</h2><h3 id="移动力提升倒计时"><a href="#移动力提升倒计时" class="headerlink" title="移动力提升倒计时"></a>移动力提升倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
+<h2 id="料理"><a href="#料理" class="headerlink" title="料理"></a>料理</h2><p>当前生效的料理数据，似乎只是显示用（修改无效）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[main+2CBDB80]+A4    当前生效料理类型（修改无效）</span><br><span class="line">0 = 耐热防护</span><br><span class="line">1 = 耐寒防护</span><br><span class="line">2 = 电麻防护</span><br><span class="line">3 = 火焰防护（未验证）</span><br><span class="line">4 = 攻击提升</span><br><span class="line">5 = 防御提升</span><br><span class="line">6 = 安静性提升</span><br><span class="line">7 = 移动力提升</span><br><span class="line"></span><br><span class="line">[main+2CBDB80]+A8    当前生效料理等级（修改无效）</span><br><span class="line">[main+2CBDB80]+AC    当前生效料理剩余时间（修改无效）</span><br></pre></td></tr></table></figure>
+
+<h3 id="移动力提升倒计时"><a href="#移动力提升倒计时" class="headerlink" title="移动力提升倒计时"></a>移动力提升倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CC4768]+C0]+12A0</span><br><span class="line">[[main+2CC4768]+C0]+12AC</span><br><span class="line">[[main+2CC4768]+C0]+12B8</span><br></pre></td></tr></table></figure>
 
 <h3 id="攻击提升倒计时"><a href="#攻击提升倒计时" class="headerlink" title="攻击提升倒计时"></a>攻击提升倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
@@ -286,7 +289,28 @@
 <h3 id="防御提升倒计时"><a href="#防御提升倒计时" class="headerlink" title="防御提升倒计时"></a>防御提升倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CC4768]+C0]+12E8</span><br></pre></td></tr></table></figure>
 
-<h3 id="耐寒防护倒计时"><a href="#耐寒防护倒计时" class="headerlink" title="耐寒防护倒计时"></a>耐寒防护倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
+<h3 id="耐寒防护倒计时"><a href="#耐寒防护倒计时" class="headerlink" title="耐寒防护倒计时"></a>耐寒防护倒计时</h3><table>
+<thead>
+<tr>
+<th>数据</th>
+<th>地址</th>
+<th>数据类型</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>耐寒防护剩余时间</td>
+<td>[[main+2CC4768]+C0]+1300</td>
+<td>float</td>
+<td>每秒&#x3D;30</td>
+</tr>
+<tr>
+<td>耐寒防护等级</td>
+<td>[[main+2CC4768]+C0]+13D8</td>
+<td>uint</td>
+<td></td>
+</tr>
+</tbody></table>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CC4768]+C0]+1300</span><br></pre></td></tr></table></figure>
 
 <h3 id="电麻防护倒计时"><a href="#电麻防护倒计时" class="headerlink" title="电麻防护倒计时"></a>电麻防护倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
@@ -318,7 +342,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2024-02-04 08:09:47
+              2024-02-06 11:58:07
             </span>
             
                   <span class="post-tags">
@@ -615,7 +639,7 @@
       </a>
       <div class="share-content hidden">
         
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%A1%9E%E5%B0%94%E8%BE%BE%E4%BC%A0%E8%AF%B4%EF%BC%9A%E6%97%B7%E9%87%8E%E4%B9%8B%E6%81%AF%E4%BD%9C%E5%BC%8A%E6%95%B0%E6%8D%AE%E6%95%B4%E7%90%86 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F01%2F28%2Fbotw-hack%2F + '" target="_blank" title="Twitter">
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%A1%9E%E5%B0%94%E8%BE%BE%E4%BC%A0%E8%AF%B4%EF%BC%9A%E6%97%B7%E9%87%8E%E4%B9%8B%E6%81%AF%E6%95%B0%E6%8D%AE%E6%95%B4%E7%90%86 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F01%2F28%2Fbotw-hack%2F + '" target="_blank" title="Twitter">
             <i class="iconfont icon-twitter"></i>
           </a>
         
