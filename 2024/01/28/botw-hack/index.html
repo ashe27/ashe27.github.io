@@ -146,7 +146,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2024-02-06 11:58:07
+          2024-02-07 08:36:45
         </span>
         
               <span class="post-tags">
@@ -277,17 +277,17 @@
 <td>为 0 时可用</td>
 </tr>
 </tbody></table>
-<h2 id="料理"><a href="#料理" class="headerlink" title="料理"></a>料理</h2><p>当前生效的料理数据，似乎只是显示用（修改无效）。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[main+2CBDB80]+A4    当前生效料理类型（修改无效）</span><br><span class="line">0 = 耐热防护</span><br><span class="line">1 = 耐寒防护</span><br><span class="line">2 = 电麻防护</span><br><span class="line">3 = 火焰防护（未验证）</span><br><span class="line">4 = 攻击提升</span><br><span class="line">5 = 防御提升</span><br><span class="line">6 = 安静性提升</span><br><span class="line">7 = 移动力提升</span><br><span class="line"></span><br><span class="line">[main+2CBDB80]+A8    当前生效料理等级（修改无效）</span><br><span class="line">[main+2CBDB80]+AC    当前生效料理剩余时间（修改无效）</span><br></pre></td></tr></table></figure>
+<h2 id="料理"><a href="#料理" class="headerlink" title="料理"></a>料理</h2><h3 id="移动力提升倒计时"><a href="#移动力提升倒计时" class="headerlink" title="移动力提升倒计时"></a>移动力提升倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1ED8</span><br><span class="line">[[main+2CA1140]+60]+1EE4</span><br><span class="line">[[main+2CA1140]+60]+1EF0</span><br></pre></td></tr></table></figure>
 
-<h3 id="移动力提升倒计时"><a href="#移动力提升倒计时" class="headerlink" title="移动力提升倒计时"></a>移动力提升倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CC4768]+C0]+12A0</span><br><span class="line">[[main+2CC4768]+C0]+12AC</span><br><span class="line">[[main+2CC4768]+C0]+12B8</span><br></pre></td></tr></table></figure>
+<h3 id="攻击提升倒计时"><a href="#攻击提升倒计时" class="headerlink" title="攻击提升倒计时"></a>攻击提升倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F14</span><br></pre></td></tr></table></figure>
 
-<h3 id="攻击提升倒计时"><a href="#攻击提升倒计时" class="headerlink" title="攻击提升倒计时"></a>攻击提升倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CC4768]+C0]+12DC</span><br></pre></td></tr></table></figure>
+<h3 id="防御提升倒计时"><a href="#防御提升倒计时" class="headerlink" title="防御提升倒计时"></a>防御提升倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F20</span><br></pre></td></tr></table></figure>
 
-<h3 id="防御提升倒计时"><a href="#防御提升倒计时" class="headerlink" title="防御提升倒计时"></a>防御提升倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CC4768]+C0]+12E8</span><br></pre></td></tr></table></figure>
+<h3 id="耐热防护倒计时"><a href="#耐热防护倒计时" class="headerlink" title="耐热防护倒计时"></a>耐热防护倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F2C</span><br></pre></td></tr></table></figure>
 
 <h3 id="耐寒防护倒计时"><a href="#耐寒防护倒计时" class="headerlink" title="耐寒防护倒计时"></a>耐寒防护倒计时</h3><table>
 <thead>
@@ -300,30 +300,28 @@
 </thead>
 <tbody><tr>
 <td>耐寒防护剩余时间</td>
-<td>[[main+2CC4768]+C0]+1300</td>
+<td>[[main+2CA1140]+60]+1F38</td>
 <td>float</td>
 <td>每秒&#x3D;30</td>
 </tr>
 <tr>
 <td>耐寒防护等级</td>
-<td>[[main+2CC4768]+C0]+13D8</td>
+<td>[[main+2CA1140]+60]+2010</td>
 <td>uint</td>
 <td></td>
 </tr>
 </tbody></table>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CC4768]+C0]+1300</span><br></pre></td></tr></table></figure>
+<h3 id="火焰防护倒计时"><a href="#火焰防护倒计时" class="headerlink" title="火焰防护倒计时"></a>火焰防护倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F44</span><br></pre></td></tr></table></figure>
 
-<h3 id="电麻防护倒计时"><a href="#电麻防护倒计时" class="headerlink" title="电麻防护倒计时"></a>电麻防护倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CC4768]+C0]+1324</span><br></pre></td></tr></table></figure>
+<h3 id="电麻防护倒计时"><a href="#电麻防护倒计时" class="headerlink" title="电麻防护倒计时"></a>电麻防护倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F5C</span><br></pre></td></tr></table></figure>
 
-<h3 id="耐热防护倒计时"><a href="#耐热防护倒计时" class="headerlink" title="耐热防护倒计时"></a>耐热防护倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CC4768]+C0]+12F4</span><br></pre></td></tr></table></figure>
+<h3 id="安静性提升倒计时"><a href="#安静性提升倒计时" class="headerlink" title="安静性提升倒计时"></a>安静性提升倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F74</span><br></pre></td></tr></table></figure>
 
-<h3 id="安静性提升倒计时"><a href="#安静性提升倒计时" class="headerlink" title="安静性提升倒计时"></a>安静性提升倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CC4768]+C0]+133C</span><br></pre></td></tr></table></figure>
-
-<h3 id="火焰防护倒计时"><a href="#火焰防护倒计时" class="headerlink" title="火焰防护倒计时"></a>火焰防护倒计时</h3><p>float类型，每秒&#x3D;30，30分钟的值为 54000，对应 float hex：0x4752F000</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CC4768]+C0]+130C</span><br></pre></td></tr></table></figure>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>当前生效的料理数据，似乎只是显示用（修改无效）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[main+2CBDB80]+A4    当前生效料理类型（修改无效）</span><br><span class="line">0 = 耐热防护</span><br><span class="line">1 = 耐寒防护</span><br><span class="line">2 = 电麻防护</span><br><span class="line">3 = 火焰防护（未验证）</span><br><span class="line">4 = 攻击提升</span><br><span class="line">5 = 防御提升</span><br><span class="line">6 = 安静性提升</span><br><span class="line">7 = 移动力提升</span><br><span class="line"></span><br><span class="line">[main+2CBDB80]+A8    当前生效料理等级（修改无效）</span><br><span class="line">[main+2CBDB80]+AC    当前生效料理剩余时间（修改无效）</span><br></pre></td></tr></table></figure>
 
 <h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><p><a target="_blank" rel="noopener" href="https://github.com/Pistonight/botw-save-state/blob/main/src/mem/PointerList.txt">https://github.com/Pistonight/botw-save-state/blob/main/src/mem/PointerList.txt</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/xenocard/CheatsHunter/blob/main/01007EF00011E000/cheats/8E9978D50BDD20B4.txt">https://github.com/xenocard/CheatsHunter/blob/main/01007EF00011E000/cheats/8E9978D50BDD20B4.txt</a></p>
@@ -342,7 +340,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2024-02-06 11:58:07
+              2024-02-07 08:36:45
             </span>
             
                   <span class="post-tags">
@@ -371,7 +369,7 @@
     <div class="title">目录</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE"><span class="toc-text">数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%8C%E5%8D%A1%E4%B9%8B%E7%9F%B3%E6%8A%80%E8%83%BD"><span class="toc-text">希卡之石技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8B%B1%E6%9D%B0%E6%8A%80%E8%83%BD"><span class="toc-text">英杰技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%99%E7%90%86"><span class="toc-text">料理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E5%8A%9B%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">移动力提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">攻击提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">防御提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%80%90%E5%AF%92%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">耐寒防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%B5%E9%BA%BB%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">电麻防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%80%90%E7%83%AD%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">耐热防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E9%9D%99%E6%80%A7%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">安静性提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%81%AB%E7%84%B0%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">火焰防护倒计时</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99"><span class="toc-text">相关资料</span></a>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE"><span class="toc-text">数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%8C%E5%8D%A1%E4%B9%8B%E7%9F%B3%E6%8A%80%E8%83%BD"><span class="toc-text">希卡之石技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8B%B1%E6%9D%B0%E6%8A%80%E8%83%BD"><span class="toc-text">英杰技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%99%E7%90%86"><span class="toc-text">料理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E5%8A%9B%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">移动力提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">攻击提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">防御提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%80%90%E7%83%AD%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">耐热防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%80%90%E5%AF%92%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">耐寒防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%81%AB%E7%84%B0%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">火焰防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%B5%E9%BA%BB%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">电麻防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E9%9D%99%E6%80%A7%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">安静性提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99"><span class="toc-text">相关资料</span></a>
       
     </div>
   </div>
