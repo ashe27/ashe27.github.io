@@ -146,7 +146,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-03-23 19:19:57
+          2025-03-23 19:28:34
         </span>
         
               <span class="post-tags">
@@ -218,10 +218,10 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">leds &#123;</span><br><span class="line">    led_power: led-power &#123;</span><br><span class="line">        rockchip,pins = &lt;8 1 RK_FUNC_GPIO &amp;pcfg_pull_none&gt;;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    led_user: led-work &#123;</span><br><span class="line">        rockchip,pins = &lt;8 2 RK_FUNC_GPIO &amp;pcfg_pull_none&gt;;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    led_user2: led-work2 &#123;</span><br><span class="line">        rockchip,pins = &lt;8 7 RK_FUNC_GPIO &amp;pcfg_pull_none&gt;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p><br>重新编译内核</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">编译 kernel</span><br><span class="line">./build.sh kernel</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新各部分镜像链接到 rockdev/ 目录</span></span><br><span class="line">./mkfirmware.sh</span><br></pre></td></tr></table></figure>
-<p>下载镜像文件，刷入固件即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译 kernel</span></span><br><span class="line">./build.sh kernel</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新各部分镜像链接到 rockdev/ 目录</span></span><br><span class="line">./mkfirmware.sh</span><br></pre></td></tr></table></figure>
+<p>刷入固件即可。</p>
 <h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">firefly@firefly:~$ ll /sys/class/leds</span><br><span class="line">total 0</span><br><span class="line">drwxr-xr-x  2 root root 0 Mar 23 19:09 ./</span><br><span class="line">drwxr-xr-x 60 root root 0 Mar 23 19:08 ../</span><br><span class="line">lrwxrwxrwx  1 root root 0 Mar 23 19:08 firefly:blue:power -&gt; ../../devices/platform/leds/leds/firefly:blue:power/</span><br><span class="line">lrwxrwxrwx  1 root root 0 Mar 23 19:08 firefly:blue:user2 -&gt; ../../devices/platform/leds/leds/firefly:blue:user2/</span><br><span class="line">lrwxrwxrwx  1 root root 0 Mar 23 19:08 firefly:yellow:user -&gt; ../../devices/platform/leds/leds/firefly:yellow:user/</span><br></pre></td></tr></table></figure>
-<p>找到了 led，给一个高电平：</p>
+<p>找到了 led，测试一下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 1 &gt;/sys/class/leds/firefly:blue:user2/brightness</span><br></pre></td></tr></table></figure>
 <p>成功点亮<br><img src="/images/firefly-rk3288-leds/02.webp"><br>万用表测了下电压为2.9V。</p>
 <h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://www.t-firefly.com/index.php/doc/product/info/id/49.html">LED 使用</a><br><a target="_blank" rel="noopener" href="https://wiki.t-firefly.com/zh_CN/Firefly-RK3288/driver_gpio.html">GPIO 使用</a><br><a target="_blank" rel="noopener" href="https://wiki.t-firefly.com/zh_CN/Firefly-Linux-Guide/gpio.html">GPIO 配置与使用</a><br><a target="_blank" rel="noopener" href="https://wiki.t-firefly.com/zh_CN/Firefly-Linux-Guide/first_use.html#she-bei-shu-shi-yong-gpio">设备树使用 GPIO</a><br><a target="_blank" rel="noopener" href="https://www.t-firefly.com/doc/product/info/id/61.html">Firefly-RK3288 硬件文档</a><br><a target="_blank" rel="noopener" href="https://opensource.rock-chips.com/images/4/49/Rockchip_RK3288_Datasheet_V2.7-20191227.pdf">Rockchip_RK3288_Datasheet_V2.7-20191227.pdf</a></p>
@@ -240,7 +240,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-03-23 19:19:57
+              2025-03-23 19:28:34
             </span>
             
                   <span class="post-tags">
