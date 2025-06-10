@@ -146,7 +146,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-01-11 12:11:17
+          2025-06-07 18:43:21
         </span>
         
               <span class="post-tags">
@@ -165,7 +165,7 @@
         <h2 id="安装-MinGW"><a href="#安装-MinGW" class="headerlink" title="安装 MinGW"></a>安装 MinGW</h2><p>目前 MinGW 推荐用 <a target="_blank" rel="noopener" href="https://winlibs.com/">WinLibs</a> 家编译的，安装包分为两种运行时：<code>UCRT</code>和<code>MSVCRT</code>。<br>简单地说就是<code>MSVCRT</code>用系统自带的<code>msvcrt.dll</code>文件作为运行时，而<code>UCRT</code>是新的链接方式，依赖一堆以<code>api-ms-win*</code>开头的 DLL，所以需要安装 VC 运行库。</p>
 <p><br>如果要支持 XP 系统，直觉上会选择<code>MSVCRT</code>版本，但是其实 XP 上也可以安装新的 VC 运行库，最后一个支持 XP 系统的 VC 运行库版本是<code>14.28.29213</code>。<br>下载地址：<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/566435ac-4e1c-434b-b93f-aecc71e8cffc/0D59EC7FDBF05DE813736BF875CEA5C894FFF4769F60E32E87BD48406BBF0A3A/VC_redist.x86.exe">VC_redist.x86.exe</a></p>
 <h2 id="编译-Qt"><a href="#编译-Qt" class="headerlink" title="编译 Qt"></a>编译 Qt</h2><p>和之前用 MSVC 编译 Qt 差不多，去 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules">https://download.qt.io/new_archive&#x2F;qt&#x2F;5.7&#x2F;5.7.1&#x2F;submodules</a> 下载对应的模块编译即可。比起 MSVC，用 MinGW 不用修改任何代码，直接编译就能过。<br>我的编译选项：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">configure.bat -prefix <span class="string">&quot;C:/Qt/Qt5.7.1-gcc14.2.0-x86&quot;</span> -platform win32-g++ -confirm-license -opensource -release -shared -no-directwrite -no-angle -opengl desktop -nomake examples -nomake tests</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">configure.bat -prefix <span class="string">&quot;C:/Qt/Qt5.7.1-gcc14.2.0-x86&quot;</span> -platform win32-g++ -confirm-license -opensource -release -shared -no-directwrite -no-angle -opengl desktop -nomake examples -nomake tests</span><br><span class="line">mingw32-make.exe</span><br></pre></td></tr></table></figure>
 <p><code>-platform</code>要改为<code>win32-g++</code>。仅编译 Release 版本即可，这样可以加快编译进程，除非你要调试 Qt 源码。</p>
 <h3 id="QML-问题"><a href="#QML-问题" class="headerlink" title="QML 问题"></a>QML 问题</h3><p>我编译了 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qtdeclarative-opensource-src-5.7.1.7z">qtdeclarative</a> 模块，这个模块用于开发 QML 程序，当我运行程序时提示：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JIT is disabled <span class="keyword">for</span> QML. Property bindings and animations will be very slow. Visit https://wiki.qt.io/V4 to learn about possible solutions <span class="keyword">for</span> your platform.</span><br></pre></td></tr></table></figure>
@@ -191,7 +191,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-01-11 12:11:17
+              2025-06-07 18:43:21
             </span>
             
                   <span class="post-tags">
