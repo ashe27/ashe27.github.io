@@ -146,7 +146,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-06-15 14:59:05
+          2025-06-15 16:06:07
         </span>
         
               <span class="post-tags">
@@ -203,7 +203,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">../configure --prefix=/opt/sysroot/mingw --with-default-win32-winnt=0x0600 --with-default-msvcrt=msvcrt --build=x86_64-linux-gnu --host=x86_64-w64-mingw32</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
 
 <h3 id="第一次编译-GCC"><a href="#第一次编译-GCC" class="headerlink" title="第一次编译 GCC"></a>第一次编译 GCC</h3><p>有了上面的头文件后，可以第一次 GCC 了，第一次只编译“纯净”的 GCC，它用于编译<code>mingw-w64</code>运行时</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">../configure --prefix=/opt/x86_64-w64-mingw32-gcc15 -with-sysroot=/opt/sysroot --enable-languages=c,c++ --enable-shared --disable-multilib --disable-werror --disable-checking --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-w64-mingw32</span><br><span class="line">make -j$(<span class="built_in">nproc</span>) all-gcc</span><br><span class="line">make install-strip-gcc</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">../configure --prefix=/opt/x86_64-w64-mingw32-gcc15 -with-sysroot=/opt/sysroot --enable-languages=c,c++ --disable-shared --disable-threads --disable-libstdcxx --disable-multilib --disable-werror --disable-checking --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-w64-mingw32</span><br><span class="line">make -j$(<span class="built_in">nproc</span>) all-gcc</span><br><span class="line">make install-strip-gcc</span><br><span class="line">make -j$(<span class="built_in">nproc</span>) all-target-libgcc</span><br><span class="line">make install-strip-target-libgcc</span><br></pre></td></tr></table></figure>
 
 <h3 id="编译-mingw-w64-运行时"><a href="#编译-mingw-w64-运行时" class="headerlink" title="编译 mingw-w64 运行时"></a>编译 mingw-w64 运行时</h3><p>从这一步开始，我们需要用到刚才制作的 GCC 编译器了，所以将<code>bin</code>目录添加到<code>PATH</code>环境变量中：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/opt/x86_64-w64-mingw32-gcc15/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
@@ -212,9 +212,11 @@
 <p>OK，没问题。开始编译完整的<code>mingw-w64</code>：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/mingw-w64-v13.0.0/mingw-w64-crt</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=/opt/sysroot/mingw --with-default-msvcrt=msvcrt --build=x86_64-linux-gnu --host=x86_64-w64-mingw32</span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
 
-<h3 id="编译完整的-GCC"><a href="#编译完整的-GCC" class="headerlink" title="编译完整的 GCC"></a>编译完整的 GCC</h3><p>mingw-w64 已经编译完成，现在编译完整的 GCC</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/gcc-15.1.0/build</span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip-gcc</span><br></pre></td></tr></table></figure>
-<p>到这里发现仍然有问题，<code>/opt/x86_64-w64-mingw32-gcc15</code>目录下连 C++ 相关的头文件都没有，mingw相关的 dll 文件也没看到，不知道是哪里错了</p>
+<h3 id="编译完整的-GCC"><a href="#编译完整的-GCC" class="headerlink" title="编译完整的 GCC"></a>编译完整的 GCC</h3><p>mingw-w64 已经编译完成，现在进行最后一步，现在编译完整的 GCC，注意第二次编译时新建一个文件夹，不要在第一次的 build 目录中进行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/gcc-15.1.0/</span><br><span class="line"><span class="built_in">mkdir</span> build2 &amp;&amp; <span class="built_in">cd</span> build2</span><br><span class="line">../configure --prefix=/opt/x86_64-w64-mingw32-gcc15 -with-sysroot=/opt/sysroot --enable-languages=c,c++ --enable-threads=win32 --enable-shared --disable-multilib --disable-werror --disable-checking --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-w64-mingw32</span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
+<p>大功告成！再次编译示例程序</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/x86_64-w64-mingw32-gcc15/bin/x86_64-w64-mingw32-g++ -std=c++23 main.cpp -o main</span><br></pre></td></tr></table></figure>
+
 <h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://www.wannaexpresso.com/2022/02/21/gcc-cross-compiler-make-it-your-own/">「天龙八部」年轻人的第一个GCC交叉编译器</a></p>
 
       </div>
@@ -231,7 +233,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-06-15 14:59:05
+              2025-06-15 16:06:07
             </span>
             
                   <span class="post-tags">
