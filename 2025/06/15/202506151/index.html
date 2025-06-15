@@ -146,7 +146,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-06-15 16:06:07
+          2025-06-15 16:18:35
         </span>
         
               <span class="post-tags">
@@ -216,7 +216,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/gcc-15.1.0/</span><br><span class="line"><span class="built_in">mkdir</span> build2 &amp;&amp; <span class="built_in">cd</span> build2</span><br><span class="line">../configure --prefix=/opt/x86_64-w64-mingw32-gcc15 -with-sysroot=/opt/sysroot --enable-languages=c,c++ --enable-threads=win32 --enable-shared --disable-multilib --disable-werror --disable-checking --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-w64-mingw32</span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
 <p>大功告成！再次编译示例程序</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/x86_64-w64-mingw32-gcc15/bin/x86_64-w64-mingw32-g++ -std=c++23 main.cpp -o main</span><br></pre></td></tr></table></figure>
-
+<p>终于得到一个可以运行的 exe 程序了！</p>
 <h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://www.wannaexpresso.com/2022/02/21/gcc-cross-compiler-make-it-your-own/">「天龙八部」年轻人的第一个GCC交叉编译器</a></p>
 
       </div>
@@ -233,7 +233,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-06-15 16:06:07
+              2025-06-15 16:18:35
             </span>
             
                   <span class="post-tags">
