@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      .NET 注册 COM 组件 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">.NET 注册 COM 组件</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/dotnet/" title=".NET">
+                    #.NET
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="生成密钥文件"><a href="#生成密钥文件" class="headerlink" title="生成密钥文件"></a>生成密钥文件</h2><p>提前准备好一个密钥文件，因为将注册为 COM 组件时要求提供签名。<br>打开 Visual Studio 命令行工具，执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sn -k xxx.snk</span><br></pre></td></tr></table></figure>
+<p>得到文件后放到工程目录下即可。</p>
+<h2 id="NET-Framework-工程设置"><a href="#NET-Framework-工程设置" class="headerlink" title=".NET Framework 工程设置"></a>.NET Framework 工程设置</h2><p>传统风格的工程文件和新的 SDK style 稍微有些区别，所以分开说。</p>
+<h3 id="传统风格工程"><a href="#传统风格工程" class="headerlink" title="传统风格工程"></a>传统风格工程</h3><p><strong>默认 COM 可见性</strong><br>打开工程设置窗口，点击程序集设置</p>
+<p><img src="/images/net-expose-components/01.webp"><br><img src="/images/net-expose-components/02.webp"></p>
+<p>这里不建议勾选，因为 .NET 默认会将程序集中所有访问权限为<code>public</code>的类都对外公开，这当然是不合适的。<br>所以这里默认没有勾选，实际上，这里的选项会影响<code>AssemblyInfo.cs</code>文件中<code>ComVisible</code>属性值。</p>
+<p><img src="/images/net-expose-components/03.webp"></p>
+<p><code>为 COM 互操作注册</code>选项决定在编译后是否自动注册 DLL，根据自身需要设置。<br><img src="/images/net-expose-components/04.webp"><br>对应的工程属性为：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">RegisterForComInterop</span>&gt;</span>true<span class="tag">&lt;/<span class="name">RegisterForComInterop</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><br><strong>设置签名文件</strong></p>
+<p><img src="/images/net-expose-components/05.webp"></p>
+<p>对应的工程属性为：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">SignAssembly</span>&gt;</span>true<span class="tag">&lt;/<span class="name">SignAssembly</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">AssemblyOriginatorKeyFile</span>&gt;</span>xxx.snk<span class="tag">&lt;/<span class="name">AssemblyOriginatorKeyFile</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后编写一个测试接口和其实现即可，注意要在实现类上设置<code>[ComVisible(true)]</code>。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Runtime.InteropServices;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary2</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">ICalc</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="built_in">int</span> <span class="title">Add</span>(<span class="params"><span class="built_in">int</span> a, <span class="built_in">int</span> b</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">ComVisible(true)</span>]</span><br><span class="line">    [<span class="meta">Guid(<span class="string">&quot;365BBAE2-A911-4078-952A-9B5734538C35&quot;</span>)</span>]</span><br><span class="line">    [<span class="meta">ClassInterface(ClassInterfaceType.None)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">sealed</span> <span class="keyword">class</span> <span class="title">Calc</span> : <span class="title">ICalc</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">Add</span>(<span class="params"><span class="built_in">int</span> a, <span class="built_in">int</span> b</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> a + b;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="手动注册-COM-组件"><a href="#手动注册-COM-组件" class="headerlink" title="手动注册 COM 组件"></a>手动注册 COM 组件</h4><p>如果设置了<code>RegisterForComInterop</code>属性的话会在编译后自动注册，否则就需要手动注册。<br>而用 .NET Framework 开发的 COM 组件不能用传统的<code>regsvr32</code>去注册，要用运行时自带的<code>RegAsm.exe</code>工具注册：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe ClassLibrary2.dll /tlb:ClassLibrary2.tlb /codebase</span><br></pre></td></tr></table></figure>
+<p>注意我这里用的是 x64 架构注册，注册 COM 组件时要确认架构一致性。<br>卸载的话使用<code>/u</code>选项：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe ClassLibrary2.dll /u</span><br></pre></td></tr></table></figure>
+
+<p>我们可以用 <a target="_blank" rel="noopener" href="https://www.nirsoft.net/utils/registered_dll_view.html">RegDllView</a> 软件查看系统 COM 注册情况。</p>
+<p><img src="/images/net-expose-components/06.webp"></p>
+<h4 id="测试接口"><a href="#测试接口" class="headerlink" title="测试接口"></a>测试接口</h4><p>COM 组件的好处是语言无关性，我们可以编写一个 VBScript 脚本测试接口：</p>
+<figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Dim</span> obj</span><br><span class="line"><span class="keyword">Set</span> obj = <span class="built_in">CreateObject</span>(<span class="string">&quot;ClassLibrary2.Calc&quot;</span>)</span><br><span class="line"><span class="keyword">Dim</span> result</span><br><span class="line">result = obj.Add(<span class="number">5</span>, <span class="number">3</span>)</span><br><span class="line">MsgBox <span class="string">&quot;The result is: &quot;</span> &amp; result</span><br></pre></td></tr></table></figure>
+<p>结果正确<br><img src="/images/net-expose-components/07.webp"></p>
+<h3 id="NET-Sdk-风格工程"><a href="#NET-Sdk-风格工程" class="headerlink" title="NET.Sdk 风格工程"></a>NET.Sdk 风格工程</h3><p>.NET Sdk 风格的工程文件因为没有界面，所以需要手动编辑</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="tag">&lt;<span class="name">SignAssembly</span>&gt;</span>true<span class="tag">&lt;/<span class="name">SignAssembly</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">AssemblyOriginatorKeyFile</span>&gt;</span>xxx.snk<span class="tag">&lt;/<span class="name">AssemblyOriginatorKeyFile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RegisterForComInterop</span>&gt;</span>true<span class="tag">&lt;/<span class="name">RegisterForComInterop</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Platforms</span>&gt;</span>AnyCPU;x64<span class="tag">&lt;/<span class="name">Platforms</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>因为 .NET Sdk 风格工程没有<code>AssemblyInfo.cs</code>文件设置程序集属性，这导致项目默认会将所有<code>public</code>的类都公开。<br>这就需要我们手动将程序集属性<code>ComVisible</code>设置为<code>false</code>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">AssemblyAttribute</span> <span class="attr">Include</span>=<span class="string">&quot;System.Runtime.InteropServices.ComVisibleAttribute&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">_Parameter1</span>&gt;</span>false<span class="tag">&lt;/<span class="name">_Parameter1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">AssemblyAttribute</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>不同于传统风格工程文件是将属性写在代码中，Sdk 风格将属性配置在工程文件中。</p>
+<h2 id="NET-工程设置"><a href="#NET-工程设置" class="headerlink" title=".NET 工程设置"></a>.NET 工程设置</h2><p>对于新的 .NET 框架，使用<code>EnableComHosting</code>属性决定是否生成 COM Host（一个用于注册的本机 DLL 文件）。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">OutputType</span>&gt;</span>Library<span class="tag">&lt;/<span class="name">OutputType</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TargetFrameworks</span>&gt;</span>net8<span class="tag">&lt;/<span class="name">TargetFrameworks</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ImplicitUsings</span>&gt;</span>disable<span class="tag">&lt;/<span class="name">ImplicitUsings</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Nullable</span>&gt;</span>enable<span class="tag">&lt;/<span class="name">Nullable</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">LangVersion</span>&gt;</span>12<span class="tag">&lt;/<span class="name">LangVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">SignAssembly</span>&gt;</span>true<span class="tag">&lt;/<span class="name">SignAssembly</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">AssemblyOriginatorKeyFile</span>&gt;</span>xxx.snk<span class="tag">&lt;/<span class="name">AssemblyOriginatorKeyFile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">EnableComHosting</span>&gt;</span>true<span class="tag">&lt;/<span class="name">EnableComHosting</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Platforms</span>&gt;</span>AnyCPU;x64<span class="tag">&lt;/<span class="name">Platforms</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>当<code>EnableComHosting</code>属性为<code>true</code>时，编译后会多出一个<code>[ProjectName].comhost.dll</code>文件。</p>
+<p><img src="/images/net-expose-components/08.webp"></p>
+<p>这不是 .NET 程序集，而是一个本机的 DLL 文件。</p>
+<p><img src="/images/net-expose-components/09.webp"></p>
+<p>而这个 DLL 文件导出了注册 COM 需要的几个标准方法，用 C++ 开发过 COM 组件的一定都明白了。</p>
+<p><img src="/images/net-expose-components/10.webp"></p>
+<p>可以看出 .NET 不同于 .NET Framework 框架的处理方式。所以这里不再需要用<code>RegAsm.exe</code>去注册了，直接原生注册即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">regsvr32 ClassLibrary2.comhost.dll</span><br></pre></td></tr></table></figure>
+<p>卸载：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">regsvr32 /u ClassLibrary2.comhost.dll</span><br></pre></td></tr></table></figure>
+
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/native-interop/expose-components-to-com">向 COM 公开 .NET Core 组件</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/standard/assembly/set-attributes-project-file">在项目文件中设置程序集属性</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/05/28/windows-drivers/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/dotnet/" title=".NET">
+                        #.NET
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/06/29/build-qt-xp-571/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%AF%86%E9%92%A5%E6%96%87%E4%BB%B6"><span class="toc-text">生成密钥文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NET-Framework-%E5%B7%A5%E7%A8%8B%E8%AE%BE%E7%BD%AE"><span class="toc-text">.NET Framework 工程设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9F%E9%A3%8E%E6%A0%BC%E5%B7%A5%E7%A8%8B"><span class="toc-text">传统风格工程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E6%B3%A8%E5%86%8C-COM-%E7%BB%84%E4%BB%B6"><span class="toc-text">手动注册 COM 组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E6%8E%A5%E5%8F%A3"><span class="toc-text">测试接口</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NET-Sdk-%E9%A3%8E%E6%A0%BC%E5%B7%A5%E7%A8%8B"><span class="toc-text">NET.Sdk 风格工程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NET-%E5%B7%A5%E7%A8%8B%E8%AE%BE%E7%BD%AE"><span class="toc-text">.NET 工程设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + .NET%20%E6%B3%A8%E5%86%8C%20COM%20%E7%BB%84%E4%BB%B6 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F06%2F13%2Fnet-expose-components%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/06/13/net-expose-components/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

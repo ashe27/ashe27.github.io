@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      太难了！制作交叉编译器 x86_64-w64-mingw32-gcc 踩坑记录 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">太难了！制作交叉编译器 x86_64-w64-mingw32-gcc 踩坑记录</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/GCC/" title="GCC">
+                    #GCC
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>研究 GCC 交叉编译器有些天了，相关的资料不算很多，可能是因为太折腾了，这个话题没有太多人讨论。没有特别需求的话大家更愿意用系统自带的交叉编译器，开箱即用。</p>
+<p><br>网络上相关资料更多都是在制作 Linux x86_64 和 Linux arm64 之间的交叉编译器，我也尝试过，但流程很复杂，每个人的编译环境又不同，很容易编译失败。<br>因为我平时主要在 Windows 平台上工作，所以尝试在 Linux 上编译一个 Windows 上运行的 GCC，经过无数次编译失败，耗费N个小时后，终于成功了！</p>
+<p><br>首先有些基本概念要了解一下：</p>
+<ul>
+<li>有个工具包叫<code>Binutils</code>，它是汇编器、链接器的源码，是必须要编译的，它不依赖 glibc 和 Linux 头文件。比较独立，所以编译一般不会出问题。</li>
+<li>如果目标是 Linux 平台，则编译过程比较复杂，gcc、glibc要分阶段编译，比较复杂，容易失败。而目标平台是 Windows 的话则简单很多。</li>
+</ul>
+<h2 id="第一次失败了"><a href="#第一次失败了" class="headerlink" title="第一次失败了"></a>第一次失败了</h2><p>这是一次失败的编译，可以选择是否阅读，其中有坑点，可以看看。</p>
+<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>我的编译环境是 Ubuntu 20.04 x86_64<br>目标环境是 Windows amd64</p>
+<p><br>Binutils 版本选择的是 2.44：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/binutils/">https://mirrors.ustc.edu.cn/gnu/binutils/</a><br>GCC 版本选择的是 15.1.0：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0">https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0</a><br>然后提前安装好相应的工具：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install make texinfo mingw-w64-x86-64-dev -y</span><br></pre></td></tr></table></figure>
+<p>如果要编译32位程序的话就安装<code>mingw-w64-i686-dev</code>包，或者直接安装包含两者的<code>mingw-w64</code>包</p>
+<h3 id="编译-Binutils"><a href="#编译-Binutils" class="headerlink" title="编译 Binutils"></a>编译 Binutils</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf binutils-2.44.tar.xz</span><br><span class="line"><span class="built_in">cd</span> binutils-2.44/</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=/opt/x86_64-w64-mingw32-gcc15 --disable-multilib --disable-nls --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-w64-mingw32</span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译-GCC"><a href="#编译-GCC" class="headerlink" title="编译 GCC"></a>编译 GCC</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf gcc-15.1.0.tar.xz</span><br><span class="line"><span class="built_in">cd</span> gcc-15.1.0/</span><br><span class="line">./contrib/download_prerequisites</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=/opt/x86_64-w64-mingw32-gcc15 -with-sysroot=/usr/x86_64-w64-mingw32 --enable-languages=c,c++ --enable-threads=win32 --enable-shared --disable-multilib --disable-werror --disable-checking --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-w64-mingw32</span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br></pre></td></tr></table></figure>
+<p>开始漫长的等待过程了。。。<br>不出意外的话会碰到一个错误</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> [ -d ../prev-gcc ]; <span class="keyword">then</span> \</span><br><span class="line">  <span class="built_in">cd</span> ../prev-gcc &amp;&amp; \</span><br><span class="line">  make real-install-headers-tar DESTDIR=`<span class="built_in">pwd</span>`/../gcc/ \</span><br><span class="line">    libsubdir=. ; \</span><br><span class="line"><span class="keyword">else</span> \</span><br><span class="line">  <span class="built_in">set</span> -e; <span class="keyword">for</span> ml <span class="keyword">in</span> `<span class="built_in">cat</span> fixinc_list`; <span class="keyword">do</span> \</span><br><span class="line">    sysroot_headers_suffix=`<span class="built_in">echo</span> <span class="variable">$&#123;ml&#125;</span> | sed -e <span class="string">&#x27;s/;.*$//&#x27;</span>`; \</span><br><span class="line">    multi_dir=`<span class="built_in">echo</span> <span class="variable">$&#123;ml&#125;</span> | sed -e <span class="string">&#x27;s/^[^;]*;//&#x27;</span>`; \</span><br><span class="line">    fix_dir=include-fixed<span class="variable">$&#123;multi_dir&#125;</span>; \</span><br><span class="line">    <span class="keyword">if</span> ! <span class="literal">false</span> &amp;&amp; <span class="built_in">test</span> ! -d `<span class="built_in">echo</span> /usr/x86_64-w64-mingw32<span class="variable">$&#123;sysroot_headers_suffix&#125;</span>/mingw/include | sed -e :a -e <span class="string">&#x27;s,[^/]*/\.\.\/,,&#x27;</span> -e ta`; <span class="keyword">then</span> \</span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;The directory (BUILD_SYSTEM_HEADER_DIR) that should contain system headers does not exist:&quot;</span> &gt;&amp;2 ; \</span><br><span class="line">      <span class="built_in">echo</span> <span class="string">&quot;  `echo /usr/x86_64-w64-mingw32<span class="variable">$&#123;sysroot_headers_suffix&#125;</span>/mingw/include | sed -e :a -e &#x27;s,[^/]*/\.\.\/,,&#x27; -e ta`&quot;</span> &gt;&amp;2 ; \</span><br><span class="line">      <span class="keyword">case</span> linux-gnu <span class="keyword">in</span> \</span><br><span class="line">        darwin*) \</span><br><span class="line">          <span class="built_in">echo</span> <span class="string">&quot;(on Darwin this usually means you need to pass the --with-sysroot= flag to point to a valid MacOS SDK)&quot;</span> &gt;&amp;2; \</span><br><span class="line">          ;; \</span><br><span class="line">      <span class="keyword">esac</span>; \</span><br><span class="line">      tooldir_sysinc=`<span class="built_in">echo</span> <span class="string">&quot;/opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/../../../../x86_64-w64-mingw32/sys-include&quot;</span> | sed -e :a -e <span class="string">&quot;s,[^/]*/\.\.\/,,&quot;</span> -e ta`; \</span><br><span class="line">      <span class="keyword">if</span> <span class="built_in">test</span> <span class="string">&quot;x`echo /usr/x86_64-w64-mingw32<span class="variable">$&#123;sysroot_headers_suffix&#125;</span>/mingw/include | sed -e :a -e &#x27;s,[^/]*/\.\.\/,,&#x27; -e ta`&quot;</span> = <span class="string">&quot;x<span class="variable">$&#123;tooldir_sysinc&#125;</span>&quot;</span>; \</span><br><span class="line">      <span class="keyword">then</span> <span class="built_in">sleep</span> 1; <span class="keyword">else</span> <span class="built_in">exit</span> 1; <span class="keyword">fi</span>; \</span><br><span class="line">    <span class="keyword">fi</span>; \</span><br><span class="line">    /bin/bash ../../gcc/../mkinstalldirs <span class="variable">$&#123;fix_dir&#125;</span>; \</span><br><span class="line">    <span class="built_in">chmod</span> a+rx <span class="variable">$&#123;fix_dir&#125;</span> || <span class="literal">true</span>; \</span><br><span class="line">    (TARGET_MACHINE=<span class="string">&#x27;x86_64-w64-mingw32&#x27;</span>; srcdir=`<span class="built_in">cd</span> ../../gcc; <span class="variable">$&#123;PWDCMD-pwd&#125;</span>`; \</span><br><span class="line">      SHELL=<span class="string">&#x27;/bin/bash&#x27;</span>; MACRO_LIST=`<span class="variable">$&#123;PWDCMD-pwd&#125;</span>`/macro_list ; \</span><br><span class="line">      gcc_dir=`<span class="variable">$&#123;PWDCMD-pwd&#125;</span>` ; \</span><br><span class="line">      <span class="built_in">export</span> TARGET_MACHINE srcdir SHELL MACRO_LIST &amp;&amp; \</span><br><span class="line">      <span class="built_in">cd</span> ../build-x86_64-linux-gnu/fixincludes &amp;&amp; \</span><br><span class="line">      /bin/bash ./fixinc.sh <span class="string">&quot;<span class="variable">$&#123;gcc_dir&#125;</span>/<span class="variable">$&#123;fix_dir&#125;</span>&quot;</span> \</span><br><span class="line">        `<span class="built_in">echo</span> /usr/x86_64-w64-mingw32<span class="variable">$&#123;sysroot_headers_suffix&#125;</span>/mingw/include | sed -e :a -e <span class="string">&#x27;s,[^/]*/\.\.\/,,&#x27;</span> -e ta`  ); \</span><br><span class="line">  <span class="keyword">done</span>; \</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line">The directory (BUILD_SYSTEM_HEADER_DIR) that should contain system headers does not exist:</span><br><span class="line">  /usr/x86_64-w64-mingw32/mingw/include</span><br><span class="line">make[2]: *** [Makefile:3643: stmp-fixinc] Error 1</span><br><span class="line">make[2]: *** Waiting <span class="keyword">for</span> unfinished <span class="built_in">jobs</span>....</span><br><span class="line"><span class="built_in">rm</span> gcc.pod</span><br><span class="line">make[2]: Leaving directory <span class="string">&#x27;/opt/gcc-15.1.0/build/gcc&#x27;</span></span><br><span class="line">make[1]: *** [Makefile:4728: all-gcc] Error 2</span><br><span class="line">make[1]: Leaving directory <span class="string">&#x27;/opt/gcc-15.1.0/build&#x27;</span></span><br><span class="line">make: *** [Makefile:1068: all] Error 2</span><br></pre></td></tr></table></figure>
+<p>Makefile 文件中硬编码了一个规则：它强制性地在<code>sysroot</code>路径 (<code>/usr/x86_64-w64-mingw32</code>) 后面拼接上了一个<code>/mingw/include</code>子目录，然后检查这个拼接成的路径是否存在。<br>因为我编译的 GCC 版本较新，而通过系统安装的 mingw-w64 版本较低（7.0），目录结构不同，导致 GCC 找不到相关的头文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ dpkg -l | grep mingw-w64</span><br><span class="line">ii  mingw-w64-common                           7.0.0-2                              all          Common files <span class="keyword">for</span> Mingw-w64</span><br><span class="line">ii  mingw-w64-x86-64-dev                       7.0.0-2                              all          Development files <span class="keyword">for</span> MinGW-w64 targeting Win64</span><br></pre></td></tr></table></figure>
+
+<p>解决办法是在 GCC 期望的位置创建软连接：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建它期望的 /mingw 父目录</span></span><br><span class="line">sudo <span class="built_in">mkdir</span> -p /usr/x86_64-w64-mingw32/mingw</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建一个名为 include 的符号链接，指向真实的 include 目录</span></span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/x86_64-w64-mingw32/include /usr/x86_64-w64-mingw32/mingw/include</span><br><span class="line"></span><br><span class="line"><span class="comment"># 为 lib 目录也创建一个，以防后面链接阶段出现类似问题</span></span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/x86_64-w64-mingw32/lib /usr/x86_64-w64-mingw32/mingw/lib</span><br></pre></td></tr></table></figure>
+<p>最后安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
+<h3 id="检验"><a href="#检验" class="headerlink" title="检验"></a>检验</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ /opt/x86_64-w64-mingw32-gcc15/bin/x86_64-w64-mingw32-gcc -v</span><br><span class="line">Using built-in specs.</span><br><span class="line">COLLECT_GCC=/opt/x86_64-w64-mingw32-gcc15/bin/x86_64-w64-mingw32-gcc</span><br><span class="line">COLLECT_LTO_WRAPPER=/opt/x86_64-w64-mingw32-gcc15/libexec/gcc/x86_64-w64-mingw32/15.1.0/lto-wrapper</span><br><span class="line">Target: x86_64-w64-mingw32</span><br><span class="line">Configured with: ../configure --prefix=/opt/x86_64-w64-mingw32-gcc15 -with-sysroot=/usr/x86_64-w64-mingw32 --enable-languages=c,c++ --enable-threads=win32 --enable-shared --disable-multilib --disable-werror --disable-checking --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-w64-mingw32</span><br><span class="line">Thread model: win32</span><br><span class="line">Supported LTO compression algorithms: zlib</span><br><span class="line">gcc version 15.1.0 (GCC) </span><br></pre></td></tr></table></figure>
+<p>写个例子程序试试</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;format&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printHello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> s = std::format(<span class="string">&quot;&#123;&#125; &#123;&#125;\n&quot;</span>, <span class="string">&quot;Hello&quot;</span> , <span class="number">123</span>);</span><br><span class="line">    std::cout &lt;&lt; s;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(printHello)</span></span>;</span><br><span class="line">    t.<span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译报错</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ /opt/x86_64-w64-mingw32-gcc15/bin/x86_64-w64-mingw32-g++ -std=c++23 main.cpp -o main</span><br><span class="line">main.cpp: In <span class="keyword">function</span> ‘int main()’:</span><br><span class="line">main.cpp:14:29: error: no matching <span class="keyword">function</span> <span class="keyword">for</span> call to ‘std::thread::thread(void (&amp;)())’</span><br><span class="line">   14 |     std::thread t(printHello);</span><br><span class="line">      |                             ^</span><br><span class="line">main.cpp:14:29: note: there are 2 candidates</span><br><span class="line">In file included from /opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/stop_token:40,</span><br><span class="line">                 from /opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/thread:44,</span><br><span class="line">                 from main.cpp:5:</span><br><span class="line">/opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/bits/std_thread.h:189:5: note: candidate 1: ‘std::thread::thread(std::thread&amp;&amp;)’</span><br><span class="line">  189 |     thread(thread&amp;&amp; __t) noexcept</span><br><span class="line">      |     ^~~~~~</span><br><span class="line">/opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/bits/std_thread.h:189:21: note: no known conversion <span class="keyword">for</span> argument 1 from ‘void()’ to ‘std::thread&amp;&amp;’</span><br><span class="line">  189 |     thread(thread&amp;&amp; __t) noexcept</span><br><span class="line">      |            ~~~~~~~~~^~~</span><br><span class="line">/opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/bits/std_thread.h:143:5: note: candidate 2: ‘std::thread::thread()’</span><br><span class="line">  143 |     thread() noexcept = default;</span><br><span class="line">      |     ^~~~~~</span><br><span class="line">/opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/bits/std_thread.h:143:5: note: candidate expects 0 arguments, 1 provided</span><br></pre></td></tr></table></figure>
+<p>掉坑里了，因为 mingw-w64 版本太老了。看来需要自行编译<code>mingw-w64</code>。</p>
+<h2 id="第二次成功了"><a href="#第二次成功了" class="headerlink" title="第二次成功了"></a>第二次成功了</h2><p>Ubuntu 20 系统中安装的 mingw-w64 版本是 7.0.0，版本有点老了。我们可以去官网下载目前最新的 13.0.0：<a target="_blank" rel="noopener" href="https://www.mingw-w64.org/source/">https://www.mingw-w64.org/source/</a><br>将前面安装的<code>mingw-w64-x86-64-dev</code>删掉，避免在编译过程中不小心引入了老的头文件或库。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove --purge mingw-w64-x86-64-dev</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译-Binutils-1"><a href="#编译-Binutils-1" class="headerlink" title="编译 Binutils"></a>编译 Binutils</h3><p>和前面的步骤一模一样</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf binutils-2.44.tar.xz</span><br><span class="line"><span class="built_in">cd</span> binutils-2.44/</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=/opt/x86_64-w64-mingw32-gcc15 --disable-multilib --disable-nls --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-w64-mingw32</span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装-mingw-w64-头文件"><a href="#安装-mingw-w64-头文件" class="headerlink" title="安装 mingw-w64 头文件"></a>安装 mingw-w64 头文件</h3><p>这里先看看帮助</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 注意，我们指向的是 mingw-w64-headers 子目录下的 configure 脚本</span></span><br><span class="line"><span class="built_in">cd</span> /opt/mingw-w64-v13.0.0/mingw-w64-headers</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line"></span><br><span class="line">$ ../configure -h</span><br><span class="line"><span class="string">&#x27;configure&#x27;</span> configures mingw-w64-headers 4.0b to adapt to many kinds of systems.</span><br><span class="line"></span><br><span class="line">Usage: ../configure [OPTION]... [VAR=VALUE]...</span><br><span class="line"></span><br><span class="line">To assign environment variables (e.g., CC, CFLAGS...), specify them as</span><br><span class="line">VAR=VALUE.  See below <span class="keyword">for</span> descriptions of some of the useful variables.</span><br><span class="line"></span><br><span class="line">Defaults <span class="keyword">for</span> the options are specified <span class="keyword">in</span> brackets.</span><br><span class="line"></span><br><span class="line">Configuration:</span><br><span class="line">  -h, --<span class="built_in">help</span>              display this <span class="built_in">help</span> and <span class="built_in">exit</span></span><br><span class="line">      --<span class="built_in">help</span>=short        display options specific to this package</span><br><span class="line">      --<span class="built_in">help</span>=recursive    display the short <span class="built_in">help</span> of all the included packages</span><br><span class="line">  -V, --version           display version information and <span class="built_in">exit</span></span><br><span class="line">  -q, --quiet, --silent   <span class="keyword">do</span> not <span class="built_in">print</span> <span class="string">&#x27;checking ...&#x27;</span> messages</span><br><span class="line">      --cache-file=FILE   cache <span class="built_in">test</span> results <span class="keyword">in</span> FILE [disabled]</span><br><span class="line">  -C, --config-cache      <span class="built_in">alias</span> <span class="keyword">for</span> <span class="string">&#x27;--cache-file=config.cache&#x27;</span></span><br><span class="line">  -n, --no-create         <span class="keyword">do</span> not create output files</span><br><span class="line">      --srcdir=DIR        find the sources <span class="keyword">in</span> DIR [configure <span class="built_in">dir</span> or <span class="string">&#x27;..&#x27;</span>]</span><br><span class="line"></span><br><span class="line">Installation directories:</span><br><span class="line">  --prefix=PREFIX         install architecture-independent files <span class="keyword">in</span> PREFIX</span><br><span class="line">                          [/usr/local]</span><br><span class="line">  --exec-prefix=EPREFIX   install architecture-dependent files <span class="keyword">in</span> EPREFIX</span><br><span class="line">                          [PREFIX]</span><br><span class="line"></span><br><span class="line">By default, <span class="string">&#x27;make install&#x27;</span> will install all the files <span class="keyword">in</span></span><br><span class="line"><span class="string">&#x27;/usr/local/bin&#x27;</span>, <span class="string">&#x27;/usr/local/lib&#x27;</span> etc.  You can specify</span><br><span class="line">an installation prefix other than <span class="string">&#x27;/usr/local&#x27;</span> using <span class="string">&#x27;--prefix&#x27;</span>,</span><br><span class="line"><span class="keyword">for</span> instance <span class="string">&#x27;--prefix=$HOME&#x27;</span>.</span><br><span class="line"></span><br><span class="line">For better control, use the options below.</span><br><span class="line"></span><br><span class="line">Fine tuning of the installation directories:</span><br><span class="line">  --bindir=DIR            user executables [EPREFIX/bin]</span><br><span class="line">  --sbindir=DIR           system admin executables [EPREFIX/sbin]</span><br><span class="line">  --libexecdir=DIR        program executables [EPREFIX/libexec]</span><br><span class="line">  --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]</span><br><span class="line">  --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]</span><br><span class="line">  --localstatedir=DIR     modifiable single-machine data [PREFIX/var]</span><br><span class="line">  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]</span><br><span class="line">  --libdir=DIR            object code libraries [EPREFIX/lib]</span><br><span class="line">  --includedir=DIR        C header files [PREFIX/include]</span><br><span class="line">  --oldincludedir=DIR     C header files <span class="keyword">for</span> non-gcc [/usr/include]</span><br><span class="line">  --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]</span><br><span class="line">  --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]</span><br><span class="line">  --infodir=DIR           info documentation [DATAROOTDIR/info]</span><br><span class="line">  --localedir=DIR         locale-dependent data [DATAROOTDIR/locale]</span><br><span class="line">  --mandir=DIR            man documentation [DATAROOTDIR/man]</span><br><span class="line">  --docdir=DIR            documentation root</span><br><span class="line">                          [DATAROOTDIR/doc/mingw-w64-headers]</span><br><span class="line">  --htmldir=DIR           html documentation [DOCDIR]</span><br><span class="line">  --dvidir=DIR            dvi documentation [DOCDIR]</span><br><span class="line">  --pdfdir=DIR            pdf documentation [DOCDIR]</span><br><span class="line">  --psdir=DIR             ps documentation [DOCDIR]</span><br><span class="line"></span><br><span class="line">Program names:</span><br><span class="line">  --program-prefix=PREFIX            prepend PREFIX to installed program names</span><br><span class="line">  --program-suffix=SUFFIX            append SUFFIX to installed program names</span><br><span class="line">  --program-transform-name=PROGRAM   run sed PROGRAM on installed program names</span><br><span class="line"></span><br><span class="line">System types:</span><br><span class="line">  --build=BUILD     configure <span class="keyword">for</span> building on BUILD [guessed]</span><br><span class="line">  --host=HOST       cross-compile to build programs to run on HOST [BUILD]</span><br><span class="line"></span><br><span class="line">Optional Features:</span><br><span class="line">  --disable-option-checking  ignore unrecognized --<span class="built_in">enable</span>/--with options</span><br><span class="line">  --disable-FEATURE       <span class="keyword">do</span> not include FEATURE (same as --enable-FEATURE=no)</span><br><span class="line">  --enable-FEATURE[=ARG]  include FEATURE [ARG=<span class="built_in">yes</span>]</span><br><span class="line">  --enable-silent-rules   less verbose build output (undo: <span class="string">&quot;make V=1&quot;</span>)</span><br><span class="line">  --disable-silent-rules  verbose build output (undo: <span class="string">&quot;make V=0&quot;</span>)</span><br><span class="line">  --enable-maintainer-mode</span><br><span class="line">                          <span class="built_in">enable</span> make rules and dependencies not useful (and</span><br><span class="line">                          sometimes confusing) to the casual installer</span><br><span class="line">  --enable-w32api         Enable building a w32api package <span class="keyword">for</span> Cygwin</span><br><span class="line">                          (shorthand <span class="keyword">for</span> --includedir=PREFIX/include/w32api</span><br><span class="line">                          --disable-crt)</span><br><span class="line">  --disable-crt           Do not use the default crt headers</span><br><span class="line">  --enable-sdk=ARG        Add the desired SDK, <span class="built_in">where</span> ARG can be one of ddk, no</span><br><span class="line">                          or all. Default is all.</span><br><span class="line">  --enable-idl            Enable installing idl files</span><br><span class="line"></span><br><span class="line">Optional Packages:</span><br><span class="line">  --with-PACKAGE[=ARG]    use PACKAGE [ARG=<span class="built_in">yes</span>]</span><br><span class="line">  --without-PACKAGE       <span class="keyword">do</span> not use PACKAGE (same as --with-PACKAGE=no)</span><br><span class="line">  --with-widl=PATH        use widl to update idl-based headers. Optionally</span><br><span class="line">                          search <span class="keyword">for</span> a compatible widl <span class="keyword">in</span> PATH</span><br><span class="line">  --with-default-win32-winnt=VER</span><br><span class="line">                          Default value of _WIN32_WINNT (default: 0xa00)</span><br><span class="line">  --with-default-msvcrt=LIB</span><br><span class="line">                          Default msvcrt to target (default: ucrt)</span><br></pre></td></tr></table></figure>
+<p>有两个参选项得注意：<code>--with-default-win32-winnt</code>和<code>--with-default-msvcrt</code>。<br><code>--with-default-win32-winnt</code>决定了支持最低的 Windows API，这里的默认值是<code>0x0A00</code>，表示 Windows 10，有些高了，因为我要求兼容至 Vista，那么要改为<code>0x0600</code>，其他值查看微软手册：<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/porting/modifying-winver-and-win32-winnt">更新 WINVER 和 _WIN32_WINNT</a>。<br><code>--with-default-msvcrt</code>决定了运行时类型，默认是<code>ucrt</code>，意味着最终编译出的程序会依赖一堆<code>api-ms</code>开头的 DLL 文件，这需要用户电脑安装 VC 运行库，这是默认且推荐的方式。<br>如果要用老的运行时<code>msvcrt</code>，就将选项改为<code>--with-default-msvcrt=msvcrt</code>即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">../configure --prefix=/opt/sysroot/mingw --with-default-win32-winnt=0x0600 --with-default-msvcrt=msvcrt --build=x86_64-linux-gnu --host=x86_64-w64-mingw32</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
+<p>用<code>msvcrt</code>的好处是不需要额外安装 VC Runtime，仅依赖<code>msvcrt.dll</code>，特别是编译 32 位程序的话，可以运行在 XP 系统上。</p>
+<h3 id="第一次编译-GCC"><a href="#第一次编译-GCC" class="headerlink" title="第一次编译 GCC"></a>第一次编译 GCC</h3><p>有了上面的头文件后，可以编译 GCC 了，第一次只编译“纯净”的 GCC，它的作用仅用于编译<code>mingw-w64</code>运行时</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">../configure --prefix=/opt/x86_64-w64-mingw32-gcc15 -with-sysroot=/opt/sysroot --enable-languages=c --disable-shared --disable-threads --disable-libstdcxx --disable-multilib --disable-werror --disable-checking --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-w64-mingw32</span><br><span class="line">make -j$(<span class="built_in">nproc</span>) all-gcc</span><br><span class="line">make install-strip-gcc</span><br><span class="line">make -j$(<span class="built_in">nproc</span>) all-target-libgcc</span><br><span class="line">make install-strip-target-libgcc</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译-mingw-w64-运行时"><a href="#编译-mingw-w64-运行时" class="headerlink" title="编译 mingw-w64 运行时"></a>编译 mingw-w64 运行时</h3><p>从这一步开始，我们需要用到刚才制作的 GCC 编译器了，所以将<code>bin</code>目录添加到<code>PATH</code>环境变量中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/opt/x86_64-w64-mingw32-gcc15/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+<p>验证一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">which</span> x86_64-w64-mingw32-gcc</span><br><span class="line">/opt/x86_64-w64-mingw32-gcc15/bin/x86_64-w64-mingw32-gcc</span><br></pre></td></tr></table></figure>
+<p>OK，没问题。开始编译完整的<code>mingw-w64</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/mingw-w64-v13.0.0/mingw-w64-crt</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=/opt/sysroot/mingw --with-default-msvcrt=msvcrt --build=x86_64-linux-gnu --host=x86_64-w64-mingw32</span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
+
+<h3 id="第二次编译-GCC"><a href="#第二次编译-GCC" class="headerlink" title="第二次编译 GCC"></a>第二次编译 GCC</h3><p>这是最后一步，编译完整的 GCC。注意编译时新建一个文件夹，不要在第一次的 build 目录中进行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/gcc-15.1.0/</span><br><span class="line"><span class="built_in">mkdir</span> build-gcc-final &amp;&amp; <span class="built_in">cd</span> build-gcc-final</span><br><span class="line">../configure --prefix=/opt/x86_64-w64-mingw32-gcc15 -with-sysroot=/opt/sysroot --enable-languages=c,c++ --enable-threads=win32 --enable-shared --disable-multilib --disable-werror --disable-checking --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-w64-mingw32</span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
+<p>大功告成！再次编译示例程序</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/x86_64-w64-mingw32-gcc15/bin/x86_64-w64-mingw32-g++ -std=c++23 main.cpp -o main</span><br></pre></td></tr></table></figure>
+<p>终于得到一个可以运行的 exe 程序了！<br>本质上我们从零开始制作了一份<code>mingw-w64-x86-64-dev</code>包！</p>
+<h2 id="事情还没完"><a href="#事情还没完" class="headerlink" title="事情还没完"></a>事情还没完</h2><p>当我将前面制作好的工具链打包为<code>.deb</code>文件后，还原了虚拟机，然后安装这个工具链，再次编译示例程序，报错了！</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">$ x86_64-w64-mingw32-g++ -std=c++23 main.cpp -o main -v</span><br><span class="line">Using built-in specs.</span><br><span class="line">COLLECT_GCC=x86_64-w64-mingw32-g++</span><br><span class="line">COLLECT_LTO_WRAPPER=/opt/x86_64-w64-mingw32-gcc15/libexec/gcc/x86_64-w64-mingw32/15.1.0/lto-wrapper</span><br><span class="line">Target: x86_64-w64-mingw32</span><br><span class="line">Configured with: ../configure --prefix=/opt/x86_64-w64-mingw32-gcc15 -with-sysroot=/opt/sysroot --enable-languages=c,c++ --enable-threads=win32 --enable-shared --disable-multilib --disable-werror --disable-checking --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-w64-mingw32</span><br><span class="line">Thread model: win32</span><br><span class="line">Supported LTO compression algorithms: zlib</span><br><span class="line">gcc version 15.1.0 (GCC) </span><br><span class="line">COLLECT_GCC_OPTIONS=<span class="string">&#x27;-std=c++23&#x27;</span> <span class="string">&#x27;-o&#x27;</span> <span class="string">&#x27;main.exe&#x27;</span> <span class="string">&#x27;-v&#x27;</span> <span class="string">&#x27;-shared-libgcc&#x27;</span> <span class="string">&#x27;-mtune=generic&#x27;</span> <span class="string">&#x27;-march=x86-64&#x27;</span></span><br><span class="line"> /opt/x86_64-w64-mingw32-gcc15/libexec/gcc/x86_64-w64-mingw32/15.1.0/cc1plus -quiet -v -U_REENTRANT main.cpp -quiet -dumpbase main.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -std=c++23 -version -o /tmp/ccPJxgCO.s</span><br><span class="line">GNU C++23 (GCC) version 15.1.0 (x86_64-w64-mingw32)</span><br><span class="line">        compiled by GNU C version 9.4.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.24-GMP</span><br><span class="line"></span><br><span class="line">GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072</span><br><span class="line">ignoring nonexistent directory <span class="string">&quot;/opt/sysroot/usr/local/include&quot;</span></span><br><span class="line">ignoring nonexistent directory <span class="string">&quot;/opt/sysroot/mingw/include&quot;</span></span><br><span class="line"><span class="comment">#include &quot;...&quot; search starts here:</span></span><br><span class="line"><span class="comment">#include &lt;...&gt; search starts here:</span></span><br><span class="line"> /opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/../../../../x86_64-w64-mingw32/include/c++/15.1.0</span><br><span class="line"> /opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/../../../../x86_64-w64-mingw32/include/c++/15.1.0/x86_64-w64-mingw32</span><br><span class="line"> /opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/../../../../x86_64-w64-mingw32/include/c++/15.1.0/backward</span><br><span class="line"> /opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/include</span><br><span class="line"> /opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/include-fixed</span><br><span class="line"> /opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/../../../../x86_64-w64-mingw32/include</span><br><span class="line">End of search list.</span><br><span class="line">Compiler executable checksum: c6785f47bdf27eacd276f07e706187db</span><br><span class="line">In file included from /opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/bits/postypes.h:42,</span><br><span class="line">                 from /opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/iosfwd:44,</span><br><span class="line">                 from /opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/ios:42,</span><br><span class="line">                 from /opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/bits/ostream.h:43,</span><br><span class="line">                 from /opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/ostream:42,</span><br><span class="line">                 from /opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/iostream:43,</span><br><span class="line">                 from main.cpp:4:</span><br><span class="line">/opt/x86_64-w64-mingw32-gcc15/x86_64-w64-mingw32/include/c++/15.1.0/cwchar:49:10: fatal error: wchar.h: No such file or directory</span><br><span class="line">   49 | <span class="comment">#include &lt;wchar.h&gt;</span></span><br><span class="line">      |          ^~~~~~~~~</span><br><span class="line">compilation terminated.</span><br></pre></td></tr></table></figure>
+<p>看上去是因为打包时没有将<code>sysroot</code>打包进来，也就是<code>mingw-w64</code>的头文件和运行时。<br>从日志上看，gcc 会从编译时指定的<code>--with-sysroot</code>参数中搜索</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ignoring nonexistent directory <span class="string">&quot;/opt/sysroot/usr/local/include&quot;</span></span><br><span class="line">ignoring nonexistent directory <span class="string">&quot;/opt/sysroot/mingw/include&quot;</span></span><br></pre></td></tr></table></figure>
+<p>但<br>再看看其他搜索路径</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/../../../../x86_64-w64-mingw32/include/c++/15.1.0</span><br><span class="line">/opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/../../../../x86_64-w64-mingw32/include/c++/15.1.0/x86_64-w64-mingw32</span><br><span class="line">/opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/../../../../x86_64-w64-mingw32/include/c++/15.1.0/backward</span><br><span class="line">/opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/include</span><br><span class="line">/opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/include-fixed</span><br><span class="line">/opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/../../../../x86_64-w64-mingw32/include</span><br></pre></td></tr></table></figure>
+<p>前面 5 个都是和 C++ 相关的路径，而最后一个返回到了工具链安装根目录下的<code>x86_64-w64-mingw32/include</code>，其实这里对于 gcc 来说就像是<code>/usr</code>目录一样，gcc 默认会在这里搜索头文件和库。<br>所以我们要做的就是将<code>mingw-w64</code>的头文件和运行时安装到这个目录下再打包即可。</p>
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://www.wannaexpresso.com/2022/02/21/gcc-cross-compiler-make-it-your-own/">「天龙八部」年轻人的第一个GCC交叉编译器</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/06/11/qt-image-button/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/GCC/" title="GCC">
+                        #GCC
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2025/07/05/gcc-fvisibility/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%A4%B1%E8%B4%A5%E4%BA%86"><span class="toc-text">第一次失败了</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-text">准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91-Binutils"><span class="toc-text">编译 Binutils</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91-GCC"><span class="toc-text">编译 GCC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E9%AA%8C"><span class="toc-text">检验</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%88%90%E5%8A%9F%E4%BA%86"><span class="toc-text">第二次成功了</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91-Binutils-1"><span class="toc-text">编译 Binutils</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-mingw-w64-%E5%A4%B4%E6%96%87%E4%BB%B6"><span class="toc-text">安装 mingw-w64 头文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E7%BC%96%E8%AF%91-GCC"><span class="toc-text">第一次编译 GCC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91-mingw-w64-%E8%BF%90%E8%A1%8C%E6%97%B6"><span class="toc-text">编译 mingw-w64 运行时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E7%BC%96%E8%AF%91-GCC"><span class="toc-text">第二次编译 GCC</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E6%83%85%E8%BF%98%E6%B2%A1%E5%AE%8C"><span class="toc-text">事情还没完</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%A4%AA%E9%9A%BE%E4%BA%86%EF%BC%81%E5%88%B6%E4%BD%9C%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%99%A8%20x86_64-w64-mingw32-gcc%20%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F06%2F15%2F202506151%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/06/15/202506151/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

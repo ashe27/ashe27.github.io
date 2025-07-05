@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      C# 序列化对象到XML 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">C# 序列化对象到XML</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/c-sharp/" title="C#">
+                    #C#
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p>C#中要将一个对象序列化到XML，或从XML反序列化需要用到 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.serialization.xmlserializer">XmlSerializer</a> 类。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.IO;</span><br><span class="line"><span class="keyword">using</span> System.Windows.Forms;</span><br><span class="line"><span class="keyword">using</span> System.Xml.Serialization;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">WindowsFormsApp1</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">enum</span> MyEnum</span><br><span class="line">    &#123;</span><br><span class="line">        Enum1,</span><br><span class="line">        Enum2</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Cat</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="built_in">int</span> Color;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Student</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="built_in">int</span> _val1;</span><br><span class="line">        <span class="keyword">public</span> <span class="built_in">int</span> Val2;</span><br><span class="line">        <span class="keyword">public</span> MyEnum MyEnum;</span><br><span class="line">        <span class="keyword">public</span> <span class="built_in">int</span> Val3 &#123; <span class="keyword">get</span>; &#125; = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">public</span> <span class="built_in">int</span> Val4 &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">public</span> <span class="built_in">int</span>? Val5 = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> Cat MyCat = <span class="keyword">new</span>();</span><br><span class="line">        <span class="keyword">public</span> List&lt;<span class="built_in">int</span>&gt; Arr1;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> StaticVal;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">Form1</span> : <span class="title">Form</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Form1</span>()</span></span><br><span class="line">        &#123;</span><br><span class="line">            InitializeComponent();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">button1_Click</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> obj = <span class="keyword">new</span> Student()</span><br><span class="line">            &#123;</span><br><span class="line">                Arr1 = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="number">10</span>,</span><br><span class="line">                    <span class="number">20</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> serializer = <span class="keyword">new</span> XmlSerializer(obj.GetType());</span><br><span class="line">            <span class="keyword">using</span> <span class="keyword">var</span> fs = <span class="keyword">new</span> FileStream(<span class="string">&quot;obj.xml&quot;</span>, FileMode.Create);</span><br><span class="line">            serializer.Serialize(fs, obj);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出XML内容</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Student</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="attr">xmlns:xsd</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Val2</span>&gt;</span>0<span class="tag">&lt;/<span class="name">Val2</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">MyEnum</span>&gt;</span>Enum1<span class="tag">&lt;/<span class="name">MyEnum</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Val5</span> <span class="attr">xsi:nil</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">MyCat</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Color</span>&gt;</span>0<span class="tag">&lt;/<span class="name">Color</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">MyCat</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Arr1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">int</span>&gt;</span>10<span class="tag">&lt;/<span class="name">int</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">int</span>&gt;</span>20<span class="tag">&lt;/<span class="name">int</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Arr1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Val4</span>&gt;</span>0<span class="tag">&lt;/<span class="name">Val4</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Student</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>可见类成员并没有完全被序列化，因为 XmlSerializer 默认不会序列化以下几种数据：</p>
+<ol>
+<li>静态成员，因为静态成员属于类而不是实例。</li>
+<li>只读成员，因为只读成员在反序列化时不能被初始化。</li>
+<li>私有成员，因为私有成员不能从外部访问，因此无法序列化和反序列化。</li>
+</ol>
+<h2 id="必须有默认构造函数"><a href="#必须有默认构造函数" class="headerlink" title="必须有默认构造函数"></a>必须有默认构造函数</h2><p>当类没有提供无参数构造函数时，构造 XmlSerializer 时就会抛出<code>InvalidOperationException</code>异常</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Student 无法序列化，因为它没有无参数的构造函数。</span><br></pre></td></tr></table></figure>
+<h2 id="实现-IXmlSerializable-接口"><a href="#实现-IXmlSerializable-接口" class="headerlink" title="实现 IXmlSerializable 接口"></a>实现 IXmlSerializable 接口</h2><p>在某些情况下，XmlSerializer类的默认行为可能无法满足需求，这时就需要实现 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.serialization.ixmlserializable">IXmlSerializable</a> 接口来控制序列化和反序列化过程</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Student</span>: <span class="title">IXmlSerializable</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">int</span> _val1;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Val2;</span><br><span class="line">    <span class="keyword">public</span> MyEnum MyEnum;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Val3</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span>;</span><br><span class="line">    &#125; = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Val4</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span>;</span><br><span class="line">        <span class="keyword">set</span>;</span><br><span class="line">    &#125; = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> ? Val5 = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">public</span> Cat MyCat = <span class="keyword">new</span>();</span><br><span class="line">    <span class="keyword">public</span> List &lt; <span class="built_in">int</span> &gt; Arr1;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span> StaticVal;</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">public</span> XmlSchema <span class="title">GetSchema</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;  <span class="comment">// 没用，总是返回null</span></span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ReadXml</span>(<span class="params">XmlReader reader</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Val2 = reader.ReadElementContentAsInt();</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">WriteXml</span>(<span class="params">XmlWriter writer</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        writer.WriteValue(Val2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出XML内容</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Student</span>&gt;</span>0<span class="tag">&lt;/<span class="name">Student</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>一些需要实现IXmlSerializable接口的情况：</p>
+<ol>
+<li>控制值的输出格式。</li>
+<li>需要序列化私有成员时。</li>
+<li>当需要在序列化过程中执行一些自定义的操作时，例如在序列化之前或之后执行某些操作，或者在序列化期间处理异常时。</li>
+</ol>
+<h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><p>使用注解（Attribute）来为XML序列化和反序列化提供更多的控制和灵活性。</p>
+<h3 id="XmlRoot"><a href="#XmlRoot" class="headerlink" title="XmlRoot"></a>XmlRoot</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.serialization.xmlattributes.xmlroot">XmlRoot</a> 用于指定XML文档根元素名称和命名空间的注解。它可以应用于类或结构体，并且可以在序列化和反序列化过程中提供更多的控制和灵活性。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">XmlRoot(<span class="string">&quot;Person&quot;</span>, Namespace = <span class="string">&quot;http://example.com&quot;</span>)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Person</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Age &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出XML内容</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Person</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://example.com&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Name</span>&gt;</span>Alice<span class="tag">&lt;/<span class="name">Name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Age</span>&gt;</span>30<span class="tag">&lt;/<span class="name">Age</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Person</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="XmlElement"><a href="#XmlElement" class="headerlink" title="XmlElement"></a>XmlElement</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.serialization.xmlelementattribute">XmlElement</a> 用于将类的属性或字段序列化为XML元素的注解。它可以应用于公共字段或属性，并且可以指定XML元素的名称和命名空间。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Person</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">XmlElement(<span class="string">&quot;FullName&quot;</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    </span><br><span class="line">    [<span class="meta">XmlElement(<span class="string">&quot;Years&quot;</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Age &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出内容</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Person</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="attr">xmlns:xsd</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Years</span>&gt;</span>0<span class="tag">&lt;/<span class="name">Years</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Person</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在这个例子中，XmlElement 注解指定了节点元素的名称。更多用法参考 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.serialization.xmlelementattribute">XmlElement</a></p>
+<h3 id="XmlAttribute"><a href="#XmlAttribute" class="headerlink" title="XmlAttribute"></a>XmlAttribute</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.serialization.xmlattributeattribute">XmlAttribute</a> 是用于将类的属性或字段序列化为XML属性的注解。它可以应用于公共字段或属性，并且可以指定XML属性的名称和命名空间。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Person</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    </span><br><span class="line">    [<span class="meta">XmlAttribute(<span class="string">&quot;Years&quot;</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Age &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出内容</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Person</span> <span class="attr">Years</span>=<span class="string">&quot;30&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Name</span>&gt;</span>Alice<span class="tag">&lt;/<span class="name">Name</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Person</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在这个例子中，注解将Age属性序列化为XML属性，属性名为”Years”。更多用法参考 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.serialization.xmlattributes">XmlAttributes</a></p>
+<h3 id="XmlArray"><a href="#XmlArray" class="headerlink" title="XmlArray"></a>XmlArray</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.serialization.xmlarrayattribute">XmlArray</a> 用于将数组或集合属性序列化为XML数组的注解。它可以应用于公共字段或属性，并且可以指定XML数组的名称、元素名称和命名空间。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Person</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    </span><br><span class="line">    [<span class="meta">XmlArray(<span class="string">&quot;Interests&quot;</span>)</span>]</span><br><span class="line">    [<span class="meta">XmlArrayItem(<span class="string">&quot;Interest&quot;</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span>[] Interests &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子中，注解指定了生成的XML数组的名称为”Interests”。同时，XmlArrayItem注解指定了生成的XML数组元素的名称为”Interest”。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Person</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Name</span>&gt;</span>Alice<span class="tag">&lt;/<span class="name">Name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Interests</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Interest</span>&gt;</span>Reading<span class="tag">&lt;/<span class="name">Interest</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Interest</span>&gt;</span>Traveling<span class="tag">&lt;/<span class="name">Interest</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Interest</span>&gt;</span>Hiking<span class="tag">&lt;/<span class="name">Interest</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Interests</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Person</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="XmlIgnore"><a href="#XmlIgnore" class="headerlink" title="XmlIgnore"></a>XmlIgnore</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.serialization.xmlignoreattribute">XmlIgnore</a> 用于公共字段或属性，并用于指示XmlSerializer忽略该字段或属性的序列化。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Person</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    </span><br><span class="line">    [<span class="meta">XmlIgnore</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Age &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="其他注解"><a href="#其他注解" class="headerlink" title="其他注解"></a>其他注解</h3><p>还有一些其他不常用的注解参考官方手册 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/standard/serialization/attributes-that-control-xml-serialization">用来控制 XML 序列化的属性</a></p>
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/standard/serialization/how-to-serialize-an-object">如何：序列化对象</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/standard/serialization/introducing-xml-serialization#xml-serialization-considerations">XML 序列化注意事项</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/07/04/rust-mod/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/c-sharp/" title="C#">
+                        #C#
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/07/06/rust-workspace/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-text">基本用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%85%E9%A1%BB%E6%9C%89%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-text">必须有默认构造函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0-IXmlSerializable-%E6%8E%A5%E5%8F%A3"><span class="toc-text">实现 IXmlSerializable 接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E8%A7%A3"><span class="toc-text">注解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XmlRoot"><span class="toc-text">XmlRoot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XmlElement"><span class="toc-text">XmlElement</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XmlAttribute"><span class="toc-text">XmlAttribute</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XmlArray"><span class="toc-text">XmlArray</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XmlIgnore"><span class="toc-text">XmlIgnore</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%B3%A8%E8%A7%A3"><span class="toc-text">其他注解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + C%23%20%E5%BA%8F%E5%88%97%E5%8C%96%E5%AF%B9%E8%B1%A1%E5%88%B0XML + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F07%2F05%2FXmlSerializer%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/07/05/XmlSerializer/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

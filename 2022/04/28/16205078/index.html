@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      gettext 使用方法 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">gettext 使用方法</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/" title="工具软件">
+                    #工具软件
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>Windows版下载地址：<a target="_blank" rel="noopener" href="https://mlocati.github.io/articles/gettext-iconv-windows.html">https://mlocati.github.io/articles/gettext-iconv-windows.html</a></p>
+<h2 id="翻译流程"><a href="#翻译流程" class="headerlink" title="翻译流程"></a>翻译流程</h2><ol>
+<li>在软件源码中使用相应的库将需要翻译的文字标记起来。比如C语言的<code>libintl</code>，适合C++的 <a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/index.html">Boost.locale</a>。</li>
+<li>使用<code>xgettext.exe</code>工具提取源代码中被标记的语句，生成 pot（portable object template）文件。</li>
+<li>使用<code>msginit.exe</code>工具将 pot 文件转化成一个特定语言版本的 po（portable object）文件。或者使用<code>msgmerge.exe</code>将更新了的 pot 文件与旧的 po 文件合并生成新的 po 文件。</li>
+<li>编辑 po 文件（可使用 <a target="_blank" rel="noopener" href="https://poedit.net/">Poedit</a> 等工具），开始翻译工作。</li>
+<li>使用<code>msgfmt.exe</code>工具将<code>.po</code>文件转换成<code>.mo</code>（machine object)文件。</li>
+</ol>
+<h2 id="提取原文"><a href="#提取原文" class="headerlink" title="提取原文"></a>提取原文</h2><p>从源码中提取原文用到的工具是<code>xgettext</code>。</p>
+<h3 id="0x01-基本用法"><a href="#0x01-基本用法" class="headerlink" title="0x01 基本用法"></a>0x01 基本用法</h3><p>在源码中标记需要翻译的字符串</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::string str1 = boost::locale::<span class="built_in">gettext</span>(<span class="string">&quot;Love&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>提取命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xgettext.exe --from-code=&quot;UTF-8&quot; -o my.pot main.cpp</span><br></pre></td></tr></table></figure>
+<p><strong>知识点：</strong></p>
+<ol>
+<li>工具默认提取关键字<code>gettext</code>标记的字符串。</li>
+<li>工具默认认为源文件是 ASCII 文件。</li>
+</ol>
+<p>但既然是要做国际化支持，建议将源码文件改为 UTF-8 编码，通过参数<code>--from-code</code>来指示源文件的编码即可。生成的 pot 文件内容如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># SOME DESCRIPTIVE TITLE.</span><br><span class="line"># Copyright (C) YEAR THE PACKAGE&#x27;S COPYRIGHT HOLDER</span><br><span class="line"># This file is distributed under the same license as the PACKAGE package.</span><br><span class="line"># FIRST AUTHOR &lt;EMAIL@ADDRESS&gt;, YEAR.</span><br><span class="line">#</span><br><span class="line">#, fuzzy</span><br><span class="line">msgid &quot;&quot;</span><br><span class="line">msgstr &quot;&quot;</span><br><span class="line">&quot;Project-Id-Version: PACKAGE VERSION\n&quot;</span><br><span class="line">&quot;Report-Msgid-Bugs-To: \n&quot;</span><br><span class="line">&quot;POT-Creation-Date: 2022-04-00 00:00+0800\n&quot;</span><br><span class="line">&quot;PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n&quot;</span><br><span class="line">&quot;Last-Translator: FULL NAME &lt;EMAIL@ADDRESS&gt;\n&quot;</span><br><span class="line">&quot;Language-Team: LANGUAGE &lt;LL@li.org&gt;\n&quot;</span><br><span class="line">&quot;Language: \n&quot;</span><br><span class="line">&quot;MIME-Version: 1.0\n&quot;</span><br><span class="line">&quot;Content-Type: text/plain; charset=CHARSET\n&quot;</span><br><span class="line">&quot;Content-Transfer-Encoding: 8bit\n&quot;</span><br><span class="line"></span><br><span class="line">#: C:/Demo/main.cpp:15</span><br><span class="line">msgid &quot;Love&quot;</span><br><span class="line">msgstr &quot;&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="0x02-自定义提取关键字"><a href="#0x02-自定义提取关键字" class="headerlink" title="0x02 自定义提取关键字"></a>0x02 自定义提取关键字</h3><p><code>xgettext.exe</code>默认仅识别<code>gettext</code>关键字，但可以用<code>--keyword</code>参数指示额外的关键字以满足扩展需求</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _(STRING) boost::locale::gettext(STRING)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> str1 = _(<span class="string">&quot;underline&quot;</span>);</span><br><span class="line"><span class="keyword">auto</span> str2 = boost::locale::<span class="built_in">translate</span>(<span class="string">&quot;boost&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xgettext --from-code=&quot;UTF-8&quot; --keyword=_ --keyword=translate -o gettext.pot main.cpp</span><br></pre></td></tr></table></figure>
+<h2 id="生成-po-文件"><a href="#生成-po-文件" class="headerlink" title="生成 po 文件"></a>生成 po 文件</h2><p>生成 po 文件用到的工具是<code>msginit</code>。</p>
+<h3 id="0x01-基本用法-1"><a href="#0x01-基本用法-1" class="headerlink" title="0x01 基本用法"></a>0x01 基本用法</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msginit -i gettext.pot -o gettext.po</span><br></pre></td></tr></table></figure>
+<p>得到po文件内容大概如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># Chinese translations for PACKAGE package</span><br><span class="line"># PACKAGE 软件包的简体中文翻译.</span><br><span class="line"># Copyright (C) 2022 THE PACKAGE&#x27;S COPYRIGHT HOLDER</span><br><span class="line"># This file is distributed under the same license as the PACKAGE package.</span><br><span class="line"># &lt;EMAIL@ADDRESS&gt;, 2022.</span><br><span class="line">#</span><br><span class="line">msgid &quot;&quot;</span><br><span class="line">msgstr &quot;&quot;</span><br><span class="line">&quot;Project-Id-Version: PACKAGE VERSION\n&quot;</span><br><span class="line">&quot;Report-Msgid-Bugs-To: \n&quot;</span><br><span class="line">&quot;POT-Creation-Date: 2022-04-01 08:57+0800\n&quot;</span><br><span class="line">&quot;PO-Revision-Date: 2022-04-01 09:16+0800\n&quot;</span><br><span class="line">&quot;Last-Translator: &lt;EMAIL@ADDRESS&gt;\n&quot;</span><br><span class="line">&quot;Language-Team: Chinese (simplified)\n&quot;</span><br><span class="line">&quot;Language: zh_CN\n&quot;</span><br><span class="line">&quot;MIME-Version: 1.0\n&quot;</span><br><span class="line">&quot;Content-Type: text/plain; charset=GBK\n&quot;</span><br><span class="line">&quot;Content-Transfer-Encoding: 8bit\n&quot;</span><br><span class="line">&quot;Plural-Forms: nplurals=1; plural=0;\n&quot;</span><br><span class="line"></span><br><span class="line">#: C:/Demo/Application.cpp:45</span><br><span class="line">msgid &quot;Love&quot;</span><br><span class="line">msgstr &quot;&quot;</span><br><span class="line"></span><br><span class="line">#: C:/Demo/Application.cpp:46</span><br><span class="line">msgid &quot;underline&quot;</span><br><span class="line">msgstr &quot;&quot;</span><br><span class="line"></span><br><span class="line">#: C:/Demo/Application.cpp:47</span><br><span class="line">msgid &quot;boost&quot;</span><br><span class="line">msgstr &quot;&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="0x02-指示目标语言及编码"><a href="#0x02-指示目标语言及编码" class="headerlink" title="0x02 指示目标语言及编码"></a>0x02 指示目标语言及编码</h3><p>输出的 po 文件默认使用本机区域设置，比如简体中文是<code>zh_CN.GBK</code>。<br>可以通过<code>--locale</code>参数指示 po 文件的语言和编码。格式遵循 <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/ISO%20639-1">ISO 639-1</a> 和 <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/ISO%203166-1/5269555">ISO 3166-1</a> 标准。<br>比如我想创建一个针对简体中文的翻译文件并采用 UTF-8 编码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msginit --locale=zh_CN.UTF-8 -i gettext.pot -o zh_CN.po</span><br></pre></td></tr></table></figure>
+<p>但是<code>charset</code>却依然是GBK</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">&quot;Content-Type: text/plain; charset=GBK\n&quot;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>google找到了答案：因为 pot 文件没有编码信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;Content-Type: text/plain; charset=CHARSET\n&quot;</span><br></pre></td></tr></table></figure>
+<p>明明在 xgettext 参数中指定了 UTF-8，为什么 pot 文件没有信息？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xgettext.exe --from-code=&quot;UTF-8&quot;</span><br></pre></td></tr></table></figure>
+<p>因为 xgettext 在提取原文过程中没有发现任何非 ASCII 字符，就会忽略掉 charset，也算是个BUG了。<br>当我手动修改 pot 文件编码后，再次生成 po 文件，charset 就变为了 UTF-8，但文件内容其实还是GBK。。。<br><img src="https://pic.rmb.bdstatic.com/bjh/63597676b81cbde2eab69189c966bba1.png"><br>所以，解决这个问题需要做两件事</p>
+<ol>
+<li>修改 po 文件的<code>charset</code>为UTF-8</li>
+<li>修改 po 文件编码为 UTF-8</li>
+</ol>
+<p>每次去手动修改有点傻，我们可以在源码中标记一个UTF-8字符，但是翻译的时候忽略它，这样就能保证 pot、po文件的<code>charset</code>为UTF-8。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//TRANSLATOR:无需翻译</span></span><br><span class="line">boost::locale::<span class="built_in">pgettext</span>(<span class="string">&quot;IGNORE&quot;</span>, <span class="string">&quot;ø&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>这样就解决了<code>charset</code>的问题。文件自身编码问题可以用<code>iconv.exe</code>来转换，它已经包含在<code>gettext</code>工具包中了，所以最终的命令是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">msginit -i test.pot -o zh_CN.po.tmp</span><br><span class="line">iconv -t utf-8 zh_CN.po.tmp &gt; zh_CN.po</span><br><span class="line">del zh_CN.po.tmp</span><br></pre></td></tr></table></figure>
+<h2 id="生成-mo-语言文件"><a href="#生成-mo-语言文件" class="headerlink" title="生成 mo 语言文件"></a>生成 mo 语言文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msgfmt -o test.mo zh_CN.po</span><br></pre></td></tr></table></figure>
+<h2 id="更新-po-文件"><a href="#更新-po-文件" class="headerlink" title="更新 po 文件"></a>更新 po 文件</h2><p>在软件升级迭代的过程中，待翻译原文也会发生变化，如增加、删除等，这就需要将 pot 文件中变动的内容更新至 po 文件，而不是重新生成一个新的 po 文件。这就需要用到<code>msgmerge</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msgmerge -U zh_CN.po test.pot</span><br></pre></td></tr></table></figure>
+<p><code>-U</code>表示更新现有 po 文件，按位置看，第一个文件就是被更新的目标文件。<br>当然也可以用<code>-o</code>参数创建一个新的 po 文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msgmerge -o new.po zh_CN.po test.pot</span><br></pre></td></tr></table></figure>
+<p><strong>知识点：</strong></p>
+<ol>
+<li>新文件中词条如果有译文，任何情况下都不会被覆盖。</li>
+<li>通过<code>compendium</code>参数指定翻译文件对空词条进行填充。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msgmerge --compendium dict.po -U target.po new.pot</span><br></pre></td></tr></table></figure>
+<p>注意，引用的文件可以是 pot 文件，也可以是 po 文件。</p>
+<h2 id="合并多个-po-文件"><a href="#合并多个-po-文件" class="headerlink" title="合并多个 po 文件"></a>合并多个 po 文件</h2><p>一个软件项目可能含有多个模块，每个模块都有自己的翻译文件，有大量重叠的内容，完全可以将多个 po 文件合并为一个。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msgcat -o all.po 1.po 2.po</span><br></pre></td></tr></table></figure>
+<p>默认合并规则：</p>
+<ul>
+<li>对于相同的原文，如果仅有一个被翻译了，则采用它。</li>
+<li>对于相同的原文，如果有不同的翻译，则会合并所有的翻译，需要人工处理<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#: main.cpp:21 main.cpp:25</span><br><span class="line">#, fuzzy</span><br><span class="line">msgid &quot;Love&quot;</span><br><span class="line">msgstr &quot;&quot;</span><br><span class="line">&quot;#-#-#-#-#  1.po  #-#-#-#-#\n&quot;</span><br><span class="line">&quot;爱情\n&quot;</span><br><span class="line">&quot;#-#-#-#-#  2.po  #-#-#-#-#\n&quot;</span><br><span class="line">&quot;爱&quot;</span><br></pre></td></tr></table></figure>
+<img src="https://pic.rmb.bdstatic.com/bjh/a6c4215b2b72a9ba139b57ff419faab2.png"><br>如果想避免重复的翻译内容被合并，可以使用<code>use-first</code>参数，表示采用找到的第一个可用的翻译。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msgcat --use-first -o all.po 1.po 2.po</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.gnu.org/software/gettext/manual/html_node/msginit-Invocation.html">msginit</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/haiiiiiyun/article/details/104970005">GNU gettext工具简介</a><br><a target="_blank" rel="noopener" href="https://www.helywin.com/posts/20200814061352/">gettext使用</a><br><a target="_blank" rel="noopener" href="https://peter.bloomfield.online/generate-utf-8-dictionaries-using-gettext/">Generate UTF-8 dictionaries using gettext</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/04/27/16200732/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/" title="工具软件">
+                        #工具软件
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/05/07/16244353/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD"><span class="toc-text">下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BF%BB%E8%AF%91%E6%B5%81%E7%A8%8B"><span class="toc-text">翻译流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E5%8F%96%E5%8E%9F%E6%96%87"><span class="toc-text">提取原文</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-text">0x01 基本用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8F%90%E5%8F%96%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-text">0x02 自定义提取关键字</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90-po-%E6%96%87%E4%BB%B6"><span class="toc-text">生成 po 文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95-1"><span class="toc-text">0x01 基本用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-%E6%8C%87%E7%A4%BA%E7%9B%AE%E6%A0%87%E8%AF%AD%E8%A8%80%E5%8F%8A%E7%BC%96%E7%A0%81"><span class="toc-text">0x02 指示目标语言及编码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90-mo-%E8%AF%AD%E8%A8%80%E6%96%87%E4%BB%B6"><span class="toc-text">生成 mo 语言文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0-po-%E6%96%87%E4%BB%B6"><span class="toc-text">更新 po 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%88%E5%B9%B6%E5%A4%9A%E4%B8%AA-po-%E6%96%87%E4%BB%B6"><span class="toc-text">合并多个 po 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + gettext%20%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F04%2F28%2F16205078%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/04/28/16205078/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

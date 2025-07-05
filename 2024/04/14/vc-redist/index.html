@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      VC 运行时安装包 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">VC 运行时安装包</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/" title="工具软件">
+                    #工具软件
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/c-plus-plus/" title="C++">
+                    #C++
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>VC运行库没什么特别情况就直接安装最新版，但有些新版本已经不支持旧系统，所以会特别列出来。</p>
+<h2 id="Microsoft-Visual-C-2015-2022"><a href="#Microsoft-Visual-C-2015-2022" class="headerlink" title="Microsoft Visual C++ 2015 - 2022"></a>Microsoft Visual C++ 2015 - 2022</h2><h3 id="最新版本"><a href="#最新版本" class="headerlink" title="最新版本"></a>最新版本</h3><p><a target="_blank" rel="noopener" href="https://aka.ms/vs/17/release/vc_redist.x86.exe">VC_redist.x86.exe</a><br><a target="_blank" rel="noopener" href="https://aka.ms/vs/17/release/vc_redist.x64.exe">VC_redist.x64.exe</a><br><a target="_blank" rel="noopener" href="https://aka.ms/vs/17/release/vc_redist.arm64.exe">VC_redist.arm64.exe</a></p>
+<h3 id="14-32-31332（最后一个可以运行在-Vista-系统上的版本）"><a href="#14-32-31332（最后一个可以运行在-Vista-系统上的版本）" class="headerlink" title="14.32.31332（最后一个可以运行在 Vista 系统上的版本）"></a>14.32.31332（最后一个可以运行在 Vista 系统上的版本）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://download.visualstudio.microsoft.com/download/pr/ed95ef9e-da02-4735-9064-bd1f7f69b6ed/CE6593A1520591E7DEA2B93FD03116E3FC3B3821A0525322B0A430FAA6B3C0B4/VC_redist.x64.exe</span><br><span class="line">https://download.visualstudio.microsoft.com/download/pr/ed95ef9e-da02-4735-9064-bd1f7f69b6ed/CF92A10C62FFAB83B4A2168F5F9A05E5588023890B5C0CC7BA89ED71DA527B0F/VC_redist.x86.exe</span><br><span class="line">https://download.visualstudio.microsoft.com/download/pr/ed95ef9e-da02-4735-9064-bd1f7f69b6ed/8E126191012691AE22A0D5A89FAC01B59BABC7B680E5D9B65828935FD366E375/VC_redist.arm64.exe</span><br></pre></td></tr></table></figure>
+
+<h2 id="Microsoft-Visual-C-2015-2019"><a href="#Microsoft-Visual-C-2015-2019" class="headerlink" title="Microsoft Visual C++ 2015 - 2019"></a>Microsoft Visual C++ 2015 - 2019</h2><h3 id="最新版本-1"><a href="#最新版本-1" class="headerlink" title="最新版本"></a>最新版本</h3><p><a target="_blank" rel="noopener" href="https://aka.ms/vs/16/release/vc_redist.x86.exe">VC_redist.x86.exe</a><br><a target="_blank" rel="noopener" href="https://aka.ms/vs/16/release/vc_redist.x64.exe">VC_redist.x64.exe</a><br><a target="_blank" rel="noopener" href="https://aka.ms/vs/16/release/VC_redist.arm64.exe">VC_redist.arm64.exe</a></p>
+<h3 id="14-28-29213（最后一个可以运行在-XP-系统上的版本）"><a href="#14-28-29213（最后一个可以运行在-XP-系统上的版本）" class="headerlink" title="14.28.29213（最后一个可以运行在 XP 系统上的版本）"></a>14.28.29213（最后一个可以运行在 XP 系统上的版本）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">https://download.visualstudio.microsoft.com/download/pr/566435ac-4e1c-434b-b93f-aecc71e8cffc/0D59EC7FDBF05DE813736BF875CEA5C894FFF4769F60E32E87BD48406BBF0A3A/VC_redist.x86.exe</span><br><span class="line">https://download.visualstudio.microsoft.com/download/pr/566435ac-4e1c-434b-b93f-aecc71e8cffc/B75590149FA14B37997C35724BC93776F67E08BFF9BD5A69FACBF41B3846D084/VC_redist.x64.exe</span><br><span class="line">https://download.visualstudio.microsoft.com/download/pr/7b0dbd13-8740-4bcd-b86e-dffe0002c0b2/07C0219A8002491F85604EB76AADBD11DB819AF8A813621376B5DA5630C21E20/VC_redist.arm64.exe</span><br></pre></td></tr></table></figure>
+
+<h2 id="Microsoft-Visual-C-2017"><a href="#Microsoft-Visual-C-2017" class="headerlink" title="Microsoft Visual C++ 2017"></a>Microsoft Visual C++ 2017</h2><h3 id="最新版本-2"><a href="#最新版本-2" class="headerlink" title="最新版本"></a>最新版本</h3><p><a target="_blank" rel="noopener" href="https://aka.ms/vs/15/release/vc_redist.x86.exe">VC_redist.x86.exe</a><br><a target="_blank" rel="noopener" href="https://aka.ms/vs/15/release/vc_redist.x64.exe">VC_redist.x64.exe</a><br><a target="_blank" rel="noopener" href="https://aka.ms/vs/15/release/vc_redist.arm64.exe">VC_redist.arm64.exe</a></p>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>x86</th>
+<th>x64</th>
+<th>arm64</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>14.20.27404.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/57c9f522-4aaf-4036-8c7b-9a0034359359/2cb6bf088adfc7f54e122b468effa879/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/2db56484-9419-45d1-b02c-1cb23d85d45b/7bb6c9d792c1d26679b1af8effd630f2/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.20.27323.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/810f730d-4094-41b3-ab0e-aa3314b57288/da301e7b495be0d806e385931d0321d8/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/1577e5d9-4000-49e4-a76f-974f47715c1e/1f3238178cac6d30960d8a7a6af515a3/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.16.27305.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/9fc98793-5b02-4fb2-9bca-04ea54a7b98d/2c922a55fb6d2808cfcd5935c666088a/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/ddec9dfe-f1b5-4e78-b576-31c4c401b693/5c831021d2ca44f1915ed7f8705f8fde/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.16.27029.1</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/09a93ed7-32d3-4a52-8c4c-ba26eb1465de/8a3d68179def218fea8dc987c5c01eb6/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/906d2e4a-c423-4c85-bfd9-d0fa35640dfe/34ef2b9a75badb8926d2820bac3639f8/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/cf45ec71-d4d7-480e-affc-e75e89e0349b/9e1367fcaabe85e254817b18ee39e2a7/vc_redist.arm64.exe">vc_redist.arm64.exe</a></td>
+</tr>
+<tr>
+<td>14.16.27027.1</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/e9e1e87c-5bba-49fa-8bad-e00f0527f9bc/8e641901c2257dda7f0d3fd26541e07a/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/36c5faaf-bd8b-433f-b3d7-2af73bae10a8/212f41f2ccffee6d6dc27f901b7d77a1/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/14276100-0b76-4787-9443-f5d9e3be9532/26b2215bf08256af3ddb80892b14f087/vc_redist.arm64.exe">vc_redist.arm64.exe</a></td>
+</tr>
+<tr>
+<td>14.16.27024.1</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/feb07965-6bd2-4448-a42c-f7e44b14b2bd/e967de02e250191d8743fed0a99300cc/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/da111512-4cd1-4373-8e9c-b7756169a7fc/9847cddac1fa50cb4c609d3440dbbfdd/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/d5873e09-f580-4e55-896d-88dd8b97f58d/02f09136713a170d7cbb571fa626a615/vc_redist.arm64.exe">vc_redist.arm64.exe</a></td>
+</tr>
+<tr>
+<td>14.16.27023.1</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/d0b808a8-aa78-4250-8e54-49b8c23f7328/9c5e6532055786367ee61aafb3313c95/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/9fbed7c7-7012-4cc0-a0a3-a541f51981b5/e7eec15278b4473e26d7e32cef53a34c/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.16.27012.6</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/418c1c23-c3b9-40f4-aa7f-c29a4428938f/6cdc605d4ba860a0ab86cace32894b0b/vc_redist.x86.exe">vc_redist.x86.exe</a>、<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/ad7b10f2-178d-4147-9f29-dc15fed99860/73a98387d598066aedecfb1740e09095/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/f4b43ad3-8847-4630-9df9-3910ce3ebaaf/e0acacec5e6f7e0fe2c0b4be495bf1a0/vc_redist.x64.exe">vc_redist.x64.exe</a>、<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/ec23352c-a742-453a-9b2e-3a2132b69661/564487308ad325ff0cfccf9b89e885c7/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.15.26706.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/a091cf7f-0c4a-4880-adc7-925046c2d227/fc4906e2d327380e4a320d677795ca8c/vc_redist.x86.exe">vc_redist.x86.exe</a>、<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/749aa419-f9e4-4578-a417-a43786af205e/d59197078cc425377be301faba7dd87a/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/21ac5efc-11b4-43ff-8c53-5e204b1abdc5/16acba795c9a429c6dd4c26570f40cab/vc_redist.x64.exe">vc_redist.x64.exe</a>、<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/20ef12bb-5283-41d7-90f7-eb3bb7355de7/8b58fd89f948b2430811db3da92299a6/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.15.26626.1</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/30fb3093-fd68-4fd2-a89e-5bf9d82d4afe/b64fcef8b6025637adaa30fbc3bf25b7/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/40540ada-0c94-4fd5-96a0-5f7186628b96/cd4090733c623b9dc71fc2361115c200/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.15.26608.1</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/776d6fb9-1c03-47fa-a6d5-7eb528198d6f/ddc92bc7e33ce187851e5939ec7b70ab/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/ecd5a72e-cd0f-4086-9e54-d70572c0dfd8/622a0624ebce07df3d0eaadeceeef3bb/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.14.26429.4</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/12319034/ccd261eb0e095411af3b306273231b68/VC_redist.x86.exe">VC_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/12328699/a80e967515b2a4faf37bf15387f1c5c3/VC_redist.x64.exe">VC_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.14.26405.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/12076901/9ca0bba83015c844cc98d7cb783370e9/VC_redist.x86.exe">VC_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/12077385/73e1ab8917c6ee08fb03a230865b9401/VC_redist.x64.exe">VC_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.14.26329.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/11993435/9ca0bba83015c844cc98d7cb783370e9/VC_redist.x86.exe">VC_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/11992678/73e1ab8917c6ee08fb03a230865b9401/VC_redist.x64.exe">VC_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.13.26118.0</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>14.13.26020.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/100486102/9ca0bba83015c844cc98d7cb783370e9/VC_redist.x86.exe">VC_redist.x86.exe</a>、<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/11687613/88b50ce70017bf10f2d56d60fcba6ab1/VC_redist.x86.exe">VC_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/100493959/73e1ab8917c6ee08fb03a230865b9401/VC_redist.x64.exe">VC_redist.x64.exe</a>、<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/11687625/2cd2dba5748dc95950a5c42c2d2d78e4/VC_redist.x64.exe">VC_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.12.25810.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/100349138/88b50ce70017bf10f2d56d60fcba6ab1/VC_redist.x86.exe">VC_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/100349091/2cd2dba5748dc95950a5c42c2d2d78e4/VC_redist.x64.exe">VC_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.12.25711.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/100084058/9ca0bba83015c844cc98d7cb783370e9/VC_redist.x86.exe">VC_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/100084443/73e1ab8917c6ee08fb03a230865b9401/VC_redist.x64.exe">VC_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.11.25506.0</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>14.11.25325.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/11100229/78c1e864d806e36f6035d80a0e80399e/VC_redist.x86.exe">VC_redist.x86.exe</a>、<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/10630635/9ca0bba83015c844cc98d7cb783370e9/VC_redist.x86.exe">VC_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/11100230/15ccb3f02745c7b206ad10373cbca89b/VC_redist.x64.exe">VC_redist.x64.exe</a>、<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/10629685/73e1ab8917c6ee08fb03a230865b9401/VC_redist.x64.exe">VC_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.10.25017.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/f/e/1febbdb2-aded-4e14-9063-39fb17e88444/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/3/b/f/3bf6e759-c555-4595-8973-86b7b4312927/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.10.25008.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/d/8/1d8137db-b5bb-4925-8c5d-927424a2e4de/vc_redist.x86.exe">vc_redist.x86.exe</a>、<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/7/a/6/7a68af9f-3761-4781-809b-b6df0f56d24c/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/5/7/b/57b2947c-7221-4f33-b35e-2fc78cb10df4/vc_redist.x64.exe">vc_redist.x64.exe</a>、<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/8/9/d/89d195e1-1901-4036-9a75-fbe46443fc5a/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="14-16-27033-0"><a href="#14-16-27033-0" class="headerlink" title="14.16.27033.0"></a>14.16.27033.0</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">https://download.visualstudio.microsoft.com/download/pr/2b5bcd2f-0dbc-4b83-90a3-3b1c5ae77e62/0252474394129dbab6ff9ce24f1c6a3c/vc_redist.x86.exe</span><br><span class="line"></span><br><span class="line">https://download.visualstudio.microsoft.com/download/pr/84ad0436-74ae-497d-bdb7-4fd6e6ab001c/5B0CBB977F2F5253B1EBE5C9D30EDBDA35DBD68FB70DE7AF5FAAC6423DB575B5/VC_redist.x64.exe</span><br><span class="line"></span><br><span class="line">https://download.visualstudio.microsoft.com/download/pr/84ad0436-74ae-497d-bdb7-4fd6e6ab001c/E0AD3FDD0D4CD9F1BB1589F23AB73991CAA8EEA374F59DCB9E0B46D1422A6BE6/VC_redist.arm64.exe</span><br></pre></td></tr></table></figure>
+
+<h2 id="Microsoft-Visual-C-2015"><a href="#Microsoft-Visual-C-2015" class="headerlink" title="Microsoft Visual C++ 2015"></a>Microsoft Visual C++ 2015</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>x86</th>
+<th>x64</th>
+<th>arm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>14.10.24516.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/0/5/2/05271FE6-CBA8-4A4D-9E95-00CFC60C1639/VC_redist.x86.exe">VC_redist.x86.exe</a>、<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/5/B/1/5B188FBD-9CCA-46D2-AE4C-BC50DF7E8828/VC_redist.x86.exe">VC_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/8/C/4/8C46752E-F6FD-43E4-AF10-E046A128CC0A/VC_redist.x64.exe">VC_redist.x64.exe</a>、<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/6/2/4/62491095-34D6-4FB0-BB14-22293D193397/VC_redist.x64.exe">VC_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.24406.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/c/5/0/c50ddaed-1286-4a0f-ba29-63ea2d6b2bc2/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/e/7/8/e7842dea-ed59-4703-9a9e-5c05e89686f5/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.24215.1</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/F/0/1F01DD22-748C-41A7-89DE-54D64355CDA6/vc_redist.x86.exe">vc_redist.x86.exe</a>、<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/6/A/A/6AA4EDFF-645B-48C5-81CC-ED5963AEAD48/vc_redist.x64.exe">vc_redist.x64.exe</a>、<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/F/0/1F01DD22-748C-41A7-89DE-54D64355CDA6/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.24212.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/9/a/2/9a2a7e36-a8af-46c0-8a78-a5eb111eefe2/vc_redist.x86.exe">vc_redist.x86.exe</a>、<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/6/D/F/6DF3FF94-F7F9-4F0B-838C-A328D1A7D0EE/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/2/a/2/2a2ef9ab-1b4b-49f0-9131-d33f79544e70/vc_redist.x64.exe">vc_redist.x64.exe</a>、<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/6/D/F/6DF3FF94-F7F9-4F0B-838C-A328D1A7D0EE/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.24210.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/d/e/c/dec58546-c2f5-40a7-b38e-4df8d60b9764/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/2/c/6/2c675af0-2155-4961-b32e-289d7addfcec/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.24123.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/0/6/4/064F84EA-D1DB-4EAA-9A5C-CC2F0FF6A638/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/0/6/4/064F84EA-D1DB-4EAA-9A5C-CC2F0FF6A638/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.24109.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/f/3/6/f36aaf39-28c5-481c-94ae-eb32338f1a42/enu_RM_CLIENT/vcredistd14x86/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/f/3/6/f36aaf39-28c5-481c-94ae-eb32338f1a42/enu_RM_CLIENT/vcredistd14x64/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.24018.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/5/2/a/52abcc54-d42c-45dc-b2e3-a34da7b3c1cc/enu_ENT/vcredistd14x86/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/5/2/a/52abcc54-d42c-45dc-b2e3-a34da7b3c1cc/enu_ENT/vcredistd14x64/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.23918.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/f/3/9/f39b30ec-f8ef-4ba3-8cb4-e301fcf0e0aa/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/4/c/b/4cbd5757-0dd4-43a7-bac0-2a492cedbacb/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/0/2/5/02596cd9-63cd-4c90-8e13-073ff0fe7fb5/vc_redist.arm.exe">vc_redist.arm.exe</a></td>
+</tr>
+<tr>
+<td>14.0.23910.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/0/9/8/098f52fc-d597-485e-8282-0188c5a94d5a/enu_ENT/vcredistd14x86/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/0/9/8/098f52fc-d597-485e-8282-0188c5a94d5a/enu_ENT/vcredistd14x64/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.23907.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/5/5/3/5532a287-5746-4332-a2be-173c9c118a9b/enu_ENT/vcredistd14x86/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/5/5/3/5532a287-5746-4332-a2be-173c9c118a9b/enu_ENT/vcredistd14x64/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.23824.1</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/8/2/c/82c972ab-8a40-4d4b-86cf-24a984c5cf7f/enu_comm_sl4/vcredistd14x86/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/9/3/7/937bcec8-37db-4be6-a296-9d0cf1d88ff7/enu_comm_sl3/vcredistd14x64/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.23816.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/3/e/13ec6ec9-2076-4f9a-901e-7e67d0fa5833/enu_TFS_OFF/vcredistd14x86/vc_redist.x86.exe">vc_redist.x86.exe</a>、<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/a/e/d/aed666f4-d768-40bd-a46d-78579cf77357/enu_TFS_SRV/vcredistd14x86/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/3/e/13ec6ec9-2076-4f9a-901e-7e67d0fa5833/enu_TFS_OFF/vcredistd14x64/vc_redist.x64.exe">vc_redist.x64.exe</a>、<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/a/e/d/aed666f4-d768-40bd-a46d-78579cf77357/enu_TFS_SRV/vcredistd14x64/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.23506.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/C/E/5/CE514EAE-78A8-4381-86E8-29108D78DBD4/VC_redist.x86.exe">VC_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/C/E/5/CE514EAE-78A8-4381-86E8-29108D78DBD4/VC_redist.x64.exe">VC_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>14.0.23026.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/9/3/F/93FCF1E7-E6A4-478B-96E7-D4B285925B00/vc_redist.x86.exe">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/9/3/F/93FCF1E7-E6A4-478B-96E7-D4B285925B00/vc_redist.x64.exe">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="Microsoft-Visual-C-2013"><a href="#Microsoft-Visual-C-2013" class="headerlink" title="Microsoft Visual C++ 2013"></a>Microsoft Visual C++ 2013</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>x86</th>
+<th>x64</th>
+<th>arm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>最新</td>
+<td><a target="_blank" rel="noopener" href="https://aka.ms/highdpimfc2013x86chs">vc_redist.x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://aka.ms/highdpimfc2013x64chs">vc_redist.x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>12.0.40664.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/10912113/5da66ddebb0ad32ebd4b922fd82e8e25/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/10912041/cee5d6bca2ddbcd039da727bf4acb48a/vcredist_x64.exe">vcredist_x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>12.0.40660.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/0/5/6/056dcda9-d667-4e27-8001-8a0c6971d6b1/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/0/5/6/056dcda9-d667-4e27-8001-8a0c6971d6b1/vcredist_x64.exe">vcredist_x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>12.0.40649.5</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/C/C/2/CC2DF5F8-4454-44B4-802D-5EA68D086676/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/C/C/2/CC2DF5F8-4454-44B4-802D-5EA68D086676/vcredist_x64.exe">vcredist_x64.exe</a></td>
+<td></td>
+</tr>
+<tr>
+<td>12.0.30501.0</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe">vcredist_x64.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_arm.exe">vcredist_arm.exe</a></td>
+</tr>
+<tr>
+<td>12.0.21005.1</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/5/2/a/52abcc54-d42c-45dc-b2e3-a34da7b3c1cc/enu_ENT/vcredistd12x86/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/5/2/a/52abcc54-d42c-45dc-b2e3-a34da7b3c1cc/enu_ENT/vcredistd12x64/vcredist_x64.exe">vcredist_x64.exe</a></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="Microsoft-Visual-C-2012"><a href="#Microsoft-Visual-C-2012" class="headerlink" title="Microsoft Visual C++ 2012"></a>Microsoft Visual C++ 2012</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>x86</th>
+<th>x64</th>
+<th>arm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>11.0.61030.0</td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x64.exe">vcredist_x64.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU4/vcredist_arm.exe">vcredist_arm.exe</a></td>
+</tr>
+<tr>
+<td>11.0.60610.1</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU3/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU3/vcredist_x64.exe">vcredist_x64.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU3/vcredist_arm.exe">vcredist_arm.exe</a></td>
+</tr>
+<tr>
+<td>11.0.51106.1</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU1/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU1/vcredist_x64.exe">vcredist_x64.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU1/vcredist_arm.exe">vcredist_arm.exe</a></td>
+</tr>
+<tr>
+<td>11.0.50727.1</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/vcredist_x64.exe">vcredist_x64.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/vcredist_arm.exe">vcredist_arm.exe</a></td>
+</tr>
+</tbody></table>
+<h2 id="Microsoft-Visual-C-2010"><a href="#Microsoft-Visual-C-2010" class="headerlink" title="Microsoft Visual C++ 2010"></a>Microsoft Visual C++ 2010</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>x86</th>
+<th>x64</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10.0.40219.473</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/E/E/0/EE05C9EF-A661-4D9E-BCE2-6961ECDF087F/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/E/E/0/EE05C9EF-A661-4D9E-BCE2-6961ECDF087F/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+<tr>
+<td>10.0.40219.325</td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+<tr>
+<td>10.0.40219.1</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/C/6/D/C6D0FD4E-9E53-4897-9B91-836EBA2AACD3/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/A/8/0/A80747C3-41BD-45DF-B505-E9710D2744E0/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+<tr>
+<td>10.0.30319.415</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/4/D/0/4D00D6C0-09FC-446C-AE9C-C923AF2DF29A/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/4/D/0/4D00D6C0-09FC-446C-AE9C-C923AF2DF29A/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+<tr>
+<td>10.0.30319.1</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/5/B/C/5BC5DBB3-652D-4DCE-B14A-475AB85EEF6E/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/3/2/2/3224B87F-CFA0-4E70-BDA3-3DE650EFEBA5/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+</tbody></table>
+<h2 id="Microsoft-Visual-C-2008"><a href="#Microsoft-Visual-C-2008" class="headerlink" title="Microsoft Visual C++ 2008"></a>Microsoft Visual C++ 2008</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>x86</th>
+<th>x64</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>9.0.30729.6161</td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+<tr>
+<td>9.0.30729.4148</td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/9/7/7/977B481A-7BA6-4E30-AC40-ED51EB2028F2/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/9/7/7/977B481A-7BA6-4E30-AC40-ED51EB2028F2/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+<tr>
+<td>9.0.30729.17</td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/d/d/9/dd9a82d0-52ef-40db-8dab-795376989c03/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/2/d/6/2d61c766-107b-409d-8fba-c39e61ca08e8/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+<tr>
+<td>9.0.30411</td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/d/1/0/d10d210e-e0ad-4010-b547-bc5e395ef691/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/1/9/0/190da410-d595-4342-ba2f-2422e78bc84d/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+<tr>
+<td>9.0.21022.218</td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/A/5/3/A53B40CA-F75C-4678-852A-3C15EA82F186/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/A/5/3/A53B40CA-F75C-4678-852A-3C15EA82F186/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+<tr>
+<td>9.0.21022</td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/1/1/1/1116b75a-9ec3-481a-a3c8-1777b5381140/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/d/2/4/d242c3fb-da5a-4542-ad66-f9661d0a8d19/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+</tbody></table>
+<h2 id="Microsoft-Visual-C-2005"><a href="#Microsoft-Visual-C-2005" class="headerlink" title="Microsoft Visual C++ 2005"></a>Microsoft Visual C++ 2005</h2><table>
+<thead>
+<tr>
+<th>版本</th>
+<th>x86</th>
+<th>x64</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8.0.61001</td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/4/A/2/4A22001F-FA3B-4C13-BF4E-42EC249D51C4/vcredist_x86.EXE">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/8/B/4/8B42259F-5D70-43F4-AC2E-4B208FD8D66A/vcredist_x64.EXE">vcredist_x64.exe</a></td>
+</tr>
+<tr>
+<td>8.0.59193</td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/6/B/B/6BB661D6-A8AE-4819-B79F-236472F6070C/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/6/B/B/6BB661D6-A8AE-4819-B79F-236472F6070C/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+<tr>
+<td>8.0.56336</td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/e/1/c/e1c773de-73ba-494a-a5ba-f24906ecf088/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/d/4/1/d41aca8a-faa5-49a7-a5f2-ea0aa4587da0/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+<tr>
+<td>8.0.50727.42</td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/d/3/4/d342efa6-3266-4157-a2ec-5174867be706/vcredist_x86.exe">vcredist_x86.exe</a></td>
+<td><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/9/1/4/914851c6-9141-443b-bdb4-8bad3a57bea9/vcredist_x64.exe">vcredist_x64.exe</a></td>
+</tr>
+</tbody></table>
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-CN/cpp/windows/latest-supported-vc-redist">Microsoft Visual C++ 可再发行程序包最新支持的下载</a><br><a target="_blank" rel="noopener" href="https://www.itechtics.com/microsoft-visual-c-redistributable-versions-direct-download-links/">Download Microsoft Visual C++ Redistributables (All Versions)</a><br><a target="_blank" rel="noopener" href="https://forum.ru-board.com/topic.cgi?forum=5&topic=24691">Microsoft Runtime Libraries</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gushandujian/p/16148602.html">各个版本Microsoft Visual C++运行库下载地址</a><br><a target="_blank" rel="noopener" href="https://github.com/abbodi1406/vcredist/tree/master/source_links">vcredist</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/04/11/windbg-remote/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/" title="工具软件">
+                        #工具软件
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/c-plus-plus/" title="C++">
+                        #C++
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/04/14/net-unhandledexception/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Microsoft-Visual-C-2015-2022"><span class="toc-text">Microsoft Visual C++ 2015 - 2022</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC"><span class="toc-text">最新版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14-32-31332%EF%BC%88%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E5%9C%A8-Vista-%E7%B3%BB%E7%BB%9F%E4%B8%8A%E7%9A%84%E7%89%88%E6%9C%AC%EF%BC%89"><span class="toc-text">14.32.31332（最后一个可以运行在 Vista 系统上的版本）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Microsoft-Visual-C-2015-2019"><span class="toc-text">Microsoft Visual C++ 2015 - 2019</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC-1"><span class="toc-text">最新版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14-28-29213%EF%BC%88%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E5%8F%AF%E4%BB%A5%E8%BF%90%E8%A1%8C%E5%9C%A8-XP-%E7%B3%BB%E7%BB%9F%E4%B8%8A%E7%9A%84%E7%89%88%E6%9C%AC%EF%BC%89"><span class="toc-text">14.28.29213（最后一个可以运行在 XP 系统上的版本）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Microsoft-Visual-C-2017"><span class="toc-text">Microsoft Visual C++ 2017</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC-2"><span class="toc-text">最新版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#14-16-27033-0"><span class="toc-text">14.16.27033.0</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Microsoft-Visual-C-2015"><span class="toc-text">Microsoft Visual C++ 2015</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Microsoft-Visual-C-2013"><span class="toc-text">Microsoft Visual C++ 2013</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Microsoft-Visual-C-2012"><span class="toc-text">Microsoft Visual C++ 2012</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Microsoft-Visual-C-2010"><span class="toc-text">Microsoft Visual C++ 2010</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Microsoft-Visual-C-2008"><span class="toc-text">Microsoft Visual C++ 2008</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Microsoft-Visual-C-2005"><span class="toc-text">Microsoft Visual C++ 2005</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + VC%20%E8%BF%90%E8%A1%8C%E6%97%B6%E5%AE%89%E8%A3%85%E5%8C%85 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F04%2F14%2Fvc-redist%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/04/14/vc-redist/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

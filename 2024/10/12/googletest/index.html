@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      用 GoogleTest 进行单元测试 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">用 GoogleTest 进行单元测试</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/c-plus-plus/" title="C++">
+                    #C++
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/GoogleTest/" title="GoogleTest">
+                    #GoogleTest
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Unit-Test/" title="Unit Test">
+                    #Unit Test
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="将-GoogleTest-添加到项目中"><a href="#将-GoogleTest-添加到项目中" class="headerlink" title="将 GoogleTest 添加到项目中"></a>将 GoogleTest 添加到项目中</h2><p>GoogleTest 仓库地址：<a target="_blank" rel="noopener" href="https://github.com/google/googletest">https://github.com/google/googletest</a><br>包含两个项目：GoogleTest 和 GoogleMock，目录结构是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">googletest/</span><br><span class="line">├── googletest/</span><br><span class="line">│   └── CMakeLists.txt</span><br><span class="line">├── googlemock/</span><br><span class="line">│   └── CMakeLists.txt</span><br><span class="line">└── CMakeLists.txt</span><br></pre></td></tr></table></figure>
+<p>GoogleMock 是用于模拟数据用的，简单测试的话用不上它。只需要将 googletest 拷贝到项目中，大概是这样的结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">MyProject/</span><br><span class="line">├── CMakeLists.txt</span><br><span class="line">├── ModuleA/</span><br><span class="line">│   └── CMakeLists.txt</span><br><span class="line">└── googletest/</span><br><span class="line">    ├── googletest/</span><br><span class="line">    │   └── CMakeLists.txt</span><br><span class="line">    └── CMakeLists.txt</span><br></pre></td></tr></table></figure>
+<p>然后在根<code>CMakeLists.txt</code>文件中加入</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(BUILD_GMOCK <span class="keyword">OFF</span>)</span><br><span class="line"><span class="keyword">add_subdirectory</span>(googletest)</span><br></pre></td></tr></table></figure>
+<p>接着创建一个测试项目，比如<code>ModuleA-Test</code>，在它的<code>CMakeLists.txt</code>中链接<code>gtest_main</code>即可。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">target_link_libraries</span>(ModuleA-<span class="keyword">Test</span> PRIVATE gtest_main)</span><br></pre></td></tr></table></figure>
+<p>注意，GoogleTest 添加了两个 target，<code>gtest</code>和<code>gtest_main</code>。<br><code>gtest_main</code>是 GoogleTest 测试框架中的一个库，它提供了一个预定义的<code>main()</code>函数，用于运行所有的测试用例。<br>在使用 GoogleTest 编写测试时，通常需要定义一个<code>main()</code>函数来初始化测试框架并运行测试用例。而<code>gtest_main</code>库提供了一个默认的<code>main()</code>函数实现，<br>通过使用<code>gtest_main</code>库，可以避免在每个测试文件中编写相同的<code>main()</code>函数，从而简化测试代码的编写和维护。<br>下面是一个使用<code>gtest_main</code>库的简单示例：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gtest/gtest.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="built_in">TEST</span>(ExampleTest, SimpleTest) &#123;</span><br><span class="line">    <span class="built_in">ASSERT_EQ</span>(<span class="number">2</span>, <span class="number">1</span> + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 无需编写 main() 函数，gtest_main 会自动提供</span></span><br></pre></td></tr></table></figure>
+<p>而<code>gtest_main</code>是依赖<code>gtest</code>的，所以我们只需要链接<code>gtest_main</code>即可。</p>
+<h2 id="断言"><a href="#断言" class="headerlink" title="断言"></a>断言</h2><p>断言分成两大类：</p>
+<ul>
+<li><code>ASSERT_*</code>系列：如果检测失败就直接退出当前函数。</li>
+<li><code>EXPECT_*</code>系列：如果检测失败发出提示，并继续往下执行。</li>
+</ul>
+<p>通常情况应该首选使用 EXPECT，因为 ASSERT 在报告完错误后不会进行清理工作。</p>
+<h3 id="判断布尔类型"><a href="#判断布尔类型" class="headerlink" title="判断布尔类型"></a>判断布尔类型</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ASSERT_TRUE</span>(condition);      <span class="comment">// 判断条件是否为真</span></span><br><span class="line"><span class="built_in">ASSERT_FALSE</span>(condition);     <span class="comment">// 判断条件是否为假</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">EXPECT_TRUE</span>(condition);      <span class="comment">// 判断条件是否为真</span></span><br><span class="line"><span class="built_in">EXPECT_FALSE</span>(condition);     <span class="comment">// 判断条件是否为假</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="逻辑判断"><a href="#逻辑判断" class="headerlink" title="逻辑判断"></a>逻辑判断</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ASSERT_EQ</span>(val1, val2);       <span class="comment">// 判断是否相等</span></span><br><span class="line"><span class="built_in">ASSERT_NE</span>(val1, val2);       <span class="comment">// 判断是否不相等</span></span><br><span class="line"><span class="built_in">ASSERT_LT</span>(val1, val2);       <span class="comment">// 判断是否小于</span></span><br><span class="line"><span class="built_in">ASSERT_LE</span>(val1, val2);       <span class="comment">// 判断是否小于等于</span></span><br><span class="line"><span class="built_in">ASSERT_GT</span>(val1, val2);       <span class="comment">// 判断是否大于</span></span><br><span class="line"><span class="built_in">ASSERT_GE</span>(val1, val2);       <span class="comment">// 判断是否大于等于</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="比较字符串类型"><a href="#比较字符串类型" class="headerlink" title="比较字符串类型"></a>比较字符串类型</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ASSERT_STREQ</span>(str1,str2);     <span class="comment">// 判断字符串是否相等</span></span><br><span class="line"><span class="built_in">ASSERT_STRNE</span>(str1,str2);     <span class="comment">// 判断字符串是否不相等</span></span><br><span class="line"><span class="built_in">ASSERT_STRCASEEQ</span>(str1,str2); <span class="comment">// 判断字符串是否相等，忽视大小写</span></span><br><span class="line"><span class="built_in">ASSERT_STRCASENE</span>(str1,str2); <span class="comment">// 判断字符串是否不相等，忽视大小写</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">EXPECT_STREQ</span>(str1,str2);     <span class="comment">// 判断字符串是否相等</span></span><br><span class="line"><span class="built_in">EXPECT_STRNE</span>(str1,str2);     <span class="comment">// 判断字符串是否不相等</span></span><br><span class="line"><span class="built_in">EXPECT_STRCASEEQ</span>(str1,str2); <span class="comment">// 判断字符串是否相等，忽视大小写</span></span><br><span class="line"><span class="built_in">EXPECT_STRCASENE</span>(str1,str2); <span class="comment">// 判断字符串是否不相等，忽视大小写</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="谓词"><a href="#谓词" class="headerlink" title="谓词"></a>谓词</h3><p>谓词用于编写自定义的断言。这些宏允许你定义一个谓词函数，该函数接受一定数量的参数并返回一个布尔值，然后将该谓词函数应用于实际的参数，并根据返回值来确定断言是否通过。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">EXPECT_PRED1</span>(pred,val1);</span><br><span class="line"><span class="built_in">EXPECT_PRED2</span>(pred,val1,val2);</span><br><span class="line"><span class="built_in">EXPECT_PRED3</span>(pred,val1,val2,val3);</span><br><span class="line"><span class="built_in">EXPECT_PRED4</span>(pred,val1,val2,val3,val4);</span><br><span class="line"><span class="built_in">EXPECT_PRED5</span>(pred,val1,val2,val3,val4,val5);</span><br><span class="line"></span><br><span class="line"><span class="built_in">ASSERT_PRED1</span>(pred,val1);</span><br><span class="line"><span class="built_in">ASSERT_PRED2</span>(pred,val1,val2);</span><br><span class="line"><span class="built_in">ASSERT_PRED3</span>(pred,val1,val2,val3);</span><br><span class="line"><span class="built_in">ASSERT_PRED4</span>(pred,val1,val2,val3,val4);</span><br><span class="line"><span class="built_in">ASSERT_PRED5</span>(pred,val1,val2,val3,val4,val5);</span><br></pre></td></tr></table></figure>
+<p>一个使用 EXPECT_PRED2 的例子：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gtest/gtest.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">IsPositiveAndEven</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x &gt; <span class="number">0</span> &amp;&amp; y &gt; <span class="number">0</span> &amp;&amp; x % <span class="number">2</span> == <span class="number">0</span> &amp;&amp; y % <span class="number">2</span> == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">TEST</span>(PredTest, IsPositiveAndEven) &#123;</span><br><span class="line">    <span class="built_in">EXPECT_PRED2</span>(IsPositiveAndEven, <span class="number">2</span>, <span class="number">4</span>);</span><br><span class="line">    <span class="built_in">EXPECT_PRED2</span>(IsPositiveAndEven, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/coderzh/tag/Google%20Test/">玩转Google开源C++单元测试框架Google Test系列</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/shift_wwx/article/details/102857567">C++单元测试框架Google Test系列(gtest)</a><br><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/1419710">C++单元测试GoogleTest和GoogleMock十分钟快速上手</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1510229">C++ 项目之Googletest单元测试</a><br><a target="_blank" rel="noopener" href="https://www.jetbrains.com.cn/en-us/help/clion/creating-google-test-run-debug-configuration-for-test.html">CLion 中使用 Google Test</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/10/12/ryujinx/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/c-plus-plus/" title="C++">
+                        #C++
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/GoogleTest/" title="GoogleTest">
+                        #GoogleTest
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Unit-Test/" title="Unit Test">
+                        #Unit Test
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/10/13/boost-asio/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86-GoogleTest-%E6%B7%BB%E5%8A%A0%E5%88%B0%E9%A1%B9%E7%9B%AE%E4%B8%AD"><span class="toc-text">将 GoogleTest 添加到项目中</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%AD%E8%A8%80"><span class="toc-text">断言</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E5%B8%83%E5%B0%94%E7%B1%BB%E5%9E%8B"><span class="toc-text">判断布尔类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%88%A4%E6%96%AD"><span class="toc-text">逻辑判断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AF%94%E8%BE%83%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B"><span class="toc-text">比较字符串类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%93%E8%AF%8D"><span class="toc-text">谓词</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%94%A8%20GoogleTest%20%E8%BF%9B%E8%A1%8C%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F10%2F12%2Fgoogletest%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/10/12/googletest/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Switch 大气层系统介绍 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Switch 大气层系统介绍</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Switch/" title="Switch">
+                    #Switch
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="hekate"><a href="#hekate" class="headerlink" title="hekate"></a>hekate</h2><p><a target="_blank" rel="noopener" href="https://github.com/CTCaer/hekate">hekate </a> 是 Switch 开机后第一个运行的程序，类似于 PC 电脑上的 BIOS 程序，负责引导系统（比如大气层系统）。<br>还有一些实用工具等功能。</p>
+<h2 id="Atmosphere-大气层系统"><a href="#Atmosphere-大气层系统" class="headerlink" title="Atmosphere 大气层系统"></a>Atmosphere 大气层系统</h2><p>GitHub：<a target="_blank" rel="noopener" href="https://github.com/Atmosphere-NX/Atmosphere">https://github.com/Atmosphere-NX/Atmosphere</a><br>升级系统时，要确认 Atmosphere 的版本是否支持目标 Switch 版本，如果不支持的话则要先升级 Atmosphere，再升级 Switch 系统版本。</p>
+<h3 id="系统插件"><a href="#系统插件" class="headerlink" title="系统插件"></a>系统插件</h3><p>插件是随系统启动的。类似于 Windows 系统上的服务程序，是不可见的，在后台工作。<br>系统插件安装目录：<code>\atmosphere\contents</code><br>插件的配置目录：<code>\config</code><br>插件配置文件夹要与插件名相同，比如特斯拉插件的配置路径是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\config\Tesla\</span><br></pre></td></tr></table></figure>
+
+<h3 id="系统应用"><a href="#系统应用" class="headerlink" title="系统应用"></a>系统应用</h3><p>应用程序文件扩展名是<code>.nro</code>，等同于我们手机上的 APP，需要从系统相册中启动应用。<br>系统应用安装目录：<code>\atmosphere\switch</code></p>
+<h2 id="特斯拉菜单"><a href="#特斯拉菜单" class="headerlink" title="特斯拉菜单"></a>特斯拉菜单</h2><p>特斯拉需要单独拿出来讲，因为它有自己的开发框架和应用（.ovl程序）。简单理解的话就是类似微信，它为我们提供了小程序（.ovl程序）。<br>特斯拉由两个部分组成：<a target="_blank" rel="noopener" href="https://github.com/WerWolv/nx-ovlloader">nx-ovlloader</a> 和 <a target="_blank" rel="noopener" href="https://github.com/WerWolv/Tesla-Menu">Tesla-Menu</a>。<br>工作原理：<code>nx-ovlloader</code>是系统插件，它会加载<code>\switch\.overlays\ovlmenu.ovl</code>，也就是特斯拉菜单。<br>特斯拉菜单自身也属于一个加载器（微信），它负责加载<code>.ovl</code>后缀的菜单程序（小程序）。<br>菜单程序安装位置：<code>switch\.overlays</code></p>
+<h3 id="配置特斯拉菜单"><a href="#配置特斯拉菜单" class="headerlink" title="配置特斯拉菜单"></a>配置特斯拉菜单</h3><p>呼出快捷键修改位置：<code>\config\tesla\config.ini</code>。<strong>如果文件不存在则创建它，否则无法呼出菜单</strong>。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[tesla]</span></span><br><span class="line"><span class="attr">key_combo</span>=L+DDOWN</span><br></pre></td></tr></table></figure>
+<p>上面的配置是指按<code>L + 左摇杆下</code>呼出菜单。<br>支持的按键：</p>
+<ul>
+<li>普通按键 &#x3D; A, B, X, Y, L, R, ZL, ZR</li>
+<li>摇杆 &#x3D; LS, RS</li>
+<li>加和减 &#x3D; PLUS, MINUS,</li>
+<li>方向键 &#x3D; DUP, DDOWN, DLEFT, DRIGHT</li>
+</ul>
+<p><br>如果想修改菜单的顺序，可以插件名字前面加个数字，比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0_EdiZon</span><br><span class="line">1_emuiibo</span><br><span class="line">2_QuickNTP</span><br></pre></td></tr></table></figure>
+
+<h2 id="虚拟amiibo"><a href="#虚拟amiibo" class="headerlink" title="虚拟amiibo"></a>虚拟amiibo</h2><p><a target="_blank" rel="noopener" href="https://github.com/XorTroll/emuiibo">emuiibo</a> 是一个可以虚拟 amiibo 的插件，支持特斯拉。<br>主要讲讲如何生成 amiboo 数据：</p>
+<ol>
+<li>安装 <a target="_blank" rel="noopener" href="https://github.com/XorTroll/emuiibo">emuiibo</a> 插件。</li>
+<li>安装 <a target="_blank" rel="noopener" href="https://github.com/Slluxx/AmiiboGenerator">AmiiboGenerator</a>。</li>
+<li>进入相册启动<code>AmiiboGenerator</code>程序。</li>
+<li>确保网络畅通，按下<code>-</code>键开始更新数据库。</li>
+<li>可选图像下载。按下<code>B</code>，再按<code>ZR</code>启用图像下载。网络不好的最好设置代理服务器。</li>
+<li>按下<code>ZL</code>键选中所有的数据，再按<code>X</code>键开始生成数据，生成完毕后打开 emuiibo 就可以模拟 amiibo 了。</li>
+</ol>
+<p><br>amiboo 数据库地址：<a target="_blank" rel="noopener" href="https://www.amiiboapi.com/api/amiibo/">https://www.amiiboapi.com/api/amiibo/</a><br>懒得折腾的话就直接下载网友生成好的数据：<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv25544001/">https://www.bilibili.com/read/cv25544001/</a></p>
+<h2 id="金手指"><a href="#金手指" class="headerlink" title="金手指"></a>金手指</h2><p><a target="_blank" rel="noopener" href="https://github.com/tomvita/EdiZon-SE">EdiZon-SE</a> 是金手指插件。<br>作弊码可以通过 <a target="_blank" rel="noopener" href="https://github.com/HamletDuFromage/aio-switch-updater">aio-switch-updater</a> 程序在线下载，不过都是英文的。<br>推荐还是按需下载，玩什么游戏就去网上找，解压到 <code>\atmosphere\contents\</code> 目录下。<br><br>特斯拉版本插件用这个：<a target="_blank" rel="noopener" href="https://github.com/proferabg/EdiZon-Overlay">https://github.com/proferabg/EdiZon-Overlay</a></p>
+<h2 id="常用插件和程序"><a href="#常用插件和程序" class="headerlink" title="常用插件和程序"></a>常用插件和程序</h2><table>
+<thead>
+<tr>
+<th>应用名称</th>
+<th align="center">.nro</th>
+<th align="center">.ovl</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>daybreak</td>
+<td align="center">✔️</td>
+<td align="center">❌</td>
+<td>系统固件升级程序。已经包含在大气层系统中</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/rashevskyv/dbi">DBI</a></td>
+<td align="center">✔️</td>
+<td align="center">❌</td>
+<td>系统必备！安装游戏、传输文件等功能</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/BernardoGiordano/Checkpoint">Checkpoint</a></td>
+<td align="center">✔️</td>
+<td align="center">❌</td>
+<td>存档管理工具。支持备份、还原等</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/HamletDuFromage/aio-switch-updater">aio-switch-updater</a></td>
+<td align="center">✔️</td>
+<td align="center">❌</td>
+<td>在线更新系统、金手指作弊码等功能</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/tomvita/EdiZon-SE">EdiZon-SE</a></td>
+<td align="center">✔️</td>
+<td align="center">❌</td>
+<td>金手指</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/proferabg/EdiZon-Overlay">EdiZon-Overlay</a></td>
+<td align="center">❌</td>
+<td align="center">✔️</td>
+<td>特斯拉版金手指</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/XorTroll/emuiibo">emuiibo</a></td>
+<td align="center">❌</td>
+<td align="center">✔️</td>
+<td>虚拟amiibo</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://github.com/WerWolv/ovl-sysmodules">ovl-sysmodules</a></td>
+<td align="center">❌</td>
+<td align="center">✔️</td>
+<td>系统模块管理</td>
+</tr>
+</tbody></table>
+<h2 id="Switch-固件下载地址"><a href="#Switch-固件下载地址" class="headerlink" title="Switch 固件下载地址"></a>Switch 固件下载地址</h2><p><a target="_blank" rel="noopener" href="https://darthsternie.net/switch-firmwares/">https://darthsternie.net/switch-firmwares/</a><br><a target="_blank" rel="noopener" href="https://github.com/THZoria/NX_Firmware">https://github.com/THZoria/NX_Firmware</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://gbatemp.net/threads/tesla-the-nintendo-switch-overlay-menu.557362/">Tesla - The Nintendo Switch Overlay Menu</a><br><a target="_blank" rel="noopener" href="http://www.265xh.com/nszhinan/4455.html">大气层特斯拉菜单插件排序调整方法</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/10/19/csharp-pinvoke/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Switch/" title="Switch">
+                        #Switch
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/11/03/ahk-showhide-window/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#hekate"><span class="toc-text">hekate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Atmosphere-%E5%A4%A7%E6%B0%94%E5%B1%82%E7%B3%BB%E7%BB%9F"><span class="toc-text">Atmosphere 大气层系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%8F%92%E4%BB%B6"><span class="toc-text">系统插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%BA%94%E7%94%A8"><span class="toc-text">系统应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E6%96%AF%E6%8B%89%E8%8F%9C%E5%8D%95"><span class="toc-text">特斯拉菜单</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%89%B9%E6%96%AF%E6%8B%89%E8%8F%9C%E5%8D%95"><span class="toc-text">配置特斯拉菜单</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9Famiibo"><span class="toc-text">虚拟amiibo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%91%E6%89%8B%E6%8C%87"><span class="toc-text">金手指</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%8F%92%E4%BB%B6%E5%92%8C%E7%A8%8B%E5%BA%8F"><span class="toc-text">常用插件和程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Switch-%E5%9B%BA%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80"><span class="toc-text">Switch 固件下载地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Switch%20%E5%A4%A7%E6%B0%94%E5%B1%82%E7%B3%BB%E7%BB%9F%E4%BB%8B%E7%BB%8D + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F10%2F21%2Fswitch-atmosphere%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/10/21/switch-atmosphere/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

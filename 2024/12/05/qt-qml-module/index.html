@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      学习制作 QML 模块 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">学习制作 QML 模块</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Qt/" title="Qt">
+                    #Qt
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>因为 QML 自带的控件不算多，所以不得不写一些基础控件，将这些控件放在一个动态库中也方便其他程序使用。<br>在学习开发控件库的时候遇到一些问题，网上的好多文章都写的不清不楚，很多细节也忽略了，自己折腾了一天总算成功了。</p>
+<p><br>本文内容在 Qt 5.7.1 版下而写，可能在更新的版本中有些类名或方法发生了变化。</p>
+<h2 id="import-时会发生什么？"><a href="#import-时会发生什么？" class="headerlink" title="import 时会发生什么？"></a>import 时会发生什么？</h2><p>在 QML 中，导入一个模块的时候程序会从哪里去找？</p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.mycompany.Controls <span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+<p>我用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/sysinternals/downloads/procmon">Process Monitor</a> 工具监控发现程序会从根目录开始搜索：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./com/mycompany/Controls.1.0/qmldir</span><br><span class="line">./com/mycompany.1.0/Controls/qmldir</span><br><span class="line">./com.1.0/mycompany/Controls/qmldir</span><br></pre></td></tr></table></figure>
+<p>按照<code>.</code>分层，从最后一层开始，加上版本号向上找。找不到就换下一个目录（<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qqmlengine.html#importPathList">QQmlEngine::importPathList</a> 是模块目录列表）。<br>所有目录都找不到的话，则将小版本号丢弃，仅从大版本号再从开搜一遍：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./com/mycompany/Controls.1/qmldir</span><br><span class="line">./com/mycompany.1/Controls/qmldir</span><br><span class="line">./com.1/mycompany/Controls/qmldir</span><br></pre></td></tr></table></figure>
+<p>还找不到就干脆不带版本号找</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./com/mycompany/Controls/qmldir</span><br></pre></td></tr></table></figure>
+<p>最后找不到就报错退出程序。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qrc:/main.qml:5 module &quot;MyControls&quot; is not installed</span><br></pre></td></tr></table></figure>
+<p>所以路径中有版本号的话优先级更高。</p>
+<p><br>默认情况下，<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qqmlengine.html#importPathList">QQmlEngine::importPathList</a> 返回3个目录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;C:/demo/debug&quot;</span><br><span class="line">&quot;qrc:/qt-project.org/imports&quot;</span><br><span class="line">&quot;C:/qt/qml&quot;</span><br></pre></td></tr></table></figure>
+<p>第一个是应用所在目录。第二个是 Qt 自己的资源目录，但是什么都没有。第三个是 Qt 安装目录。<br>可以用 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qqmlengine.html#addImportPath">QQmlEngine::addImportPath</a> 方法添加模块目录，添加后会插入到第一位。</p>
+<h2 id="qmldir-文件"><a href="#qmldir-文件" class="headerlink" title="qmldir 文件"></a>qmldir 文件</h2><p>当模块目录存在时，Qt 会尝试读取模块目录下的<code>qmldir</code>文件，这个文件的作用就是告诉 Qt 如何找到相关资源，相当于一个索引文件，比如一个最小的<code>qmldir</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">module com.mycompany.controls</span><br><span class="line">MyButton 1.0 MyButton.qml</span><br></pre></td></tr></table></figure>
+<p><code>module</code>指定了模块的完整路径，也是<code>import</code>的路径。<br>在我的例子中，整个目录结构就是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.exe</span><br><span class="line">com/</span><br><span class="line">└── mycompany/</span><br><span class="line">    └── controls/</span><br><span class="line">        ├── qmldir</span><br><span class="line">        └── MyButton.qml</span><br></pre></td></tr></table></figure>
+<p><code>qmldir</code>还有一些其他属性，可以查看官方手册了解：<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtqml-modules-qmldir.html">Module Definition qmldir Files</a></p>
+<h2 id="封装模块"><a href="#封装模块" class="headerlink" title="封装模块"></a>封装模块</h2><p>实际中，我们不太可能会直接将<code>.qml</code>文件暴露给用户，还有另一种可能是控件由 C++ 绘制，没有<code>.qml</code>文件，这种时候更好的选择的是将控件封装到一个动态库中。<br>新建一个动态库项目，从 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-6/qqmlextensionplugin.html">QQmlExtensionPlugin</a> 继承并覆盖其纯虚方法。<br>主要就是在 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-6/qqmlextensionplugin.html#registerTypes">QQmlExtensionPlugin::registerTypes</a> 方法内注册所有控件。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">MyPlugin::registerTypes</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *uri)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// C++实现的控件</span></span><br><span class="line">    <span class="built_in">qmlRegisterType</span>&lt;FPSText&gt;(uri, <span class="number">1</span>, <span class="number">0</span>, <span class="string">&quot;MyRectangle&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// .qml 控件</span></span><br><span class="line">    <span class="built_in">qmlRegisterType</span>(<span class="built_in">QUrl</span>(<span class="string">&quot;qrc:/MyButton.qml&quot;</span>), uri, <span class="number">1</span>, <span class="number">0</span>, <span class="string">&quot;MyButton&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MyPlugin::initializeEngine</span><span class="params">(QQmlEngine *engine, <span class="type">const</span> <span class="type">char</span> *uri)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">Q_UNUSED</span>(engine);</span><br><span class="line">    <span class="built_in">Q_UNUSED</span>(uri);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们以插件形式提供 QML 模块时，<code>qmldir</code>文件内容就要修改下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">module com.mycompany.controls</span><br><span class="line">plugin MyPlugin</span><br></pre></td></tr></table></figure>
+<p><code>MyPlugin</code>就是不带后缀的动态库文件名，完整目录结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.exe</span><br><span class="line">com/</span><br><span class="line">└── mycompany/</span><br><span class="line">    └── controls/</span><br><span class="line">        ├── qmldir</span><br><span class="line">        └── MyPlugin.dll</span><br></pre></td></tr></table></figure>
+<p>Qt 在找到模块目录后会根据<code>qmldir</code>文件内容，加载<code>.dll</code>插件，并调用<code>registerTypes</code>方法，这样就成功注册了控件等资源。</p>
+<p><br>另外有个小细节，debug 版本程序会优先加载<code>d</code>后缀的动态库文件。<br>比如<code>qmldir</code>文件中写的是<code>plugin MyPlugin</code>，对于 debug 程序来说，会先尝试加载<code>MyPlugind.dll</code>，找不到才会加载<code>MyPlugin.dll</code>。<br>release 版程序则不会。</p>
+<h2 id="生成元数据"><a href="#生成元数据" class="headerlink" title="生成元数据"></a>生成元数据</h2><p>事情还没完，QtCreator 中对于自定义控件全是红色警告：</p>
+<p><img src="/images/qt-qml-module/01.webp"></p>
+<p>因为默认情况下，IDE 并不知道这些自定义控件有哪些属性、方法。这就需要我们提供一个<code>.qmltypes</code>元数据文件来告诉 IDE，让其有智能提示和静态分析的能力。<br>Qt 目录下有个<code>qmlplugindump.exe</code>工具，将模块搜索路径传递给它，并给定一个模块名称就能生成一个<code>.qmltypes</code>文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qmlplugindump -nonrelocatable MyControls 1.0 . &gt; plugin.qmltypes</span><br></pre></td></tr></table></figure>
+<p>这表示在当前目录下搜索<code>MyControls</code>模块的<code>1.0</code>版本，并生成元数据到<code>plugin.qmltypes</code>文件中。<br>然后在<code>qmldir</code>文件中加入一行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typeinfo plugin.qmltypes</span><br></pre></td></tr></table></figure>
+<p>这是标准做法，但是我发现 QtCreator 会自动查找目录下<code>.qmltypes</code>后缀的文件作为元数据，并不需要使用<code>typeinfo</code>去标注。<br>另外要注意的是，Debug 版的程序不能用来生成元数据。</p>
+<p><br>最后，对于 cmake 项目，要在<code>CMakeLists.txt</code>中设置<code>QML_IMPORT_PATH</code>环境变量，告诉 IDE 去哪里查找模块元数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set(QML_IMPORT_PATH C:/app/bin/debug/qml/ CACHE STRING &quot;&quot; FORCE)</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>开发 QML 插件，需要一个继承自 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-6/qqmlextensionplugin.html">QQmlExtensionPlugin</a> 的类，并在其中注册所有的模块。</li>
+<li><code>import</code>后面的名称就是模块的名称。</li>
+<li>模块路径可以用 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qqmlengine.html#addImportPath">QQmlEngine::addImportPath</a> 添加。</li>
+<li>模块目录必须包含<code>qmldir</code>文件，文件内至少提供<code>module</code>属性，对于动态库插件，还需要提供<code>plugin</code>属性，用于指明动态库文件名（不含后缀）。</li>
+<li>对于纯 C++ 实现的 QML 控件，可以不用元数据文件<code>.qmltypes</code>，IDE 会有代码提示，但是对于纯 QML 控件则需要用<code>qmlplugindump.exe</code>来生成元数据文件，否则 IDE 会发出警告。</li>
+<li>元数据文件只是告诉 IDE 相关信息，提供代码提示等功能，在程序运行时是不需要的。</li>
+<li><code>qmldir</code>中的<code>typeinfo</code>属性可以省略，Qt 会自动查找<code>.qmltypes</code>后缀的文件作为元数据。</li>
+</ol>
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/cloud_castle/article/details/37043047">Qt5官方demo解析集20——Chapter 6: Writing an Extension Plugin</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/625057deaeac">Qt&#x2F;QML 插件系统</a><br><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtqml-modules-topic.html">QML Modules</a><br><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtqml-modules-qmldir.html">Module Definition qmldir Files</a><br><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtqml-tutorials-extending-qml-example.html">Writing QML Extensions with C++</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/12/03/build-qt-ubuntu1604-arm/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Qt/" title="Qt">
+                        #Qt
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/12/11/cmake-dll-outputdir/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#import-%E6%97%B6%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-text">import 时会发生什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#qmldir-%E6%96%87%E4%BB%B6"><span class="toc-text">qmldir 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%81%E8%A3%85%E6%A8%A1%E5%9D%97"><span class="toc-text">封装模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%85%83%E6%95%B0%E6%8D%AE"><span class="toc-text">生成元数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%AD%A6%E4%B9%A0%E5%88%B6%E4%BD%9C%20QML%20%E6%A8%A1%E5%9D%97 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F12%2F05%2Fqt-qml-module%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/12/05/qt-qml-module/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

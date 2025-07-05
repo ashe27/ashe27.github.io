@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      JS遍历对象、数组的一些方法与适用场景 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">JS遍历对象、数组的一些方法与适用场景</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/JavaScript/" title="JavaScript">
+                    #JavaScript
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="for"><a href="#for" class="headerlink" title="for"></a>for</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr1.<span class="property">length</span>; ++i) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(arr1[i]); <span class="comment">// 5, 10, 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>几乎是任何编程语言都有的基本语法，用于遍历数组，中途可通过<code>break</code>中断遍历。</p>
+<h2 id="for…in…"><a href="#for…in…" class="headerlink" title="for…in…"></a>for…in…</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">in</span> arr1) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item); <span class="comment">// 0, 1, 2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出的是索引，而不是元素值。它可以用来遍历对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = &#123; <span class="attr">a</span>: <span class="number">5</span>, <span class="attr">b</span>: <span class="number">10</span>, <span class="attr">c</span>: <span class="number">20</span> &#125;;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">in</span> arr1) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item);  <span class="comment">// 5, 10, 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>显然，for…in…适用于遍历对象。</p>
+<h2 id="for…of…"><a href="#for…of…" class="headerlink" title="for…of…"></a>for…of…</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> arr1) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item);  <span class="comment">// 5, 10, 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以说是<code>for</code>循环的改进版本，不能用于遍历对象，中途可通过<code>break</code>中断遍历。<br>与下面的写法等效</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> index <span class="keyword">of</span> arr1.<span class="title function_">values</span>()) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(index);  <span class="comment">// 5, 10, 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果只想获取索引，可以遍历<code>keys</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> index <span class="keyword">of</span> arr1.<span class="title function_">keys</span>()) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(index);  <span class="comment">// 0, 1, 2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果想同时得到索引和值，可以遍历<code>entries</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> [index, value] <span class="keyword">of</span> arr1.<span class="title function_">entries</span>()) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(index);  <span class="comment">// 0, 1, 2</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(value);  <span class="comment">// 5, 10, 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="forEach"><a href="#forEach" class="headerlink" title="forEach"></a>forEach</h2><p>数组的成员方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line">arr1.<span class="title function_">forEach</span>(<span class="keyword">function</span> (<span class="params">value, index, arr</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`index = <span class="subst">$&#123;index&#125;</span>, value = <span class="subst">$&#123;value&#125;</span>`</span>);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>);</span><br><span class="line">&#125;, <span class="number">100</span>);</span><br></pre></td></tr></table></figure>
+<p>特点：</p>
+<ol>
+<li>可以拿到元素、索引、数组自身三个值。</li>
+<li>支持向回调函数传递参数<code>this</code>，前提是不要使用箭头函数作为回调。</li>
+<li>不支持中断。</li>
+</ol>
+<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><p>数组的成员方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">map</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value * <span class="number">2</span>;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// [20, 40, 60]</span></span><br></pre></td></tr></table></figure>
+<p>特点：</p>
+<ol>
+<li>可以拿到元素、索引、数组自身三个值。</li>
+<li>得到一个新数组，不影响原数组。</li>
+<li>不支持中断。</li>
+<li>新数组与原数组长度一致。</li>
+<li>回调函数返回新元素。</li>
+</ol>
+<p><code>map</code>强调的是<strong>处理每一个元素数据并得到一个新数组</strong>。</p>
+<h2 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">filter</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value &lt; <span class="number">25</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// [10, 20]</span></span><br></pre></td></tr></table></figure>
+<p>特点：</p>
+<ol>
+<li>可以拿到元素、索引、数组自身三个值。</li>
+<li>得到一个新数组，不影响原数组。</li>
+<li>不支持中断。</li>
+<li>新数组与原数组长度可能不一致。</li>
+<li>回调函数返回<code>bool</code>类型决定是否将当前元素压入新数组。</li>
+</ol>
+<p><code>filter</code>强调的是<strong>筛选出所有符合条件的数据并得到一个新数组</strong>。</p>
+<h2 id="some"><a href="#some" class="headerlink" title="some"></a>some</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">some</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value &lt; <span class="number">25</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>与<code>filter</code>类似，但不需要得到新数组，而是只需要知道<strong>数组中是否有任何一条数据满足条件</strong>。</p>
+<h2 id="every"><a href="#every" class="headerlink" title="every"></a>every</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">every</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value &lt; <span class="number">25</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<p>与<code>some</code>类似，不需要得到新数组，只是想知道<strong>数组中的每个元素是否都满足条件</strong>。</p>
+<h2 id="find"><a href="#find" class="headerlink" title="find"></a>find</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">10</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">find</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value == <span class="number">10</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+<p>与<code>some</code>类似，但返回的是<strong>符合条件的第一个元素值</strong>，没有任何元素符合条件则返回<code>undefined</code>。</p>
+<h2 id="findIndex"><a href="#findIndex" class="headerlink" title="findIndex"></a>findIndex</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">10</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">findIndex</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value == <span class="number">10</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
+<p>与<code>find</code>类似，但是返回的是索引，没有任何元素符合条件则返回<code>-1</code>。</p>
+<h2 id="reduce"><a href="#reduce" class="headerlink" title="reduce"></a>reduce</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">10</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">reduce</span>(<span class="function">(<span class="params">previousValue, currentValue, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> previousValue + currentValue;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// 70</span></span><br></pre></td></tr></table></figure>
+<p>从数组第一个元素开始，每次循环将数据的处理结果传递到下一次循环，直到处理完每个元素，最终得到一个值。</p>
+<h2 id="reduceRight"><a href="#reduceRight" class="headerlink" title="reduceRight"></a>reduceRight</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">10</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">reduceRight</span>(<span class="function">(<span class="params">previousValue, currentValue, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> previousValue + currentValue;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// 70</span></span><br></pre></td></tr></table></figure>
+<p>和<code>reduce</code>一样，不过是从数组末尾开始处理。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>遍历对象用<code>for...in...</code>。</li>
+<li>遍历数组用<code>for</code>、<code>for...of...</code>、<code>forEach</code>。</li>
+<li>期望对原数组加工处理并得到一个新数组用<code>map</code>。</li>
+<li>期望对原数组进行筛选并得到一个筛选后的新数组，用<code>filter</code>。</li>
+<li>找出数组中满足条件的第一个元素用<code>find</code>、<code>findIndex</code>。对标的是<code>filter</code>，不过仅仅返回一条数据。</li>
+<li>仅需要知道数组中是否有满足条件的元素，而不需要得到元素数据，用<code>some</code>、<code>every</code>。</li>
+<li>需要对数组中每条数据进行处理，并且每次的处理依赖上次的处理结果，用<code>reduce</code>、<code>reduceRight</code>。</li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/10/11/j0xKsEOlM/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/JavaScript/" title="JavaScript">
+                        #JavaScript
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/10/22/delphi-lite/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#for"><span class="toc-text">for</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#for%E2%80%A6in%E2%80%A6"><span class="toc-text">for…in…</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#for%E2%80%A6of%E2%80%A6"><span class="toc-text">for…of…</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#forEach"><span class="toc-text">forEach</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#map"><span class="toc-text">map</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#filter"><span class="toc-text">filter</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#some"><span class="toc-text">some</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#every"><span class="toc-text">every</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#find"><span class="toc-text">find</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#findIndex"><span class="toc-text">findIndex</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reduce"><span class="toc-text">reduce</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reduceRight"><span class="toc-text">reduceRight</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + JS%E9%81%8D%E5%8E%86%E5%AF%B9%E8%B1%A1%E3%80%81%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%80%E4%BA%9B%E6%96%B9%E6%B3%95%E4%B8%8E%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F10%2F12%2FrFKBYYIi6%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/10/12/rFKBYYIi6/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

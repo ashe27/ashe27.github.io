@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      CFileDialog 扩展名注意事项 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">CFileDialog 扩展名注意事项</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/MFC/" title="MFC">
+                    #MFC
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>在 MFC 中，<code>打开</code>和<code>保存</code>对话框都是用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cfiledialog-class">CFileDialog</a> 来实现的，构造函数的第一个参数决定了是”打开”还是”保存”。</p>
+<h2 id="打开对话框"><a href="#打开对话框" class="headerlink" title="打开对话框"></a>打开对话框</h2><p>一个简单的对话框如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个对话框有两个问题：</p>
+<ol>
+<li>用户如果未输入扩展名，<code>ext</code>将为空。</li>
+<li>允许用户输入不存在的文件名。</li>
+</ol>
+<h3 id="解决问题一"><a href="#解决问题一" class="headerlink" title="解决问题一"></a>解决问题一</h3><p>可以将第二个参数为默认的扩展名，当用户没有输入扩展名的时候，会自动附加默认扩展名。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, _T(<span class="string">&quot;txt&quot;</span>), <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输入<code>123</code>，会得到文件名<code>123.txt</code>。</p>
+<ul>
+<li>过滤器优先于默认扩展名。如果用户未输入文件名，但是选择了有效的过滤器：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, _T(<span class="string">&quot;ini&quot;</span>), <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*|TXT|*.txt||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+如果用户选择了<code>txt</code>过滤器，但是输入<code>123</code>作为文件名，将会得到<code>123.txt</code>，而不是<code>123.ini</code>。</li>
+<li>如果过滤器有多个扩展名，则采用第一个：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, _T(<span class="string">&quot;ini&quot;</span>), <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*|TXT|*.txt;*.doc||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+输入了<code>123</code>作为文件名，得到<code>123.txt</code>。</li>
+<li>当默认扩展名为<code>nullptr</code>时，即使选择了过滤器也不会追加扩展名。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*|TXT|*.txt||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+选择过滤器<code>txt</code>，输入<code>123</code>作为文件名将会得到<code>123</code>文件名，而不是<code>123.txt</code>。</li>
+</ul>
+<h3 id="解决问题二"><a href="#解决问题二" class="headerlink" title="解决问题二"></a>解决问题二</h3><p>可以在第四个参数上指定<code>OFN_FILEMUSTEXIST</code>，意味着必须输入一个存在的文件名</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, OFN_FILEMUSTEXIST, _T(<span class="string">&quot;ALL|*.*||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果用户输入<code>123</code>且文件不存在就会出现警告，这样可以保证<code>DoModal</code>返回时文件名必然有效。<br><img src="https://pic.rmb.bdstatic.com/bjh/45c55e9fea121b211b903ed96a6f6c88.png"></p>
+<h2 id="保存对话框"><a href="#保存对话框" class="headerlink" title="保存对话框"></a>保存对话框</h2><ul>
+<li>当默认扩展名为<code>nullptr</code>时，即使选择了过滤器也不会追加扩展名。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(FALSE, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, OFN_OVERWRITEPROMPT, _T(<span class="string">&quot;TXT|*.txt||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();  <span class="comment">// &quot;&quot;</span></span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>(); <span class="comment">// &quot;123&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+输入<code>123</code>得到<code>123</code>。</li>
+<li>以用户输入的扩展名为准。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(FALSE, _T(<span class="string">&quot;&quot;</span>), <span class="literal">nullptr</span>, OFN_OVERWRITEPROMPT, _T(<span class="string">&quot;TXT|*.txt||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+输入<code>123.doc</code>得到<code>123.doc</code>，而不是<code>123.txt</code>。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>如果用户输入了扩展名，则以用户输入为最终值。</li>
+<li>如果用户未输入扩展名，且设置了默认扩展名，就先采用过滤器中的扩展名，只有用户选择通配符<code>*.*</code>时才采用默认扩展名。</li>
+<li>默认扩展名为<code>nullptr</code>时，在任何情况下都不会自动追加扩展名。</li>
+</ol>
+<h3 id="对于打开对话框"><a href="#对于打开对话框" class="headerlink" title="对于打开对话框"></a>对于打开对话框</h3><p>相信没有人会愿意打开不存在的文件，那么<code>OFN_FILEMUSTEXIST</code>几乎是必选项，而这正好也确保了文件名是正确的，所以默认扩展名可有可无。</p>
+<h3 id="对于保存对话框"><a href="#对于保存对话框" class="headerlink" title="对于保存对话框"></a>对于保存对话框</h3><p>建议总是设置一个默认扩展名。如果默认扩展名为<code>nullptr</code>，即使选择了有效的过滤器，对话框则也不会追加扩展名，用户必须手动输入才行。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cfiledialog-class">CFileDialog 类</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/05/15/16273544/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/MFC/" title="MFC">
+                        #MFC
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/05/18/16286455/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E5%AF%B9%E8%AF%9D%E6%A1%86"><span class="toc-text">打开对话框</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98%E4%B8%80"><span class="toc-text">解决问题一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98%E4%BA%8C"><span class="toc-text">解决问题二</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%9D%E5%AD%98%E5%AF%B9%E8%AF%9D%E6%A1%86"><span class="toc-text">保存对话框</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E%E6%89%93%E5%BC%80%E5%AF%B9%E8%AF%9D%E6%A1%86"><span class="toc-text">对于打开对话框</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E%E4%BF%9D%E5%AD%98%E5%AF%B9%E8%AF%9D%E6%A1%86"><span class="toc-text">对于保存对话框</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + CFileDialog%20%E6%89%A9%E5%B1%95%E5%90%8D%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F05%2F17%2F16282565%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/05/17/16282565/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

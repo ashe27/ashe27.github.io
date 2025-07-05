@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      Nim学习：Object 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Nim学习：Object</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Nim/" title="Nim">
+                    #Nim
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="定义对象类型"><a href="#定义对象类型" class="headerlink" title="定义对象类型"></a>定义对象类型</h2><p>定义对象类型有三种形式：</p>
+<ol>
+<li><code>object</code></li>
+<li><code>ref object</code></li>
+<li><code>ptr object</code></li>
+</ol>
+<h3 id="object"><a href="#object" class="headerlink" title="object"></a>object</h3><figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span></span><br><span class="line">  <span class="type">MyObj1</span> = <span class="keyword">object</span></span><br><span class="line">    age: <span class="type">int</span></span><br></pre></td></tr></table></figure>
+<p>本质上就是结构体，从生成的 C 代码中可看出来：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">tyObject_MyObj1__inljzvlFXKezToqKwQKx9bg</span> &#123;</span></span><br><span class="line">	NI age;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>区别在使用上，例子：</p>
+<figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">proc</span> foo1() =</span><br><span class="line">  <span class="keyword">var</span> obj1: <span class="type">MyObj1</span></span><br><span class="line">  obj1.age = <span class="number">5</span></span><br><span class="line">  echo obj1.age</span><br></pre></td></tr></table></figure>
+<p>这是对应的 C 代码，为了方便理解删除了一些无关的代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">N_LIB_PRIVATE <span class="title function_">N_NIMCALL</span><span class="params">(<span class="type">void</span>, foo1__main_u9)</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	tyObject_MyObj1__inljzvlFXKezToqKwQKx9bg obj1;</span><br><span class="line">	nimZeroMem((<span class="type">void</span>*)(&amp;obj1), <span class="keyword">sizeof</span>(tyObject_MyObj1__inljzvlFXKezToqKwQKx9bg));</span><br><span class="line">	obj1.age = ((NI)<span class="number">5</span>);</span><br><span class="line">	nimln_(<span class="number">14</span>);	colontmpD_ = dollar___systemZdollars_u8(obj1.age);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从代码中可以看出来，**<code>object</code>声明的对象默认在栈上分配，初始化会清零。如果改用<code>new</code>分配则会在堆上，且会被 GC 回收**：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">N_LIB_PRIVATE <span class="title function_">N_NIMCALL</span><span class="params">(<span class="type">void</span>, foo1__main_u9)</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	tyObject_MyObj1__inljzvlFXKezToqKwQKx9bg* obj1;</span><br><span class="line">	obj1 = NIM_NIL;</span><br><span class="line">	obj1 = new__main_u10();</span><br><span class="line">	nimln_(<span class="number">13</span>);	(*obj1).age = ((NI)<span class="number">5</span>);</span><br><span class="line">	nimln_(<span class="number">14</span>);	colontmpD_ = dollar___systemZdollars_u8((*obj1).age);</span><br><span class="line">	eqdestroy___main_u22(obj1);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ref-object"><a href="#ref-object" class="headerlink" title="ref object"></a>ref object</h3><p>使用<code>ref</code>关键字定义对象总是在堆上分配：</p>
+<figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span></span><br><span class="line">  <span class="type">MyObj2</span> = <span class="keyword">ref</span> <span class="keyword">object</span></span><br><span class="line">    age: <span class="type">int</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">var</span> obj2: <span class="type">MyObj2</span></span><br><span class="line">obj2.age = <span class="number">5</span></span><br><span class="line">echo obj2.age</span><br></pre></td></tr></table></figure>
+<p>程序运行会报错：<code>SIGSEGV: Illegal storage access. (Attempt to read from nil?)</code>。<br>看看对应的 C 代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">N_LIB_PRIVATE <span class="title function_">N_NIMCALL</span><span class="params">(<span class="type">void</span>, foo1__main_u9)</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">	tyObject_MyObj2colonObjectType___oLKZp5hB19b9cuVViusoCnEQ* obj2;</span><br><span class="line">	obj2 = NIM_NIL;</span><br><span class="line">	(*obj2).age = ((NI)<span class="number">5</span>);</span><br><span class="line">	nimln_(<span class="number">14</span>);	colontmpD_ = dollar___systemZdollars_u8((*obj2).age);</span><br><span class="line">	eqdestroy___main_u14(obj2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>错误原因就是访问空指针了，<strong>所以<code>ref object</code>必须用<code>new</code>关键字分配，同时它会被 GC 回收。</strong></p>
+<h3 id="ptr-object"><a href="#ptr-object" class="headerlink" title="ptr object"></a>ptr object</h3><p><code>ptr object</code>和<code>ref object</code>一样都是指针类型，但<code>ptr object</code>不会被 GC 回收，需要手动管理生命周期：</p>
+<figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">proc</span> foo1() =</span><br><span class="line">  <span class="keyword">var</span> obj3 = <span class="keyword">cast</span>[<span class="type">MyObj3</span>](alloc(sizeof(<span class="type">MyObj3</span>)))</span><br><span class="line">  obj3.age = <span class="number">5</span></span><br><span class="line">  echo obj3.age</span><br><span class="line">  dealloc(obj3)</span><br></pre></td></tr></table></figure>
+<p>和 C 一样，申请一块内存然后强制转换为类型指针。不过一般不会这么用。</p>
+<h2 id="不显示使用-ref-或-ptr-关键字"><a href="#不显示使用-ref-或-ptr-关键字" class="headerlink" title="不显示使用 ref 或 ptr 关键字"></a>不显示使用 ref 或 ptr 关键字</h2><p>实际上，可以不在定义类型时用<code>ref</code>或<code>ptr</code>关键字，而是在声明变量时决定其类型，这样更灵活：</p>
+<figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj1: <span class="keyword">ref</span> <span class="type">MyObj1</span></span><br><span class="line"><span class="keyword">var</span> obj2: <span class="keyword">ptr</span> <span class="type">MyObj2</span></span><br></pre></td></tr></table></figure>
+<p>记住：</p>
+<ol>
+<li><code>ref</code>类型要用 <a target="_blank" rel="noopener" href="https://nim-lang.org/docs/system.html#new%2Ctypedesc">new</a> 系列方法创建，该类型可被 GC 回收。</li>
+<li><code>ptr</code>类型要用 <a target="_blank" rel="noopener" href="https://nim-lang.org/docs/system.html#create%2Ctypedesc">create</a> 系列方法创建，该类型需要手动释放。</li>
+</ol>
+<p><br>创建对象主要用以下几种方法：</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>释放内存</th>
+<th>初始化清零</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://nim-lang.org/docs/system.html#new%2Ctypedesc">new</a></td>
+<td>GC</td>
+<td>是</td>
+<td></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://nim-lang.org/docs/system.html#create%2Ctypedesc">create</a></td>
+<td><a target="_blank" rel="noopener" href="https://nim-lang.org/docs/system.html#dealloc%2Cpointer">dealloc</a></td>
+<td>是</td>
+<td></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://nim-lang.org/docs/system.html#createU%2Ctypedesc">createU</a></td>
+<td><a target="_blank" rel="noopener" href="https://nim-lang.org/docs/system.html#dealloc%2Cpointer">dealloc</a></td>
+<td>否</td>
+<td></td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://nim-lang.org/docs/system.html#createShared%2Ctypedesc">createShared</a></td>
+<td><a target="_blank" rel="noopener" href="https://nim-lang.org/docs/system.html#freeShared%2Cptr.T">freeShared</a></td>
+<td>是</td>
+<td>在共享堆上分配</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://nim-lang.org/docs/system.html#createSharedU%2Ctypedesc">createSharedU</a></td>
+<td><a target="_blank" rel="noopener" href="https://nim-lang.org/docs/system.html#freeShared%2Cptr.T">freeShared</a></td>
+<td>否</td>
+<td>在共享堆上分配</td>
+</tr>
+</tbody></table>
+<p><br>另外，在定义类型是用<code>ref</code>或<code>ptr</code>是有意义的，这可以强制要求对象在堆上分配，比如在与 C 交互时，对象的生命周期由用户控制。</p>
+<h2 id="RootObj"><a href="#RootObj" class="headerlink" title="RootObj"></a>RootObj</h2><p><a target="_blank" rel="noopener" href="https://nim-lang.org/docs/system.html#RootObj">RootObj</a> 是什么？简单一句话就是：当你要实现类的多态性时就要从它继承。</p>
+<figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span></span><br><span class="line">  <span class="type">Animal</span> = <span class="keyword">object</span> <span class="keyword">of</span> <span class="type">RootObj</span></span><br><span class="line">  <span class="type">Dog</span> = <span class="keyword">object</span> <span class="keyword">of</span> <span class="type">Animal</span></span><br><span class="line">  <span class="type">Cat</span> = <span class="keyword">object</span> <span class="keyword">of</span> <span class="type">Animal</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">method</span> vocalize(self: <span class="type">Animal</span>): <span class="type">string</span> <span class="meta">&#123;.base.&#125;</span> = <span class="string">&quot;...&quot;</span></span><br><span class="line"><span class="keyword">method</span> vocalize(self: <span class="type">Dog</span>): <span class="type">string</span> = <span class="string">&quot;Woof!&quot;</span></span><br><span class="line"><span class="keyword">method</span> vocalize(self: <span class="type">Cat</span>): <span class="type">string</span> = <span class="string">&quot;Meow!&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span></span><br><span class="line">  animal = <span class="type">Animal</span>()</span><br><span class="line">  dog = <span class="type">Dog</span>()</span><br><span class="line">  cat = <span class="type">Cat</span>()</span><br><span class="line"></span><br><span class="line">echo animal.vocalize() <span class="comment"># 输出: &quot;...&quot;</span></span><br><span class="line">echo dog.vocalize()    <span class="comment"># 输出: &quot;Woof!&quot;</span></span><br><span class="line">echo cat.vocalize()    <span class="comment"># 输出: &quot;Meow!&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="函数参数类型"><a href="#函数参数类型" class="headerlink" title="函数参数类型"></a>函数参数类型</h2><p>看例子：</p>
+<figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span></span><br><span class="line">  <span class="type">MyObj1</span> = <span class="keyword">object</span></span><br><span class="line">    age: <span class="type">int</span></span><br><span class="line"></span><br><span class="line">  <span class="type">MyObj2</span> = <span class="keyword">ref</span> <span class="keyword">object</span></span><br><span class="line">    age: <span class="type">int</span></span><br><span class="line"></span><br><span class="line">  <span class="type">MyObj3</span> = <span class="keyword">object</span></span><br><span class="line">    age: <span class="type">int</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">proc</span> foo1(obj: <span class="keyword">var</span> <span class="type">MyObj1</span>) =</span><br><span class="line">  obj.age = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">proc</span> foo2(obj: <span class="type">MyObj2</span>) =</span><br><span class="line">  obj.age = <span class="number">20</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">proc</span> foo3(obj: <span class="keyword">ptr</span> <span class="type">MyObj3</span>) =</span><br><span class="line">  obj.age = <span class="number">30</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x1 = <span class="type">MyObj1</span>(age: <span class="number">1</span>)</span><br><span class="line">foo1(x1)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x2 = new(<span class="type">MyObj2</span>)</span><br><span class="line">foo2(x2)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x3 = create(<span class="type">MyObj3</span>)</span><br><span class="line">foo3(x3)</span><br><span class="line">dealloc(x3)</span><br></pre></td></tr></table></figure>
+<p>从这段代码得到的知识点：</p>
+<ul>
+<li>如果参数是值类型，默认不可修改成员变量。要修改的化需要用<code>var</code>关键字。</li>
+<li>如果是<code>ref</code>或<code>ptr</code>类型则可以直接修改成员变量而不需要<code>var</code>关键字。</li>
+<li><code>new</code>创建的是<code>ref</code>类型，<code>create</code>创建的是<code>ptr</code>类型。</li>
+<li>如果类型需要支持用<code>create</code>创建，则在定义时不要加<code>ptr</code>（示例中的 MyObj3 类型），否则会得到一个二级指针。<figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span></span><br><span class="line">  <span class="type">MyObj3</span> = <span class="keyword">ptr</span> <span class="keyword">object</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x = create(<span class="type">MyObj3</span>) <span class="comment"># x 是二级指针</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://nim-lang.org/docs/tut2.html">Nim Tutorial (Part II)</a><br><a target="_blank" rel="noopener" href="https://nim-by-example.github.io/oop/">Object Oriented Programming</a><br><a target="_blank" rel="noopener" href="https://forum.nim-lang.org/t/5681">Why inherit RootObj?</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/12/11/cmake-dll-outputdir/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Nim/" title="Nim">
+                        #Nim
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/12/24/nim-flexiblearray/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%AF%B9%E8%B1%A1%E7%B1%BB%E5%9E%8B"><span class="toc-text">定义对象类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#object"><span class="toc-text">object</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ref-object"><span class="toc-text">ref object</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ptr-object"><span class="toc-text">ptr object</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E6%98%BE%E7%A4%BA%E4%BD%BF%E7%94%A8-ref-%E6%88%96-ptr-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-text">不显示使用 ref 或 ptr 关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RootObj"><span class="toc-text">RootObj</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E7%B1%BB%E5%9E%8B"><span class="toc-text">函数参数类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Nim%E5%AD%A6%E4%B9%A0%EF%BC%9AObject + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F12%2F12%2Fnim-ref-object%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/12/12/nim-ref-object/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

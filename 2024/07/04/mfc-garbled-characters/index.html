@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      解决 MFC 程序在英文系统上中文乱码问题 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">解决 MFC 程序在英文系统上中文乱码问题</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/MFC/" title="MFC">
+                    #MFC
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Detours/" title="Detours">
+                    #Detours
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>最近在项目中碰到中文乱码的问题，系统是英文的，安装了中文语言包。软件界面上原生的 Win32 控件能正常显示中文，但是菜单栏，状态栏，Tab等控件中的文字都是乱码。<br>排查后发现是因为项目使用了<code>多字节字符集</code>，恰巧程序又开启了<code>视觉样式</code>功能，这意味着一些带有外观样式的控件都是自绘的，而自绘用的 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/mfc/reference/cdc-class#drawtext">CDC::DrawText</a> 方法最终调用的 Win32 API 就是 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-drawtexta">DrawTextA</a>，所以结果就是在绘制文本时将 GBK 编码的文本当作英文处理了，于是乱码就出现了。<br><br>最好的解决办法就是将程序修改为 Unicode 字符集，但是由于项目古老，已经没法动了。最终决定在绘制文本时手动调用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-drawtextw">DrawTextW</a>。</p>
+<h2 id="尝试用-CMFCVisualManager-解决"><a href="#尝试用-CMFCVisualManager-解决" class="headerlink" title="尝试用 CMFCVisualManager 解决"></a>尝试用 CMFCVisualManager 解决</h2><p>因为出现乱码的控件都是自绘的，所以想到一个解决办法是实现自定义样式类，并覆盖相关的绘制方法（将 MFC 源码中的绘制逻辑复制到子类中），在绘制时将<code>DrawTextA</code>替换成<code>DrawTextW</code>。</p>
+<h3 id="视觉样式功能"><a href="#视觉样式功能" class="headerlink" title="视觉样式功能"></a>视觉样式功能</h3><p>开启了视觉样式功能的项目。<br><img src="/images/mfc-garbled-characters/01.webp"><br>查阅了一些资料后得知，带有外观的控件都是由 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/mfc/reference/cmfcvisualmanager-class">CMFCVisualManager</a> 这个类来绘制的。<br>这个类实现了单例，用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/mfc/reference/cmfcvisualmanager-class#getinstance">CMFCVisualManager::GetInstance</a> 获取实例。<br>还有一个静态方法 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/mfc/reference/cmfcvisualmanager-class#setdefaultmanager">CMFCVisualManager::SetDefaultManager</a> 可以设置实例，这使得我们可以实现自己的样式类。</p>
+<p><br>MFC 自带的样式类。<br><img src="/images/mfc-garbled-characters/02.png"></p>
+<h3 id="自定义样式"><a href="#自定义样式" class="headerlink" title="自定义样式"></a>自定义样式</h3><p>要实现自己的样式很简单，从<code>CMFCVisualManager</code>或任意子类继承，并覆盖以<code>OnDraw</code>开头的相关方法。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyVisualManager</span> : CMFCVisualManager</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">DECLARE_DYNCREATE</span>(MyVisualManager)</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">OnDrawTabContent</span><span class="params">(CDC* pDC, CRect rectTab, <span class="type">int</span> iTab, BOOL bIsActive, <span class="type">const</span> CMFCBaseTabCtrl* pTabWnd, COLORREF clrText)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//<span class="doctag">TODO:</span> 自定义绘制代码</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>要改变应用外观样式时，只需要调用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/mfc/reference/cmfcvisualmanager-class#setdefaultmanager">CMFCVisualManager::SetDefaultManager</a> 即可。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMFCVisualManager::<span class="built_in">SetDefaultManager</span>(<span class="built_in">RUNTIME_CLASS</span>(MyVisualManager));</span><br></pre></td></tr></table></figure>
+
+<h3 id="并未彻底解决问题"><a href="#并未彻底解决问题" class="headerlink" title="并未彻底解决问题"></a>并未彻底解决问题</h3><p>实践发现，并不是所有自带样式的方法都可以覆盖，比如 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/mfc/reference/cmfcvisualmanageroffice2007-class">CMFCVisualManagerOffice2007</a> 有几个方法并非<code>virtual</code>，这就没办法了。</p>
+<p><img src="/images/mfc-garbled-characters/03.webp"></p>
+<h2 id="用-Hook-方式解决"><a href="#用-Hook-方式解决" class="headerlink" title="用 Hook 方式解决"></a>用 Hook 方式解决</h2><p>最终想到一个非常规手段，用 Hook 的方式拦截<code>TextOutA</code>和<code>DrawTextA</code>，这样解决绘制乱码问题更优雅。最后选择了 <a target="_blank" rel="noopener" href="https://github.com/microsoft/Detours">Detours</a> 库来实现钩子。</p>
+<p><br>代码片段：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">BOOL</span>(WINAPI* OldTextOutA)(HDC, INT, INT, LPCSTR, INT) = ::TextOutA;</span><br><span class="line"><span class="built_in">int</span>(WINAPI* OldDrawTextA)(HDC, LPCSTR, <span class="type">int</span>, LPRECT, UINT) = ::DrawTextA;</span><br><span class="line"></span><br><span class="line"><span class="function">BOOL WINAPI <span class="title">FakeTextOutA</span><span class="params">(HDC hdc, <span class="type">int</span> x, <span class="type">int</span> y, LPCSTR lpString, <span class="type">int</span> c)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::wstring wstr = <span class="built_in">to_wstring</span>(lpString);</span><br><span class="line">    <span class="keyword">return</span> ::<span class="built_in">TextOutW</span>(hdc, x, y, wstr.<span class="built_in">c_str</span>(), wstr.<span class="built_in">size</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> WINAPI <span class="title">FakeDrawTextA</span><span class="params">(HDC hdc, LPCSTR lpchText, <span class="type">int</span> cchText, LPRECT lprc, UINT format)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::wstring wstr = <span class="built_in">to_wstring</span>(lpchText);</span><br><span class="line">    <span class="keyword">return</span> ::<span class="built_in">DrawTextW</span>(hdc, wstr.<span class="built_in">c_str</span>(), wstr.<span class="built_in">size</span>(), lprc, format);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>完美解决。</p>
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/mfc/reference/cmfcvisualmanager-class">CMFCVisualManager 类</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/bigwasp/article/details/119106308">CMFCVisualManagerWindows10 自定义类</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/06/29/build-qt-xp-571/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/MFC/" title="MFC">
+                        #MFC
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Detours/" title="Detours">
+                        #Detours
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/07/07/build-boost/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-text">问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E7%94%A8-CMFCVisualManager-%E8%A7%A3%E5%86%B3"><span class="toc-text">尝试用 CMFCVisualManager 解决</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%86%E8%A7%89%E6%A0%B7%E5%BC%8F%E5%8A%9F%E8%83%BD"><span class="toc-text">视觉样式功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%B7%E5%BC%8F"><span class="toc-text">自定义样式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B6%E6%9C%AA%E5%BD%BB%E5%BA%95%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98"><span class="toc-text">并未彻底解决问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8-Hook-%E6%96%B9%E5%BC%8F%E8%A7%A3%E5%86%B3"><span class="toc-text">用 Hook 方式解决</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E8%A7%A3%E5%86%B3%20MFC%20%E7%A8%8B%E5%BA%8F%E5%9C%A8%E8%8B%B1%E6%96%87%E7%B3%BB%E7%BB%9F%E4%B8%8A%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F07%2F04%2Fmfc-garbled-characters%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/07/04/mfc-garbled-characters/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

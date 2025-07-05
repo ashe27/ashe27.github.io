@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      CStatusBar 禁用自动状态提示 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">CStatusBar 禁用自动状态提示</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/MFC/" title="MFC">
+                    #MFC
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>今天在改一个MFC程序时，在对状态栏设置文本这里耗费了两小时时间，症状是对第一栏设置文本能成功，但是程序不显示。代码大概是这样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> UINT arr[] = &#123;</span><br><span class="line">    ID_SEPARATOR,</span><br><span class="line">    ID_SEPARATOR,</span><br><span class="line">    ID_SEPARATOR</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">SetIndicators</span>(arr, _countof(arr));</span><br><span class="line"><span class="built_in">SetPaneText</span>(<span class="number">0</span>, _T(<span class="string">&quot;Hello&quot;</span>));</span><br></pre></td></tr></table></figure>
+<p>原来问题出在指示器上，一切源于我没有理解<code>ID_SEPARATOR</code>的含义。<br>它的值等于零，用于占位，MFC会用第一个<code>ID_SEPARATOR</code>窗格显示命令提示信息（鼠标停留在菜单、工具栏时状态栏给出的提示）</p>
+<p>MFC在窗口初始化时会用ID为<code>AFX_IDS_IDLEMESSAGE</code>的字符串作为窗格初始内容，正好由于我的程序中未定义<code>AFX_IDS_IDLEMESSAGE</code>，导致MFC将空文本覆盖了我设置的文本。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>只要不用<code>ID_SEPARATOR</code>就行了，但我不想为了不用它就特地去定义一个字符串。<br>可以将ID指定为一个预定义的字符串，比如<code>AFX_IDS_IDLEMESSAGE</code>，但程序要在资源中给出它的定义，否则<code>SetIndicators</code>方法将会返回<code>FALSE</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> UINT arr[] = &#123;</span><br><span class="line">    AFX_IDS_IDLEMESSAGE,</span><br><span class="line">    AFX_IDS_IDLEMESSAGE,</span><br><span class="line">    AFX_IDS_IDLEMESSAGE</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">SetIndicators</span>(arr, _countof(arr));</span><br><span class="line"><span class="built_in">SetPaneText</span>(<span class="number">0</span>, _T(<span class="string">&quot;Hello&quot;</span>));</span><br></pre></td></tr></table></figure>
+<p>这样就可以愉快地使用<code>SetPaneText</code>了。</p>
+<h2 id="另类的解决方案"><a href="#另类的解决方案" class="headerlink" title="另类的解决方案"></a>另类的解决方案</h2><p>MFC强制将命令提示写到状态栏这个特性，看看源码是怎样实现的<br>在<code>winfrm.cpp</code>文件中</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LRESULT <span class="title">CFrameWnd::OnSetMessageString</span><span class="params">(WPARAM wParam, LPARAM lParam)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	UINT nIDLast = m_nIDLastMessage;</span><br><span class="line">	m_nFlags &amp;= ~WF_NOPOPMSG;</span><br><span class="line"></span><br><span class="line">	CWnd* pMessageBar = <span class="built_in">GetMessageBar</span>();</span><br><span class="line">	<span class="keyword">if</span> (pMessageBar != <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		LPCTSTR lpsz = <span class="literal">NULL</span>;</span><br><span class="line">		CString strMessage;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// set the message bar text</span></span><br><span class="line">		<span class="keyword">if</span> (lParam != <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">ASSERT</span>(wParam == <span class="number">0</span>);    <span class="comment">// can&#x27;t have both an ID and a string</span></span><br><span class="line">			lpsz = (LPCTSTR)lParam; <span class="comment">// set an explicit string</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (wParam != <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="comment">// map SC_CLOSE to PREVIEW_CLOSE when in print preview mode</span></span><br><span class="line">			<span class="keyword">if</span> (wParam == AFX_IDS_SCCLOSE &amp;&amp; m_lpfnCloseProc != <span class="literal">NULL</span>)</span><br><span class="line">				wParam = AFX_IDS_PREVIEW_CLOSE;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// get message associated with the ID indicated by wParam</span></span><br><span class="line">		 <span class="comment">//NT64: Assume IDs are still 32-bit</span></span><br><span class="line">			<span class="built_in">GetMessageString</span>((UINT)wParam, strMessage);</span><br><span class="line">			lpsz = strMessage;</span><br><span class="line">		&#125;</span><br><span class="line">		pMessageBar-&gt;<span class="built_in">SetWindowText</span>(lpsz);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// update owner of the bar in terms of last message selected</span></span><br><span class="line">		CFrameWnd* pFrameWnd = pMessageBar-&gt;<span class="built_in">GetParentFrame</span>();</span><br><span class="line">		<span class="keyword">if</span> (pFrameWnd != <span class="literal">NULL</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			pFrameWnd-&gt;m_nIDLastMessage = (UINT)wParam;</span><br><span class="line">			pFrameWnd-&gt;m_nIDTracking = (UINT)wParam;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	m_nIDLastMessage = (UINT)wParam;    <span class="comment">// new ID (or 0)</span></span><br><span class="line">	m_nIDTracking = (UINT)wParam;       <span class="comment">// so F1 on toolbar buttons work</span></span><br><span class="line">	<span class="keyword">return</span> nIDLast;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重要的就在这一句</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pMessageBar-&gt;<span class="built_in">SetWindowText</span>(lpsz);</span><br></pre></td></tr></table></figure>
+<p>实质上就是修改状态栏控件的标题，所以我们要看看<code>CStatusBar</code>是如何处理的，在<code>barstat.cpp</code>文件中</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">BEGIN_MESSAGE_MAP</span>(CStatusBar, CControlBar)</span><br><span class="line">  ...</span><br><span class="line">	<span class="built_in">ON_MESSAGE</span>(WM_SETTEXT, &amp;CStatusBar::OnSetText)</span><br><span class="line">  ...</span><br><span class="line"><span class="built_in">END_MESSAGE_MAP</span>()</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="function">LRESULT <span class="title">CStatusBar::OnSetText</span><span class="params">(WPARAM, LPARAM lParam)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">ASSERT_VALID</span>(<span class="keyword">this</span>);</span><br><span class="line">	<span class="built_in">ASSERT</span>(::<span class="built_in">IsWindow</span>(m_hWnd));</span><br><span class="line"></span><br><span class="line">	<span class="type">int</span> nIndex = <span class="built_in">CommandToIndex</span>(<span class="number">0</span>);</span><br><span class="line">	<span class="keyword">if</span> (nIndex &lt; <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">SetPaneText</span>(nIndex, (LPCTSTR)lParam) ? <span class="number">0</span> : <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>很明朗了，通过调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cstatusbar-class#commandtoindex">CommandToIndex</a> 获取ID为<code>ID_SEPARATOR</code>的窗格索引，然后设置窗格内容。</p>
+<p>回到最初的问题，我不想将指示器指向一个字符串ID，只想用<code>ID_SEPARATOR</code>占位，但又能用<code>SetPaneText</code>去设置面板文本怎么办？解决办法就是拦截<code>CStatusBar</code>控件的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-settext">WM_SETTEXT</a> 消息，屏蔽掉这个特性。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CStatusBarEx::OnWndMsg</span><span class="params">(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (message == WM_SETTEXT)</span><br><span class="line">    &#123;</span><br><span class="line">        *pResult = TRUE;</span><br><span class="line">        <span class="keyword">return</span> TRUE;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> __super::<span class="built_in">OnWndMsg</span>(message, wParam, lParam, pResult);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不过这个方法要求子类化<code>CStatusBar</code>或者继承它来拦截消息。其实自动提示这个功能的源头在<code>CFrameWnd::OnSetMessageString</code>，而它是对MFC内部消息 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/mfc/tn024-mfc-defined-messages-and-resources">WM_SETMESSAGESTRING</a> 的响应，所以我们也可以在 Frame 中拦截<code>WM_SETMESSAGESTRING</code>消息。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;afxpriv.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">BOOL <span class="title">MainFrame::OnWndMsg</span><span class="params">(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (message == WM_SETMESSAGESTRING)</span><br><span class="line">		<span class="keyword">return</span> __super::<span class="built_in">OnWndMsg</span>(message, <span class="number">0</span>, <span class="number">0</span>, pResult);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> __super::<span class="built_in">OnWndMsg</span>(message, wParam, lParam, pResult);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个拦截操作将<code>wParam</code>和<code>lParam</code>参数置为0，这将导致传递给<code>SetWindowText</code>的参数是空，就能达到屏蔽状态栏自动提示的特性。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/09/10/rCKN4tc4I/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/MFC/" title="MFC">
+                        #MFC
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/09/16/UnBKyM95J/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%A6%E7%B1%BB%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">另类的解决方案</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + CStatusBar%20%E7%A6%81%E7%94%A8%E8%87%AA%E5%8A%A8%E7%8A%B6%E6%80%81%E6%8F%90%E7%A4%BA + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F09%2F14%2FGY06V2QbH%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/09/14/GY06V2QbH/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

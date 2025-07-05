@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      修改 nuget 包输出位置 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">修改 nuget 包输出位置</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/dotnet/" title=".NET">
+                    #.NET
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/MSBuild/" title="MSBuild">
+                    #MSBuild
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>默认情况下，工程所引用的包在编译时会复制到输出目录。<br>这样会导致可执行文件和所有的 DLL 文件都处在同一个文件夹下，这样的目录没有层次结构，当文件过多时就难以定位程序或配置文件。<br>而我希望将所有第三方包放在子目录下，根目录只保留项目所产生的文件。</p>
+<h2 id="NET-Framework工程的修改方法"><a href="#NET-Framework工程的修改方法" class="headerlink" title=".NET Framework工程的修改方法"></a>.NET Framework工程的修改方法</h2><p>通过用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/sysinternals/downloads/procmon">进程监视器</a> 对可执行文件的观察，得知程序会依次从以下位置加载 DLL 文件：</p>
+<ol>
+<li>全局程序集缓存目录（Global Assembly Cache），共有6个<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\Microsoft.Net\assembly\GAC_64\</span><br><span class="line">C:\Windows\Microsoft.Net\assembly\GAC_MSIL\</span><br><span class="line">C:\Windows\Microsoft.Net\assembly\GAC\</span><br><span class="line">C:\Windows\assembly\GAC_64\</span><br><span class="line">C:\Windows\assembly\GAC_MSIL\</span><br><span class="line">C:\Windows\assembly\GAC\</span><br></pre></td></tr></table></figure>
+从 .NET Framework 4开始，全局程序集缓存的默认位置为<code>%windir%\Microsoft.NET\assembly</code>。在早期版本的.NET Framework中，默认位置为<code>%windir%\assembly</code>。<br>不过我们并不需要关心这个东西，想要进一步了解可以查看官方文档 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/framework/app-domains/gac">全局程序集缓存</a>。</li>
+<li>程序工作目录，一般就是 exe 文件所在目录。</li>
+<li><code>&#123;Package&#125;\&#123;Package&#125;.dll</code>。比如<code>HtmlAgilityPack\HtmlAgilityPack.dll</code>。</li>
+<li><code>[appname].exe.config</code>中所配置的探测路径。比如：<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span>  </span><br><span class="line">   <span class="tag">&lt;<span class="name">runtime</span>&gt;</span>  </span><br><span class="line">      <span class="tag">&lt;<span class="name">assemblyBinding</span> <span class="attr">xmlns</span>=<span class="string">&quot;urn:schemas-microsoft-com:asm.v1&quot;</span>&gt;</span>  </span><br><span class="line">         <span class="tag">&lt;<span class="name">probing</span> <span class="attr">privatePath</span>=<span class="string">&quot;libs&quot;</span>/&gt;</span>  </span><br><span class="line">      <span class="tag">&lt;/<span class="name">assemblyBinding</span>&gt;</span>  </span><br><span class="line">   <span class="tag">&lt;/<span class="name">runtime</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+比如<code>HtmlAgilityPack.dll</code>，那么加载路径就是<code>libs\HtmlAgilityPack.dll</code>。<br>这个选项支持配置多个探测路径，详细用法查看官方文档：<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/framework/configure-apps/file-schema/runtime/probing-element">probing 元素</a>。</li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.appdomain.assemblyresolve">AppDomain.AssemblyResolve 事件</a>。如果以上路径都未找到 DLL，那么会触发此事件<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> assemblyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, <span class="string">&quot;libs&quot;</span>, <span class="keyword">new</span> AssemblyName(args.Name).Name + <span class="string">&quot;.dll&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> File.Exists(assemblyPath) ? Assembly.LoadFrom(assemblyPath) : <span class="literal">null</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<br>显然，只有第4、5两种方法是我们需要的，一个通过配置文件，一个写死在代码中。用哪种方案根据自身喜好决定即可。</li>
+</ol>
+<h3 id="改变包的输出位置"><a href="#改变包的输出位置" class="headerlink" title="改变包的输出位置"></a>改变包的输出位置</h3><p>在这里找到了一个答案：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/55946010/">How to specify output folder for the referenced nuget packages?</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ItemDefinitionGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ReferenceCopyLocalPaths</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">DestinationSubDirectory</span>&gt;</span>libs\<span class="tag">&lt;/<span class="name">DestinationSubDirectory</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ReferenceCopyLocalPaths</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ItemDefinitionGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这样，所有引用的包都会复制到 libs 文件夹下，根目录清爽了。但是如果解决方案中有 DLL 工程的话，其也会复制到这个目录下去。<br>下面是改进后的版本，仅将第三方包复制到子目录：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Target</span> <span class="attr">Name</span>=<span class="string">&quot;AddDestinationSubDirectory&quot;</span> <span class="attr">AfterTargets</span>=<span class="string">&quot;ResolveAssemblyReferences&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ReferenceCopyLocalPaths</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;%(ReferenceCopyLocalPaths.ReferenceSourceTarget)&#x27; != &#x27;ProjectReference&#x27;&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">DestinationSubDirectory</span>&gt;</span>libs\<span class="tag">&lt;/<span class="name">DestinationSubDirectory</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ReferenceCopyLocalPaths</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>语法简化，效果一样：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Target</span> <span class="attr">Name</span>=<span class="string">&quot;AddDestinationSubDirectory&quot;</span> <span class="attr">AfterTargets</span>=<span class="string">&quot;ResolveAssemblyReferences&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ReferenceCopyLocalPaths</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;%(ReferenceCopyLocalPaths.ReferenceSourceTarget)&#x27; != &#x27;ProjectReference&#x27;&quot;</span> <span class="attr">Update</span>=<span class="string">&quot;%(ReferenceCopyLocalPaths)&quot;</span> <span class="attr">DestinationSubDirectory</span>=<span class="string">&quot;libs\&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>简单说下这个任务，我们需要用 <a target="_blank" rel="noopener" href="https://msbuildlog.com/">MSBuild Structured Log Viewer</a> 这个软件来分析 MSBuild 的构建过程。<br>其中 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/visualstudio/msbuild/resolveassemblyreference-task">ResolveAssemblyReferences</a> 任务正是用来确定引用程序集的，文件列表就存在<code>ReferenceCopyLocalPaths</code>中。<br>所以我们的任务需要在其后执行，验证并向<code>ReferenceCopyLocalPaths</code>追加<code>DestinationSubDirectory</code>元数据即可。</p>
+<h2 id="NET工程的修改方法"><a href="#NET工程的修改方法" class="headerlink" title=".NET工程的修改方法"></a>.NET工程的修改方法</h2><p>对于新的 .NET 工程，虽然也可以通过<code>DestinationSubDirectory</code>属性指定 nuget 包的输出位置，但是却无法再加载这些包了，因为加载路径变了。</p>
+<h3 id="修改DLL探测位置"><a href="#修改DLL探测位置" class="headerlink" title="修改DLL探测位置"></a>修改DLL探测位置</h3><p>在编译 .NET 项目时，将在输出目录中生成一个<code>[appname].runtimeconfig.json</code>文件，这个文件中有一个<code>additionalProbingPaths</code>属性，它允许你指定一个或多个自定义探测路径，供运行时在查找程序集时使用。<br><br>但是<code>[appname].runtimeconfig.json</code>文件在工程编译时会被覆盖掉，所以我们要将配置写在一个名为<code>runtimeconfig.template.json</code>文件中，让它与工程文件在同一个目录下。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;additionalProbingPaths&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;libs&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>当然这个配置模板的文件名也可以修改，在工程文件中用<code>UserRuntimeConfig</code>指定一个新的名称。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">UserRuntimeConfig</span>&gt;</span>newname.template.json<span class="tag">&lt;/<span class="name">UserRuntimeConfig</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最终的<code>[appname].runtimeconfig.json</code>文件内容大概就是这个样子</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;runtimeOptions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;tfm&quot;</span><span class="punctuation">:</span> <span class="string">&quot;net7.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;framework&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Microsoft.NETCore.App&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;7.0.0&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;additionalProbingPaths&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;libs&quot;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>与传统的 NetFx 项目一样，程序首先会尝试在当前目录下加载 DLL，找不到文件时才会从<code>additionalProbingPaths</code>指定的路径中搜索。<br>不过在新的 .NET 中，并不是将 DLL 复制到子目录就完事了，因为<code>additionalProbingPaths</code>指定的只是 nuget 包的 packages 位置，子目录结构要保持和包的结构一致。<br><br>我们都知道，一个包可能含有多个不同版本的 DLL 文件，那么程序到底用的哪个 DLL 呢？可以查看<code>[appname].deps.json</code>文件。一个例子：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;runtimeTarget&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;.NETCoreApp,Version=v7.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;signature&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;compilationOptions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;targets&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;.NETCoreApp,Version=v7.0&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;ConsoleApp1/1.0.0&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;HtmlAgilityPack&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.11.51&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;runtime&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;ConsoleApp1.dll&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;HtmlAgilityPack/1.11.51&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;runtime&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;lib/netstandard2.0/HtmlAgilityPack.dll&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;assemblyVersion&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.11.51.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;fileVersion&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.11.51.0&quot;</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;libraries&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;ConsoleApp1/1.0.0&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;project&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;serviceable&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;sha512&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;HtmlAgilityPack/1.11.51&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;package&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;serviceable&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;sha512&quot;</span><span class="punctuation">:</span> <span class="string">&quot;sha512-yRn0Vd6Smu69xGyRWIZVl/Ley2OMMCMwC9tZRR/GdXfxGYj1sGMT4KskWd8OP9dGlqaXPkyB0NzBHKejtZdbow==&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;htmlagilitypack/1.11.51&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;hashPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;htmlagilitypack.1.11.51.nupkg.sha512&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>探测路径就是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;additionalProbingPaths&#125;\&#123;libraries.package.path&#125;\&#123;targets.package.runtime&#125;</span><br></pre></td></tr></table></figure>
+<p>就上面的例子而言，最终加载路径是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">libs/htmlagilitypack/1.11.51/lib/netstandard2.0/HtmlAgilityPack.dll</span><br></pre></td></tr></table></figure>
+<h3 id="改变包的输出位置-1"><a href="#改变包的输出位置-1" class="headerlink" title="改变包的输出位置"></a>改变包的输出位置</h3><p>加载路径清楚了，那么如何让项目在编译时将 DLL 复制到子目录呢？有位网友给出了 <a target="_blank" rel="noopener" href="https://stackoverflow.com/a/72044506">答案</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Target</span> <span class="attr">Name</span>=<span class="string">&quot;CreateLibs&quot;</span> <span class="attr">AfterTargets</span>=<span class="string">&quot;AfterBuild&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">NugetFiles</span> <span class="attr">Include</span>=<span class="string">&quot;@(ReferenceCopyLocalPaths-&gt;HasMetadata(&#x27;PathInPackage&#x27;))&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">OutPath</span>&gt;</span>$(OutDir)libs\%(ReferenceCopyLocalPaths.NuGetPackageId)\%(ReferenceCopyLocalPaths.NuGetPackageVersion)\%(ReferenceCopyLocalPaths.PathInPackage)<span class="tag">&lt;/<span class="name">OutPath</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">DeletePath</span>&gt;</span>$(OutDir)%(ReferenceCopyLocalPaths.DestinationSubPath)<span class="tag">&lt;/<span class="name">DeletePath</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">NugetFiles</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Copy</span> <span class="attr">SourceFiles</span>=<span class="string">&quot;@(NugetFiles)&quot;</span> <span class="attr">DestinationFiles</span>=<span class="string">&quot;@(NugetFiles-&gt;&#x27;%(OutPath)&#x27;)&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Delete</span> <span class="attr">Files</span>=<span class="string">&quot;@(NugetFiles-&gt;&#x27;%(DeletePath)&#x27;)&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>不过这个任务触发时机较晚，DLL 已经复制完成了，为了提高效率，我将它改进如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Target</span> <span class="attr">Name</span>=<span class="string">&quot;AddDestinationSubDirectory&quot;</span> <span class="attr">AfterTargets</span>=<span class="string">&quot;ResolveAssemblyReferences&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ReferenceCopyLocalPaths</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;%(ReferenceCopyLocalPaths.ReferenceSourceTarget)&#x27; != &#x27;ProjectReference&#x27;&quot;</span> <span class="attr">Update</span>=<span class="string">&quot;%(ReferenceCopyLocalPaths)&quot;</span> <span class="attr">DestinationSubDirectory</span>=<span class="string">&quot;$([System.IO.Path]::GetDirectoryName(libs\%(ReferenceCopyLocalPaths.NuGetPackageId)\%(ReferenceCopyLocalPaths.NuGetPackageVersion)\%(ReferenceCopyLocalPaths.PathInPackage)))\&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="WinUI工程的修改方法"><a href="#WinUI工程的修改方法" class="headerlink" title="WinUI工程的修改方法"></a>WinUI工程的修改方法</h2><p>在 WinUI 工程下，用以上的方法修改后程序依然运行不起来。监控后发现<code>Microsoft.Windows.SDK.NET.dll</code>和<code>WinRT.Runtime.dll</code>这两个文件不受<code>additionalProbingPaths</code>设置的影响，它们只从可执行文件的工作目录下加载。<br>解决方法也很简单，加个 Condition 验证，过滤掉这两个文件就行了</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Target</span> <span class="attr">Name</span>=<span class="string">&quot;AddDestinationSubDirectory&quot;</span> <span class="attr">AfterTargets</span>=<span class="string">&quot;ResolveAssemblyReferences&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ReferenceCopyLocalPaths</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;%(ReferenceCopyLocalPaths.ReferenceSourceTarget)&#x27; != &#x27;ProjectReference&#x27; And &#x27;%(FileName)%(Extension)&#x27; != &#x27;Microsoft.Windows.SDK.NET.dll&#x27; And &#x27;%(FileName)%(Extension)&#x27; != &#x27;WinRT.Runtime.dll&#x27;&quot;</span> <span class="attr">Update</span>=<span class="string">&quot;%(ReferenceCopyLocalPaths)&quot;</span> <span class="attr">DestinationSubDirectory</span>=<span class="string">&quot;$([System.IO.Path]::GetDirectoryName(libs\%(ReferenceCopyLocalPaths.NuGetPackageId)\%(ReferenceCopyLocalPaths.NuGetPackageVersion)\%(ReferenceCopyLocalPaths.PathInPackage)))\&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Target</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/56844233/">Additional probing paths for .NET Core 3 migration</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/48650348/">additionalProbingPaths not respected after dotnet publish?</a><br><a target="_blank" rel="noopener" href="https://www.imooc.com/article/299861">netcore项目生成 runtimeconfig.json 文件 &amp; additionalProbingPaths 详解</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/TianFang/p/12420573.html">.Net core 程序Nuget包独立存放 （一）</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/TianFang/p/12424902.html">.Net core 程序Nuget包独立存放 （二）</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/07/06/rust-workspace/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/dotnet/" title=".NET">
+                        #.NET
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/MSBuild/" title="MSBuild">
+                        #MSBuild
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/07/20/csharp-settings/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#NET-Framework%E5%B7%A5%E7%A8%8B%E7%9A%84%E4%BF%AE%E6%94%B9%E6%96%B9%E6%B3%95"><span class="toc-text">.NET Framework工程的修改方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%B9%E5%8F%98%E5%8C%85%E7%9A%84%E8%BE%93%E5%87%BA%E4%BD%8D%E7%BD%AE"><span class="toc-text">改变包的输出位置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NET%E5%B7%A5%E7%A8%8B%E7%9A%84%E4%BF%AE%E6%94%B9%E6%96%B9%E6%B3%95"><span class="toc-text">.NET工程的修改方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9DLL%E6%8E%A2%E6%B5%8B%E4%BD%8D%E7%BD%AE"><span class="toc-text">修改DLL探测位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%B9%E5%8F%98%E5%8C%85%E7%9A%84%E8%BE%93%E5%87%BA%E4%BD%8D%E7%BD%AE-1"><span class="toc-text">改变包的输出位置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WinUI%E5%B7%A5%E7%A8%8B%E7%9A%84%E4%BF%AE%E6%94%B9%E6%96%B9%E6%B3%95"><span class="toc-text">WinUI工程的修改方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E4%BF%AE%E6%94%B9%20nuget%20%E5%8C%85%E8%BE%93%E5%87%BA%E4%BD%8D%E7%BD%AE + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F07%2F18%2Fdotnet-probing%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/07/18/dotnet-probing/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

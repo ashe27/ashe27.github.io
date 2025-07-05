@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      旷野之息神庙全亮、传送作弊 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">旷野之息神庙全亮、传送作弊</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Switch/" title="Switch">
+                    #Switch
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/%E5%A1%9E%E5%B0%94%E8%BE%BE%E4%BC%A0%E8%AF%B4/" title="塞尔达传说">
+                    #塞尔达传说
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>在<code>塞尔达传说：旷野之息</code>中，神庙在地图上有四种状态：</p>
+<ol>
+<li>从未访问过。地图上不会出现图标。</li>
+<li>访问过但是未激活。图标呈黄色，无法传送。</li>
+<li>神庙已激活但未通关。图标呈外蓝内黄，可以传送。</li>
+<li>神庙已通关。图标呈蓝色，可以传送。</li>
+</ol>
+<p><br>我第一直觉就是这是个枚举类型，于是找了几个小时 0123、1234 这些数字，始终没有找到地址。最后无奈对比存档文件发现地图上点亮神庙的依据是访问次数是否大于零。访问过才会出现在地图上，也就是说数据结构并不是我想的那样是一个简单的枚举类型。</p>
+<h2 id="查找内存地址"><a href="#查找内存地址" class="headerlink" title="查找内存地址"></a>查找内存地址</h2><p>对于从未访问过的神庙搜索 0 即可，但是这样肯定不好找，有两个方法定位：</p>
+<ol>
+<li>先模糊搜索，然后离神庙远一点，再靠近神庙，这样访问次数就会+1。</li>
+<li>用 <a target="_blank" rel="noopener" href="https://www.marcrobledo.com/savegame-editors/zelda-botw/">存档编辑器</a> 修改神庙访问次数（方法见文章末尾链接）。改为一个特殊的数字，这样就比较好搜。</li>
+</ol>
+<p><br>我搜索到<code>迦奥玛·阿萨神庙</code>本次的地址为<code>heap+AB30D710</code>，数据类型为<code>u32</code>。而<code>heap</code>地址当然是不可靠的，我们需要找到存储在<code>main</code>中的指针。</p>
+<h2 id="查找指针"><a href="#查找指针" class="headerlink" title="查找指针"></a>查找指针</h2><p>使用 <a target="_blank" rel="noopener" href="https://github.com/tomvita/Breeze-Beta/">Breeze</a> 设置一个写入断点，断点在<code>main+1218ACC</code>。<br>用 IDA 定位到<code>main+1218ACC</code>，看看这段伪代码：</p>
+<p><img src="/images/zelda-botw-temples/01.webp"></p>
+<p><strong>从代码看，最后一次偏移量是<code>0x1C</code>，后面找指针时就找结尾是<code>0x1C</code>的就行了。</strong><br>根据附近的代码来看，指针深度至少在 3 层，类似这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[[main+xxxx] + F0] - 58] + 1C</span><br></pre></td></tr></table></figure>
+
+<p>再次搬出 Breeze，添加目标地址到书签中，然后按下<code>Memory Explorer</code>打开内存窗口</p>
+<p><img src="/images/zelda-botw-temples/02.webp"></p>
+<p>点击<code>Jump Forward</code></p>
+<p><img src="/images/zelda-botw-temples/03.webp"></p>
+<p>点击<code>Start</code>开始搜索</p>
+<p><img src="/images/zelda-botw-temples/04.webp"></p>
+<p>在搜索结果中看到了第一条数据的偏移量是 0x1C（图片中的 d&#x3D;1c），大概率是找到了，继续<code>Next depth</code></p>
+<p><img src="/images/zelda-botw-temples/05.webp"></p>
+<p>第二次搜索结果中看到了第一条数据的偏移量是 0x58（图片中的 d&#x3D;58），感觉离成功越来越近了，继续<code>Next depth</code></p>
+<p><img src="/images/zelda-botw-temples/06.webp"></p>
+<p>一般来说指针最多就四层或五层，我这里找到四层时就找到了，看图片中 BM 不等于0，说明找到了对应的地址并添加到了书签</p>
+<p><img src="/images/zelda-botw-temples/07.webp"></p>
+<p>然后关闭游戏，重新启动游戏，这是为了让内存地址变化，以便验证指针的正确性。到 Breeze 书签中校对值是否正确，找出最后偏移为 0x1C 的可用指针。<br>编程经验告诉我，相同的数据 99% 的情况下都是在一起的。发现<code>[[main+2CA6460]+240]+???</code>是一个指针数组，只需要遍历这个数组就能找到所有地点访问次数的地址了。</p>
+<h2 id="地点数据"><a href="#地点数据" class="headerlink" title="地点数据"></a>地点数据</h2><p>包含：</p>
+<ul>
+<li>15 座塔</li>
+<li>137 座神庙（多一个？） </li>
+<li>4 个神兽</li>
+</ul>
+<p><br>前面两个神庙指针链不同，可能是没找对位置。</p>
+<table>
+<thead>
+<tr>
+<th>地点名称</th>
+<th>访问次数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>托·库摩神庙</td>
+<td>[[main+2CBDB88]+F0]+1C</td>
+</tr>
+<tr>
+<td>席亚·米乌神庙</td>
+<td>[[main+2CBDB88]+D8]+2C</td>
+</tr>
+<tr>
+<td>卡玛·拉席神庙</td>
+<td>[[[[main+2CA6460]+240]+10]+58]+1C</td>
+</tr>
+<tr>
+<td>乌塔·多神庙</td>
+<td>[[[[main+2CA6460]+240]+18]+58]+1C</td>
+</tr>
+<tr>
+<td>卡·奥裘神庙</td>
+<td>[[[[main+2CA6460]+240]+20]+58]+1C</td>
+</tr>
+<tr>
+<td>基玛·科萨萨神庙</td>
+<td>[[[[main+2CA6460]+240]+28]+58]+1C</td>
+</tr>
+<tr>
+<td>基玛·兹斯神庙</td>
+<td>[[[[main+2CA6460]+240]+30]+58]+1C</td>
+</tr>
+<tr>
+<td>塔塔卡玛·希米利神庙</td>
+<td>[[[[main+2CA6460]+240]+38]+58]+1C</td>
+</tr>
+<tr>
+<td>托·卡尤神庙</td>
+<td>[[[[main+2CA6460]+240]+40]+58]+1C</td>
+</tr>
+<tr>
+<td>哈瓦·卡伊神庙</td>
+<td>[[[[main+2CA6460]+240]+48]+58]+1C</td>
+</tr>
+<tr>
+<td>妙斯·希诺神庙</td>
+<td>[[[[main+2CA6460]+240]+50]+58]+1C</td>
+</tr>
+<tr>
+<td>飞行训练场</td>
+<td>[[[[main+2CA6460]+240]+58]+58]+1C</td>
+</tr>
+<tr>
+<td>夏·塔瓦神庙</td>
+<td>[[[[main+2CA6460]+240]+60]+58]+1C</td>
+</tr>
+<tr>
+<td>诺伊艾·罗吉神庙</td>
+<td>[[[[main+2CA6460]+240]+68]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+70]+58]+1C</td>
+</tr>
+<tr>
+<td>利特村</td>
+<td>[[[[main+2CA6460]+240]+78]+58]+1C</td>
+</tr>
+<tr>
+<td>利特驿站</td>
+<td>[[[[main+2CA6460]+240]+80]+58]+1C</td>
+</tr>
+<tr>
+<td>阿科·瓦塔神庙</td>
+<td>[[[[main+2CA6460]+240]+88]+58]+1C</td>
+</tr>
+<tr>
+<td>沃力达·诺神庙</td>
+<td>[[[[main+2CA6460]+240]+90]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+98]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+A0]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+A8]+58]+1C</td>
+</tr>
+<tr>
+<td>神兽瓦·梅德</td>
+<td>[[[[main+2CA6460]+240]+B0]+58]+1C</td>
+</tr>
+<tr>
+<td>提纳·裘扎神庙</td>
+<td>[[[[main+2CA6460]+240]+B8]+58]+1C</td>
+</tr>
+<tr>
+<td>塔邦挞之塔</td>
+<td>[[[[main+2CA6460]+240]+C0]+58]+1C</td>
+</tr>
+<tr>
+<td>基哈·乌神庙</td>
+<td>[[[[main+2CA6460]+240]+C8]+58]+1C</td>
+</tr>
+<tr>
+<td>基希罗特·摩神庙</td>
+<td>[[[[main+2CA6460]+240]+D0]+58]+1C</td>
+</tr>
+<tr>
+<td>格鲁德之塔</td>
+<td>[[[[main+2CA6460]+240]+D8]+58]+1C</td>
+</tr>
+<tr>
+<td>库伊·塔卡神庙</td>
+<td>[[[[main+2CA6460]+240]+E0]+58]+1C</td>
+</tr>
+<tr>
+<td>希·基托神庙</td>
+<td>[[[[main+2CA6460]+240]+E8]+58]+1C</td>
+</tr>
+<tr>
+<td>萨萨·卡伊神庙</td>
+<td>[[[[main+2CA6460]+240]+F0]+58]+1C</td>
+</tr>
+<tr>
+<td>依盖队基地</td>
+<td>[[[[main+2CA6460]+240]+F8]+58]+1C</td>
+</tr>
+<tr>
+<td>格鲁德小镇</td>
+<td>[[[[main+2CA6460]+240]+100]+58]+1C</td>
+</tr>
+<tr>
+<td>卡拉卡拉集市</td>
+<td>[[[[main+2CA6460]+240]+108]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+110]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+118]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+120]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+128]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+130]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+138]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+140]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+148]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+150]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+158]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+160]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+168]+58]+1C</td>
+</tr>
+<tr>
+<td>达科·塔瓦神庙</td>
+<td>[[[[main+2CA6460]+240]+170]+58]+1C</td>
+</tr>
+<tr>
+<td>古科·齐塞神庙</td>
+<td>[[[[main+2CA6460]+240]+178]+58]+1C</td>
+</tr>
+<tr>
+<td>拉丘·乌罗神庙</td>
+<td>[[[[main+2CA6460]+240]+180]+58]+1C</td>
+</tr>
+<tr>
+<td>夏达·阿达神庙</td>
+<td>[[[[main+2CA6460]+240]+188]+58]+1C</td>
+</tr>
+<tr>
+<td>基哈·托乌萨神庙</td>
+<td>[[[[main+2CA6460]+240]+190]+58]+1C</td>
+</tr>
+<tr>
+<td>拉·库阿神庙</td>
+<td>[[[[main+2CA6460]+240]+198]+58]+1C</td>
+</tr>
+<tr>
+<td>拉诺·库席神庙</td>
+<td>[[[[main+2CA6460]+240]+1A0]+58]+1C</td>
+</tr>
+<tr>
+<td>海布拉之塔</td>
+<td>[[[[main+2CA6460]+240]+1A8]+58]+1C</td>
+</tr>
+<tr>
+<td>诺基·米席神庙</td>
+<td>[[[[main+2CA6460]+240]+1B0]+58]+1C</td>
+</tr>
+<tr>
+<td>迦奥玛·阿萨神庙</td>
+<td>[[[[main+2CA6460]+240]+1B8]+58]+1C</td>
+</tr>
+<tr>
+<td>多恩巴·塔神庙</td>
+<td>[[[[main+2CA6460]+240]+1C0]+58]+1C</td>
+</tr>
+<tr>
+<td>希利特·古奥玛神庙</td>
+<td>[[[[main+2CA6460]+240]+1C8]+58]+1C</td>
+</tr>
+<tr>
+<td>塔邦达大桥驿站</td>
+<td>[[[[main+2CA6460]+240]+1D0]+58]+1C</td>
+</tr>
+<tr>
+<td>夏奥·耀神庙</td>
+<td>[[[[main+2CA6460]+240]+1D8]+58]+1C</td>
+</tr>
+<tr>
+<td>托·雅萨神庙</td>
+<td>[[[[main+2CA6460]+240]+1E0]+58]+1C</td>
+</tr>
+<tr>
+<td>摩·拉塔尼阿神庙</td>
+<td>[[[[main+2CA6460]+240]+1E8]+58]+1C</td>
+</tr>
+<tr>
+<td>米达·罗基神庙</td>
+<td>[[[[main+2CA6460]+240]+1F0]+58]+1C</td>
+</tr>
+<tr>
+<td>究尼·希神庙</td>
+<td>[[[[main+2CA6460]+240]+1F8]+58]+1C</td>
+</tr>
+<tr>
+<td>格鲁德峡谷驿站</td>
+<td>[[[[main+2CA6460]+240]+200]+58]+1C</td>
+</tr>
+<tr>
+<td>荒野之塔</td>
+<td>[[[[main+2CA6460]+240]+208]+58]+1C</td>
+</tr>
+<tr>
+<td>克·诺伊神庙</td>
+<td>[[[[main+2CA6460]+240]+210]+58]+1C</td>
+</tr>
+<tr>
+<td>神兽瓦·娜波力斯</td>
+<td>[[[[main+2CA6460]+240]+218]+58]+1C</td>
+</tr>
+<tr>
+<td>裘希·奥神庙</td>
+<td>[[[[main+2CA6460]+240]+220]+58]+1C</td>
+</tr>
+<tr>
+<td>克贝·塔瓦神庙</td>
+<td>[[[[main+2CA6460]+240]+228]+58]+1C</td>
+</tr>
+<tr>
+<td>密·苏神庙</td>
+<td>[[[[main+2CA6460]+240]+230]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+238]+58]+1C</td>
+</tr>
+<tr>
+<td>夏·格玛神庙</td>
+<td>[[[[main+2CA6460]+240]+240]+58]+1C</td>
+</tr>
+<tr>
+<td>雪原驿站</td>
+<td>[[[[main+2CA6460]+240]+248]+58]+1C</td>
+</tr>
+<tr>
+<td>利·摩纳神庙</td>
+<td>[[[[main+2CA6460]+240]+250]+58]+1C</td>
+</tr>
+<tr>
+<td>忘却神殿</td>
+<td>[[[[main+2CA6460]+240]+258]+58]+1C</td>
+</tr>
+<tr>
+<td>罗纳·卡塔神庙</td>
+<td>[[[[main+2CA6460]+240]+260]+58]+1C</td>
+</tr>
+<tr>
+<td>玛丽塔驿站</td>
+<td>[[[[main+2CA6460]+240]+268]+58]+1C</td>
+</tr>
+<tr>
+<td>玛·诺拉神庙</td>
+<td>[[[[main+2CA6460]+240]+270]+58]+1C</td>
+</tr>
+<tr>
+<td>蒙亚·托玛神庙</td>
+<td>[[[[main+2CA6460]+240]+278]+58]+1C</td>
+</tr>
+<tr>
+<td>基瓦·扎塔斯神庙</td>
+<td>[[[[main+2CA6460]+240]+280]+58]+1C</td>
+</tr>
+<tr>
+<td>丘陵之塔</td>
+<td>[[[[main+2CA6460]+240]+288]+58]+1C</td>
+</tr>
+<tr>
+<td>希·达哥兹神庙</td>
+<td>[[[[main+2CA6460]+240]+290]+58]+1C</td>
+</tr>
+<tr>
+<td>复苏神庙</td>
+<td>[[[[main+2CA6460]+240]+298]+58]+1C</td>
+</tr>
+<tr>
+<td>平原外围的驿站</td>
+<td>[[[[main+2CA6460]+240]+2A0]+58]+1C</td>
+</tr>
+<tr>
+<td>鲁耀·塔乌神庙</td>
+<td>[[[[main+2CA6460]+240]+2A8]+58]+1C</td>
+</tr>
+<tr>
+<td>达·卡索神庙</td>
+<td>[[[[main+2CA6460]+240]+2B0]+58]+1C</td>
+</tr>
+<tr>
+<td>图米·恩科神庙</td>
+<td>[[[[main+2CA6460]+240]+2B8]+58]+1C</td>
+</tr>
+<tr>
+<td>艾茨·科力玛神庙</td>
+<td>[[[[main+2CA6460]+240]+2C0]+58]+1C</td>
+</tr>
+<tr>
+<td>吉诺·耀神庙</td>
+<td>[[[[main+2CA6460]+240]+2C8]+58]+1C</td>
+</tr>
+<tr>
+<td>斯玛·萨玛神庙</td>
+<td>[[[[main+2CA6460]+240]+2D0]+58]+1C</td>
+</tr>
+<tr>
+<td>迪拉·玛神庙</td>
+<td>[[[[main+2CA6460]+240]+2D8]+58]+1C</td>
+</tr>
+<tr>
+<td>卡扎·托基神庙</td>
+<td>[[[[main+2CA6460]+240]+2E0]+58]+1C</td>
+</tr>
+<tr>
+<td>达·乔卡席神庙</td>
+<td>[[[[main+2CA6460]+240]+2E8]+58]+1C</td>
+</tr>
+<tr>
+<td>萨斯·科萨神庙</td>
+<td>[[[[main+2CA6460]+240]+2F0]+58]+1C</td>
+</tr>
+<tr>
+<td>尼阿·奈阿神庙</td>
+<td>[[[[main+2CA6460]+240]+2F8]+58]+1C</td>
+</tr>
+<tr>
+<td>卡塔·丘基神庙</td>
+<td>[[[[main+2CA6460]+240]+300]+58]+1C</td>
+</tr>
+<tr>
+<td>海拉鲁城堡</td>
+<td>[[[[main+2CA6460]+240]+308]+58]+1C</td>
+</tr>
+<tr>
+<td>亚卡·玛塔神庙</td>
+<td>[[[[main+2CA6460]+240]+310]+58]+1C</td>
+</tr>
+<tr>
+<td>平原之塔</td>
+<td>[[[[main+2CA6460]+240]+318]+58]+1C</td>
+</tr>
+<tr>
+<td>加·巴希夫神庙</td>
+<td>[[[[main+2CA6460]+240]+320]+58]+1C</td>
+</tr>
+<tr>
+<td>玛·奥努神庙</td>
+<td>[[[[main+2CA6460]+240]+328]+58]+1C</td>
+</tr>
+<tr>
+<td>罗希塔·奇古神庙</td>
+<td>[[[[main+2CA6460]+240]+330]+58]+1C</td>
+</tr>
+<tr>
+<td>耀瓦卡·伊尔塔神庙</td>
+<td>[[[[main+2CA6460]+240]+338]+58]+1C</td>
+</tr>
+<tr>
+<td>初始之塔</td>
+<td>[[[[main+2CA6460]+240]+340]+58]+1C</td>
+</tr>
+<tr>
+<td>露奈·科力巴神庙</td>
+<td>[[[[main+2CA6460]+240]+348]+58]+1C</td>
+</tr>
+<tr>
+<td>湖之塔</td>
+<td>[[[[main+2CA6460]+240]+350]+58]+1C</td>
+</tr>
+<tr>
+<td>瓦·摩达伊神庙</td>
+<td>[[[[main+2CA6460]+240]+358]+58]+1C</td>
+</tr>
+<tr>
+<td>亚·纳迦神庙</td>
+<td>[[[[main+2CA6460]+240]+360]+58]+1C</td>
+</tr>
+<tr>
+<td>伊奥·索奥神庙</td>
+<td>[[[[main+2CA6460]+240]+368]+58]+1C</td>
+</tr>
+<tr>
+<td>基托·瓦瓦伊神庙</td>
+<td>[[[[main+2CA6460]+240]+370]+58]+1C</td>
+</tr>
+<tr>
+<td>克洛格森林</td>
+<td>[[[[main+2CA6460]+240]+378]+58]+1C</td>
+</tr>
+<tr>
+<td>基耀·乌神庙</td>
+<td>[[[[main+2CA6460]+240]+380]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+388]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+390]+58]+1C</td>
+</tr>
+<tr>
+<td>玛姆·拉诺神庙</td>
+<td>[[[[main+2CA6460]+240]+398]+58]+1C</td>
+</tr>
+<tr>
+<td>森岭之塔</td>
+<td>[[[[main+2CA6460]+240]+3A0]+58]+1C</td>
+</tr>
+<tr>
+<td>库恩·希达吉神庙</td>
+<td>[[[[main+2CA6460]+240]+3A8]+58]+1C</td>
+</tr>
+<tr>
+<td>纳米卡·奥兹神庙</td>
+<td>[[[[main+2CA6460]+240]+3B0]+58]+1C</td>
+</tr>
+<tr>
+<td>湿地驿站</td>
+<td>[[[[main+2CA6460]+240]+3B8]+58]+1C</td>
+</tr>
+<tr>
+<td>卡亚·米瓦神庙</td>
+<td>[[[[main+2CA6460]+240]+3C0]+58]+1C</td>
+</tr>
+<tr>
+<td>席罗·席拉神庙</td>
+<td>[[[[main+2CA6460]+240]+3C8]+58]+1C</td>
+</tr>
+<tr>
+<td>河畔驿站</td>
+<td>[[[[main+2CA6460]+240]+3D0]+58]+1C</td>
+</tr>
+<tr>
+<td>瓦哥·卡塔神庙</td>
+<td>[[[[main+2CA6460]+240]+3D8]+58]+1C</td>
+</tr>
+<tr>
+<td>瓦希·辽科神庙</td>
+<td>[[[[main+2CA6460]+240]+3E0]+58]+1C</td>
+</tr>
+<tr>
+<td>普玛·尼特神庙</td>
+<td>[[[[main+2CA6460]+240]+3E8]+58]+1C</td>
+</tr>
+<tr>
+<td>希·库乔夫神庙</td>
+<td>[[[[main+2CA6460]+240]+3F0]+58]+1C</td>
+</tr>
+<tr>
+<td>高原驿站</td>
+<td>[[[[main+2CA6460]+240]+3F8]+58]+1C</td>
+</tr>
+<tr>
+<td>卡奥·玛卡神庙</td>
+<td>[[[[main+2CA6460]+240]+400]+58]+1C</td>
+</tr>
+<tr>
+<td>希·塔塔恩科神庙</td>
+<td>[[[[main+2CA6460]+240]+408]+58]+1C</td>
+</tr>
+<tr>
+<td>晓拉·哈神庙</td>
+<td>[[[[main+2CA6460]+240]+410]+58]+1C</td>
+</tr>
+<tr>
+<td>鼓隆城</td>
+<td>[[[[main+2CA6460]+240]+418]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+420]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+428]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+430]+58]+1C</td>
+</tr>
+<tr>
+<td>希摩·依托塞神庙</td>
+<td>[[[[main+2CA6460]+240]+438]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+440]+58]+1C</td>
+</tr>
+<tr>
+<td>废弃的北部矿坑</td>
+<td>[[[[main+2CA6460]+240]+448]+58]+1C</td>
+</tr>
+<tr>
+<td>森岭驿站</td>
+<td>[[[[main+2CA6460]+240]+450]+58]+1C</td>
+</tr>
+<tr>
+<td>南部采矿场</td>
+<td>[[[[main+2CA6460]+240]+458]+58]+1C</td>
+</tr>
+<tr>
+<td>米罗·茨席神庙</td>
+<td>[[[[main+2CA6460]+240]+460]+58]+1C</td>
+</tr>
+<tr>
+<td>丘·拉姆席神庙</td>
+<td>[[[[main+2CA6460]+240]+468]+58]+1C</td>
+</tr>
+<tr>
+<td>协莫·拉塔神庙</td>
+<td>[[[[main+2CA6460]+240]+470]+58]+1C</td>
+</tr>
+<tr>
+<td>达塔·库斯神庙</td>
+<td>[[[[main+2CA6460]+240]+478]+58]+1C</td>
+</tr>
+<tr>
+<td>塔罗·尼席神庙</td>
+<td>[[[[main+2CA6460]+240]+480]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+488]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+490]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+498]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+4A0]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+4A8]+58]+1C</td>
+</tr>
+<tr>
+<td>双子山之塔</td>
+<td>[[[[main+2CA6460]+240]+4B0]+58]+1C</td>
+</tr>
+<tr>
+<td>希贝·尼亚斯神庙</td>
+<td>[[[[main+2CA6460]+240]+4B8]+58]+1C</td>
+</tr>
+<tr>
+<td>希贝·尼罗神庙</td>
+<td>[[[[main+2CA6460]+240]+4C0]+58]+1C</td>
+</tr>
+<tr>
+<td>哈尤·达玛神庙</td>
+<td>[[[[main+2CA6460]+240]+4C8]+58]+1C</td>
+</tr>
+<tr>
+<td>利·达席神庙</td>
+<td>[[[[main+2CA6460]+240]+4D0]+58]+1C</td>
+</tr>
+<tr>
+<td>双子驿站</td>
+<td>[[[[main+2CA6460]+240]+4D8]+58]+1C</td>
+</tr>
+<tr>
+<td>托托·伊萨神庙</td>
+<td>[[[[main+2CA6460]+240]+4E0]+58]+1C</td>
+</tr>
+<tr>
+<td>晓达·萨神庙</td>
+<td>[[[[main+2CA6460]+240]+4E8]+58]+1C</td>
+</tr>
+<tr>
+<td>湖畔驿站</td>
+<td>[[[[main+2CA6460]+240]+4F0]+58]+1C</td>
+</tr>
+<tr>
+<td>塞伊·乌托神庙</td>
+<td>[[[[main+2CA6460]+240]+4F8]+58]+1C</td>
+</tr>
+<tr>
+<td>费罗尼之塔</td>
+<td>[[[[main+2CA6460]+240]+500]+58]+1C</td>
+</tr>
+<tr>
+<td>卡米拉·奥姆纳神庙</td>
+<td>[[[[main+2CA6460]+240]+508]+58]+1C</td>
+</tr>
+<tr>
+<td>古·阿齐托神庙</td>
+<td>[[[[main+2CA6460]+240]+510]+58]+1C</td>
+</tr>
+<tr>
+<td>夏德·罗恩神庙</td>
+<td>[[[[main+2CA6460]+240]+518]+58]+1C</td>
+</tr>
+<tr>
+<td>达卡·卡神庙</td>
+<td>[[[[main+2CA6460]+240]+520]+58]+1C</td>
+</tr>
+<tr>
+<td>克哈·拉玛神庙</td>
+<td>[[[[main+2CA6460]+240]+528]+58]+1C</td>
+</tr>
+<tr>
+<td>神兽瓦·鲁达尼亚</td>
+<td>[[[[main+2CA6460]+240]+530]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+538]+58]+1C</td>
+</tr>
+<tr>
+<td>利诺·希米卡神庙</td>
+<td>[[[[main+2CA6460]+240]+540]+58]+1C</td>
+</tr>
+<tr>
+<td>山麓驿站</td>
+<td>[[[[main+2CA6460]+240]+548]+58]+1C</td>
+</tr>
+<tr>
+<td>奥尔汀之塔</td>
+<td>[[[[main+2CA6460]+240]+550]+58]+1C</td>
+</tr>
+<tr>
+<td>摩阿·基希托神庙</td>
+<td>[[[[main+2CA6460]+240]+558]+58]+1C</td>
+</tr>
+<tr>
+<td>萨·达究神庙</td>
+<td>[[[[main+2CA6460]+240]+560]+58]+1C</td>
+</tr>
+<tr>
+<td>塔·姆尔神庙</td>
+<td>[[[[main+2CA6460]+240]+568]+58]+1C</td>
+</tr>
+<tr>
+<td>萨奥·科席神庙</td>
+<td>[[[[main+2CA6460]+240]+570]+58]+1C</td>
+</tr>
+<tr>
+<td>拉聂尔之塔</td>
+<td>[[[[main+2CA6460]+240]+578]+58]+1C</td>
+</tr>
+<tr>
+<td>拉纳·罗基神庙</td>
+<td>[[[[main+2CA6460]+240]+580]+58]+1C</td>
+</tr>
+<tr>
+<td>米兹·耀神庙</td>
+<td>[[[[main+2CA6460]+240]+588]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+590]+58]+1C</td>
+</tr>
+<tr>
+<td>达乌·纳艾神庙</td>
+<td>[[[[main+2CA6460]+240]+598]+58]+1C</td>
+</tr>
+<tr>
+<td>卡姆·尤奥神庙</td>
+<td>[[[[main+2CA6460]+240]+5A0]+58]+1C</td>
+</tr>
+<tr>
+<td>哈诺特之塔</td>
+<td>[[[[main+2CA6460]+240]+5A8]+58]+1C</td>
+</tr>
+<tr>
+<td>塔瓦·吉努神庙</td>
+<td>[[[[main+2CA6460]+240]+5B0]+58]+1C</td>
+</tr>
+<tr>
+<td>亚奥·玛耀神庙</td>
+<td>[[[[main+2CA6460]+240]+5B8]+58]+1C</td>
+</tr>
+<tr>
+<td>丘卡·纳塔神庙</td>
+<td>[[[[main+2CA6460]+240]+5C0]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+5C8]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+5D0]+58]+1C</td>
+</tr>
+<tr>
+<td>兹纳·卡伊神庙</td>
+<td>[[[[main+2CA6460]+240]+5D8]+58]+1C</td>
+</tr>
+<tr>
+<td>茨茨阿·尼玛神庙</td>
+<td>[[[[main+2CA6460]+240]+5E0]+58]+1C</td>
+</tr>
+<tr>
+<td>南阿卡莱驿站</td>
+<td>[[[[main+2CA6460]+240]+5E8]+58]+1C</td>
+</tr>
+<tr>
+<td>阿卡莱之塔</td>
+<td>[[[[main+2CA6460]+240]+5F0]+58]+1C</td>
+</tr>
+<tr>
+<td>达席·希诺神庙</td>
+<td>[[[[main+2CA6460]+240]+5F8]+58]+1C</td>
+</tr>
+<tr>
+<td>吉兹·卡夫伊神庙</td>
+<td>[[[[main+2CA6460]+240]+600]+58]+1C</td>
+</tr>
+<tr>
+<td>一始村</td>
+<td>[[[[main+2CA6460]+240]+608]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+610]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+618]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+620]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+628]+58]+1C</td>
+</tr>
+<tr>
+<td>卓拉领地</td>
+<td>[[[[main+2CA6460]+240]+630]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+638]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+640]+58]+1C</td>
+</tr>
+<tr>
+<td>奈兹·耀玛神庙</td>
+<td>[[[[main+2CA6460]+240]+648]+58]+1C</td>
+</tr>
+<tr>
+<td>萨塔·卡达神庙</td>
+<td>[[[[main+2CA6460]+240]+650]+58]+1C</td>
+</tr>
+<tr>
+<td>玛乌·艾鲁亚神庙</td>
+<td>[[[[main+2CA6460]+240]+658]+58]+1C</td>
+</tr>
+<tr>
+<td>达·基基神庙</td>
+<td>[[[[main+2CA6460]+240]+660]+58]+1C</td>
+</tr>
+<tr>
+<td>神兽瓦·露塔</td>
+<td>[[[[main+2CA6460]+240]+668]+58]+1C</td>
+</tr>
+<tr>
+<td>鲁克·玛神庙</td>
+<td>[[[[main+2CA6460]+240]+670]+58]+1C</td>
+</tr>
+<tr>
+<td>吉塔·萨米神庙</td>
+<td>[[[[main+2CA6460]+240]+678]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+680]+58]+1C</td>
+</tr>
+<tr>
+<td>哈特诺古代研究所</td>
+<td>[[[[main+2CA6460]+240]+688]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+690]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+698]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+6A0]+58]+1C</td>
+</tr>
+<tr>
+<td></td>
+<td>[[[[main+2CA6460]+240]+6A8]+58]+1C</td>
+</tr>
+<tr>
+<td>米亚马·迦纳神庙</td>
+<td>[[[[main+2CA6460]+240]+6B0]+58]+1C</td>
+</tr>
+<tr>
+<td>沃托里村</td>
+<td>[[[[main+2CA6460]+240]+6B8]+58]+1C</td>
+</tr>
+<tr>
+<td>姆奥·吉姆神庙</td>
+<td>[[[[main+2CA6460]+240]+6C0]+58]+1C</td>
+</tr>
+<tr>
+<td>玛·卡亚神庙</td>
+<td>[[[[main+2CA6460]+240]+6C8]+58]+1C</td>
+</tr>
+<tr>
+<td>阿卡莱古代研究所</td>
+<td>[[[[main+2CA6460]+240]+6D0]+58]+1C</td>
+</tr>
+<tr>
+<td>图·卡罗神庙</td>
+<td>[[[[main+2CA6460]+240]+6D8]+58]+1C</td>
+</tr>
+<tr>
+<td>东阿卡莱驿站</td>
+<td>[[[[main+2CA6460]+240]+6E0]+58]+1C</td>
+</tr>
+<tr>
+<td>卡茨·托萨神庙</td>
+<td>[[[[main+2CA6460]+240]+6E8]+58]+1C</td>
+</tr>
+<tr>
+<td>利塔·兹摩神庙</td>
+<td>[[[[main+2CA6460]+240]+6F0]+58]+1C</td>
+</tr>
+<tr>
+<td>卡·姆神庙</td>
+<td>[[[[main+2CA6460]+240]+6F8]+58]+1C</td>
+</tr>
+<tr>
+<td>基奥·达夫纳神庙</td>
+<td>[[[[main+2CA6460]+240]+700]+58]+1C</td>
+</tr>
+<tr>
+<td>科尼·希卡神庙</td>
+<td>[[[[main+2CA6460]+240]+708]+58]+1C</td>
+</tr>
+<tr>
+<td>希·尤塔神庙</td>
+<td>[[[[main+2CA6460]+240]+710]+58]+1C</td>
+</tr>
+<tr>
+<td>塔诺·阿神庙</td>
+<td>[[[[main+2CA6460]+240]+718]+58]+1C</td>
+</tr>
+<tr>
+<td>洽斯·科塔神庙</td>
+<td>[[[[main+2CA6460]+240]+720]+58]+1C</td>
+</tr>
+<tr>
+<td>库古·齐德神庙</td>
+<td>[[[[main+2CA6460]+240]+728]+58]+1C</td>
+</tr>
+</tbody></table>
+<h2 id="显示神庙位置"><a href="#显示神庙位置" class="headerlink" title="显示神庙位置"></a>显示神庙位置</h2><p>我们可以将所有神庙访问次数写入大于零的值，这样地图上就能显示神庙了。但是这样做金手指太痛苦了，毕竟有一百多个神庙。。。而且为每个神庙做金手指容易出错。<br>更好的做法是修改程序逻辑，我们设置一个读断点，看看是哪里访问了次数数据。</p>
+<p><img src="/images/zelda-botw-temples/08.webp"></p>
+<p>游戏在<code>main+109dfb0</code>处不停地读取地点神庙次数，接着有两处<code>cmp xxx</code>语句，都是和次数有关的判断，都<code>nop</code>掉。<br>再往下翻一点，还有一处</p>
+<p><img src="/images/zelda-botw-temples/09.webp"></p>
+<p>一共三处，都 nop 掉，抱着试试看的心理测试一下，结果瞎猫碰上死耗子，神庙全显示了！</p>
+<p><img src="/images/zelda-botw-temples/10.webp"></p>
+<p>金手指：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[显示神庙位置]</span></span><br><span class="line">04000000 0109DFB8 D503201F</span><br><span class="line">04000000 0109DFD0 D503201F</span><br><span class="line">04000000 0109DFEC D503201F</span><br></pre></td></tr></table></figure>
+
+<h2 id="显示高塔位置"><a href="#显示高塔位置" class="headerlink" title="显示高塔位置"></a>显示高塔位置</h2><p>思路与神庙一样，在访问次数的地方设置读断点，断在了<code>main+109FA30</code>处。代码和上面是一样的，nop 掉三处即可。</p>
+<p>金手指：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[显示高塔位置]</span></span><br><span class="line">04000000 0109FA38 D503201F</span><br><span class="line">04000000 0109FA50 D503201F</span><br><span class="line">04000000 0109FA6C D503201F</span><br></pre></td></tr></table></figure>
+
+<h2 id="显示古代研究所位置"><a href="#显示古代研究所位置" class="headerlink" title="显示古代研究所位置"></a>显示古代研究所位置</h2><p>思路与神庙一样，在访问次数的地方设置读断点，断在了<code>main+10A2110</code>处。代码和上面是一样的，nop 掉三处即可。</p>
+<p>金手指：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[显示古代研究所位置]</span></span><br><span class="line">04000000 010A2118 D503201F</span><br><span class="line">04000000 010A2130 D503201F</span><br><span class="line">04000000 010A214C D503201F</span><br></pre></td></tr></table></figure>
+
+<h2 id="显示神兽位置"><a href="#显示神兽位置" class="headerlink" title="显示神兽位置"></a>显示神兽位置</h2><p>思路与神庙一样，在访问次数的地方设置读断点，断在了<code>main+10A1950</code>处。代码和上面是一样的，nop 掉三处即可。</p>
+<p>金手指：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[显示神兽位置]</span></span><br><span class="line">04000000 010A1958 D503201F</span><br><span class="line">04000000 010A1970 D503201F</span><br><span class="line">04000000 010A198C D503201F</span><br></pre></td></tr></table></figure>
+
+<h2 id="显示功能-Flag"><a href="#显示功能-Flag" class="headerlink" title="显示功能 Flag"></a>显示功能 Flag</h2><p>为了搞清楚控制显示的 flag 到底在哪，于是我查看了一下高塔相关的伪代码：</p>
+<p><img src="/images/zelda-botw-temples/11.webp"></p>
+<p>重点在偏移 0x3C 处，这是一个 u32 类型的 flag，其中就包括控制神庙是否显示、是否可传送等等功能！<br>这个函数是控制高塔显示与否的函数，从代码上可以与显示有关的 flag 在第 16、17 位。测试发现控制显示的 flag 是第 16 位（0x8000）。<br><br>flag 的指针链是什么呢？仔细观察代码就可以发现了，和访问次数的指针一样，只是少一级，比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[[[main+2CA6460]+240]+340]+58]+1C    初始之塔的次数地址</span><br><span class="line">[[[main+2CA6460]+240]+340]+3C         flag 地址，在次数地址的上一级，偏移 0x3C 处</span><br></pre></td></tr></table></figure>
+
+<h2 id="传送功能-Flag"><a href="#传送功能-Flag" class="headerlink" title="传送功能 Flag"></a>传送功能 Flag</h2><p>经过反复对比、测试发现，传送 flag 在第 10 位（0x200）。<br>因为根据前面的经验，知道了这个游戏在渲染时不停的写入 flag，所以我们设置写入断点，会找到好几个地方写入，一个个翻一下有没有关于 0x200 立即数的操作，不意外的找到了：</p>
+<p><img src="/images/zelda-botw-temples/12.webp"></p>
+<p>来到 IDA 中看看清楚：</p>
+<p><img src="/images/zelda-botw-temples/13.webp"></p>
+<p>我们只需要修改 if 判断语句即可，让它始终写入传送 flag。</p>
+<h2 id="金手指"><a href="#金手指" class="headerlink" title="金手指"></a>金手指</h2><p>前面的金手指都是用的 nop 指令，发现一个小问题，对于<code>托·库摩神庙</code>神庙有时候没有效果，有时候又能显示。<br>所以最终我改用了修改 flag 的方式做金手指，这样更稳妥。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[显示神庙位置]</span><br><span class="line">04000000 0109DFB8 D503201F</span><br><span class="line">04000000 0109DFD4 1A8B116A</span><br><span class="line">04000000 0109DFF0 1A8AC149</span><br><span class="line"></span><br><span class="line">04000000 0109EFE0 D503201F</span><br><span class="line">04000000 0109F004 1A8B116A</span><br><span class="line">04000000 0109F020 1A8AC149</span><br><span class="line"></span><br><span class="line">[显示高塔位置]</span><br><span class="line">04000000 0109FA54 1A8B116A</span><br><span class="line">04000000 0109FA70 1A8AC149</span><br><span class="line"></span><br><span class="line">[显示古代研究所位置]</span><br><span class="line">04000000 010A2134 1A8B116A</span><br><span class="line">04000000 010A2150 1A8AC149</span><br><span class="line"></span><br><span class="line">[显示神兽位置]</span><br><span class="line">04000000 010A1974 1A8B116A</span><br><span class="line">04000000 010A1990 1A8AC149</span><br><span class="line"></span><br><span class="line">[已显示地点可传送]</span><br><span class="line">04000000 0109CC38 1A881108</span><br></pre></td></tr></table></figure>
+
+<h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><p><a target="_blank" rel="noopener" href="https://www.tekqart.com/thread-310724-1-1.html">『塞尔达-旷野之息』神庙高塔全标记初始存档及修改方法</a><br><a target="_blank" rel="noopener" href="https://www.tekqart.com/thread-289845-1-1.html">【金手指教程5】解鎖 FPS , MultiSearch 及 簡易找指針方法</a><br><a target="_blank" rel="noopener" href="https://www.tekqart.com/thread-308956-1-1.html">【金手指教程6】对比存档找出想要的资料</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/01/05/breeze-ida/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Switch/" title="Switch">
+                        #Switch
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/%E5%A1%9E%E5%B0%94%E8%BE%BE%E4%BC%A0%E8%AF%B4/" title="塞尔达传说">
+                        #塞尔达传说
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/01/28/botw-hack/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80"><span class="toc-text">查找内存地址</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%8C%87%E9%92%88"><span class="toc-text">查找指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%B0%E7%82%B9%E6%95%B0%E6%8D%AE"><span class="toc-text">地点数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E7%A5%9E%E5%BA%99%E4%BD%8D%E7%BD%AE"><span class="toc-text">显示神庙位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E9%AB%98%E5%A1%94%E4%BD%8D%E7%BD%AE"><span class="toc-text">显示高塔位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E5%8F%A4%E4%BB%A3%E7%A0%94%E7%A9%B6%E6%89%80%E4%BD%8D%E7%BD%AE"><span class="toc-text">显示古代研究所位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E7%A5%9E%E5%85%BD%E4%BD%8D%E7%BD%AE"><span class="toc-text">显示神兽位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E5%8A%9F%E8%83%BD-Flag"><span class="toc-text">显示功能 Flag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E9%80%81%E5%8A%9F%E8%83%BD-Flag"><span class="toc-text">传送功能 Flag</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%91%E6%89%8B%E6%8C%87"><span class="toc-text">金手指</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99"><span class="toc-text">相关资料</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%97%B7%E9%87%8E%E4%B9%8B%E6%81%AF%E7%A5%9E%E5%BA%99%E5%85%A8%E4%BA%AE%E3%80%81%E4%BC%A0%E9%80%81%E4%BD%9C%E5%BC%8A + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F01%2F24%2Fzelda-botw-temples%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/01/24/zelda-botw-temples/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

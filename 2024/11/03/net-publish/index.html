@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      用 dotnet 命令发布程序 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">用 dotnet 命令发布程序</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/dotnet/" title=".NET">
+                    #.NET
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>很久以前，发布程序都是将配置改为 Release 编译一下，得到二进制文件打包给客户，这个习惯一直延续至今。<br>好像是从 .NET Core 时代开始，微软为了跨平台搞了个推出了一个<code>发布</code>的概念，也就是在<code>编译</code>后多了一个打包的过程。</p>
+<h2 id="dotnet-命令行发布"><a href="#dotnet-命令行发布" class="headerlink" title="dotnet 命令行发布"></a>dotnet 命令行发布</h2><p>废话不多说，先看一条发布命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet publish MyProject -c Release -f net8.0-windows -r win-x64 --sc false -o ./publish -p:Platform=x64 -p:PublishSingleFile=true</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>对应MSBuild属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-c</td>
+<td>Configuration</td>
+<td>解决方案配置，一般就是<code>Debug</code>或<code>Release。</code></td>
+</tr>
+<tr>
+<td>-f</td>
+<td>TargetFramework</td>
+<td><code>TargetFrameworks</code>中的值之一。</td>
+</tr>
+<tr>
+<td>-r</td>
+<td>RuntimeIdentifier</td>
+<td>影响 nuget 包将哪些附件复制到输出目录。</td>
+</tr>
+<tr>
+<td>–sc</td>
+<td>SelfContained</td>
+<td>true表示将依赖的.NET框架文件一并复制到发布目录，文件夹会非常大。但是不用再安装运行库。</td>
+</tr>
+<tr>
+<td>-o</td>
+<td>PublishDir</td>
+<td>发布目录位置。</td>
+</tr>
+<tr>
+<td>-p:Platform</td>
+<td>Platform</td>
+<td>解决方案平台，一般就是<code>AnyCPU</code>、<code>x86</code>、<code>x64</code>、<code>ARM32</code>、<code>AMR64</code>。</td>
+</tr>
+<tr>
+<td>-p:PublishSingleFile</td>
+<td>PublishSingleFile</td>
+<td>是否将托管 DLL 文件合并为一个 exe 文件，这样发布目录会很干净，不会有大量 DLL 文件。</td>
+</tr>
+</tbody></table>
+<p><br>可以输入<code>dotnet publish /?</code>查看详细的说明。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Description:</span><br><span class="line">  适用于 .NET 平台的发布服务器</span><br><span class="line"></span><br><span class="line">用法:</span><br><span class="line">  dotnet publish [&lt;PROJECT | SOLUTION&gt;...] [options]</span><br><span class="line"></span><br><span class="line">参数:</span><br><span class="line">  &lt;PROJECT | SOLUTION&gt;  要操作的项目或解决方案文件。如果没有指定文件，则命令将在当前目录里搜索一个文件。</span><br><span class="line"></span><br><span class="line">选项:</span><br><span class="line">  --ucr, --use-current-runtime         将当前运行时用作目标运行时。</span><br><span class="line">  -o, --output &lt;OUTPUT_DIR&gt;            要放置已发布项目的输出目录。</span><br><span class="line">  --artifacts-path &lt;ARTIFACTS_DIR&gt;     工件路径。项目中的所有输出(包括生成、发布和打包输出)都将放到指定路径下的子文件夹中。</span><br><span class="line">  --manifest &lt;MANIFEST&gt;                指向目标清单文件的路径，该文件包含要通过发布步骤执行的包的列表。</span><br><span class="line">  --no-build                           发布之前不要生成项目。Implies --no-restore.</span><br><span class="line">  --sc, --self-contained               随应用程序一起发布 .NET 运行时，这样就不需要在目标计算机上安装运行时。</span><br><span class="line">                                       默认值为 &quot;false&quot;。但目标为 .NET 7 或更低版本时，如果指定了运行时标识符，则默认值为 &quot;true&quot;。</span><br><span class="line">  --no-self-contained                  将应用程序发布为依赖框架的应用程序。目标计算机上必须安装兼容的 .NET 运行时才能运行该应用程序。</span><br><span class="line">  --nologo                             不显示启动版权标志或版权消息。</span><br><span class="line">  -f, --framework &lt;FRAMEWORK&gt;          要发布的目标框架。必须在项目文件中指定目标框架。</span><br><span class="line">  -r, --runtime &lt;RUNTIME_IDENTIFIER&gt;   要发布的目标运行时。在创建自包含部署时使用。</span><br><span class="line">                                       默认情况下发布依赖于框架的应用程序。</span><br><span class="line">  -c, --configuration &lt;CONFIGURATION&gt;  发布所对应的配置。对于 NET 8.0 及更高版本的项目，默认值为 &quot;Release&quot;，但对于较低版本的项目，默认值为 &quot;Debug&quot;。</span><br><span class="line">  --version-suffix &lt;VERSION_SUFFIX&gt;    设置生成项目时使用的 $(VersionSuffix) 属性的值。</span><br><span class="line">  --interactive                        允许命令停止和等待用户输入或操作(例如，用以完成身份验证)。</span><br><span class="line">  --no-restore                         生成前请勿还原项目。</span><br><span class="line">  -v, --verbosity &lt;LEVEL&gt;              设置 MSBuild 详细程度。允许值为 q[uiet]、m[inimal]、n[ormal]、d[etailed] 和 diag[nostic]。</span><br><span class="line">  -a, --arch &lt;ARCH&gt;                    目标体系结构。</span><br><span class="line">  --os &lt;OS&gt;                            目标操作系统。</span><br><span class="line">  --disable-build-servers              强制命令忽略任何永久性生成服务器。</span><br><span class="line">  -?, -h, --help                       显示命令行帮助。</span><br></pre></td></tr></table></figure>
+
+<h2 id="pubxml-文件发布"><a href="#pubxml-文件发布" class="headerlink" title=".pubxml 文件发布"></a>.pubxml 文件发布</h2><p>在 Visual Studio 中右键选择项目，点击<code>发布</code>也可以用向导方式发布程序</p>
+<p><img src="/images/net-publish/01.webp"></p>
+<p>然后项目文件夹<code>Properties\PublishProfiles</code>下会生成相应的<code>.pubxml</code>文件。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Configuration</span>&gt;</span>Release<span class="tag">&lt;/<span class="name">Configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TargetFramework</span>&gt;</span>net8.0-windows<span class="tag">&lt;/<span class="name">TargetFramework</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Platform</span>&gt;</span>x64<span class="tag">&lt;/<span class="name">Platform</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PublishDir</span>&gt;</span>./publish<span class="tag">&lt;/<span class="name">PublishDir</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RuntimeIdentifier</span>&gt;</span>win-x64<span class="tag">&lt;/<span class="name">RuntimeIdentifier</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">SelfContained</span>&gt;</span>false<span class="tag">&lt;/<span class="name">SelfContained</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PublishSingleFile</span>&gt;</span>true<span class="tag">&lt;/<span class="name">PublishSingleFile</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>还可以用命令行来引用<code>.pubxml</code>文件来发布</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet publish MyProject -p:PublishProfile=FolderProfile</span><br></pre></td></tr></table></figure>
+<p>但是我个人不推荐这么做，因为<code>dotnet</code>不会去读取某些属性值，MSDN 上说的：</p>
+<blockquote>
+<p>.pubxml 文件中的某些属性仅受 Visual Studio 使用，对 dotnet publish 没有影响。 我们正在努力使 CLI 与 Visual Studio 的行为更加一致。 但 CLI 永远不会使用某些属性。 CLI 和 Visual Studio 都执行发布的打包方面，dotnet&#x2F;sdk#29817 计划添加对更多与此相关的属性的支持。 但 CLI 不执行发布时部署自动化方面的操作，与此相关的属性不受支持。 不支持的最值得注意的 .pubxmldotnet publish 属性是影响生成的以下属性：</p>
+</blockquote>
+<ul>
+<li>LastUsedBuildConfiguration</li>
+<li>Configuration</li>
+<li>Platform</li>
+<li>LastUsedPlatform</li>
+<li>TargetFramework</li>
+<li>TargetFrameworks</li>
+<li>RuntimeIdentifier</li>
+<li>RuntimeIdentifiers</li>
+</ul>
+<p><br>所以我还是喜欢用命令行的方式发布。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>简单地说，<code>发布</code>的最终目的就是为了以下三个功能：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props#selfcontained">SelfContained</a>。决定是否将 .NET 运行库文件一并打包，这样客户机可以避免安装 .NET 运行时。</li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/deploying/single-file/overview">PublishSingleFile</a>。决定是否将所以依赖的程序集文件合并到一个可执行文件中。</li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot">PublishAot</a>。是否启用 AOT 编译，生成的文件是非托管文件，不依赖 .NET 运行时，和 C&#x2F;C++ 一样，一般用于 DLL 项目。</li>
+</ol>
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/tools/dotnet-publish">dotnet publish 命令</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/aspnet/core/host-and-deploy/visual-studio-publish-profiles#publish-profiles">发布配置文件</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/deploying/single-file/overview">单文件部署</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/11/03/Extended-WPF-Toolkit-License/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/dotnet/" title=".NET">
+                        #.NET
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/11/05/syncfusion-crack/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#dotnet-%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%91%E5%B8%83"><span class="toc-text">dotnet 命令行发布</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pubxml-%E6%96%87%E4%BB%B6%E5%8F%91%E5%B8%83"><span class="toc-text">.pubxml 文件发布</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%94%A8%20dotnet%20%E5%91%BD%E4%BB%A4%E5%8F%91%E5%B8%83%E7%A8%8B%E5%BA%8F + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F11%2F03%2Fnet-publish%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/11/03/net-publish/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

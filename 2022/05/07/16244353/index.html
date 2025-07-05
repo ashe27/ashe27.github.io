@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      MFC学习：设置窗口标题 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">MFC学习：设置窗口标题</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/MFC/" title="MFC">
+                    #MFC
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>默认情况下，MFC的主窗口标题由<strong>文档标题和Frame标题组成</strong>，格式为：<code>file - frame</code>。</p>
+<h2 id="设置标题"><a href="#设置标题" class="headerlink" title="设置标题"></a>设置标题</h2><p>设置窗口标题用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwnd-class#setwindowtext">CWnd::SetWindowText</a> 方法。</p>
+<h2 id="设置文档标题"><a href="#设置文档标题" class="headerlink" title="设置文档标题"></a>设置文档标题</h2><p>新建一个文档时，MFC 会使用字符串资源<code>AFX_IDS_UNTITLED</code>作为文档的默认标题，接着会触发 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class#onnewdocument">CDocument::OnNewDocument</a> 方法，我们可以在文件新建成功后使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class#settitle">CDocument::SetTitle</a> 方法来设置标题。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CMFCApplication2Doc::OnNewDocument</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!CDocument::<span class="built_in">OnNewDocument</span>())</span><br><span class="line">        <span class="keyword">return</span> FALSE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>-&gt;<span class="built_in">SetTitle</span>(_T(<span class="string">&quot;新文件&quot;</span>));</span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果是<code>打开文档</code>就不能在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class#onopendocument">CDocument::OnOpenDocument</a> 中处理，因为 MFC 在打开文档后会使用文件名作为标题</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">TCHAR szTitle[_MAX_FNAME];</span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">AfxGetFileTitle</span>(szFullPath, szTitle, _MAX_FNAME) == <span class="number">0</span>)</span><br><span class="line">    <span class="built_in">SetTitle</span>(szTitle);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>最早的修改时机是在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class#setpathname">CDocument::SetPathName</a> 中，我们可以重载它</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">SetPathName</span><span class="params">(LPCTSTR lpszPathName, BOOL bAddToMRU)</span> <span class="keyword">override</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CDocument::<span class="built_in">SetPathName</span>(lpszPathName, bAddToMRU);</span><br><span class="line">    <span class="keyword">this</span>-&gt;<span class="built_in">SetTitle</span>(_T(<span class="string">&quot;new title&quot;</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是更建议在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class#ondocumentevent">CDocument::OnDocumentEvent</a> 中处理</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">OnDocumentEvent</span><span class="params">(DocumentEvent deEvent)</span> <span class="keyword">override</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (deEvent == onAfterNewDocument || deEvent == onAfterOpenDocument) &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;<span class="built_in">SetTitle</span>(_T(<span class="string">&quot;new title&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="固定窗口标题"><a href="#固定窗口标题" class="headerlink" title="固定窗口标题"></a>固定窗口标题</h2><p>我们有时候希望应用程序标题是固定的，不会随着文档变化，可以通过以下几种方式来做。</p>
+<h3 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h3><p>因为文档在设置标题后会触发 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cframewndex-class#onupdateframetitle">CFrameWndEx::OnUpdateFrameTitle</a> 方法，而这个方法会改变窗口标题，所以我们覆盖它即可避免被影响。<br>在 <a href="CFrameWndEx::OnCreate">CFrameWndEx::OnCreate</a> 中设置固定标题</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>-&gt;<span class="built_in">SetWindowText</span>(_T(<span class="string">&quot;title&quot;</span>));</span><br></pre></td></tr></table></figure>
+<p>重载 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cframewndex-class#onupdateframetitle">CFrameWndEx::OnUpdateFrameTitle</a> 方法，不调用父类操作。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">CMainFrame::OnUpdateFrameTitle</span><span class="params">(BOOL bAddToTitle)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Ignore</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h3><p>跟进<code>OnUpdateFrameTitle</code>后：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">CFrameWnd::OnUpdateFrameTitle</span><span class="params">(BOOL bAddToTitle)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ((<span class="built_in">GetStyle</span>() &amp; FWS_ADDTOTITLE) == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span>;     <span class="comment">// leave it alone!</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// allow hook to set the title (used for OLE support)</span></span><br><span class="line">    <span class="keyword">if</span> (m_pNotifyHook != <span class="literal">NULL</span> &amp;&amp; m_pNotifyHook-&gt;<span class="built_in">OnUpdateFrameTitle</span>())</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    CDocument* pDocument = <span class="built_in">GetActiveDocument</span>();</span><br><span class="line">    <span class="keyword">if</span> (bAddToTitle &amp;&amp; pDocument != <span class="literal">NULL</span>)</span><br><span class="line">        <span class="built_in">UpdateFrameTitleForDocument</span>(pDocument-&gt;<span class="built_in">GetTitle</span>());</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">UpdateFrameTitleForDocument</span>(<span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里发现了一个新东西<code>FWS_ADDTOTITLE</code>，如果窗口样式不包含它的话就退出函数了，所以我们也可以在创建<code>Frame</code>时去除这个Flag</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CMainFrame::PreCreateWindow</span><span class="params">(CREATESTRUCT&amp; cs)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!CFrameWndEx::<span class="built_in">PreCreateWindow</span>(cs))</span><br><span class="line">        <span class="keyword">return</span> FALSE;</span><br><span class="line"></span><br><span class="line">    cs.style &amp;= ~FWS_ADDTOTITLE;</span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以这个方式和方式一是一样的，本质上就是忽略<code>OnUpdateFrameTitle</code>的默认行为。</p>
+<h3 id="方式三"><a href="#方式三" class="headerlink" title="方式三"></a>方式三</h3><p>继续跟进源码，创建窗口的地方</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CWnd::CreateEx</span><span class="params">(DWORD dwExStyle, LPCTSTR lpszClassName,</span></span></span><br><span class="line"><span class="params"><span class="function">    LPCTSTR lpszWindowName, DWORD dwStyle,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> nWidth, <span class="type">int</span> nHeight,</span></span></span><br><span class="line"><span class="params"><span class="function">    HWND hWndParent, HMENU nIDorHMenu, LPVOID lpParam)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">ASSERT</span>(lpszClassName == <span class="literal">NULL</span> || <span class="built_in">AfxIsValidString</span>(lpszClassName) ||</span><br><span class="line">        <span class="built_in">AfxIsValidAtom</span>(lpszClassName));</span><br><span class="line">    <span class="built_in">ENSURE_ARG</span>(lpszWindowName == <span class="literal">NULL</span> || <span class="built_in">AfxIsValidString</span>(lpszWindowName));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// allow modification of several common create parameters</span></span><br><span class="line">    CREATESTRUCT cs;</span><br><span class="line">    cs.dwExStyle = dwExStyle;</span><br><span class="line">    cs.lpszClass = lpszClassName;</span><br><span class="line">    cs.lpszName = lpszWindowName;</span><br><span class="line">    cs.style = dwStyle;</span><br><span class="line">    cs.x = x;</span><br><span class="line">    cs.y = y;</span><br><span class="line">    cs.cx = nWidth;</span><br><span class="line">    cs.cy = nHeight;</span><br><span class="line">    cs.hwndParent = hWndParent;</span><br><span class="line">    cs.hMenu = nIDorHMenu;</span><br><span class="line">    cs.hInstance = <span class="built_in">AfxGetInstanceHandle</span>();</span><br><span class="line">    cs.lpCreateParams = lpParam;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">PreCreateWindow</span>(cs)) &#123;</span><br><span class="line">        <span class="built_in">PostNcDestroy</span>();</span><br><span class="line">        <span class="keyword">return</span> FALSE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">AfxHookWindowCreate</span>(<span class="keyword">this</span>);</span><br><span class="line">    HWND hWnd = <span class="built_in">CreateWindowEx</span>(cs.dwExStyle, cs.lpszClass,</span><br><span class="line">        cs.lpszName, cs.style, cs.x, cs.y, cs.cx, cs.cy,</span><br><span class="line">        cs.hwndParent, cs.hMenu, cs.hInstance, cs.lpCreateParams);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> _DEBUG</span></span><br><span class="line">    <span class="keyword">if</span> (hWnd == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">TRACE</span>(traceAppMsg, <span class="number">0</span>, <span class="string">&quot;Warning: Window creation failed: GetLastError returns 0x%8.8X\n&quot;</span>,</span><br><span class="line">            <span class="built_in">GetLastError</span>());</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">AfxUnhookWindowCreate</span>())</span><br><span class="line">        <span class="built_in">PostNcDestroy</span>();        <span class="comment">// cleanup if CreateWindowEx fails too soon</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (hWnd == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> FALSE;</span><br><span class="line">    <span class="built_in">ASSERT</span>(hWnd == m_hWnd); <span class="comment">// should have been set in send msg hook</span></span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在调用<code>CreateWindowEx</code>创建窗口之前调用过了一次<code>PreCreateWindow</code>，然后用<code>cs.lpszName</code>作为窗口标题，那么就可以在<code>PreCreateWindow</code>中设置固定标题</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CMainFrame::PreCreateWindow</span><span class="params">(CREATESTRUCT&amp; cs)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!CFrameWnd::<span class="built_in">PreCreateWindow</span>(cs))</span><br><span class="line">        <span class="keyword">return</span> FALSE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在整个创建窗口过程中，PreCreateWindow 会被调用两次。仅在第二次实际创建窗口前再操作</span></span><br><span class="line">    <span class="keyword">if</span> (cs.hInstance) &#123;</span><br><span class="line">        cs.style &amp;= ~FWS_ADDTOTITLE; <span class="comment">// 禁止被文档改变标题</span></span><br><span class="line">        cs.lpszName = _T(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>比前两种方式简单直观，推荐使用这种方式。</p>
+<h2 id="Frame-默认标题从哪来？"><a href="#Frame-默认标题从哪来？" class="headerlink" title="Frame 默认标题从哪来？"></a>Frame 默认标题从哪来？</h2><p>如果我们不做任何设置，Frame 始终会有一个默认标题，这个标题字符串从哪来？还是看源码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CFrameWnd::LoadFrame</span><span class="params">(UINT nIDResource, DWORD dwDefaultStyle,</span></span></span><br><span class="line"><span class="params"><span class="function">    CWnd* pParentWnd, CCreateContext* pContext)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">...</span><br><span class="line">    CString strFullString;</span><br><span class="line">    <span class="keyword">if</span> (strFullString.<span class="built_in">LoadString</span>(nIDResource))</span><br><span class="line">        <span class="built_in">AfxExtractSubString</span>(m_strTitle, strFullString, <span class="number">0</span>);    <span class="comment">// first sub-string</span></span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原来在创建 MFC 工程时，资源文件中生成了它</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">STRINGTABLE</span><br><span class="line">BEGIN</span><br><span class="line">    IDR_MAINFRAME    &quot;MFCApplication2\n\nMFCApplication2\n\n\nMFCApplication2.Document\nMFCApplication2.Document&quot;</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+<p>这是一个用<code>\n</code>分隔的字符串列表，第一个子串就是默认标题。<br>关于其他子串的解释可以查看 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdoctemplate-class#getdocstring">CDocTemplate::GetDocString</a> 的解释。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/04/28/16205078/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/MFC/" title="MFC">
+                        #MFC
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/05/08/16246612/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%A0%87%E9%A2%98"><span class="toc-text">设置标题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%96%87%E6%A1%A3%E6%A0%87%E9%A2%98"><span class="toc-text">设置文档标题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BA%E5%AE%9A%E7%AA%97%E5%8F%A3%E6%A0%87%E9%A2%98"><span class="toc-text">固定窗口标题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80"><span class="toc-text">方式一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C"><span class="toc-text">方式二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%89"><span class="toc-text">方式三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Frame-%E9%BB%98%E8%AE%A4%E6%A0%87%E9%A2%98%E4%BB%8E%E5%93%AA%E6%9D%A5%EF%BC%9F"><span class="toc-text">Frame 默认标题从哪来？</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + MFC%E5%AD%A6%E4%B9%A0%EF%BC%9A%E8%AE%BE%E7%BD%AE%E7%AA%97%E5%8F%A3%E6%A0%87%E9%A2%98 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F05%2F07%2F16244353%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/05/07/16244353/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

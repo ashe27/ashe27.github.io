@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      用 Boost.Locale 使软件支持多国语言 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">用 Boost.Locale 使软件支持多国语言</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Boost/" title="Boost">
+                    #Boost
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/gettext/" title="gettext">
+                    #gettext
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/%E6%9C%AC%E5%9C%B0%E5%8C%96/" title="本地化">
+                    #本地化
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>用过Qt的人都知道它自带有多语言支持的功能，只要在源码中将需要翻译的字符串用<code>tr</code>包裹起来，就可以很轻松的利用其提供的 Qt Linguist 软件进行文字翻译。<br>如果我们的工程并非Qt项目，那么可以考虑使用 <a target="_blank" rel="noopener" href="https://www.gnu.org/software/gettext/">gettext</a> 解决方案。其实现库<code>libintl</code>是C语言开发的，在 linux 系统上用的比较多。<br>在C++中，更适合使用 <a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/index.html">Boost.Locale</a>，用于替代<code>libintl</code>。</p>
+<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p>需要了解的是，Boost.Locale 只是一个运行时，它本身并不生成语言文件。我们需要使用<code>gettext</code>的相关工具去进行提取和翻译工作。</p>
+<blockquote>
+<p>文本假设你已经知道了如何制作.mo等语言文件。</p>
+</blockquote>
+<p>一个简单的例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;boost/locale.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    boost::locale::generator gen;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定多语言文件的根目录</span></span><br><span class="line">    gen.<span class="built_in">add_messages_path</span>(<span class="string">R&quot;(.\languages)&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对应语言文件名，不需要写扩展名。等同于 foo.mo</span></span><br><span class="line">    gen.<span class="built_in">add_messages_domain</span>(<span class="string">&quot;foo&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// generator 会去对应的文件夹下找语言文件。这里会尝试从 zh 和 zh_CN 文件夹下寻找文件</span></span><br><span class="line">    std::locale loc = gen.<span class="built_in">generate</span>(<span class="string">&quot;zh_CN.GBK&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置全局locale</span></span><br><span class="line">    std::locale::<span class="built_in">global</span>(loc);</span><br><span class="line"></span><br><span class="line">    std::string str1 = boost::locale::<span class="built_in">translate</span>(<span class="string">&quot;Love&quot;</span>).<span class="built_in">str</span>();</span><br><span class="line">    std::string str2 = boost::locale::<span class="built_in">gettext</span>(<span class="string">&quot;Love&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于上面的例子，以下文件路径都是合法的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">\languages\zh\LC_MESSAGES\foo.mo</span><br><span class="line">\languages\zh_CN\LC_MESSAGES\foo.mo</span><br></pre></td></tr></table></figure>
+<p>generate 方法使用空字符串作为参数时将采用<code>系统默认区域 + UTF8</code>编码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 重载了 () 操作符，等同于调用 generate 方法</span></span><br><span class="line">std::locale loc = <span class="built_in">gen</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 验证</span></span><br><span class="line"><span class="keyword">auto</span>&amp; info = std::<span class="built_in">use_facet</span>&lt;boost::locale::info&gt;(loc);</span><br><span class="line">std::string v1 = info.<span class="built_in">name</span>();     <span class="comment">// zh_CN.UTF-8</span></span><br><span class="line">std::string v2 = info.<span class="built_in">language</span>(); <span class="comment">// zh</span></span><br><span class="line">std::string v3 = info.<span class="built_in">country</span>();  <span class="comment">// CN</span></span><br><span class="line">std::string v4 = info.<span class="built_in">encoding</span>(); <span class="comment">// utf-8</span></span><br><span class="line"><span class="type">bool</span> v5 = info.<span class="built_in">utf8</span>();            <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>翻译字符串主要是两个静态方法<code>translate</code>和<code>gettext</code>。<br><code>translate</code>返回的是一个模板类<code>basic_message</code>，它允许原文延迟翻译，也就是只有在需要<code>string</code>的时候才会翻译。<br>而<code>gettext</code>方法是建立在<code>basic_message</code>之上的，它会立即构造一个<code>basic_message</code>并且调用<code>str()</code>方法得到字符串。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> CharType&gt;</span></span><br><span class="line"><span class="function">std::basic_string&lt;CharType&gt; <span class="title">gettext</span><span class="params">(CharType <span class="type">const</span> *id, std::locale <span class="type">const</span> &amp;loc=std::locale())</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">basic_message</span>&lt;CharType&gt;(id).<span class="built_in">str</span>(loc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果只是想立即得到译文，用<code>gettext</code>就够了。</p>
+<h2 id="gettext"><a href="#gettext" class="headerlink" title="gettext"></a>gettext</h2><ol>
+<li>获得译文，没有译文就返回原文<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::string str = boost::locale::<span class="built_in">gettext</span>(<span class="string">&quot;Love&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+<li>第二个参数可以指定 locale<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::string str = boost::locale::<span class="built_in">gettext</span>(<span class="string">&quot;Love&quot;</span>, de);</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="dgettext"><a href="#dgettext" class="headerlink" title="dgettext"></a>dgettext</h3><p>从指定的 domain(文件) 中获取译文。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::string str1 = boost::locale::<span class="built_in">dgettext</span>(<span class="string">&quot;foo2&quot;</span>, <span class="string">&quot;Love&quot;</span>);</span><br><span class="line">std::string str2 = boost::locale::<span class="built_in">dgettext</span>(<span class="string">&quot;foo2&quot;</span>, <span class="string">&quot;Love&quot;</span>, gbk);</span><br></pre></td></tr></table></figure>
+<h3 id="ngettext"><a href="#ngettext" class="headerlink" title="ngettext"></a>ngettext</h3><p><code>ngettext</code>用于处理某些语言的复数形式</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> count = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">auto</span> str = fmt::format(boost::locale::<span class="built_in">ngettext</span>(<span class="string">&quot;1 file&quot;</span>, <span class="string">&quot;&#123;&#125; files&quot;</span>, count), count); <span class="comment">// 1 file</span></span><br><span class="line"></span><br><span class="line">count = <span class="number">2</span>;</span><br><span class="line">str = fmt::format(boost::locale::<span class="built_in">ngettext</span>(<span class="string">&quot;1 file&quot;</span>, <span class="string">&quot;&#123;&#125; files&quot;</span>, count), count); <span class="comment">// 2 files</span></span><br></pre></td></tr></table></figure>
+<h3 id="pgettext"><a href="#pgettext" class="headerlink" title="pgettext"></a>pgettext</h3><p>根据上下文获得译文。上下文功能在某些场景下是有用的，它可以使同一个原文返回不同的译文。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::string str1 = boost::locale::<span class="built_in">pgettext</span>(<span class="string">&quot;ctx1&quot;</span>, <span class="string">&quot;Love&quot;</span>);</span><br><span class="line">std::string str2 = boost::locale::<span class="built_in">pgettext</span>(<span class="string">&quot;ctx2&quot;</span>, <span class="string">&quot;Love&quot;</span>, gbk);</span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>gettext</code>是高级别的方法，使用简单。还有扩展的的方法如<code>dgettext</code>、<code>ngettext</code>、<code>pgettext</code>等等。我们只要记住三个字母：</p>
+<ol>
+<li><code>d</code>表示<code>domain</code>，支持指定域（语言文件）。</li>
+<li><code>n</code>表示<code>number</code>，用于处理复数形式。</li>
+<li><code>p</code>表示<code>specific</code>，表示处理特定语境下的语句。</li>
+</ol>
+<p><code>gettext</code>所有的方法如下，看字母就知道怎么用了</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">boost::locale::<span class="built_in">gettext</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// d 开头</span></span><br><span class="line">boost::locale::<span class="built_in">dgettext</span>()</span><br><span class="line">boost::locale::<span class="built_in">dngettext</span>()</span><br><span class="line">boost::locale::<span class="built_in">dnpgettext</span>()</span><br><span class="line">boost::locale::<span class="built_in">dpgettext</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// n 开头</span></span><br><span class="line">boost::locale::<span class="built_in">ngettext</span>()</span><br><span class="line">boost::locale::<span class="built_in">npgettext</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// p 开头</span></span><br><span class="line">boost::locale::<span class="built_in">pgettext</span>();</span><br></pre></td></tr></table></figure>
+<h2 id="translate"><a href="#translate" class="headerlink" title="translate"></a>translate</h2><p>前面说过，<code>translate</code>才是底层的API，主要用于需要延迟翻译的时候，使用方法和<code>gettext</code>差不多</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">std::string str = boost::locale::<span class="built_in">translate</span>(<span class="string">&quot;Love&quot;</span>).<span class="built_in">str</span>();</span><br><span class="line"><span class="comment">// 等同于 gettext</span></span><br><span class="line"></span><br><span class="line">std::string str = boost::locale::<span class="built_in">translate</span>(<span class="string">&quot;Love&quot;</span>).<span class="built_in">str</span>(<span class="string">&quot;domain&quot;</span>);</span><br><span class="line"><span class="comment">// 等同于 dgettext</span></span><br><span class="line"></span><br><span class="line">std::string str = boost::locale::<span class="built_in">translate</span>(<span class="string">&quot;1 files&quot;</span>, <span class="string">&quot;N files&quot;</span>, <span class="number">1</span>).<span class="built_in">str</span>();</span><br><span class="line"><span class="comment">// 等同于 ngettext</span></span><br><span class="line"></span><br><span class="line">std::string str = boost::locale::<span class="built_in">translate</span>(<span class="string">&quot;ctx&quot;</span>, <span class="string">&quot;Love&quot;</span>).<span class="built_in">str</span>();</span><br><span class="line"><span class="comment">// 等同于 pgettext</span></span><br></pre></td></tr></table></figure>
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><p>软件首次运行时一般有三种选择</p>
+<ol>
+<li>默认采用英文显示。</li>
+<li>有安装程序的，在安装过程中让用户决定使用的语言。</li>
+<li>跟随系统区域设置决定使用哪种语言。</li>
+</ol>
+<p>对于第三种方式，我们需要获取计算机的区域设置。上面说过<code>generator</code>支持用空字符串来生成系统默认区域的locale，但是编码是用的UTF-8。<br>如果我们想获取系统的区域设置，可以用boost完成这项工作：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::string localeStr = boost::locale::util::<span class="built_in">get_system_locale</span>();</span><br><span class="line"><span class="comment">// 在简体中文Windows上，结果为 zh_CN.windows-936</span></span><br></pre></td></tr></table></figure>
+<p>然后将结果告诉<code>generator</code>，这样程序首次运行时将使用系统默认的语言显示了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::locale loc = boost::locale::<span class="built_in">generator</span>().<span class="built_in">generate</span>(localeStr);</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.helywin.com/posts/20200814061352/">gettext使用</a><br><a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/locale_gen.html">Locale Generation</a><br><a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/messages_formatting.html">Messages Formatting (Translation)</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/04/23/16183345/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Boost/" title="Boost">
+                        #Boost
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/gettext/" title="gettext">
+                        #gettext
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/%E6%9C%AC%E5%9C%B0%E5%8C%96/" title="本地化">
+                        #本地化
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/04/28/16205078/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-text">基本用法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gettext"><span class="toc-text">gettext</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dgettext"><span class="toc-text">dgettext</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ngettext"><span class="toc-text">ngettext</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pgettext"><span class="toc-text">pgettext</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#translate"><span class="toc-text">translate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5"><span class="toc-text">实践</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%94%A8%20Boost.Locale%20%E4%BD%BF%E8%BD%AF%E4%BB%B6%E6%94%AF%E6%8C%81%E5%A4%9A%E5%9B%BD%E8%AF%AD%E8%A8%80 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F04%2F27%2F16200732%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/04/27/16200732/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

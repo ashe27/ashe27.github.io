@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      XPath 常用语法 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">XPath 常用语法</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/dotnet/" title=".NET">
+                    #.NET
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/XML/" title="XML">
+                    #XML
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>XPath 不会经常用，但是需要的时候又想不起来一些特性该怎么用，所以整理了一些比较常见的用法。<br>在 C# 中，主要用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.xmlnode.selectsinglenode">XmlNode.SelectSingleNode</a> 和 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.xmlnode.selectnodes">XmlNode.SelectNodes 方法</a> 方法查询，前者查询单个节点，后者查询多个节点。</p>
+<h2 id="节点类型"><a href="#节点类型" class="headerlink" title="节点类型"></a>节点类型</h2><p>先复习一下节点的类型。在XML中有5种主要的节点类型，它们是：</p>
+<ol>
+<li>元素节点（Element Node）：表示XML文档的元素，包括标签、属性和内容。</li>
+<li>属性节点（Attribute Node）：用于描述元素节点的属性。</li>
+<li>文本节点（Text Node）：包含元素节点内的文本内容。</li>
+<li>注释节点（Comment Node）：用于添加注释或说明性文本到XML文件中。</li>
+<li>CDATA节（CDATA Section）：用于在XML文档中包含需要保留原始格式的文本数据。</li>
+</ol>
+<p><br>此外，还有两种特殊类型的节点：<br>6. 处理指令节点（Processing Instruction Node）：用于向XML解析器提供额外的指令或信息，通常位于XML文档的开头。<br>7. 命名空间节点（Namespace Node）：用于定义和管理XML文档中的命名空间。</p>
+<p>这些节点类型共同构成了XML文档的结构和内容。<br>在日常开发中，主要就是对前三种类型节点的查询与读写。</p>
+<h2 id="选择节点"><a href="#选择节点" class="headerlink" title="选择节点"></a>选择节点</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;.&quot;</span>);              <span class="comment">// 当前节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;..&quot;</span>);             <span class="comment">// 父节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;Item&quot;</span>);           <span class="comment">// 从当前节点中查找子节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;*&quot;</span>);              <span class="comment">// 任意节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;/Root&quot;</span>);          <span class="comment">// 文档的根节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item&quot;</span>);         <span class="comment">// 查找文档中所有的 &quot;Item&quot; 节点，无论节点有多深</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[Child]&quot;</span>);  <span class="comment">// 选择包含有子节点 &quot;Child&quot; 的节点</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="按属性过滤"><a href="#按属性过滤" class="headerlink" title="按属性过滤"></a>按属性过滤</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 选择属性节点 */</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item/@Name&quot;</span>);  <span class="comment">// 选择所有名为 &quot;Name&quot; 的属性节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item/@*&quot;</span>);     <span class="comment">// 选取所有属性节点</span></span><br><span class="line"></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[@Id]&quot;</span>);             <span class="comment">// 包含属性名为 &quot;Id&quot; 的节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[@Name=&#x27;jack&#x27;]&quot;</span>);    <span class="comment">// 要求属性等于指定的值</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 没有用引号的表示是数字，可以用逻辑表运算符</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[@Id &lt; 10]&quot;</span>);  <span class="comment">// 属性 Id 值小于 10 的节点</span></span><br><span class="line"></span><br><span class="line">SelectNodes(<span class="string">&quot;//*[@Id=3][@Age=18]&quot;</span>);     <span class="comment">// 逻辑与，要求同时满足条件</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//*[@Id=3 and @Age=18]&quot;</span>);  <span class="comment">// 逻辑与，要求同时满足条件</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//*[@Id=3 or @Age=18]&quot;</span>);   <span class="comment">// 逻辑或，满足条件之一即可</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="按位置过滤"><a href="#按位置过滤" class="headerlink" title="按位置过滤"></a>按位置过滤</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 按索引返回，与数组一样，不过索引从1开始</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[1]&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h2><p>逻辑运算符通常用于属性过滤时。</p>
+<ul>
+<li><code>=</code>：等于</li>
+<li><code>!=</code>：不等于</li>
+<li><code>&gt;</code>：大于</li>
+<li><code>&gt;=</code>：大于等于</li>
+<li><code>&lt;</code>：小于</li>
+<li><code>&lt;=</code>：小于等于</li>
+<li><code>and</code>：逻辑与</li>
+<li><code>or</code>：逻辑或</li>
+</ul>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><h3 id="node"><a href="#node" class="headerlink" title="node"></a>node</h3><p>返回当前节点下的子节点，无论是什么类型。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;/Root/node()&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="text"><a href="#text" class="headerlink" title="text"></a>text</h3><p>获取文本节点内容。<br>XML内容：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Root</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Node</span>&gt;</span>jack<span class="tag">&lt;/<span class="name">Node</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Root</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>取得文本节点值有两种方式：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> node = doc.SelectSingleNode(<span class="string">&quot;/Root/Node&quot;</span>);</span><br><span class="line">Debug.WriteLine(node.InnerText);</span><br></pre></td></tr></table></figure>
+<p>方式二就是使用<code>text()</code>函数：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> node = doc.SelectSingleNode(<span class="string">&quot;/Root/Node/text()&quot;</span>);</span><br><span class="line">Debug.WriteLine(node.Value);  <span class="comment">// jack</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="position"><a href="#position" class="headerlink" title="position"></a>position</h3><p>返回节点位置，下标从1开始</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* position 表示结果列表中的索引 */</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[position() &lt;= 5]&quot;</span>);  <span class="comment">// 选取前面5个节点</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="last"><a href="#last" class="headerlink" title="last"></a>last</h3><p>最后一个元素。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* last 选择列表中最后一个节点 */</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[last()]&quot;</span>);      <span class="comment">// 最后一个节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[last() - 1]&quot;</span>);  <span class="comment">// 倒数第2个节点</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="contains"><a href="#contains" class="headerlink" title="contains"></a>contains</h3><p>属性值是否包含指定字符串。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* start-with、ends-with、contains */</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[contains(@name, &#x27;xxx&#x27;)]&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="starts-with"><a href="#starts-with" class="headerlink" title="starts-with"></a>starts-with</h3><p>属性值是否以指定字符串开始。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;//Item[starts-with(@name, &#x27;xxx&#x27;)]&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="ends-with"><a href="#ends-with" class="headerlink" title="ends-with"></a>ends-with</h3><p>属性值是否以指定字符串结束。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;//Item[ends-with(@name, &#x27;xxx&#x27;)]&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>测试发现 C# 不支持此函数</strong>。</p>
+<h3 id="name"><a href="#name" class="headerlink" title="name"></a>name</h3><p>返回当前节点的名称。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;//*[contains(name(), &#x27;Item&#x27;)]&quot;</span>);  <span class="comment">// 所有元素节点名中包含 &quot;Item&quot; 的节点</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="substring"><a href="#substring" class="headerlink" title="substring"></a>substring</h3><p>字串查询。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;//*[substring(name(), 1, 4) = &#x27;Node&#x27;]&quot;</span>);  <span class="comment">// 从位置1取4个字符</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="索引筛选出多个结果"><a href="#索引筛选出多个结果" class="headerlink" title="索引筛选出多个结果"></a>索引筛选出多个结果</h3><p>假设 XML 内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Employees</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Employee</span> <span class="attr">Id</span>=<span class="string">&quot;1&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Employee</span> <span class="attr">Id</span>=<span class="string">&quot;2&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Employee</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Employee</span> <span class="attr">Id</span>=<span class="string">&quot;3&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Employees</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果用<code>SelectNodes(&quot;//Item[1]&quot;)</code>会查询出几个结果呢？答案是两个。因为这句话的意思是<strong>查询任意位置，名为 Item 的第1个节点</strong>。<br>由于<code>&lt;Employee Id=&quot;2&quot; /&gt;</code>处于父节点中第一个符合条件的，所以也会被筛选出来。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/xpath/index.asp">XPath 教程</a><br><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/xpath/xpath_functions.asp">XPath 函数</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Loofah/archive/2012/05/10/2494036.html">Xpath语法格式整理</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2023/11/05/scottplot-find-nearest-point/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/dotnet/" title=".NET">
+                        #.NET
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/XML/" title="XML">
+                        #XML
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2023/11/10/service-locator-pattern/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8A%82%E7%82%B9%E7%B1%BB%E5%9E%8B"><span class="toc-text">节点类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E8%8A%82%E7%82%B9"><span class="toc-text">选择节点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E5%B1%9E%E6%80%A7%E8%BF%87%E6%BB%A4"><span class="toc-text">按属性过滤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E4%BD%8D%E7%BD%AE%E8%BF%87%E6%BB%A4"><span class="toc-text">按位置过滤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-text">逻辑运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-text">函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#node"><span class="toc-text">node</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#text"><span class="toc-text">text</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#position"><span class="toc-text">position</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#last"><span class="toc-text">last</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#contains"><span class="toc-text">contains</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#starts-with"><span class="toc-text">starts-with</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ends-with"><span class="toc-text">ends-with</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#name"><span class="toc-text">name</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#substring"><span class="toc-text">substring</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5"><span class="toc-text">实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E7%AD%9B%E9%80%89%E5%87%BA%E5%A4%9A%E4%B8%AA%E7%BB%93%E6%9E%9C"><span class="toc-text">索引筛选出多个结果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + XPath%20%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F11%2F08%2Fxpath-syntax%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/11/08/xpath-syntax/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      塞尔达传说：旷野之息数据整理 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">塞尔达传说：旷野之息数据整理</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Switch/" title="Switch">
+                    #Switch
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/%E5%A1%9E%E5%B0%94%E8%BE%BE%E4%BC%A0%E8%AF%B4/" title="塞尔达传说">
+                    #塞尔达传说
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>大部分数据来自网络，亲测可用。<br><br>游戏信息：<br>TID：01007EF00011E000<br>BID：8E9978D50BDD20B4</p>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><table>
+<thead>
+<tr>
+<th>数据</th>
+<th>地址</th>
+<th>数据类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>生命</td>
+<td>[[main+2CA1A78]+80]+848</td>
+<td>uint</td>
+<td>1颗心&#x3D;4</td>
+</tr>
+<tr>
+<td>精力</td>
+<td>[[main+2C9FD70]+38]+2AC</td>
+<td>float</td>
+<td>一圈精力&#x3D;1000</td>
+</tr>
+<tr>
+<td>精力上限</td>
+<td>[[main+2C9FD70]+38]+2B0</td>
+<td>float</td>
+<td></td>
+</tr>
+<tr>
+<td>计算坠落伤害的 Y 坐标</td>
+<td>[[main+2CA1140]+60]+20D0</td>
+<td>float</td>
+<td>为 0 时可以免坠落伤害</td>
+</tr>
+<tr>
+<td>大师之剑冷却时间</td>
+<td>[[main+2CA1140]+60]+1E24</td>
+<td>float</td>
+<td>为 0 时可用</td>
+</tr>
+</tbody></table>
+<h2 id="希卡之石技能"><a href="#希卡之石技能" class="headerlink" title="希卡之石技能"></a>希卡之石技能</h2><table>
+<thead>
+<tr>
+<th>数据</th>
+<th>地址</th>
+<th>数据类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>圆形炸弹冷却时间</td>
+<td>[[main+2CA3AD8]+30]+80</td>
+<td>float</td>
+<td>为 181（0x43350000）时可用。冷却从 0 开始递增</td>
+</tr>
+<tr>
+<td>方形炸弹冷却时间</td>
+<td>[[main+2CA3AD8]+30]+98</td>
+<td>float</td>
+<td>为 181（0x43350000）时可用。冷却从 0 开始递增</td>
+</tr>
+<tr>
+<td>静止器状态Flag</td>
+<td>[[main+2CA3AD8]+30]+140</td>
+<td>byte</td>
+<td></td>
+</tr>
+<tr>
+<td>静止器冷却时间</td>
+<td>[[main+2CA3AD8]+30]+144</td>
+<td>float</td>
+<td>为 0 时可用</td>
+</tr>
+<tr>
+<td>静止器目标倒计时</td>
+<td>[[main+2CA3AD8]+30]+148</td>
+<td>float</td>
+<td>为 0 时目标物体恢复</td>
+</tr>
+</tbody></table>
+<h2 id="英杰技能"><a href="#英杰技能" class="headerlink" title="英杰技能"></a>英杰技能</h2><table>
+<thead>
+<tr>
+<th>数据</th>
+<th>地址</th>
+<th>数据类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>英杰力巴尔的勇猛冷却时间</td>
+<td>[[main+2CA1140]+60]+1DF4</td>
+<td>float</td>
+<td>为 0 时可用</td>
+</tr>
+<tr>
+<td>英杰达乌尔波扎的愤怒冷却时间</td>
+<td>[[main+2CA1140]+60]+1E00</td>
+<td>float</td>
+<td>为 0 时可用</td>
+</tr>
+<tr>
+<td>英杰达尔克尔的守护冷却时间</td>
+<td>[[main+2CA1140]+60]+1E0C</td>
+<td>float</td>
+<td>为 0 时可用</td>
+</tr>
+<tr>
+<td>英杰达米法的祈福冷却时间</td>
+<td>[[main+2CA1140]+60]+1E18</td>
+<td>float</td>
+<td>为 0 时可用</td>
+</tr>
+</tbody></table>
+<h2 id="料理"><a href="#料理" class="headerlink" title="料理"></a>料理</h2><h3 id="移动力提升倒计时"><a href="#移动力提升倒计时" class="headerlink" title="移动力提升倒计时"></a>移动力提升倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1ED8</span><br><span class="line">[[main+2CA1140]+60]+1EE4</span><br><span class="line">[[main+2CA1140]+60]+1EF0</span><br></pre></td></tr></table></figure>
+
+<h3 id="攻击提升倒计时"><a href="#攻击提升倒计时" class="headerlink" title="攻击提升倒计时"></a>攻击提升倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F14</span><br></pre></td></tr></table></figure>
+
+<h3 id="防御提升倒计时"><a href="#防御提升倒计时" class="headerlink" title="防御提升倒计时"></a>防御提升倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F20</span><br></pre></td></tr></table></figure>
+
+<h3 id="耐热防护倒计时"><a href="#耐热防护倒计时" class="headerlink" title="耐热防护倒计时"></a>耐热防护倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F2C</span><br></pre></td></tr></table></figure>
+
+<h3 id="耐寒防护倒计时"><a href="#耐寒防护倒计时" class="headerlink" title="耐寒防护倒计时"></a>耐寒防护倒计时</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F38    f32，耐寒防护剩余时间，每秒=30</span><br><span class="line">[[main+2CA1140]+60]+2010    u32，耐寒防护等级</span><br></pre></td></tr></table></figure>
+
+<h3 id="火焰防护倒计时"><a href="#火焰防护倒计时" class="headerlink" title="火焰防护倒计时"></a>火焰防护倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F44</span><br></pre></td></tr></table></figure>
+
+<h3 id="电麻防护倒计时"><a href="#电麻防护倒计时" class="headerlink" title="电麻防护倒计时"></a>电麻防护倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F5C</span><br></pre></td></tr></table></figure>
+
+<h3 id="安静性提升倒计时"><a href="#安静性提升倒计时" class="headerlink" title="安静性提升倒计时"></a>安静性提升倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F74</span><br></pre></td></tr></table></figure>
+
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>当前生效的料理数据，似乎只是显示用（修改无效）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[main+2CBDB80]+A4    当前生效料理类型（修改无效）</span><br><span class="line">0 = 耐热防护</span><br><span class="line">1 = 耐寒防护</span><br><span class="line">2 = 电麻防护</span><br><span class="line">3 = 火焰防护（未验证）</span><br><span class="line">4 = 攻击提升</span><br><span class="line">5 = 防御提升</span><br><span class="line">6 = 安静性提升</span><br><span class="line">7 = 移动力提升</span><br><span class="line"></span><br><span class="line">[main+2CBDB80]+A8    当前生效料理等级（修改无效）</span><br><span class="line">[main+2CBDB80]+AC    当前生效料理剩余时间（修改无效）</span><br></pre></td></tr></table></figure>
+
+<h2 id="装备"><a href="#装备" class="headerlink" title="装备"></a>装备</h2><p>修改装备数据有两条路径，一个在游戏界面，一个在背包界面。<br>对于背包数据，打开背包界面后查找林克当前装备的指针定位到数据结构的，这种方式在背包关闭时是无法定位的。<br><strong>注意：修改数据后要在不装备的情况下打开或关闭背包一次才会真正的将数据刷入。否则只是修改了显示数据，将物品丢弃后再拾起数据又会复原</strong>。</p>
+<h3 id="当前武器"><a href="#当前武器" class="headerlink" title="当前武器"></a>当前武器</h3><table>
+<thead>
+<tr>
+<th>数据</th>
+<th>游戏世界</th>
+<th>背包界面</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>耐久</td>
+<td>[[[[main+2CC4768]+C0]-A0]+48]+D4C</td>
+<td>[[main+2CA6D48]+447D8]+20</td>
+<td>u32</td>
+<td></td>
+</tr>
+<tr>
+<td>是否已装备</td>
+<td></td>
+<td>[[main+2CA6D48]+447D8]+24</td>
+<td>u8</td>
+<td></td>
+</tr>
+<tr>
+<td>词条属性值</td>
+<td></td>
+<td>[[main+2CA6D48]+447D8]+80</td>
+<td>u32</td>
+<td></td>
+</tr>
+<tr>
+<td>词条</td>
+<td></td>
+<td>[[main+2CA6D48]+447D8]+88</td>
+<td>u32</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="当前弓"><a href="#当前弓" class="headerlink" title="当前弓"></a>当前弓</h3><table>
+<thead>
+<tr>
+<th>数据</th>
+<th>游戏世界</th>
+<th>背包界面</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>耐久</td>
+<td>[[[[main+2CC4768]+C0]-70]+48]+D4C</td>
+<td></td>
+<td>u32</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="当前盾"><a href="#当前盾" class="headerlink" title="当前盾"></a>当前盾</h3><table>
+<thead>
+<tr>
+<th>数据</th>
+<th>游戏世界</th>
+<th>背包界面</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>耐久</td>
+<td>[[[[main+2CC4768]+C0]-88]+48]+D4C</td>
+<td></td>
+<td>u32</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="词条"><a href="#词条" class="headerlink" title="词条"></a>词条</h3><p>词条是一个 Flag。由低到高找到的第一个为 1 的位生效。第 32 位表示属性提升大，比如 0x80000001 表示攻击力提升大。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">       0x1 = 攻击力提升</span><br><span class="line">       0x2 = 耐力提升</span><br><span class="line">       0x4 = 结束暴击</span><br><span class="line">       0x8 = 远距离投掷</span><br><span class="line">      0x10 = 5连发</span><br><span class="line">      0x20 = 3连发</span><br><span class="line">      0x40 = 速射</span><br><span class="line">     0x100 = 盾防护提升</span><br><span class="line">0x80000000 = 属性提升大</span><br></pre></td></tr></table></figure>
+
+<h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><p><a target="_blank" rel="noopener" href="https://github.com/Pistonight/botw-save-state/blob/main/src/mem/PointerList.txt">https://github.com/Pistonight/botw-save-state/blob/main/src/mem/PointerList.txt</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/xenocard/CheatsHunter/blob/main/01007EF00011E000/cheats/8E9978D50BDD20B4.txt">https://github.com/xenocard/CheatsHunter/blob/main/01007EF00011E000/cheats/8E9978D50BDD20B4.txt</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/01/24/zelda-botw-temples/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Switch/" title="Switch">
+                        #Switch
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/%E5%A1%9E%E5%B0%94%E8%BE%BE%E4%BC%A0%E8%AF%B4/" title="塞尔达传说">
+                        #塞尔达传说
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/04/10/windbg-symbols/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE"><span class="toc-text">数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%8C%E5%8D%A1%E4%B9%8B%E7%9F%B3%E6%8A%80%E8%83%BD"><span class="toc-text">希卡之石技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8B%B1%E6%9D%B0%E6%8A%80%E8%83%BD"><span class="toc-text">英杰技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%99%E7%90%86"><span class="toc-text">料理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E5%8A%9B%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">移动力提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">攻击提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">防御提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%80%90%E7%83%AD%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">耐热防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%80%90%E5%AF%92%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">耐寒防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%81%AB%E7%84%B0%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">火焰防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%B5%E9%BA%BB%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">电麻防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E9%9D%99%E6%80%A7%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">安静性提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E5%A4%87"><span class="toc-text">装备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E6%AD%A6%E5%99%A8"><span class="toc-text">当前武器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E5%BC%93"><span class="toc-text">当前弓</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E7%9B%BE"><span class="toc-text">当前盾</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%8D%E6%9D%A1"><span class="toc-text">词条</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99"><span class="toc-text">相关资料</span></a>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%A1%9E%E5%B0%94%E8%BE%BE%E4%BC%A0%E8%AF%B4%EF%BC%9A%E6%97%B7%E9%87%8E%E4%B9%8B%E6%81%AF%E6%95%B0%E6%8D%AE%E6%95%B4%E7%90%86 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F01%2F28%2Fbotw-hack%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/01/28/botw-hack/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

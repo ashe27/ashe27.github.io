@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      NLog 快速入门 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">NLog 快速入门</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/dotnet/" title=".NET">
+                    #.NET
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/NLog/" title="NLog">
+                    #NLog
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>使用 NLog 需要先进行配置。可以通过文件配置或代码配置。大多数时候都是通过文件来配置。</p>
+<h2 id="配置文件搜索顺序"><a href="#配置文件搜索顺序" class="headerlink" title="配置文件搜索顺序"></a>配置文件搜索顺序</h2><p>程序启动时会依次搜索以下文件，直到搜索到为止：</p>
+<ol>
+<li>标准应用程序配置文件 app.config（例如 <code>myapp.exe.config</code>）。</li>
+<li>应用程序目录中的 <code>myapp.exe.nlog</code>。</li>
+<li>应用程序目录中的 <code>NLog.config</code>。</li>
+<li><code>NLog.dll.nlog</code> 位于 NLog.dll 所在目录中（仅当 NLog 未安装在 GAC 中时）。</li>
+</ol>
+<p><br>从这个顺序可以看出，当有多个项目时可以为每个 exe 独立配置规则，也可以共用一个规则。</p>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>在工程目录下创建一个 <code>NLog.config</code> 文件，在 Visual Studio 中选中该文件将属性<code>复制到输出目录</code>改为<code>始终复制</code>或<code>如果较新则复制</code>。<br>一个简单的配置文件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span> ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">nlog</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 日志输出到哪些地方 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">targets</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- name 是目标名称，后面规则中会用到。type 决定了输出位置。其他属性根据 type 有所不同 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">&quot;logfile&quot;</span> <span class="attr">type</span>=<span class="string">&quot;File&quot;</span> <span class="attr">fileName</span>=<span class="string">&quot;$&#123;basedir&#125;/file.log&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">&quot;dbg&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Debugger&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">targets</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- 日志输出规则 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">rules</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- minlevel 是命中级别，该级别及以上才会命中。writeTo 是写入哪个目标 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Info&quot;</span> <span class="attr">writeTo</span>=<span class="string">&quot;logfile&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Debug&quot;</span> <span class="attr">writeTo</span>=<span class="string">&quot;dbg&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">rules</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">nlog</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>测试代码：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> NLog;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">WinFormsApp1</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger s_logger = LogManager.GetCurrentClassLogger();</span><br><span class="line"></span><br><span class="line">        [<span class="meta">STAThread</span>]</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">        &#123;</span><br><span class="line">            s_logger.Info(<span class="string">&quot;hello info&quot;</span>);</span><br><span class="line">            s_logger.Debug(<span class="string">&quot;Hello debug&quot;</span>);</span><br><span class="line"></span><br><span class="line">            Application.EnableVisualStyles();</span><br><span class="line">            Application.SetCompatibleTextRenderingDefault(<span class="literal">false</span>);</span><br><span class="line">            Application.Run(<span class="keyword">new</span> Form1());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>控制台输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2024-04-25 23:22:03.6134|INFO|WinFormsApp1.Program|hello info</span><br><span class="line">2024-04-25 23:22:03.6344|DEBUG|WinFormsApp1.Program|Hello debug</span><br></pre></td></tr></table></figure>
+<p>日志文件输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2024-04-25 23:22:03.6134|INFO|WinFormsApp1.Program|hello info</span><br></pre></td></tr></table></figure>
+
+<h2 id="Targets"><a href="#Targets" class="headerlink" title="Targets"></a>Targets</h2><p>targets 部分定义日志目标。每个目标都由一个 target 元素表示。每个目标需要两个属性：</p>
+<ul>
+<li>name：目标名称，在 logger 中需要用到。</li>
+<li>type：目标类型，表示日志将写到哪里。</li>
+</ul>
+<h3 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h3><table>
+<thead>
+<tr>
+<th>目标</th>
+<th>说明</th>
+<th>文档</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Chainsaw</td>
+<td>将日志消息发送到 Log4J XML Viewer 应用程序的远程实例。</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Chainsaw-target">Wiki</a></td>
+</tr>
+<tr>
+<td>ColoredConsole</td>
+<td>使用可自定义的颜色将日志消息写入控制台。</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/ColoredConsole-target">Wiki</a></td>
+</tr>
+<tr>
+<td>Console</td>
+<td>将日志消息写入控制台。</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Console-target">Wiki</a></td>
+</tr>
+<tr>
+<td>Database</td>
+<td>使用ADO.NET提供程序将日志消息写入数据库。数据库操作总是在事务之外执行。</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Database-target">Wiki</a></td>
+</tr>
+<tr>
+<td>DebugSystem</td>
+<td>通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.diagnostics.debug.writeline">Debug.WriteLine</a> 发送日志消息。</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/DebugSystem-target">Wiki</a></td>
+</tr>
+<tr>
+<td>Debug</td>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Debug-target">Wiki</a></td>
+</tr>
+<tr>
+<td>Debugger</td>
+<td>将日志消息写入附加的托管调试器。</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Debugger-target">Wiki</a></td>
+</tr>
+<tr>
+<td>EventLog</td>
+<td>将日志消息写入Windows事件日志。</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/EventLog-target">Wiki</a></td>
+</tr>
+<tr>
+<td>File</td>
+<td>将日志消息写入一个或多个文件。</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/File-target">Wiki</a></td>
+</tr>
+<tr>
+<td>LogReceiverService</td>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/LogReceiverService-target">Wiki</a></td>
+</tr>
+<tr>
+<td>Mail</td>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Mail-target">Wiki</a></td>
+</tr>
+<tr>
+<td>Memory</td>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Memory-target">Wiki</a></td>
+</tr>
+<tr>
+<td>MethodCall</td>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/MethodCall-target">Wiki</a></td>
+</tr>
+<tr>
+<td>Network</td>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Network-target">Wiki</a></td>
+</tr>
+<tr>
+<td>NLogViewer</td>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/NLogViewer-target">Wiki</a></td>
+</tr>
+<tr>
+<td>Null</td>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Null-target">Wiki</a></td>
+</tr>
+<tr>
+<td>OutputDebugString</td>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/OutputDebugString-target">Wiki</a></td>
+</tr>
+<tr>
+<td>PerfCounter</td>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/PerfCounter-target">Wiki</a></td>
+</tr>
+<tr>
+<td>Trace</td>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Trace-target">Wiki</a></td>
+</tr>
+<tr>
+<td>WebService</td>
+<td></td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/WebService-target">Wiki</a></td>
+</tr>
+</tbody></table>
+<p><br>每个 target 都有自己的配置属性，查看官方 Wiki 即可。其中用的最多的当然还是 <a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/File-target">File target</a> 了。<br>注意，某些 target 还需要按照依赖包才会生效。</p>
+<h3 id="Layout"><a href="#Layout" class="headerlink" title="Layout"></a>Layout</h3><p><code>laytou</code> 属性默认值是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;longdate&#125;|$&#123;level:uppercase=true&#125;|$&#123;logger&#125;|$&#123;message:withexception=true&#125;</span><br></pre></td></tr></table></figure>
+<p>输出的日志：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2024-04-27 13:40:17.5794|TRACE|WindowsFormsApp.Program|start</span><br></pre></td></tr></table></figure>
+<p>简单说，<code>layout</code>就是由一系列的内置变量组合而成的。</p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>示例</th>
+<th>说明</th>
+<th>文档</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>${shortdate}</td>
+<td>2024-04-27</td>
+<td>当前日期</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/ShortDate-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${time}</td>
+<td>14:08:04.4274</td>
+<td>当前时间</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Time-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${date}</td>
+<td>2024&#x2F;04&#x2F;27 14:04:02.735</td>
+<td>当前日期时间（短）</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Date-layout-renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${longdate}</td>
+<td>2024-04-27 13:49:06.1412</td>
+<td>当前日期时间（长）</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Longdate-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${ticks}</td>
+<td>638498236261006047</td>
+<td>当前日期和时间的刻度值</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Ticks-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${level}</td>
+<td>TRACE</td>
+<td>日志级别</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Level-layout-renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${logger}</td>
+<td>WindowsFormsApp.Program</td>
+<td>记录器名称</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Logger-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${message}</td>
+<td></td>
+<td>日志内容</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Message-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${callsite}</td>
+<td>WindowsFormsApp.Program.Main</td>
+<td>调用站点。可包含函数名、源文件等信息</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Callsite-layout-renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${appdomain}</td>
+<td>0001:WindowsFormsApp.exe</td>
+<td>应用程序域</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/AppDomain-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${appsetting}</td>
+<td></td>
+<td>应用程序设置配置</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/AppSetting-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${assembly-version}</td>
+<td>1.0.0.0</td>
+<td>程序集版本</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/AssemblyVersion-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${gc}</td>
+<td>1291536</td>
+<td>垃圾收集器的信息</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Gc-layout-renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${hostname}</td>
+<td>DESKTOP-XXXX</td>
+<td>计算机名</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/HostName-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${machinename</td>
+<td>DESKTOP-XXXX</td>
+<td>运行进程的计算机名</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Machinename-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${local-ip}</td>
+<td>169.254.227.96</td>
+<td>本地IP地址</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Local-IP-Address-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${processid}</td>
+<td>14476</td>
+<td>进程ID</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/ProcessId-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${processname}</td>
+<td>WindowsFormsApp</td>
+<td>进程名称</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Processname-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${processdir}</td>
+<td>D:\MyApp</td>
+<td>进程目录</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/ProcessDir-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${processinfo}</td>
+<td></td>
+<td>进程信息。默认显示进程ID</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/ProcessInfo-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${processtime}</td>
+<td>00:00:04.836</td>
+<td>进程启动以来的时间</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/ProcessTime-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${threadname}</td>
+<td></td>
+<td>线程名称</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/ThreadName-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${threadid}</td>
+<td></td>
+<td>线程ID</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/ThreadId-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${basedir}</td>
+<td>D:\MyApp</td>
+<td>应用程序的位置</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Basedir-layout-renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${currentdir}</td>
+<td>D:\MyApp</td>
+<td>工作路径</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/CurrentDir-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${specialfolder}</td>
+<td></td>
+<td>系统特殊文件夹路径</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Special-Folder-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${tempdir}</td>
+<td></td>
+<td>系统临时目录</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/TempDir-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${environment}</td>
+<td></td>
+<td>环境变量</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Environment-layout-renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${registry}</td>
+<td></td>
+<td>注册表值</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Registry-Layout-Renderer">Wiki</a></td>
+</tr>
+<tr>
+<td>${pad}</td>
+<td></td>
+<td>将填充应用于另一个布局输出</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Pad-Layout-Renderer">Wiki</a></td>
+</tr>
+</tbody></table>
+<p><br>常用的一般就是进程、线程信息了。还有其他一些高级用法可以参考官方文档。<br>另外注意，某些变量需要依赖扩展包，否则不会生效。</p>
+<p><br>我个人喜欢的一个布局：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;longdate&#125; [$&#123;level:uppercase=true:padding=5&#125;] [$&#123;threadid&#125;] [$&#123;logger&#125;] $&#123;message&#125;</span><br></pre></td></tr></table></figure>
+<p>在默认的布局上对齐日志级别以及加入线程ID</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2024-04-27 15:03:14.0145 [TRACE] [1] [WindowsFormsApp.Program] Hello</span><br></pre></td></tr></table></figure>
+
+<h2 id="Rules"><a href="#Rules" class="headerlink" title="Rules"></a>Rules</h2><p>rules 部分控制什么级别的日志输出到什么 target。一些例子：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span> ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">nlog</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">rules</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 匹配任何名称的记录器，Info 级及以上日志输出到 logfile --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Info&quot;</span> <span class="attr">writeTo</span>=<span class="string">&quot;logfile&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Trace 日志输出到 logfile --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">level</span>=<span class="string">&quot;Trace&quot;</span>  <span class="attr">writeTo</span>=<span class="string">&quot;logfile&quot;</span> /&gt;</span></span><br><span class="line">	</span><br><span class="line">    <span class="comment">&lt;!-- 禁用的记录器 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;mylog&quot;</span> <span class="attr">levels</span>=<span class="string">&quot;Warn,Error&quot;</span> <span class="attr">enabled</span>=<span class="string">&quot;false&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">rules</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">nlog</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>NLog 会自上而下去尝试匹配每个 logger，匹配到了就打印日志到 target，除非遇到了 final 属性，比如：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">rules</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Trace&quot;</span> <span class="attr">writeTo</span>=<span class="string">&quot;logfile&quot;</span> <span class="attr">final</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Trace&quot;</span>  <span class="attr">writeTo</span>=<span class="string">&quot;dbgSys&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">rules</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>final</code>属性会阻止 NLog 继续向下匹配，所以这个例子只会将日志输出到 logfile target。</p>
+<h3 id="name"><a href="#name" class="headerlink" title="name"></a>name</h3><p>匹配记录器对象的记录器名称，可以包含通配符（<code>*</code>和<code>?</code>）。<br>创建 NLog 记录器对象时，必须提供类似 <code>NLog.LogManager.GetLogger(&quot;logger name&quot;)</code> 的记录器名称。还可以使用 <code>NLog.LogManager.GetCurrentClassLogger()</code> 从类上下文中提取记录器名称。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> logger = LogManager.GetCurrentClassLogger();</span><br><span class="line">        <span class="comment">// 等于 var logger = LogManager.GetLogger(typeof(Program).FullName);</span></span><br><span class="line"></span><br><span class="line">        Application.EnableVisualStyles();</span><br><span class="line">        Application.SetCompatibleTextRenderingDefault(<span class="literal">false</span>);</span><br><span class="line">        Application.Run(<span class="keyword">new</span> Form1());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="记录器级别过滤器"><a href="#记录器级别过滤器" class="headerlink" title="记录器级别过滤器"></a>记录器级别过滤器</h3><p>如果规则包含多个级别声明属性（ level 、 levels 、 minlevel 和 maxlevel ），则仅包含第一个级别声明使用属性或集合，其余的将被忽略。<br>级别声明属性按以下顺序处理：</p>
+<ol>
+<li>levels</li>
+<li>level</li>
+<li>minlevel 和 maxlevel （它们具有相同的优先级）</li>
+</ol>
+<p><br>注意这里是我测试过的排序，与官方文档中的优先级不同（NLog v5.2.8）。</p>
+<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Tutorial/">Tutorial</a><br><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Configuration-file/">Configuration file</a><br><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Configure-from-code">Configure from code</a><br><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Layouts">Layouts</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/shieryoufeng/p/17788734.html">Nlog笔记</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/04/21/msbuild-project-sdk/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/dotnet/" title=".NET">
+                        #.NET
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/NLog/" title="NLog">
+                        #NLog
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2024/05/18/get-builtin-account/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%90%9C%E7%B4%A2%E9%A1%BA%E5%BA%8F"><span class="toc-text">配置文件搜索顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Targets"><span class="toc-text">Targets</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Type"><span class="toc-text">Type</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Layout"><span class="toc-text">Layout</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rules"><span class="toc-text">Rules</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#name"><span class="toc-text">name</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E5%99%A8%E7%BA%A7%E5%88%AB%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-text">记录器级别过滤器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + NLog%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F04%2F25%2Fnlog-tutorial%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/04/25/nlog-tutorial/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

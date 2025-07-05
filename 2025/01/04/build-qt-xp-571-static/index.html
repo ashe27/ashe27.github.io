@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      VS2022 静态链接VC方式编译 Qt 5.7.1 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">VS2022 静态链接VC方式编译 Qt 5.7.1</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Qt/" title="Qt">
+                    #Qt
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>之前写过一篇 <a href="/2024/06/29/build-qt-xp-571/">VS2017 编译 Qt 5.7.1</a> 文章介绍了 Qt 的编译方式。为了支持 XP 系统，不得不使用 VS2017 来编译，这带来一个问题：无法享受 C++ 20 以后的现代式编程。</p>
+<p>好在有 <a target="_blank" rel="noopener" href="https://github.com/Chuyu-Team/YY-Thunks">YY-Thunks</a> 这个神器可以解决 XP 缺失一些 API 的问题。<br>总体的编译流程和之前差不多，只是一些配置细节不同。</p>
+<h2 id="编辑-msvc-desktop-conf"><a href="#编辑-msvc-desktop-conf" class="headerlink" title="编辑 msvc-desktop.conf"></a>编辑 msvc-desktop.conf</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 控制 SDK 版本</span><br><span class="line">DEFINES += UNICODE WIN32 _UNICODE _WIN32_WINNT=0x0501 _USING_V110_SDK71_</span><br><span class="line"></span><br><span class="line"># 子系统版本，要运行在 XP 系统上必须是 5.01</span><br><span class="line">QMAKE_SUBSYSTEM_SUFFIX  = ,5.01</span><br><span class="line"></span><br><span class="line"># -MD 改为 -MT，这样编译出的 Qt DLL 文件就不依赖VC运行库了</span><br><span class="line">QMAKE_CFLAGS_RELEASE    = -O2 -MT</span><br><span class="line">QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO += -O2 -MT -Zi</span><br><span class="line">QMAKE_CFLAGS_DEBUG      = -Zi -MTd</span><br><span class="line"></span><br><span class="line"># 链接 YY_Thunks_for_WinXP.obj 文件，让 YY-Thunks 实现 Vista+ 以后才有的 API</span><br><span class="line">QMAKE_LFLAGS = /NOLOGO /DYNAMICBASE /NXCOMPAT C:\Qt\YY_Thunks_for_WinXP.obj</span><br><span class="line"></span><br><span class="line"># 根据 YY-Thunks 的要求，对于 DLL 项目要修改入口点</span><br><span class="line">QMAKE_LFLAGS_DLL = /DLL /ENTRY:&quot;DllMainCRTStartupForYY_Thunks&quot;</span><br></pre></td></tr></table></figure>
+
+<h2 id="编译错误"><a href="#编译错误" class="headerlink" title="编译错误"></a>编译错误</h2><p>在编译过程中会碰到一些错误而终止，要解决掉才能完成编译。</p>
+<h3 id="FILE-ID-128-类型重定义"><a href="#FILE-ID-128-类型重定义" class="headerlink" title="_FILE_ID_128 类型重定义"></a>_FILE_ID_128 类型重定义</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\corelib\io\qfilesystemengine_win.cpp(629): error C2011: “_FILE_ID_128”:“struct”类型重定义</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MinGW-64 defines FILE_ID_128 as of gcc-4.8.1 along with FILE_SUPPORTS_INTEGRITY_STREAMS</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> !(defined(Q_CC_MINGW) &amp;&amp; defined(FILE_SUPPORTS_INTEGRITY_STREAMS))</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">_FILE_ID_128</span> &#123;</span><br><span class="line">    BYTE  Identifier[<span class="number">16</span>];</span><br><span class="line">&#125; FILE_ID_128, *PFILE_ID_128;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// !(Q_CC_MINGW &amp;&amp; FILE_SUPPORTS_INTEGRITY_STREAMS)</span></span></span><br></pre></td></tr></table></figure>
+<p>因为新SDK中已经有改定义了，所以提示重定义错误，直接删除这一段即可。</p>
+<h3 id="缺少头文件"><a href="#缺少头文件" class="headerlink" title="缺少头文件"></a>缺少头文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\tools\qlalr\compress.cpp(40): error C2039: &quot;binary_function&quot;: 不是 &quot;std&quot; 的成员</span><br></pre></td></tr></table></figure>
+<p>在<code>compress.cpp</code>中添加头文件<code>#include &lt;functional&gt;</code>。</p>
+<h3 id="缺少-tmschema-h"><a href="#缺少-tmschema-h" class="headerlink" title="缺少 tmschema.h"></a>缺少 tmschema.h</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qwindowsxpstyle_p_p.h(64): fatal error C1083: 无法打开包括文件: “tmschema.h”: No such file or directory</span><br></pre></td></tr></table></figure>
+<p>这个头文件仅在 SDK v7.1A 中才有。可以从 v7.1A SDK 中提取出这个头文件，或从这里下载 <a target="_blank" rel="noopener" href="https://github.com/tpn/winsdk-7/raw/refs/heads/master/v7.1A/Include/Tmschema.h">https://github.com/tpn/winsdk-7/raw/refs/heads/master/v7.1A/Include/Tmschema.h</a> 文件，将它放在一个单独的目录中，稍后编译前将这个目录加入头文件搜索路径即可。</p>
+<h3 id="未声明的标识符"><a href="#未声明的标识符" class="headerlink" title="未声明的标识符"></a>未声明的标识符</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\widgets\util\qsystemtrayicon_win.cpp(262): error C2065: “NIIF_USER”: 未声明的标识符</span><br><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\widgets\util\qsystemtrayicon_win.cpp(270): error C2065: “NIF_SHOWTIP”: 未声明的标识符</span><br><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\widgets\util\qsystemtrayicon_win.cpp(283): error C2065: “NIF_SHOWTIP”: 未声明的标识符</span><br><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\widgets\util\qsystemtrayicon_win.cpp(327): error C2065: “NOTIFYICON_VERSION_4”: 未声明的标识符</span><br></pre></td></tr></table></figure>
+<p>这3个宏是 Vista 后才有的，直接在<code>qsystemtrayicon_win.cpp</code>文件中追加即可：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> NIIF_USER</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NIIF_USER 0x00000004</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> NIF_SHOWTIP</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NIF_SHOWTIP 0x00000080</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> NOTIFYICON_VERSION_4</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NOTIFYICON_VERSION_4 4</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="缺少-RtlCaptureStackBackTrace"><a href="#缺少-RtlCaptureStackBackTrace" class="headerlink" title="缺少 RtlCaptureStackBackTrace"></a>缺少 RtlCaptureStackBackTrace</h3><p>这个错误在以前的文章中提到过，在<code>qtestcase.cpp</code>文件中加入以下声明即可：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> __declspec(dllimport) <span class="function">USHORT WINAPI <span class="title">RtlCaptureStackBackTrace</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    __in ULONG FramesToSkip,</span></span></span><br><span class="line"><span class="params"><span class="function">    __in ULONG FramesToCapture,</span></span></span><br><span class="line"><span class="params"><span class="function">    __out_ecount(FramesToCapture) PVOID *BackTrace,</span></span></span><br><span class="line"><span class="params"><span class="function">    __out_opt PULONG BackTraceHash</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>我的编译参数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> INCLUDE=C:\Qt\winsdk-7.1A;%INCLUDE%</span><br><span class="line">..\configure.bat -prefix <span class="string">&quot;C:/Qt/Qt5.7.1-vc14.42-x86-static&quot;</span> -platform win32-msvc2015 -confirm-license -opensource -debug-and-release -shared -nomake examples -nomake tests -no-directwrite -no-angle -opengl desktop -mp</span><br></pre></td></tr></table></figure>
+<p>注意这里先将前面提到 tmschema.h 的路径加入到搜索路径中。<br>没意外的话编译就OK了。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>用 QtCreator 创建的项目默认是控制台程序，将其修改为<code>WIN32</code>：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_executable</span>(untitled WIN32 <span class="variable">$&#123;PROJECT_SOURCES&#125;</span>)</span><br></pre></td></tr></table></figure>
+<p>然后会继续报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qtmaind.lib(qtmain_win.obj):-1: error: LNK2038: 检测到“RuntimeLibrary”的不匹配项: 值“MTd_StaticDebug”不匹配值“MDd_DynamicDebug”(mocs_compilation.cpp.obj 中)</span><br></pre></td></tr></table></figure>
+<p>很明显，项目也必须静态链接VC。<br>为了在 XP 下运行，还要作出其他配置，最终的设置如下：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (CMAKE_CXX_COMPILER_ID <span class="keyword">STREQUAL</span> <span class="string">&quot;MSVC&quot;</span>)</span><br><span class="line">    <span class="keyword">target_compile_definitions</span>(untitled PRIVATE UNICODE _UNICODE)</span><br><span class="line">    <span class="keyword">target_compile_options</span>(untitled PRIVATE $&lt;$&lt;CONFIG:&gt;:/MT&gt; $&lt;$&lt;CONFIG:Debug&gt;:/MTd&gt; $&lt;$&lt;CONFIG:Release&gt;:/MT&gt; )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (CMAKE_SIZEOF_VOID_P <span class="keyword">EQUAL</span> <span class="number">4</span>)</span><br><span class="line">        <span class="keyword">target_compile_definitions</span>(untitled PRIVATE _WIN32_WINNT=<span class="number">0</span>x0501 _USING_V110_SDK71_)</span><br><span class="line">        <span class="keyword">set_target_properties</span>(untitled PROPERTIES LINK_FLAGS <span class="string">&quot;/SUBSYSTEM:WINDOWS,5.01&quot;</span>)</span><br><span class="line">        <span class="keyword">target_link_options</span>(untitled PRIVATE <span class="string">&quot;$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/YY_Thunks_for_WinXP.obj&quot;</span>)</span><br><span class="line">    <span class="keyword">endif</span> ()</span><br><span class="line"><span class="keyword">endif</span> ()</span><br></pre></td></tr></table></figure>
+
+<h3 id="内存错误"><a href="#内存错误" class="headerlink" title="内存错误"></a>内存错误</h3><p>在界面上随便放几个控件，然后用<code>Debug</code>方式运行，会弹出一个提示框：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">---------------------------</span><br><span class="line">Microsoft Visual C++ Runtime Library</span><br><span class="line">---------------------------</span><br><span class="line">Debug Assertion Failed!</span><br><span class="line"></span><br><span class="line">Program: C:\test\app.exe</span><br><span class="line">File: minkernel\crts\ucrt\src\appcrt\heap\debug_heap.cpp</span><br><span class="line">Line: 996</span><br><span class="line"></span><br><span class="line">Expression: __acrt_first_block == header</span><br><span class="line"></span><br><span class="line">For information on how your program can cause an assertion</span><br><span class="line">failure, see the Visual C++ documentation on asserts.</span><br><span class="line"></span><br><span class="line">(Press Retry to debug the application)</span><br></pre></td></tr></table></figure>
+<p>网上查了下，大概原因是因为在一个模块中申请的内存在另一个模块中释放导致的。因为使用<code>/MT</code>编译后不再依赖VC运行库，每个模块都有自己的堆管理器，导致内存的申请和释放都是在各个模块中进行的。<br>为了解决这个问题，必须遵循 <strong>谁申请谁释放</strong> 的原则，但我们肯定是无法魔改 Qt 的，于是我想到引入 <a target="_blank" rel="noopener" href="https://github.com/Chuyu-Team/VC-LTL5">VC-LTL5</a> 是否能解决？实践发现确实可以！</p>
+<h2 id="引入-VC-LTL5"><a href="#引入-VC-LTL5" class="headerlink" title="引入 VC-LTL5"></a>引入 VC-LTL5</h2><p>去 <a target="_blank" rel="noopener" href="https://github.com/Chuyu-Team/VC-LTL5">VC-LTL5</a> 下载安装包，解压后运行<code>Install.cmd</code>安装即可。<br>接着在编译之前先运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> WindowsTargetPlatformMinVersion=5.1.2600.0</span><br><span class="line"><span class="string">&quot;VC-LTL helper for nmake.cmd&quot;</span></span><br></pre></td></tr></table></figure>
+<p>然后再按照前面的方式正常编译即可，最终产生的二进制文件将依赖<code>msvcrt.dll</code>文件，这样内存的申请释放都在<code>msvcrt.dll</code>中，就不会有前面的问题了。</p>
+<p><br>还要注意的是，在项目中也要使用 VC-LTL5，这样才能保持和 Qt DLL 一致的内存管理。<br>普通的做法是安装 VC-LTL5 后，将<code>VC-LTL helper for cmake.cmake</code>文件拷贝到项目目录下，在<code>CMakeLists.txt</code>文件中加入：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一定要在 add_executable 之前包含，否则无效，这点官方没有指出。而且 VC-LTL5 仅在 Release 时才工作，Debug 是没有的</span></span><br><span class="line"><span class="keyword">set</span>(WindowsTargetPlatformMinVersion <span class="string">&quot;5.1.2600.0&quot;</span>)</span><br><span class="line"><span class="keyword">include</span>(<span class="string">&quot;VC-LTL helper for cmake.cmake&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(untitled WIN32 <span class="variable">$&#123;PROJECT_SOURCES&#125;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><br>普通引用方式是要先安装 VC-LTL5，但是在工作中，项目是和同事们一起维护的，这要求每位开发者都要先安装，有些麻烦，我更希望将 VC-LTL5 集成到编译的 Qt 中，并精简掉无关的文件（移除除了 5.1.2600.0 之外的所有 TargetPlatform 文件），并指定<code>VC_LTL_ROOT</code>变量即可：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(WindowsTargetPlatformMinVersion <span class="string">&quot;5.1.2600.0&quot;</span>)</span><br><span class="line"><span class="keyword">set</span>(VC_LTL_Root <span class="string">&quot;$&#123;CMAKE_PREFIX_PATH&#125;/vc-ltl5&quot;</span>)</span><br><span class="line"><span class="keyword">include</span>(<span class="string">&quot;$&#123;VC_LTL_Root&#125;/VC-LTL helper for cmake.cmake&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><br>最后的最后，每个工程都要设置 XP 相关的设置很啰嗦，直接在入口<code>CMakeLists.txt</code>中全局设置一次更方便：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (CMAKE_CXX_COMPILER_ID <span class="keyword">STREQUAL</span> <span class="string">&quot;MSVC&quot;</span>)</span><br><span class="line">    <span class="keyword">add_compile_definitions</span>(UNICODE _UNICODE)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">link_libraries</span>(<span class="string">&quot;$&#123;CMAKE_PREFIX_PATH&#125;/obj/YY_Thunks_for_WinXP.obj&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">set</span>(WindowsTargetPlatformMinVersion <span class="string">&quot;5.1.2600.0&quot;</span>)</span><br><span class="line">    <span class="keyword">set</span>(VC_LTL_Root <span class="string">&quot;$&#123;CMAKE_PREFIX_PATH&#125;/vc-ltl5&quot;</span>)</span><br><span class="line">    <span class="keyword">include</span>(<span class="string">&quot;$&#123;VC_LTL_Root&#125;/VC-LTL helper for cmake.cmake&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">add_compile_options</span>(</span><br><span class="line">        $&lt;$&lt;CONFIG:&gt;:/MT&gt;</span><br><span class="line">        $&lt;$&lt;CONFIG:Debug&gt;:/MTd&gt;</span><br><span class="line">        $&lt;$&lt;CONFIG:Release&gt;:/MT&gt;</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (CMAKE_SIZEOF_VOID_P <span class="keyword">EQUAL</span> <span class="number">4</span>)</span><br><span class="line">        <span class="keyword">add_compile_definitions</span>(_WIN32_WINNT=<span class="number">0</span>x0501 _USING_V110_SDK71_)</span><br><span class="line">    <span class="keyword">endif</span> ()</span><br><span class="line"><span class="keyword">endif</span>()</span><br></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/cpp/build/reference/md-mt-ld-use-run-time-library">&#x2F;MD、&#x2F;MT、&#x2F;LD（使用运行时库）</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37380933/article/details/139300145">[C++][MSVC][Error] __acrt_first_block &#x3D;&#x3D; header</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2024/12/24/nim-flexiblearray/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Qt/" title="Qt">
+                        #Qt
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2025/01/09/net-radiobutton-click/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%BE%91-msvc-desktop-conf"><span class="toc-text">编辑 msvc-desktop.conf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E9%94%99%E8%AF%AF"><span class="toc-text">编译错误</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FILE-ID-128-%E7%B1%BB%E5%9E%8B%E9%87%8D%E5%AE%9A%E4%B9%89"><span class="toc-text">_FILE_ID_128 类型重定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E5%B0%91%E5%A4%B4%E6%96%87%E4%BB%B6"><span class="toc-text">缺少头文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E5%B0%91-tmschema-h"><span class="toc-text">缺少 tmschema.h</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AA%E5%A3%B0%E6%98%8E%E7%9A%84%E6%A0%87%E8%AF%86%E7%AC%A6"><span class="toc-text">未声明的标识符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E5%B0%91-RtlCaptureStackBackTrace"><span class="toc-text">缺少 RtlCaptureStackBackTrace</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-text">编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E9%94%99%E8%AF%AF"><span class="toc-text">内存错误</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E5%85%A5-VC-LTL5"><span class="toc-text">引入 VC-LTL5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + VS2022%20%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5VC%E6%96%B9%E5%BC%8F%E7%BC%96%E8%AF%91%20Qt%205.7.1 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F01%2F04%2Fbuild-qt-xp-571-static%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/01/04/build-qt-xp-571-static/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

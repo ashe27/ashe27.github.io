@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      XP下MFC程序本地化研究 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">XP下MFC程序本地化研究</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-07-01 20:55:10
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/%E6%9C%AC%E5%9C%B0%E5%8C%96/" title="本地化">
+                    #本地化
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/MFC/" title="MFC">
+                    #MFC
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="MFC-的本地化方案"><a href="#MFC-的本地化方案" class="headerlink" title="MFC 的本地化方案"></a>MFC 的本地化方案</h2><p>在 MFC 程序中，本地化是通过资源文件来完成的。菜单栏、对话框、字符串，图片等等资源都支持多个语言的副本。<br><img src="https://pic.rmb.bdstatic.com/bjh/42bf226a228cc0b444c82c19daf6a806.png"><br>在框架内部，是通过 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-createdialoga">CreateDialog</a>、<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/win32/api/winuser/nf-winuser-dialogboxa">DialogBox</a>、<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenua">LoadMenu</a>、<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringa">LoadString</a>、<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-findresourcea">FindResource</a> 来查找资源的。比如查找字符串：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">const</span> ATLSTRINGRESOURCEIMAGE* <span class="title">AtlGetStringResourceImage</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">	_In_ HINSTANCE hInstance,</span></span></span><br><span class="line"><span class="params"><span class="function">	_In_ UINT id)</span> <span class="title">throw</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	HRSRC hResource;</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">		The and operation (&amp; static_cast&lt;WORD&gt;(~0)) protects the expression from being greater</span></span><br><span class="line"><span class="comment">		than WORD - this would cause a runtime error when the application is compiled with /RTCc flag.</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	hResource = ::<span class="built_in">FindResourceW</span>(hInstance, <span class="built_in">MAKEINTRESOURCEW</span>( (((id&gt;&gt;<span class="number">4</span>)+<span class="number">1</span>) &amp; <span class="built_in">static_cast</span>&lt;WORD&gt;(~<span class="number">0</span>)) ), (LPWSTR) RT_STRING);</span><br><span class="line">	<span class="keyword">if</span>( hResource == <span class="literal">NULL</span> )</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span>( <span class="literal">NULL</span> );</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> _AtlGetStringResourceImage( hInstance, hResource, id );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这些函数有个特点：<strong>跟根据当前线程语言环境来定位资源</strong>。<br>当一个线程创建时，它使用用户语言环境，该值由 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winnls/nf-winnls-getuserdefaultlcid">GetUserDefaultLCID</a> 返回。<br>也就是说，在默认情况下资源加载是根据用户的区域设置来的决定。</p>
+<h2 id="改变线程语言环境"><a href="#改变线程语言环境" class="headerlink" title="改变线程语言环境"></a>改变线程语言环境</h2><p>使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreadlocale">SetThreadLocale</a> 可以改变当前线程的区域设置，从而改变 MFC 加载资源的语言。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将语言环境改为 英语(美国)</span></span><br><span class="line">::<span class="built_in">SetThreadLocale</span>(<span class="built_in">MAKELCID</span>(<span class="built_in">MAKELANGID</span>(LANG_ENGLISH, SUBLANG_ENGLISH_US), SORT_DEFAULT)); </span><br><span class="line"></span><br><span class="line">CString title;</span><br><span class="line">title.<span class="built_in">LoadString</span>(AFX_IDS_APP_TITLE); <span class="comment">// 会尝试加载 英语(美国) 字符资源</span></span><br></pre></td></tr></table></figure>
+<p>但是这个函数有明显的缺点，会影响所有涉及到字符串操作的地方，比如在中文系统上，线程语言改为英文，为用户提供一个通用对话框：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">::<span class="built_in">SetThreadLocale</span>(<span class="built_in">MAKELCID</span>(<span class="built_in">MAKELANGID</span>(LANG_ENGLISH, SUBLANG_ENGLISH_US), SORT_DEFAULT));</span><br><span class="line">CFileDialog dlg...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>如果此时用户选了一个带有中文字符的路径，对话框将会得到一些乱码路径，问题还不仅仅只是这里而已。<br><strong>所以不要使用 SetThreadLocale 来修改语言环境，除非你清楚自己在做什么。</strong><br>正确做法应该是自行通过 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/win32/api/winbase/nf-winbase-findresourceexa">FindResourceEx</a> 来查找资源，这个函数不受线程语言影响，可以指定语言，但是也无法再使用 MFC 自带的一些加载资源的方法了。</p>
+<h2 id="线程UI语言"><a href="#线程UI语言" class="headerlink" title="线程UI语言"></a>线程UI语言</h2><p>从 Vista 开始，提出了一个线程UI语言的概念，这解决了上面提到的<code>SetThreadLocale</code>影响全局的问题。通过 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreaduilanguage">SetThreadUILanguage</a> 或 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-CN/windows/win32/api/winnls/nf-winnls-setthreadpreferreduilanguages">SetThreadPreferredUILanguages</a> 来改变当前线程的UI语言，而它仅仅只影响资源加载时的语言版本，不会影响线程的语言设置</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LCID loc = ::<span class="built_in">GetThreadLocale</span>();  <span class="comment">// 2052</span></span><br><span class="line">::<span class="built_in">SetThreadUILanguage</span>(<span class="built_in">MAKELANGID</span>(LANG_ENGLISH, SUBLANG_ENGLISH_US));</span><br><span class="line">loc = ::<span class="built_in">GetThreadLocale</span>(); <span class="comment">// 还是 2052</span></span><br></pre></td></tr></table></figure>
+<p>但在 XP 系统下，这个函数会同时设置<code>ThreadLocale</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LCID loc = ::<span class="built_in">GetThreadLocale</span>();  <span class="comment">// 2052</span></span><br><span class="line">::<span class="built_in">SetThreadUILanguage</span>(<span class="built_in">MAKELANGID</span>(LANG_ENGLISH, SUBLANG_ENGLISH_US));</span><br><span class="line">loc = ::<span class="built_in">GetThreadLocale</span>(); <span class="comment">// 1033</span></span><br><span class="line">::<span class="built_in">SetThreadUILanguage</span>(<span class="built_in">MAKELANGID</span>(LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED));</span><br><span class="line">loc = ::<span class="built_in">GetThreadLocale</span>(); <span class="comment">// 还是 1033</span></span><br></pre></td></tr></table></figure>
+<p>设置为英语后就改不回来了，很奇怪，抱着好奇的心态用IDA看了一下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LANGID __stdcall <span class="title">SetThreadUILanguage</span><span class="params">(LANGID LangId)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="type">int</span> v1; <span class="comment">// eax</span></span><br><span class="line">  UINT ConsoleOutputCP; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">int</span> v3; <span class="comment">// esi</span></span><br><span class="line">  LCID v4; <span class="comment">// esi</span></span><br><span class="line">  LCID v6; <span class="comment">// esi</span></span><br><span class="line">  LCID CurrentLocale; <span class="comment">// [esp+8h] [ebp-3Ch]</span></span><br><span class="line">  UINT v8; <span class="comment">// [esp+Ch] [ebp-38h]</span></span><br><span class="line">  <span class="type">int</span> v9; <span class="comment">// [esp+10h] [ebp-34h] BYREF</span></span><br><span class="line">  <span class="type">int</span> v10; <span class="comment">// [esp+14h] [ebp-30h] BYREF</span></span><br><span class="line">  <span class="type">int</span> v11; <span class="comment">// [esp+18h] [ebp-2Ch]</span></span><br><span class="line">  LCID Locale; <span class="comment">// [esp+1Ch] [ebp-28h]</span></span><br><span class="line">  WCHAR LCData[<span class="number">16</span>]; <span class="comment">// [esp+20h] [ebp-24h] BYREF</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">LOWORD</span>(v1) = <span class="built_in">GetUserDefaultUILanguage</span>();</span><br><span class="line">  v11 = v1;</span><br><span class="line">  CurrentLocale = <span class="built_in">NtCurrentTeb</span>()-&gt;CurrentLocale;</span><br><span class="line">  Locale = <span class="number">1033</span>;</span><br><span class="line">  ConsoleOutputCP = <span class="built_in">GetConsoleOutputCP</span>();</span><br><span class="line">  v8 = ConsoleOutputCP;</span><br><span class="line">  <span class="keyword">if</span> ( dword_7C88593C || (v6 = gSystemLocale) == <span class="number">0</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    v3 = dword_7C885938;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">GetLocaleInfoW</span>(gSystemLocale, <span class="number">0x1004</span>u, LCData, <span class="number">16</span>);</span><br><span class="line">    <span class="built_in">NlsConvertStringToIntegerW</span>(<span class="number">-1</span>, &amp;dword_7C88593C);</span><br><span class="line">    <span class="built_in">GetLocaleInfoW</span>(v6, <span class="number">0xB</span>u, LCData, <span class="number">16</span>);</span><br><span class="line">    <span class="built_in">NlsConvertStringToIntegerW</span>(<span class="number">-1</span>, &amp;dword_7C885940);</span><br><span class="line">    ConsoleOutputCP = v8;</span><br><span class="line">    v3 = v6 &amp; <span class="number">0x3FF</span>;</span><br><span class="line">    dword_7C885938 = v3;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( (_WORD)v11 )</span><br><span class="line">  &#123;</span><br><span class="line">    v4 = (<span class="type">unsigned</span> __int16)v11;</span><br><span class="line">    <span class="built_in">GetLocaleInfoW</span>((<span class="type">unsigned</span> __int16)v11, <span class="number">0x1004</span>u, LCData, <span class="number">16</span>);</span><br><span class="line">    <span class="built_in">NlsConvertStringToIntegerW</span>(<span class="number">-1</span>, &amp;v9);</span><br><span class="line">    <span class="built_in">GetLocaleInfoW</span>(v4, <span class="number">0xB</span>u, LCData, <span class="number">16</span>);</span><br><span class="line">    <span class="built_in">NlsConvertStringToIntegerW</span>(<span class="number">-1</span>, &amp;v10);</span><br><span class="line">    v3 = dword_7C885938;</span><br><span class="line">    ConsoleOutputCP = v8;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( ConsoleOutputCP</span><br><span class="line">    &amp;&amp; v3 != <span class="number">1</span></span><br><span class="line">    &amp;&amp; v3 != <span class="number">13</span></span><br><span class="line">    &amp;&amp; v3 != <span class="number">42</span></span><br><span class="line">    &amp;&amp; v3 != <span class="number">30</span></span><br><span class="line">    &amp;&amp; (ConsoleOutputCP == dword_7C88593C || ConsoleOutputCP == dword_7C885940)</span><br><span class="line">    &amp;&amp; (ConsoleOutputCP == v9 || ConsoleOutputCP == v10) )</span><br><span class="line">  &#123;</span><br><span class="line">    Locale = (<span class="type">unsigned</span> __int16)v11;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( Locale != CurrentLocale &amp;&amp; !<span class="built_in">SetThreadLocale</span>(Locale) )</span><br><span class="line">    <span class="keyword">return</span> CurrentLocale;</span><br><span class="line">  <span class="keyword">return</span> Locale;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>中间一大段不用看，看结尾两行的逻辑：只有在当前线程 LCID 不等于<code>英语(美国)</code>时才会调用<code>SetThreadLocale</code>，这解释了为什么设置为英语后就改不回去了。<br>因为<code>SetThreadUILanguage</code>在 Vista 后有不同的行为，所以也不能完全否定它的作用。</p>
+<h2 id="XP下的多语言解决方案"><a href="#XP下的多语言解决方案" class="headerlink" title="XP下的多语言解决方案"></a>XP下的多语言解决方案</h2><p>因为 XP 系统没有将线程语言和UI语言分离，所以不可以使用<code>SetThreadLocale</code>或<code>SetThreadUILanguage</code>去解决UI多语言问题。<br>有其他两个方案选择：</p>
+<ol>
+<li>为每种语言单独制作一个资源型DLL，在APP初始化前用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/application-information-and-management#afxsetresourcehandle">AfxSetResourceHandle</a> 设置一下，这样之后任何资源加载都会从这个DLL中获取。</li>
+<li>非常规手段，Hook<code>FindResource</code>、<code>LoadMenu</code>等等与资源加载的相关函数，在资源加载前设置语言环境，资源加载后还原语言环境。</li>
+</ol>
+<p>第一种方法属于正规手段，但是很繁琐，维护起来很麻烦。<br>第二种方法可以将所有资源集中在EXE中，维护更方便。不过除了<code>FindResourceEx</code>以外函数无法指定语言ID，所以每次加载资源时需要切换<code>ThreadLocale</code>。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/win32/intl/user-interface-language-management">用户界面语言管理</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreadlocale">SetThreadLocale function</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/windows/win32/api/winnls/nf-winnls-setthreaduilanguage">SetThreadUILanguage function</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/build/creating-a-resource-only-dll">创建纯资源 DLL</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/tn057-localization-of-mfc-components">MFC 组件的本地化</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37824357/article/details/122001614">MFC基于对话框使用dll进行多语言切换</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2022/05/17/16282565/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-07-01 20:55:10
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/%E6%9C%AC%E5%9C%B0%E5%8C%96/" title="本地化">
+                        #本地化
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/MFC/" title="MFC">
+                        #MFC
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2022/05/19/16290668/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MFC-%E7%9A%84%E6%9C%AC%E5%9C%B0%E5%8C%96%E6%96%B9%E6%A1%88"><span class="toc-text">MFC 的本地化方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B9%E5%8F%98%E7%BA%BF%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%8E%AF%E5%A2%83"><span class="toc-text">改变线程语言环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8BUI%E8%AF%AD%E8%A8%80"><span class="toc-text">线程UI语言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XP%E4%B8%8B%E7%9A%84%E5%A4%9A%E8%AF%AD%E8%A8%80%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">XP下的多语言解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + XP%E4%B8%8BMFC%E7%A8%8B%E5%BA%8F%E6%9C%AC%E5%9C%B0%E5%8C%96%E7%A0%94%E7%A9%B6 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F05%2F18%2F16286455%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/05/18/16286455/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
