@@ -146,7 +146,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-07-19 23:50:28
+          2025-07-19 23:58:58
         </span>
         
               <span class="post-tags">
@@ -165,7 +165,7 @@
         <p><a href="/2025/06/15/202506151">上次</a>在 Ubuntu 16 系统上成功制作了生成 Win32 程序的交叉编译器，这次就可以用它来制作运行在 Windows 上但<code>target=x86_64-linux-gnu</code>的交叉工具链。<br>我的目的是能在 Windows 上编译出 Linux 下的程序。由于跨了三个平台（虽然build和target相同），所以称为加拿大编译（canadian）。</p>
 <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>与上次不同的是，这次的<code>target</code>值是<code>x86_64-linux-gnu</code>，所以需要准备 Linux 内核头文件和 glibc 库。<br>由于我期望的目标系统就是当前编译的宿主机，所以就以当前系统的软件版本为准即可：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># lsb_release -a</span></span><br><span class="line">No LSB modules are available.</span><br><span class="line">Distributor ID: Ubuntu</span><br><span class="line">Description:    Ubuntu 16.04.7 LTS</span><br><span class="line">Release:        16.04</span><br><span class="line">Codename:       xenial</span><br><span class="line"></span><br><span class="line"><span class="comment"># uname -a</span></span><br><span class="line">Linux vm-ubuntu16-amd64 4.15.0-142-generic <span class="comment">#146~16.04.1-Ubuntu SMP Tue Apr 13 09:27:15 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ldd --version</span></span><br><span class="line">ldd (Ubuntu GLIBC 2.23-0ubuntu11.3) 2.23</span><br><span class="line">Copyright (C) 2016 Free Software Foundation, Inc.</span><br><span class="line">This is free software; see the <span class="built_in">source</span> <span class="keyword">for</span> copying conditions.  There is NO</span><br><span class="line">warranty; not even <span class="keyword">for</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span><br><span class="line">Written by Roland McGrath and Ulrich Drepper.</span><br></pre></td></tr></table></figure>
-<p>Binutils 版本选择的是 2.44：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/binutils/">https://mirrors.ustc.edu.cn/gnu/binutils/</a><br>GCC 版本选择的是 15.1.0：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0/">https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0/</a><br>Linux内核坂本是 4.15：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/kernel.org/linux/kernel/v4.x/linux-4.15.tar.xz">https://mirrors.ustc.edu.cn/kernel.org/linux/kernel/v4.x/linux-4.15.tar.xz</a><br>glibc坂本是 2.23：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/glibc/glibc-2.23.tar.xz">https://mirrors.ustc.edu.cn/gnu/glibc/glibc-2.23.tar.xz</a></p>
+<p>Binutils 版本选择的是 2.44：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/binutils/">https://mirrors.ustc.edu.cn/gnu/binutils/</a><br>GCC 版本选择的是 15.1.0：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0/">https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0/</a><br>Linux内核版本是 4.15：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/kernel.org/linux/kernel/v4.x/linux-4.15.tar.xz">https://mirrors.ustc.edu.cn/kernel.org/linux/kernel/v4.x/linux-4.15.tar.xz</a><br>glibc版本是 2.23：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/glibc/glibc-2.23.tar.xz">https://mirrors.ustc.edu.cn/gnu/glibc/glibc-2.23.tar.xz</a></p>
 <p><br>安装必要的软件包</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt -y install gawk p7zip-full</span><br></pre></td></tr></table></figure>
 
@@ -223,7 +223,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-19 23:50:28
+              2025-07-19 23:58:58
             </span>
             
                   <span class="post-tags">
