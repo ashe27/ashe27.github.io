@@ -146,7 +146,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-07-20 11:31:32
+          2025-07-26 17:16:54
         </span>
         
               <span class="post-tags">
@@ -188,10 +188,10 @@
 <h2 id="安装-Linux-内核头文件"><a href="#安装-Linux-内核头文件" class="headerlink" title="安装 Linux 内核头文件"></a>安装 Linux 内核头文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf linux-4.15.tar.xz </span><br><span class="line"><span class="built_in">cd</span> linux-4.15/</span><br><span class="line">make ARCH=x86_64 headers_install INSTALL_HDR_PATH=<span class="variable">$SYSROOT</span></span><br></pre></td></tr></table></figure>
 <p>头文件会安装到<code>$SYSROOT/include</code>下。</p>
 <h2 id="编译-glibc"><a href="#编译-glibc" class="headerlink" title="编译 glibc"></a>编译 glibc</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf glibc-2.23.tar.xz </span><br><span class="line"><span class="built_in">cd</span> glibc-2.23/</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=<span class="variable">$SYSROOT</span> --with-headers=<span class="variable">$SYSROOT</span>/include --disable-multilib --disable-werror --build=<span class="variable">$BUILD</span> --host=<span class="variable">$TARGET</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-<p>这里值得一提的是<code>--host=$TARGET</code>，因为glibc没有<code>target</code>选项，glibc的<code>--host</code>等同于gcc的<code>--target</code>。</p>
-<p><br>这里在配置<code>--prefix</code>时有个坑，我一开始是这样编译安装的：</p>
+<p>这里值得一提的是<code>--host=$TARGET</code>，glibc 没有<code>target</code>选项，glibc 的<code>--host</code>等同于 gcc 的<code>--target</code>。</p>
+<p><br>这里在配置<code>--prefix</code>时有个坑，我最初是这样编译安装的：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s <span class="variable">$SYSROOT</span> <span class="variable">$SYSROOT</span>/usr</span><br><span class="line">../configure --prefix=/usr --with-headers=<span class="variable">$SYSROOT</span>/include --disable-multilib --disable-werror --build=<span class="variable">$BUILD</span> --host=<span class="variable">$TARGET</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install DESTDIR=<span class="variable">$SYSROOT</span></span><br></pre></td></tr></table></figure>
-<p>首先创建了<code>$SYSROOT/usr</code>这个目录的软链接，链接到<code>$SYSROOT</code>自身，这样在后面 GCC 编译时会从<code>$SYSROOT/usr/include</code>中搜索头文件（实际是$SYSROOT&#x2F;include）。<br>这样看上去最后安装的路径也应该是对的，可是最后执行 GCC 的<code>make install</code>时会提示<code>libpthread</code>的链接错误，感觉是和 glibc 的<code>--prefix</code>有关系，它会从<code>/usr/lib64</code>等地方去搜索库，而不是<code>$SYSROOT/lib64</code>这里搜索。</p>
+<p>首先创建了<code>$SYSROOT/usr</code>这个目录的软链接，链接到<code>$SYSROOT</code>自身，这样在后面 GCC 编译时会从<code>$SYSROOT/usr/include</code>中搜索头文件（实际是$SYSROOT&#x2F;include）。<br>这样看上去最后安装的路径也应该是对的，可是最后执行 GCC 的<code>make install</code>时会提示<code>libpthread</code>的链接错误，感觉是和 glibc 的<code>--prefix</code>有关系，它会从<code>/usr/lib64</code>等地方去搜索库，而不是<code>$SYSROOT/lib64</code>这里搜索，所以<code>-prefix</code>一定要是<code>$SYSROOT</code>。</p>
 <h2 id="编译-GCC"><a href="#编译-GCC" class="headerlink" title="编译 GCC"></a>编译 GCC</h2><p>关键点来了，前面我们将 glibc 安装到<code>$SYSROOT</code>下了，但是 GCC 在编译时会从<code>$SYSROOT/usr</code>下搜索头文件，所以我们要临时创建<code>usr</code>目录的软链接</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s <span class="variable">$SYSROOT</span> <span class="variable">$SYSROOT</span>/usr</span><br></pre></td></tr></table></figure>
 <p>这样当 GCC 访问<code>$SYSROOT/usr/include</code>时，实际访问的就是<code>$SYSROOT/include</code>目录。<br><br>开始编译 GCC</p>
@@ -227,7 +227,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-20 11:31:32
+              2025-07-26 17:16:54
             </span>
             
                   <span class="post-tags">
