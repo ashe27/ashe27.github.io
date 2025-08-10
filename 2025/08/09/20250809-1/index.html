@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      编译 Qt 5.7.1 for arm64 满血版 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">编译 Qt 5.7.1 for arm64 满血版</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-08-10 15:38:38
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Qt/" title="Qt">
+                    #Qt
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>硬件：<a target="_blank" rel="noopener" href="http://www.orangepi.cn/html/hardWare/computerAndMicrocontrollers/details/Orange-Pi-3B.html">Orange Pi 3B</a><br>系统版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># lsb_release -a</span></span><br><span class="line">No LSB modules are available.</span><br><span class="line">Distributor ID: Ubuntu</span><br><span class="line">Description:    Ubuntu 20.04.6 LTS</span><br><span class="line">Release:        20.04</span><br><span class="line">Codename:       focal</span><br></pre></td></tr></table></figure>
+<p>Qt 版本使用的 5.7.1：<a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/">https://download.qt.io/new_archive&#x2F;qt&#x2F;5.7&#x2F;5.7.1&#x2F;submodules&#x2F;</a><br>因为我用的是自己编译的 GCC 15，将 lib 库加入到优先搜索路径中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/local/lib64</span><br></pre></td></tr></table></figure>
+<p>尽可能多的安装 Qt 依赖的库，这样才能制作满血版的 Qt</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install <span class="string">&quot;^libxcb.*&quot;</span> libx11-dev libx11-xcb-dev libxext-dev libxi-dev libxfixes-dev libglu1-mesa-dev libfreetype6-dev libxrender-dev libfontconfig1-dev libxkbcommon-dev libxkbcommon-x11-dev libdbus-1-dev libasound2-dev libpulse-dev libudev-dev libwayland-dev libatspi2.0-dev libgl1-mesa-dev libegl1-mesa-dev libgles2-mesa-dev zlib1g-dev libssl-dev libpng-dev libjpeg-dev libgbm-dev libdrm-dev libmtdev-dev unixodbc-dev libinput-dev libicu-dev libproxy-dev libdouble-conversion-dev libharfbuzz-dev freetds-dev libcups2-dev libpq-dev</span><br></pre></td></tr></table></figure>
+
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>Qt 编译选项如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ../configure -prefix &quot;/opt/qt-5.7.1&quot; -confirm-license -opensource -opengl es2 -no-sql-mysql -nomake examples -nomake tests</span></span><br><span class="line"></span><br><span class="line">This is the Qt Open Source Edition.</span><br><span class="line"></span><br><span class="line">You are licensed to use this software under the terms of</span><br><span class="line">the GNU Lesser General Public License (LGPL) versions 3.</span><br><span class="line">You are also licensed to use this software under the terms of</span><br><span class="line">the GNU General Public License (GPL) versions 2.</span><br><span class="line"></span><br><span class="line">You have already accepted the terms of the Open Source license.</span><br><span class="line"></span><br><span class="line">Preparing build tree...</span><br><span class="line">Creating qmake...</span><br><span class="line">.Done.</span><br><span class="line">Running configuration tests...</span><br><span class="line">checking <span class="keyword">for</span> C++14...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> C++1z...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> default C++ standard edition...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> 64-bit std::atomic...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> std::atomic <span class="keyword">for</span> <span class="keyword">function</span> pointers...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> sse2...  no.</span><br><span class="line">checking <span class="keyword">for</span> ipc_sysv...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> zlib...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> mtdev...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> libjpeg...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> libpng...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> dlopen...  no.</span><br><span class="line">checking <span class="keyword">for</span> libdl...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> DB2...  no.</span><br><span class="line">checking <span class="keyword">for</span> InterBase...  no.</span><br><span class="line">checking <span class="keyword">for</span> OCI...  no.</span><br><span class="line">checking <span class="keyword">for</span> ODBC...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> PostgreSQL...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> SQLite2...  no.</span><br><span class="line">checking <span class="keyword">for</span> TDS...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> Cups...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> POSIX iconv...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> D-Bus...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> libproxy...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> Glib...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> ICU...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> PulseAudio...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> OpenGL ES 2.0...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> OpenGL ES 3.0...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> OpenGL ES 3.1...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> FontConfig...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> libudev...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> evdev...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> tslib...  no.</span><br><span class="line">checking <span class="keyword">for</span> xkbcommon...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> libinput...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> XLib...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> Xrender...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> XInput2...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> xcb...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> xcb-xkb...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> xcb-syslibs...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> xcb-render...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> xcb-glx...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> xcb-xlib...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> GBM...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> LinuxFB...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> KMS...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> Mir client...  no.</span><br><span class="line">checking <span class="keyword">for</span> EGL...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> EGL-X11...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> eglfs-brcm...  no.</span><br><span class="line">checking <span class="keyword">for</span> eglfs-egldevice...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> eglfs-mali...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> eglfs-viv...  no.</span><br><span class="line">checking <span class="keyword">for</span> DoubleConversion...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> HarfBuzz...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> STL...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> POSIX clock_gettime()...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> POSIX Monotonic Clock...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> posix_fallocate...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> mremap...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> getaddrinfo...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> inotify...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> eventfd...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> IPv6 interface name...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> getifaddrs...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> cloexec...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> ppoll...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> OpenSSL...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> PCRE...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> OpenVG...  no.</span><br><span class="line">checking <span class="keyword">for</span> OpenVG...  no.</span><br><span class="line">checking <span class="keyword">for</span> OpenVG (lc includes)...  no.</span><br><span class="line">checking <span class="keyword">for</span> OpenVG (lc includes)...  no.</span><br><span class="line">checking <span class="keyword">for</span> alsa...  <span class="built_in">yes</span>.</span><br><span class="line">checking <span class="keyword">for</span> GStreamer 1.0...  <span class="built_in">yes</span>.</span><br><span class="line">Done running configuration tests.</span><br><span class="line"></span><br><span class="line">   Configure summary</span><br><span class="line"></span><br><span class="line">Build <span class="built_in">type</span>:    linux-g++ (arm64, CPU features: cx16 neon)</span><br><span class="line">Platform notes:</span><br><span class="line"></span><br><span class="line">            - Also available <span class="keyword">for</span> Linux: linux-clang linux-kcc linux-icc linux-cxx</span><br><span class="line">        </span><br><span class="line">Build options:</span><br><span class="line">  Configuration .......... accessibility accessibility-atspi-bridge alsa audio-backend c++11 c++14 c++1z clock-gettime clock-monotonic compile_examples concurrent cups dbus dbus-linked egl eglfs eglfs_egldevice eglfs_gbm eglfs_mali egl_x11 enable_new_dtags evdev eventfd fontconfig full-config gbm getaddrinfo getifaddrs glib gstreamer-1.0 gtk3 iconv icu inotify ipv6ifname kms large-config largefile libinput libproxy libudev linuxfb medium-config minimal-config mremap mtdev neon opengl opengles2 openssl png poll_ppoll posix_fallocate precompile_header pulseaudio qpa qpa reduce_exports release rpath shared small-config system-doubleconversion system-freetype system-harfbuzz system-jpeg system-png system-zlib threadsafe-cloexec use_gold_linker xcb xcb-glx xcb-plugin xcb-render xcb-sm xcb-xlib xinput2 xkbcommon-evdev xlib xrender </span><br><span class="line">  Build parts ............ libs tools</span><br><span class="line">  Mode ................... release</span><br><span class="line">  Using sanitizer(s)...... none</span><br><span class="line">  Using C++ standard ..... c++1z</span><br><span class="line">  Using gold linker....... <span class="built_in">yes</span></span><br><span class="line">  Using new DTAGS ........ <span class="built_in">yes</span></span><br><span class="line">  Using PCH .............. <span class="built_in">yes</span></span><br><span class="line">  Using LTCG ............. no</span><br><span class="line">  Target compiler supports:</span><br><span class="line"></span><br><span class="line">Qt modules and options:</span><br><span class="line">  Qt D-Bus ............... <span class="built_in">yes</span> (linked to dbus-1)</span><br><span class="line">  Qt Concurrent .......... <span class="built_in">yes</span></span><br><span class="line">  Qt GUI ................. <span class="built_in">yes</span></span><br><span class="line">  Qt Widgets ............. <span class="built_in">yes</span></span><br><span class="line">  Large File ............. <span class="built_in">yes</span></span><br><span class="line">  QML debugging .......... <span class="built_in">yes</span></span><br><span class="line">  Use system proxies ..... no</span><br><span class="line"></span><br><span class="line">Support enabled <span class="keyword">for</span>:</span><br><span class="line">  Accessibility .......... <span class="built_in">yes</span></span><br><span class="line">  ALSA ................... <span class="built_in">yes</span></span><br><span class="line">  CUPS ................... <span class="built_in">yes</span></span><br><span class="line">  DoubleConversion........ <span class="built_in">yes</span> (system library)</span><br><span class="line">  Evdev .................. <span class="built_in">yes</span></span><br><span class="line">  FontConfig ............. <span class="built_in">yes</span></span><br><span class="line">  FreeType ............... <span class="built_in">yes</span> (system library)</span><br><span class="line">  Glib ................... <span class="built_in">yes</span></span><br><span class="line">  GStreamer .............. <span class="built_in">yes</span> (1.0)</span><br><span class="line">  GTK platformtheme ...... <span class="built_in">yes</span></span><br><span class="line">  HarfBuzz ............... <span class="built_in">yes</span> (system library)</span><br><span class="line">  Iconv .................. <span class="built_in">yes</span></span><br><span class="line">  ICU .................... <span class="built_in">yes</span></span><br><span class="line">  Image formats: </span><br><span class="line">    GIF .................. <span class="built_in">yes</span> (plugin, using bundled copy)</span><br><span class="line">    JPEG ................. <span class="built_in">yes</span> (plugin, using system library)</span><br><span class="line">    PNG .................. <span class="built_in">yes</span> (<span class="keyword">in</span> QtGui, using system library)</span><br><span class="line">  libinput................ <span class="built_in">yes</span></span><br><span class="line">  Logging backends: </span><br><span class="line">    journald ............... no</span><br><span class="line">    syslog   ............... no</span><br><span class="line">  mtdev .................. <span class="built_in">yes</span> (system library)</span><br><span class="line">  Networking: </span><br><span class="line">    getaddrinfo .......... <span class="built_in">yes</span></span><br><span class="line">    getifaddrs ........... <span class="built_in">yes</span></span><br><span class="line">    IPv6 ifname .......... <span class="built_in">yes</span></span><br><span class="line">    libproxy.............. <span class="built_in">yes</span></span><br><span class="line">    OpenSSL .............. <span class="built_in">yes</span> (loading libraries at run-time)</span><br><span class="line">  OpenGL / OpenVG: </span><br><span class="line">    EGL .................. <span class="built_in">yes</span></span><br><span class="line">    OpenGL ............... <span class="built_in">yes</span> (OpenGL ES 2.0+)</span><br><span class="line">    OpenVG ............... no</span><br><span class="line">  PCRE ................... system</span><br><span class="line">  pkg-config ............. <span class="built_in">yes</span> </span><br><span class="line">  PulseAudio ............. <span class="built_in">yes</span></span><br><span class="line">  QPA backends: </span><br><span class="line">    DirectFB ............. no</span><br><span class="line">    EGLFS ................ <span class="built_in">yes</span></span><br><span class="line">      EGLFS i.MX6 ........ no</span><br><span class="line">      EGLFS i.MX6 Wayland. no</span><br><span class="line">      EGLFS EGLDevice .... <span class="built_in">yes</span></span><br><span class="line">      EGLFS GBM .......... <span class="built_in">yes</span></span><br><span class="line">      EGLFS Mali ......... <span class="built_in">yes</span></span><br><span class="line">      EGLFS Raspberry Pi . no</span><br><span class="line">      EGLFS X11 .......... <span class="built_in">yes</span></span><br><span class="line">    LinuxFB .............. <span class="built_in">yes</span></span><br><span class="line">    Mir client............ no</span><br><span class="line">    XCB .................. <span class="built_in">yes</span> (system library)</span><br><span class="line">      EGL on X ........... <span class="built_in">yes</span></span><br><span class="line">      GLX ................ <span class="built_in">yes</span></span><br><span class="line">      MIT-SHM ............ <span class="built_in">yes</span></span><br><span class="line">      Xcb-Xlib ........... <span class="built_in">yes</span></span><br><span class="line">      Xcursor ............ <span class="built_in">yes</span> (loaded at runtime)</span><br><span class="line">      Xfixes ............. <span class="built_in">yes</span> (loaded at runtime)</span><br><span class="line">      Xi2 ................ <span class="built_in">yes</span></span><br><span class="line">      Xrandr ............. <span class="built_in">yes</span> (loaded at runtime)</span><br><span class="line">      Xrender ............ <span class="built_in">yes</span></span><br><span class="line">      XKB ................ <span class="built_in">yes</span></span><br><span class="line">      XShape ............. <span class="built_in">yes</span></span><br><span class="line">      XSync .............. <span class="built_in">yes</span></span><br><span class="line">  Session management ..... <span class="built_in">yes</span></span><br><span class="line">  SQL drivers: </span><br><span class="line">    DB2 .................. no</span><br><span class="line">    InterBase ............ no</span><br><span class="line">    MySQL ................ no</span><br><span class="line">    OCI .................. no</span><br><span class="line">    ODBC ................. <span class="built_in">yes</span> (plugin)</span><br><span class="line">    PostgreSQL ........... <span class="built_in">yes</span> (plugin)</span><br><span class="line">    SQLite 2 ............. no</span><br><span class="line">    SQLite ............... <span class="built_in">yes</span> (plugin, using bundled copy)</span><br><span class="line">    TDS .................. <span class="built_in">yes</span> (plugin)</span><br><span class="line">  tslib .................. no</span><br><span class="line">  udev ................... <span class="built_in">yes</span></span><br><span class="line">  xkbcommon-x11........... <span class="built_in">yes</span> (system library)</span><br><span class="line">  xkbcommon-evdev......... <span class="built_in">yes</span></span><br><span class="line">  zlib ................... <span class="built_in">yes</span> (system library)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Qt is now configured <span class="keyword">for</span> building. Just run <span class="string">&#x27;make&#x27;</span>.</span><br><span class="line">Once everything is built, you must run <span class="string">&#x27;make install&#x27;</span>.</span><br><span class="line">Qt will be installed into /opt/qt-5.7.1</span><br><span class="line"></span><br><span class="line">Prior to reconfiguration, make sure you remove any leftovers from</span><br><span class="line">the previous build.</span><br></pre></td></tr></table></figure>
+<p>开始吧</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make -j4</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<h3 id="第1个错误"><a href="#第1个错误" class="headerlink" title="第1个错误"></a>第1个错误</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/opt/qtbase-opensource-src-5.7.1/src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_egldevice/qeglfskmsegldevice.cpp:74:82: error: invalid conversion from ‘EGLDeviceEXT’ &#123;aka ‘void*’&#125; to ‘EGLNativeDisplayType’ &#123;aka ‘Display*’&#125; [-fpermissive]</span><br><span class="line">   74 |     return static_cast&lt;QEglFSKmsEglDeviceIntegration *&gt;(m_integration)-&gt;eglDevice();</span><br><span class="line">      |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~</span><br><span class="line">      |                                                                                  |</span><br><span class="line">      |                                                                                  EGLDeviceEXT &#123;aka void*&#125;</span><br></pre></td></tr></table></figure>
+<p>编辑文件<code>src/plugins/platforms/eglfs/deviceintegration/eglfs_kms_egldevice/qeglfskmsegldevice.cpp</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function">EGLNativeDisplayType <span class="title">QEglFSKmsEglDevice::nativeDisplay</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"> </span>&#123;</span><br><span class="line">-    <span class="keyword">return</span> <span class="built_in">static_cast</span>&lt;QEglFSKmsEglDeviceIntegration *&gt;(m_integration)-&gt;<span class="built_in">eglDevice</span>();</span><br><span class="line">+    <span class="keyword">return</span> <span class="built_in">reinterpret_cast</span>&lt;EGLNativeDisplayType&gt;(<span class="built_in">static_cast</span>&lt;QEglFSKmsEglDeviceIntegration *&gt;(m_integration)-&gt;<span class="built_in">eglDevice</span>());</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>解决方案来自 <a target="_blank" rel="noopener" href="https://code.qt.io/cgit/qt/qtbase.git/commit/?id=f577a01f5e8d9678d268917ca727a6e9a3e819a6">https://code.qt.io/cgit/qt/qtbase.git/commit/?id=f577a01f5e8d9678d268917ca727a6e9a3e819a6</a></p>
+<h3 id="第2个错误"><a href="#第2个错误" class="headerlink" title="第2个错误"></a>第2个错误</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/opt/qtbase-opensource-src-5.7.1/include/QtCore/../../src/corelib/io/qurl.h:137:9: error: expected identifier before numeric constant</span><br><span class="line">  137 |         None = 0x0,</span><br></pre></td></tr></table></figure>
+<p>代码中的<code>None</code>这个名字与系统头文件（通常是 X11 图形界面的 X.h）中的一个宏定义冲突了。<br>编辑<code>src/corelib/io/qurl.h</code>文件</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先取消 None 宏</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> None</span></span><br><span class="line">  <span class="meta">#<span class="keyword">undef</span> None</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Q_CORE_EXPORT</span> QUrl</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">enum</span> <span class="title class_">ParsingMode</span> &#123;</span><br><span class="line">        TolerantMode,</span><br><span class="line">        StrictMode,</span><br><span class="line">        DecodedMode</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// encoding / toString values</span></span><br><span class="line">    <span class="keyword">enum</span> <span class="title class_">UrlFormattingOption</span> &#123;</span><br><span class="line">        None = <span class="number">0x0</span>,</span><br><span class="line">        RemoveScheme = <span class="number">0x1</span>,</span><br><span class="line">        RemovePassword = <span class="number">0x2</span>,</span><br><span class="line">        RemoveUserInfo = RemovePassword | <span class="number">0x4</span>,</span><br><span class="line">        RemovePort = <span class="number">0x8</span>,</span><br><span class="line">        RemoveAuthority = RemoveUserInfo | RemovePort | <span class="number">0x10</span>,</span><br><span class="line">        RemovePath = <span class="number">0x20</span>,</span><br><span class="line">        RemoveQuery = <span class="number">0x40</span>,</span><br><span class="line">        RemoveFragment = <span class="number">0x80</span>,</span><br><span class="line">        <span class="comment">// 0x100 was a private code in Qt 4, keep unused for a while</span></span><br><span class="line">        PreferLocalFile = <span class="number">0x200</span>,</span><br><span class="line">        StripTrailingSlash = <span class="number">0x400</span>,</span><br><span class="line">        RemoveFilename = <span class="number">0x800</span>,</span><br><span class="line">        NormalizePathSegments = <span class="number">0x1000</span></span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="善后工作"><a href="#善后工作" class="headerlink" title="善后工作"></a>善后工作</h2><h3 id="还原-qurl-h-文件"><a href="#还原-qurl-h-文件" class="headerlink" title="还原 qurl.h 文件"></a>还原 qurl.h 文件</h3><p>如果你碰到了前面我碰到的<code>None</code>宏冲突的错误，那么应该在编译好之后移除添加的”补丁”代码，避免污染源文件。<br>将<code>include/QtCore/qurl.h</code>文件还原。</p>
+<h3 id="修改-rpath"><a href="#修改-rpath" class="headerlink" title="修改 rpath"></a>修改 rpath</h3><p>因为我用的自编译的 GCC，所以最好将其 lib 路径设置为优先搜索</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/qt-5.7.1/bin</span><br><span class="line">sudo patchelf --set-rpath <span class="string">&#x27;/usr/local/lib64&#x27;</span> qmake</span><br><span class="line">sudo patchelf --set-rpath <span class="string">&#x27;/usr/local/lib64&#x27;</span> moc</span><br><span class="line">sudo patchelf --set-rpath <span class="string">&#x27;/usr/local/lib64:$ORIGIN/../lib&#x27;</span> uic</span><br><span class="line">sudo patchelf --set-rpath <span class="string">&#x27;/usr/local/lib64:$ORIGIN/../lib&#x27;</span> qlalr</span><br></pre></td></tr></table></figure>
+
+<h2 id="编译其他模块"><a href="#编译其他模块" class="headerlink" title="编译其他模块"></a>编译其他模块</h2><p>以<code>qtserialport</code>模块为例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/opt/qt-5.7.1/bin/qmake qtserialport.pro</span><br><span class="line">make -j4</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<h2 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar cJf qt5.7.1-gcc15.1.0-opengl_es2-aarch64-linux-gnu.tar.xz /opt/qt-5.7.1/</span><br></pre></td></tr></table></figure>
+<p>这样就可以拷贝到其他机器上使用了。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/08/08/20250808-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-08-10 15:38:38
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Qt/" title="Qt">
+                        #Qt
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-text">编译</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC1%E4%B8%AA%E9%94%99%E8%AF%AF"><span class="toc-text">第1个错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC2%E4%B8%AA%E9%94%99%E8%AF%AF"><span class="toc-text">第2个错误</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%96%84%E5%90%8E%E5%B7%A5%E4%BD%9C"><span class="toc-text">善后工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%98%E5%8E%9F-qurl-h-%E6%96%87%E4%BB%B6"><span class="toc-text">还原 qurl.h 文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-rpath"><span class="toc-text">修改 rpath</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%85%B6%E4%BB%96%E6%A8%A1%E5%9D%97"><span class="toc-text">编译其他模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%8C%85"><span class="toc-text">打包</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%BC%96%E8%AF%91%20Qt%205.7.1%20for%20arm64%20%E6%BB%A1%E8%A1%80%E7%89%88 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F08%2F09%2F20250809-1%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/08/09/20250809-1/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
