@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <meta name="author" content="John Doe" />
+  <meta name="description" content="" />
+  
+  
+  <title>
+    
+      学习破解 Navicat Premium 17.3.4 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+  
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 7.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">学习破解 Navicat Premium 17.3.4</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-10-03 16:18:00
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/%E9%80%86%E5%90%91/" title="逆向">
+                    #逆向
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>摸着石头过河，参照以下文章自己手动实践一次：<br><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-688820-1-1.html">XX XX v12.0.23.0 破解教程x86,x64通用，手动破解，不要补丁，无病毒</a><br><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-2052969-1-1.html">Navicat 17 破解教程</a><br><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-2056733-1-1.html">Navicat for Sqlite 17.3.2 英文版 一字节替换RSA公钥</a><br><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-2063431-1-1.html">记破解Navicat Premium 17.3.4过程</a></p>
+<p><br>软件下载地址：<a target="_blank" rel="noopener" href="https://www.navicat.com.cn/download/navicat-premium">https://www.navicat.com.cn/download/navicat-premium</a></p>
+<h2 id="找到公钥"><a href="#找到公钥" class="headerlink" title="找到公钥"></a>找到公钥</h2><p>根据前人的经验，用 x64dbg 在 libcc.dll 模块中调试搜索汇编特征在“搜索匹配特征”窗口中，使用十六进制搜索模式查找字节序列<code>41 FF D0 90 48 8B D0 48 8B CF</code>，该字节序列对应以下汇编指令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">call r8</span><br><span class="line">nop</span><br><span class="line">mov rdx,rax</span><br><span class="line">mov rcx,rdi</span><br></pre></td></tr></table></figure>
+<p>到这里</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">00007FF8C33EE637 | 41:FFD0                  | call r8      // 拼接公钥字符串</span><br><span class="line">00007FF8C33EE63A | 90                       | nop</span><br><span class="line">00007FF8C33EE63B | 48:8BD0                  | mov rdx,rax</span><br><span class="line">00007FF8C33EE63E | 48:8BCF                  | mov rcx,rdi</span><br><span class="line">00007FF8C33EE641 | FFD3                     | call rbx</span><br></pre></td></tr></table></figure>
+<p>在<code>libcc+214E63A</code>处设置断点，也就是<code>call r8</code>之后的一行，此时在<code>rax</code>中就是公钥。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw1dqF3SkCaAAmMzs889IqdW9M2dIdh3jG9yPcmLnmJiGpBF4E9VHSMGe8oPAy2kJDmdNt4BcEygvssEfginva5t5jm352UAoDosUJkTXGQhpAWMF4fBmBpO3EedG62rOsqMBgmSdAyxCSPBRJIOFR0QgZFbRnU0frj34fiVmgYiLuZSAmIbs8ZxiHPdp1oD4tUpvsFci4QJtYNjNnGU2WPH6rvChGl1IRKrxMtqLielsvajUjyrgOC6NmymYMvZNER3htFEtL1eQbCyTfDmtYyQ1Wt4Ot12lxf0wVIR5mcGN7XCXJRHOFHSf1gzXWabRSvmt1nrl7sW6cjxljuuQawIDAQAB</span><br></pre></td></tr></table></figure>
+<p>最开始我直接从 x64dbg 中拷贝出公钥，新建了一个不带换行的公钥文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN PUBLIC KEY-----</span><br><span class="line">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw1dqF3SkCaAAmMzs889IqdW9M2dIdh3jG9yPcmLnmJiGpBF4E9VHSMGe8oPAy2kJDmdNt4BcEygvssEfginva5t5jm352UAoDosUJkTXGQhpAWMF4fBmBpO3EedG62rOsqMBgmSdAyxCSPBRJIOFR0QgZFbRnU0frj34fiVmgYiLuZSAmIbs8ZxiHPdp1oD4tUpvsFci4QJtYNjNnGU2WPH6rvChGl1IRKrxMtqLielsvajUjyrgOC6NmymYMvZNER3htFEtL1eQbCyTfDmtYyQ1Wt4Ot12lxf0wVIR5mcGN7XCXJRHOFHSf1gzXWabRSvmt1nrl7sW6cjxljuuQawIDAQAB</span><br><span class="line">-----END PUBLIC KEY-----</span><br></pre></td></tr></table></figure>
+<p>这和我们常见的密钥文件不同，它没有换行，于是有些在线工具不兼容，比如 <a target="_blank" rel="noopener" href="http://tool.chacuo.net/cryptrsakeyparse">http://tool.chacuo.net/cryptrsakeyparse</a><br>但是有的在线兼容性更强，比如 <a target="_blank" rel="noopener" href="https://www.oren.net.cn/rsa/info.html">https://www.oren.net.cn/rsa/info.html</a><br>不过无论如何，这种一行 Base64 编码的证书是不标准的。<br>AI对此的回答：</p>
+<blockquote>
+<p>PEM 格式最初是在 RFC 1421 中定义的，它的全称是“隐私增强邮件”（Privacy-Enhanced Mail）。这个标准被设计用来在电子邮件中安全地传输加密数据。<br>标准规定：该标准明确规定，Base64 编码后的数据文本，每行长度不应超过 64 个字符。<br>行业惯例：因此，所有标准的加密工具（如 OpenSSL）在生成 PEM 格式的密钥或证书时，都会严格遵守这个规定，自动在每 64 个字符后添加一个换行符 (\n)。</p>
+</blockquote>
+<p>所以标准的公钥文件内容应该是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN PUBLIC KEY-----</span><br><span class="line">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw1dqF3SkCaAAmMzs889I</span><br><span class="line">qdW9M2dIdh3jG9yPcmLnmJiGpBF4E9VHSMGe8oPAy2kJDmdNt4BcEygvssEfginv</span><br><span class="line">a5t5jm352UAoDosUJkTXGQhpAWMF4fBmBpO3EedG62rOsqMBgmSdAyxCSPBRJIOF</span><br><span class="line">R0QgZFbRnU0frj34fiVmgYiLuZSAmIbs8ZxiHPdp1oD4tUpvsFci4QJtYNjNnGU2</span><br><span class="line">WPH6rvChGl1IRKrxMtqLielsvajUjyrgOC6NmymYMvZNER3htFEtL1eQbCyTfDmt</span><br><span class="line">YyQ1Wt4Ot12lxf0wVIR5mcGN7XCXJRHOFHSf1gzXWabRSvmt1nrl7sW6cjxljuuQ</span><br><span class="line">awIDAQAB</span><br><span class="line">-----END PUBLIC KEY-----</span><br></pre></td></tr></table></figure>
+<p>通过前面的在线工具分解出模数（N）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C3576A1774A409A00098CCECF3CF48A9D5BD336748761DE31BDC8F7262E7989886A4117813D54748C19EF283C0CB69090E674DB7805C13282FB2C11F8229EF6B9B798E6DF9D940280E8B142644D7190869016305E1F0660693B711E746EB6ACEB2A30182649D032C4248F0512483854744206456D19D4D1FAE3DF87E256681888BB994809886ECF19C621CF769D680F8B54A6FB05722E1026D60D8CD9C653658F1FAAEF0A11A5D4844AAF132DA8B89E96CBDA8D48F2AE0382E8D9B299832F64D111DE1B4512D2F57906C2C937C39AD6324355ADE0EB75DA5C5FD3054847999C18DED70972511CE14749FD60CD759A6D14AF9ADD67AE5EEC5BA723C658EEB906B</span><br></pre></td></tr></table></figure>
+<p>指数（e）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">65537 (0x10001)</span><br></pre></td></tr></table></figure>
+
+<h2 id="构造新的私钥、公钥"><a href="#构造新的私钥、公钥" class="headerlink" title="构造新的私钥、公钥"></a>构造新的私钥、公钥</h2><p>下载  RSA 一字节替换工具：<br><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-2008824-1-1.html">https://www.52pojie.cn/thread-2008824-1-1.html</a><br><a target="_blank" rel="noopener" href="https://www.chinapyg.com/thread-158380-1-1.html">https://www.chinapyg.com/thread-158380-1-1.html</a></p>
+<p><br>计算得到两种结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">替换位置 0 ：C3 --&gt; BD</span><br><span class="line">new N: BD576A1774A409A00098CCECF3CF48A9D5BD336748761DE31BDC8F7262E7989886A4117813D54748C19EF283C0CB69090E674DB7805C13282FB2C11F8229EF6B9B798E6DF9D940280E8B142644D7190869016305E1F0660693B711E746EB6ACEB2A30182649D032C4248F0512483854744206456D19D4D1FAE3DF87E256681888BB994809886ECF19C621CF769D680F8B54A6FB05722E1026D60D8CD9C653658F1FAAEF0A11A5D4844AAF132DA8B89E96CBDA8D48F2AE0382E8D9B299832F64D111DE1B4512D2F57906C2C937C39AD6324355ADE0EB75DA5C5FD3054847999C18DED70972511CE14749FD60CD759A6D14AF9ADD67AE5EEC5BA723C658EEB906B</span><br><span class="line">new P: 11</span><br><span class="line">new Q: B234279D9AF4BDC3C45393B1D668BCDC1475D606DAC9858A749359D511CAE9F8F7310161F48C7F53890E116CF1B062DB58D9B28E96ED3F34E1992E3BC5CD1D9274362BB2CD08B4DA680A6D5131BB62DABD2E7B50D4A605ABD651F2BB8E0ABEE0A820F25C9AEE211A98BD1E6A7CB804F7C7A6041579FD75C376D0E9E023334CBCBFBDB8F1807EFD1FA23E3961548DA68FB9AF782D7F2FE2D51BA671B27513F6EA4D282C2DC4CD84F8B9195B7B280ADC26FCEEBD044A82B4E99539FB727120E7D0101C1FB8C4DF3B9DB51A844E93091BA89A8C91C1EFBBA36ED875D3225E9090B62B39D36113D485B8E63C14C0CAAEBB1F559FB2ABBEF6865FBE89A24177744BB</span><br><span class="line">new D: 119EB68C0ED6442D272C5C5E2925120770BE75FB1786F57D4B2986A85AAA05986858A01A5F63C4F32D8A068F0F16B1AF9E8967EE515E03F1E69C8EC5BA391DC36D5A2DD7F00DFC53DC15ABD96B616BD4D4FFD3919A750FFA7DA67CA9AED1C12DD571EC84DB8CD019212111F0D5841C79A373F6D368CC76E86CC71B58DE22246445512D0833FC5A6AD64FF0BC7EEFC2985373D61E298542986FB3756A7FC90991013007AE3ED7535E846ECD6CCFF8C2EBD7F68319F98412FF4592061ABAB4D636EC60DB821975391FCED8605CA48D31FEE9C91C6060A3DCF508D21D9E385B72F390329783F1C201B6D68CFA4055CA11167810E249B90807215065AB756DAA421</span><br><span class="line">校验结果：成功！</span><br><span class="line"></span><br><span class="line">替换位置 0 ：C3 --&gt; CC</span><br><span class="line">new N: CC576A1774A409A00098CCECF3CF48A9D5BD336748761DE31BDC8F7262E7989886A4117813D54748C19EF283C0CB69090E674DB7805C13282FB2C11F8229EF6B9B798E6DF9D940280E8B142644D7190869016305E1F0660693B711E746EB6ACEB2A30182649D032C4248F0512483854744206456D19D4D1FAE3DF87E256681888BB994809886ECF19C621CF769D680F8B54A6FB05722E1026D60D8CD9C653658F1FAAEF0A11A5D4844AAF132DA8B89E96CBDA8D48F2AE0382E8D9B299832F64D111DE1B4512D2F57906C2C937C39AD6324355ADE0EB75DA5C5FD3054847999C18DED70972511CE14749FD60CD759A6D14AF9ADD67AE5EEC5BA723C658EEB906B</span><br><span class="line">new P: 35</span><br><span class="line">new Q: 3DB0200714B8C41CFB5999A34E6EE0CDD642C710B070F0DF208FDE058CF3CD767F96F6C879E9714B18A3E89BB2F4F43CB23C2AC84D643FBED944744379686EEB5A6851A39D8A09B52633A57AA5B0078E9D48DF19ED43BE3249930A3C28BAFE6EB3835291A0C9F74C2754CFCB367EA5D1E443BDAFF1FF2F6EFF7824600B4A6ABA20854EA46802173A72D52A8E5040C18036BAB29F7FBD3F18E23A37CA258DA624830339A46A98DD5E4508222C554BEFABE6DD7B6BA3F99F7664FF46FE10F73BDD4D9EC1B8D9B6B284B2D8341933FE175CB8D1509051B9C553DB2A9F7EF2DC41BCD8BB9ABE88C69527FC90DB2F59298E22339D7CEEA2AFAD8424F703BE0E2A21F</span><br><span class="line">new D: 6B6659CC9A3A394ED019A650D97C57AE674C29F2978E7AFFAE5C6C4B33A540E1FFAFA10756A1A55AFE9258A7C381903CA07FFA6873BD86F24AA950D62CE932BC55D1EBD935AE1FCAA0B128790941195725E5BA7014536E2F7543287DA6D831A420AC11B473C14DE9EB4C50DED788D64040EFE3B0115E9D81DE0C9920126844BABB65FC8E667AC560408F7B20FCFE51265DA2DCDCAEF49887454FE0D3F45FD2941CF91F816F09A7D7B9CE385901444D09F7CF42531CD0BCDDCF67577D7DA2443ABF2A18D33151512B9188B3E3F14E7FF431DE532A80EF336C14D6F78B795F1AA0A4A2B3FEE878FD34FA186553E123654F8C97B3EC7197F53C6D7316B3ED4B5361</span><br><span class="line">校验结果：成功！</span><br><span class="line"></span><br><span class="line">计算成功总数：2 </span><br><span class="line">总耗时：0 秒 141 毫秒</span><br><span class="line">线程数: 20</span><br><span class="line">素数集：2~251 区间内的素数</span><br><span class="line">素数个数：54</span><br></pre></td></tr></table></figure>
+<p>计算出新的参数后就可以构造出公钥和私钥文件了<br>创建一个 python 脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> cryptography.hazmat.primitives.asymmetric <span class="keyword">import</span> rsa</span><br><span class="line"><span class="keyword">from</span> cryptography.hazmat.primitives <span class="keyword">import</span> serialization</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># --- 输出文件名设置 ---</span></span><br><span class="line">private_key_filename = <span class="string">&quot;private_key.pem&quot;</span></span><br><span class="line">public_key_filename = <span class="string">&quot;public_key.pem&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># --- RSA 参数 ---</span></span><br><span class="line">n = <span class="built_in">int</span>(<span class="string">&quot;BD576A1774A409A00098CCECF3CF48A9D5BD336748761DE31BDC8F7262E7989886A4117813D54748C19EF283C0CB69090E674DB7805C13282FB2C11F8229EF6B9B798E6DF9D940280E8B142644D7190869016305E1F0660693B711E746EB6ACEB2A30182649D032C4248F0512483854744206456D19D4D1FAE3DF87E256681888BB994809886ECF19C621CF769D680F8B54A6FB05722E1026D60D8CD9C653658F1FAAEF0A11A5D4844AAF132DA8B89E96CBDA8D48F2AE0382E8D9B299832F64D111DE1B4512D2F57906C2C937C39AD6324355ADE0EB75DA5C5FD3054847999C18DED70972511CE14749FD60CD759A6D14AF9ADD67AE5EEC5BA723C658EEB906B&quot;</span>, <span class="number">16</span>)</span><br><span class="line">e = <span class="built_in">int</span>(<span class="string">&quot;10001&quot;</span>, <span class="number">16</span>) <span class="comment"># e = 65537</span></span><br><span class="line">d = <span class="built_in">int</span>(<span class="string">&quot;119EB68C0ED6442D272C5C5E2925120770BE75FB1786F57D4B2986A85AAA05986858A01A5F63C4F32D8A068F0F16B1AF9E8967EE515E03F1E69C8EC5BA391DC36D5A2DD7F00DFC53DC15ABD96B616BD4D4FFD3919A750FFA7DA67CA9AED1C12DD571EC84DB8CD019212111F0D5841C79A373F6D368CC76E86CC71B58DE22246445512D0833FC5A6AD64FF0BC7EEFC2985373D61E298542986FB3756A7FC90991013007AE3ED7535E846ECD6CCFF8C2EBD7F68319F98412FF4592061ABAB4D636EC60DB821975391FCED8605CA48D31FEE9C91C6060A3DCF508D21D9E385B72F390329783F1C201B6D68CFA4055CA11167810E249B90807215065AB756DAA421&quot;</span>, <span class="number">16</span>)</span><br><span class="line">p = <span class="built_in">int</span>(<span class="string">&quot;11&quot;</span>, <span class="number">16</span>)</span><br><span class="line">q = <span class="built_in">int</span>(<span class="string">&quot;B234279D9AF4BDC3C45393B1D668BCDC1475D606DAC9858A749359D511CAE9F8F7310161F48C7F53890E116CF1B062DB58D9B28E96ED3F34E1992E3BC5CD1D9274362BB2CD08B4DA680A6D5131BB62DABD2E7B50D4A605ABD651F2BB8E0ABEE0A820F25C9AEE211A98BD1E6A7CB804F7C7A6041579FD75C376D0E9E023334CBCBFBDB8F1807EFD1FA23E3961548DA68FB9AF782D7F2FE2D51BA671B27513F6EA4D282C2DC4CD84F8B9195B7B280ADC26FCEEBD044A82B4E99539FB727120E7D0101C1FB8C4DF3B9DB51A844E93091BA89A8C91C1EFBBA36ED875D3225E9090B62B39D36113D485B8E63C14C0CAAEBB1F559FB2ABBEF6865FBE89A24177744BB&quot;</span>, <span class="number">16</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证RSA参数</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;正在验证 RSA 参数...&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> p * q != n:</span><br><span class="line">    <span class="keyword">raise</span> ValueError(<span class="string">f&quot;p * q ≠ n\np*q = <span class="subst">&#123;p * q&#125;</span>\nn   = <span class="subst">&#123;n&#125;</span>&quot;</span>)</span><br><span class="line">phi = (p - <span class="number">1</span>) * (q - <span class="number">1</span>)</span><br><span class="line"><span class="keyword">if</span> (e * d) % phi != <span class="number">1</span>:</span><br><span class="line">    <span class="keyword">raise</span> ValueError(<span class="string">f&quot;e * d ≢ 1 mod φ(n)\n(e*d) % phi = <span class="subst">&#123;(e*d) % phi&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算 CRT 参数</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;正在计算 CRT 参数...&quot;</span>)</span><br><span class="line">dmp1 = d % (p - <span class="number">1</span>)</span><br><span class="line">dmq1 = d % (q - <span class="number">1</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    iqmp = <span class="built_in">pow</span>(q, -<span class="number">1</span>, p)</span><br><span class="line"><span class="keyword">except</span> ValueError:</span><br><span class="line">    <span class="keyword">raise</span> ValueError(<span class="string">&quot;q has no inverse mod p (gcd(q,p) ≠ 1?)&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构造密钥</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;正在构造密钥对象...&quot;</span>)</span><br><span class="line">    private_numbers = rsa.RSAPrivateNumbers(</span><br><span class="line">        p=p,</span><br><span class="line">        q=q,</span><br><span class="line">        d=d,</span><br><span class="line">        dmp1=dmp1,</span><br><span class="line">        dmq1=dmq1,</span><br><span class="line">        iqmp=iqmp,</span><br><span class="line">        public_numbers=rsa.RSAPublicNumbers(e=e, n=n)</span><br><span class="line">    )</span><br><span class="line">    private_key = private_numbers.private_key()</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;已成功构造私钥！&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 序列化为 PEM 格式的字节串</span></span><br><span class="line">    pem_private = private_key.private_bytes(</span><br><span class="line">        encoding=serialization.Encoding.PEM,</span><br><span class="line">        <span class="built_in">format</span>=serialization.PrivateFormat.PKCS8,</span><br><span class="line">        encryption_algorithm=serialization.NoEncryption()</span><br><span class="line">    )</span><br><span class="line">    pem_public = private_key.public_key().public_bytes(</span><br><span class="line">        encoding=serialization.Encoding.PEM,</span><br><span class="line">        <span class="built_in">format</span>=serialization.PublicFormat.SubjectPublicKeyInfo</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 写入私钥文件</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(private_key_filename, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(pem_private)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;\n私钥已成功保存到文件：<span class="subst">&#123;private_key_filename&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 写入公钥文件</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(public_key_filename, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(pem_public)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;公钥已成功保存到文件：<span class="subst">&#123;public_key_filename&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> ex:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;创建密钥失败：&quot;</span>, <span class="built_in">str</span>(ex))</span><br></pre></td></tr></table></figure>
+<p>新的公钥文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN PUBLIC KEY-----</span><br><span class="line">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvVdqF3SkCaAAmMzs889I</span><br><span class="line">qdW9M2dIdh3jG9yPcmLnmJiGpBF4E9VHSMGe8oPAy2kJDmdNt4BcEygvssEfginv</span><br><span class="line">a5t5jm352UAoDosUJkTXGQhpAWMF4fBmBpO3EedG62rOsqMBgmSdAyxCSPBRJIOF</span><br><span class="line">R0QgZFbRnU0frj34fiVmgYiLuZSAmIbs8ZxiHPdp1oD4tUpvsFci4QJtYNjNnGU2</span><br><span class="line">WPH6rvChGl1IRKrxMtqLielsvajUjyrgOC6NmymYMvZNER3htFEtL1eQbCyTfDmt</span><br><span class="line">YyQ1Wt4Ot12lxf0wVIR5mcGN7XCXJRHOFHSf1gzXWabRSvmt1nrl7sW6cjxljuuQ</span><br><span class="line">awIDAQAB</span><br><span class="line">-----END PUBLIC KEY-----</span><br></pre></td></tr></table></figure>
+<p>私钥文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN PRIVATE KEY-----</span><br><span class="line">MIIEPAIBADANBgkqhkiG9w0BAQEFAASCBCYwggQiAgEAAoIBAQC9V2oXdKQJoACY</span><br><span class="line">zOzzz0ip1b0zZ0h2HeMb3I9yYueYmIakEXgT1UdIwZ7yg8DLaQkOZ023gFwTKC+y</span><br><span class="line">wR+CKe9rm3mObfnZQCgOixQmRNcZCGkBYwXh8GYGk7cR50bras6yowGCZJ0DLEJI</span><br><span class="line">8FEkg4VHRCBkVtGdTR+uPfh+JWaBiIu5lICYhuzxnGIc92nWgPi1Sm+wVyLhAm1g</span><br><span class="line">2M2cZTZY8fqu8KEaXUhEqvEy2ouJ6Wy9qNSPKuA4Lo2bKZgy9k0RHeG0US0vV5Bs</span><br><span class="line">LJN8Oa1jJDVa3g63XaXF/TBUhHmZwY3tcJclEc4UdJ/WDNdZptFK+a3WeuXuxbpy</span><br><span class="line">PGWO65BrAgMBAAECggEAARnraMDtZELScsXF4pJRIHcL51+xeG9X1LKYaoWqoFmG</span><br><span class="line">hYoBpfY8TzLYoGjw8Wsa+eiWfuUV4D8eacjsW6OR3DbVot1/AN/FPcFavZa2Fr1N</span><br><span class="line">T/05GadQ/6faZ8qa7RwS3VceyE24zQGSEhEfDVhBx5o3P202jMduhsxxtY3iIkZE</span><br><span class="line">VRLQgz/Fpq1k/wvH7vwphTc9YeKYVCmG+zdWp/yQmRATAHrj7XU16Ebs1sz/jC69</span><br><span class="line">f2gxn5hBL/RZIGGrq01jbsYNuCGXU5H87YYFykjTH+6ckcYGCj3PUI0h2eOFty85</span><br><span class="line">Ayl4PxwgG21oz6QFXKERZ4EOJJuQgHIVBlq3VtqkIQIBEQKCAQALI0J52a9L3DxF</span><br><span class="line">OTsdZovNwUddYG2smFinSTWdURyun49zEBYfSMf1OJDhFs8bBi21jZso6W7T804Z</span><br><span class="line">kuO8XNHZJ0NiuyzQi02mgKbVExu2LavS57UNSmBavWUfK7jgq+4Kgg8lya7iEamL</span><br><span class="line">0eany4BPfHpgQVef11w3bQ6eAjM0y8v7248YB+/R+iPjlhVI2mj7mveC1/L+LVG6</span><br><span class="line">ZxsnUT9upNKCwtxM2E+LkZW3soCtwm/O69BEqCtOmVOftycSDn0BAcH7jE3zudtR</span><br><span class="line">qETpMJG6iajJHB77ujbth10yJekJC2KznTYRPUhbjmPBTAyq67H1Wfsqu+9oZfvo</span><br><span class="line">miQXd0S7AgEBAoIBAAEZ62jA7WRC0nLFxeKSUSB3C+dfsXhvV9SymGqFqqBZhoWK</span><br><span class="line">AaX2PE8y2KBo8PFrGvnoln7lFeA/HmnI7Fujkdw21aLdfwDfxT3BWr2Wtha9TU/9</span><br><span class="line">ORmnUP+n2mfKmu0cEt1XHshNuM0BkhIRHw1YQceaNz9tNozHbobMcbWN4iJGRFUS</span><br><span class="line">0IM/xaatZP8Lx+78KYU3PWHimFQphvs3Vqf8kJkQEwB64+11NehG7NbM/4wuvX9o</span><br><span class="line">MZ+YQS/0WSBhq6tNY27GDbghl1OR/O2GBcpI0x/unJHGBgo9z1CNIdnjhbcvOQMp</span><br><span class="line">eD8cIBttaM+kBVyhEWeBDiSbkIByFQZat1bapCECAQc=</span><br><span class="line">-----END PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+<p>对比新旧公钥文件可以发现替换了两个字节：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA【w1】dqF3SkCaAAmMzs889I</span><br><span class="line">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA【vV】dqF3SkCaAAmMzs889I</span><br></pre></td></tr></table></figure>
+<p>即<code>w1</code>改为<code>vV</code>。</p>
+<h2 id="查找公钥修改点"><a href="#查找公钥修改点" class="headerlink" title="查找公钥修改点"></a>查找公钥修改点</h2><p>回到<code>libcc+214E637</code>处，进入函数一条条分析，很容易可以看出这个函数在拼接公钥字符串，我们一步步走直到出现<code>w1</code>，对应HEX为<code>0x7731</code><br>在<code>libcc+2156FD4</code>处就是了！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">00007FF8C3076FD4 | 66:C785 20010000 7731    | mov word ptr ss:[rbp+120],3177          | 字符&quot;w1&quot;</span><br><span class="line">00007FF8C3076FDD | C685 22010000 64         | mov byte ptr ss:[rbp+122],64            |</span><br><span class="line">00007FF8C3076FE4 | 48:8D85 20010000         | lea rax,qword ptr ss:[rbp+120]          |</span><br><span class="line">00007FF8C3076FEB | 48:8985 60050000         | mov qword ptr ss:[rbp+560],rax          |</span><br><span class="line">00007FF8C3076FF2 | 48:8D85 23010000         | lea rax,qword ptr ss:[rbp+123]          |</span><br><span class="line">00007FF8C3076FF9 | 48:8985 68050000         | mov qword ptr ss:[rbp+568],rax          |</span><br><span class="line">00007FF8C3077000 | 48:8D95 60050000         | lea rdx,qword ptr ss:[rbp+560]          |</span><br><span class="line">00007FF8C3077007 | 49:8BCF                  | mov rcx,r15                             |</span><br><span class="line">00007FF8C307700A | E8 B1F7FFFF              | call libcc.7FF8C30767C0                 |</span><br><span class="line">00007FF8C307700F | 48:8D15 6EFDFA03         | lea rdx,qword ptr ds:[7FF8C7026D84]     |</span><br></pre></td></tr></table></figure>
+<p>将操作数<code>3177</code>替换为<code>5676</code>即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov word ptr ss:[rbp+120],5676</span><br></pre></td></tr></table></figure>
+<p>但是修改了字符后，函数返回的公钥完全是错误的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvVdqF3SkCaAAmMzs889I</span><br><span class="line">qdW9M2dId3jG9yPcmLnmJiGpBF4E9VHSMGe8oPAy2kJDmdNt4BcEygvssEfginva</span><br><span class="line">t5jm352UAoDosUJkTXGQhpAWMF4fBmBpO3EedG62rOsqMBgmSdAyxCSPBRJIOFR0</span><br><span class="line">QgZFbRnU0frj34fiVmgYiLuZSAmIbs8ZxiHPdpVoD4tUpvsFci4QJtYNjNnGU2WP</span><br><span class="line">H6rvChGl1IRKrxMtqLielsvajUjyrgOC6NmymYMvZNER3htFEtL1eQbCyTfDmtYy</span><br><span class="line">Q1Wt4Ot12lxf0wVIR5mcGN7XCXJRHOFHSf1gzXWabRSvmt1nrl7sW6cjxljuuQaw</span><br><span class="line">IDAQAB</span><br></pre></td></tr></table></figure>
+<p><strong>陷阱一：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">00007FF8C307724D | 0FB610                   | movzx edx,byte ptr ds:[rax]             | rax:&quot;1dqF3SkCaAAmMzs889IqdW9M2dId&quot;</span><br><span class="line">00007FF8C3077250 | 80C2 37                  | add dl,37</span><br><span class="line">00007FF8C3077253 | 49:8BCF                  | mov rcx,r15</span><br><span class="line">00007FF8C3077256 | E8 054C52FF              | call libcc.7FF8C259BE60</span><br></pre></td></tr></table></figure>
+<p>这里做了一个加法运算，修改了公钥后这里的结果就不一样了。只需要让其在<code>add</code>操作后保持一致就行了。<br>正常时：31(1) + 37<br>修改后：56(V) + 37</p>
+<p>37 - (56 - 31) &#x3D; 12，所以这里改为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add dl,12</span><br></pre></td></tr></table></figure>
+<p><strong>陷阱二：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">00007FF8C3078545 | 0FB610                   | movzx edx,byte ptr ds:[rax]        // 取了修改处的&quot;V&quot;</span><br><span class="line">00007FF8C3078548 | 49:8BCF                  | mov rcx,r15</span><br><span class="line">00007FF8C307854B | E8 103952FF              | call libcc.7FF8C259BE60</span><br><span class="line"></span><br><span class="line">-----BEGIN PUBLIC KEY-----</span><br><span class="line">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw【1】dqF3SkCaAAmMzs889I</span><br><span class="line">qdW9M2dIdh3jG9yPcmLnmJiGpBF4E9VHSMGe8oPAy2kJDmdNt4BcEygvssEfginv</span><br><span class="line">a5t5jm352UAoDosUJkTXGQhpAWMF4fBmBpO3EedG62rOsqMBgmSdAyxCSPBRJIOF</span><br><span class="line">R0QgZFbRnU0frj34fiVmgYiLuZSAmIbs8ZxiHPdp【1】oD4tUpvsFci4QJtYNjNnGU2</span><br><span class="line">WPH6rvChGl1IRKrxMtqLielsvajUjyrgOC6NmymYMvZNER3htFEtL1eQbCyTfDmt</span><br><span class="line">YyQ1Wt4Ot12lxf0wVIR5mcGN7XCXJRHOFHSf1gzXWabRSvmt1nrl7sW6cjxljuuQ</span><br><span class="line">awIDAQAB</span><br><span class="line">-----END PUBLIC KEY-----</span><br></pre></td></tr></table></figure>
+<p>它从前面修改处取字符赋值给后面的字符，原来是<code>1</code>时就对了，修改后导致第4行括号那里变成了<code>V</code>。。。看得出来作者也是用<code>1字节替换RSA</code>工具计算过的。。。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">movzx edx,byte ptr ds:[rax]</span><br><span class="line"></span><br><span class="line">改为</span><br><span class="line"></span><br><span class="line">push 0x31</span><br><span class="line">pop edx</span><br></pre></td></tr></table></figure>
+<p>测试可行。<br>根据 AI 分析，<code>7FF8C259BE60</code>就是追加字符的方法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">_QWORD *__fastcall sub_18167BE60(_QWORD *a1, __int64 a2)</span><br><span class="line">&#123;</span><br><span class="line">  unsigned __int64 v2; // r8</span><br><span class="line">  unsigned __int64 v4; // r9</span><br><span class="line">  _QWORD *v5; // rax</span><br><span class="line"></span><br><span class="line">  v2 = a1[2];</span><br><span class="line">  v4 = a1[3];</span><br><span class="line">  if ( v2 &gt;= v4 )</span><br><span class="line">  &#123;</span><br><span class="line">    sub_181683AE0(a1, a2, v2, (unsigned __int8)a2);</span><br><span class="line">    return a1;</span><br><span class="line">  &#125;</span><br><span class="line">  else</span><br><span class="line">  &#123;</span><br><span class="line">    v5 = a1;</span><br><span class="line">    a1[2] = v2 + 1;</span><br><span class="line">    if ( v4 &gt; 0xF )</span><br><span class="line">      v5 = (_QWORD *)*a1;</span><br><span class="line">    *((_BYTE *)v5 + v2) = a2;</span><br><span class="line">    *((_BYTE *)v5 + v2 + 1) = 0;</span><br><span class="line">    return a1;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>制作一个<code>.1377</code>补丁文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;libcc.dll</span><br><span class="line">0000000002156FDB:77-&gt;76</span><br><span class="line">0000000002156FDC:31-&gt;56</span><br><span class="line">0000000002157252:37-&gt;12</span><br><span class="line">0000000002158545:0F-&gt;6A</span><br><span class="line">0000000002158546:B6-&gt;31</span><br><span class="line">0000000002158547:10-&gt;5A</span><br></pre></td></tr></table></figure>
+<p>至此，公钥就替换成功了。</p>
+<h2 id="计算序列号"><a href="#计算序列号" class="headerlink" title="计算序列号"></a>计算序列号</h2><p>这个软件在离线激活前必须先输入正确的序列号，而序列号是在本地计算出来的。<br>我们在输入序列号时会实时的检测输入内容是否正确，正确后才会启用“激活”按钮<br>为了找到事件发生的位置，我用<code>GetWindowTextA</code>和<code>GetWindowTextW</code>都没有断下来，于是我全内存搜索输入的序列号，找到了<br><img src="/images/crack-navicat-premium-17-3-4/01.webp"></p>
+<p>分析发现可以在<code>WideCharToMultiByte</code>上设置断点，返回几层后来到这里</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">000000000168FE8F | E8 0CBB33FF              | call navicat.9CB9A0                                   | Unicode转ANSI</span><br><span class="line">000000000168FE94 | C685 E7000000 00         | mov byte ptr ss:[rbp+E7],0                            |</span><br><span class="line">000000000168FE9B | C785 E0000000 00000000   | mov dword ptr ss:[rbp+E0],0                           |</span><br><span class="line">000000000168FEA5 | 48:8B9D F0000000         | mov rbx,qword ptr ss:[rbp+F0]                         | [rbp+F0]:&quot;NAVPLTBQ2X7G7BNS&quot;</span><br><span class="line">000000000168FEAC | 48:85DB                  | test rbx,rbx                                          | rbx:&quot;NAVPLTBQ2X7G7BNS&quot;</span><br><span class="line">000000000168FEAF | 74 09                    | je navicat.168FEBA                                    |</span><br><span class="line">000000000168FEB1 | 8B43 FC                  | mov eax,dword ptr ds:[rbx-4]                          |</span><br><span class="line">000000000168FEB4 | 8985 E0000000            | mov dword ptr ss:[rbp+E0],eax                         |</span><br><span class="line">000000000168FEBA | 83BD E0000000 10         | cmp dword ptr ss:[rbp+E0],10                          | 序列号长度必须是16位</span><br><span class="line">000000000168FEC1 | 75 33                    | jne navicat.168FEF6                                   |</span><br><span class="line">000000000168FEC3 | 48:8B8D F0000000         | mov rcx,qword ptr ss:[rbp+F0]                         | [rbp+F0]:&quot;NAVPLTBQ2X7G7BNS&quot;</span><br><span class="line">000000000168FECA | E8 B12AE3FE              | call navicat.4C2980                                   |</span><br><span class="line">000000000168FECF | 48:8B8D 20010000         | mov rcx,qword ptr ss:[rbp+120]                        | [rbp+120]:&amp;L&quot;圐n&quot;</span><br><span class="line">000000000168FED6 | 48:8B89 580B0000         | mov rcx,qword ptr ds:[rcx+B58]                        |</span><br><span class="line">000000000168FEDD | 48:89C2                  | mov rdx,rax                                           |</span><br><span class="line">000000000168FEE0 | 4C:8D85 E8000000         | lea r8,qword ptr ss:[rbp+E8]                          |</span><br><span class="line">000000000168FEE7 | 48:8B05 BADF3002         | mov rax,qword ptr ds:[399DEA8]                        | 验证序列号的函数</span><br><span class="line">000000000168FEEE | FF10                     | call qword ptr ds:[rax]                               | 验证序列号</span><br><span class="line">000000000168FEF0 | 8885 E7000000            | mov byte ptr ss:[rbp+E7],al                           | 成功时al=1</span><br><span class="line">000000000168FEF6 | 80BD E7000000 00         | cmp byte ptr ss:[rbp+E7],0                            |</span><br><span class="line">000000000168FEFD | 0F84 1C020000            | je navicat.169011F                                    |</span><br></pre></td></tr></table></figure>
+<p>跟进分析</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">00007FFBC8E2E8F8 | 48:8B01                  | mov rax,qword ptr ds:[rcx]                            |</span><br><span class="line">00007FFBC8E2E8FB | 4C:8D4424 38             | lea r8,qword ptr ss:[rsp+38]                          | [rsp+38]:L&quot;談椃&quot;</span><br><span class="line">00007FFBC8E2E900 | 48:8D5424 60             | lea rdx,qword ptr ss:[rsp+60]                         | [rsp+60]:&quot;NAVPLTBQ2X7G7BNS&quot;</span><br><span class="line">00007FFBC8E2E905 | FF50 10                  | call qword ptr ds:[rax+10]                            | 验证序列号</span><br><span class="line">00007FFBC8E2E908 | 0FB6D8                   | movzx ebx,al                                          | ebx:&quot;NAVPLTBQ2X7G7BNS&quot;</span><br></pre></td></tr></table></figure>
+<p>再跟进后的伪代码，用 IDA 查看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Hidden C++ exception states: #wind=1</span><br><span class="line">char __fastcall sub_182149DE0(__int64 a1, __int64 a2, _QWORD *a3)</span><br><span class="line">&#123;</span><br><span class="line">    // 省略...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>丢给 AI 分析</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">**这是一个注册中心的关键检查和保存函数**，从函数名和代码内容可以看出这是 `CSRegistrationCenter::checkAndSaveKey` 函数。</span><br><span class="line"></span><br><span class="line">### 主要功能：</span><br><span class="line"></span><br><span class="line">1. **输入验证**：</span><br><span class="line">   - 检查输入字符串的长度是否为16字节（`*(_QWORD *)(a2 + 16) == 16`）</span><br><span class="line">   - 如果不是16字节，直接返回失败（0）</span><br><span class="line"></span><br><span class="line">2. **密钥验证**：</span><br><span class="line">   - 调用虚函数进行密钥验证（`*(_QWORD *)a1 + 48LL`）</span><br><span class="line">   - 如果验证失败，进入错误处理流程</span><br><span class="line"></span><br><span class="line">3. **成功处理流程**：</span><br><span class="line">   - 获取当前时间戳</span><br><span class="line">   - 调用UI相关函数更新状态</span><br><span class="line">   - 检查验证结果的状态码（`sub_18214EB60`）</span><br><span class="line">   - 根据状态码决定是否调用特定的回调函数</span><br><span class="line"></span><br><span class="line">4. **时间管理**：</span><br><span class="line">   - 获取或设置时间戳</span><br><span class="line">   - 如果提供了输出参数（`a3`），计算30天后的时间戳（`v8 + 2592000`）</span><br><span class="line"></span><br><span class="line">5. **日志记录**：</span><br><span class="line">   - 记录函数调用信息到日志系统</span><br><span class="line">   - 包含文件名：`&quot;D:\\dev\\navicatlibs\\libcc\\src\\cs_registration_center.cpp&quot;`</span><br><span class="line">   - 包含函数签名：`&quot;bool __cdecl CSRegistrationCenter::checkAndSaveKey(...)&quot;`</span><br><span class="line"></span><br><span class="line">6. **状态保存**：</span><br><span class="line">   - 将验证结果保存到对象的状态字段中</span><br><span class="line">   - 调用清理函数</span><br><span class="line"></span><br><span class="line">### 关键特征：</span><br><span class="line"></span><br><span class="line">- **安全保护**：使用栈保护cookie防止缓冲区溢出</span><br><span class="line">- **虚函数调用**：通过虚函数表调用不同的验证方法</span><br><span class="line">- **错误处理**：完整的错误处理和资源清理</span><br><span class="line">- **时间计算**：2592000秒 = 30天的计算</span><br><span class="line">- **日志系统**：完整的调试日志记录</span><br><span class="line"></span><br><span class="line">### 返回值：</span><br><span class="line">- 成功时返回 1</span><br><span class="line">- 失败时返回 0</span><br><span class="line"></span><br><span class="line">### 总结：</span><br><span class="line">这是一个**软件注册验证函数**，用于检查用户提供的注册密钥是否有效，并保存相关的验证状态。函数包含完整的输入验证、密钥验证、状态管理和错误处理机制，是软件授权系统的核心组件。</span><br></pre></td></tr></table></figure>
+<p>根据 AI 给出的提示，关键在<code>a1 + 48LL</code>这个验证函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">00007FFBC9879E0A | 0F85 C5010000            | jne libcc.7FFBC9879FD5                                | 序列号必须是16位</span><br><span class="line">00007FFBC9879E10 | 0F57C0                   | xorps xmm0,xmm0                                       |</span><br><span class="line">00007FFBC9879E13 | 0F1145 C8                | movups xmmword ptr ss:[rbp-38],xmm0                   |</span><br><span class="line">00007FFBC9879E17 | 66:0F6F0D D1952204       | movdqa xmm1,xmmword ptr ds:[7FFBCDAA33F0]             |</span><br><span class="line">00007FFBC9879E1F | F3:0F7F4D D8             | movdqu xmmword ptr ss:[rbp-28],xmm1                   |</span><br><span class="line">00007FFBC9879E24 | C645 C8 00               | mov byte ptr ss:[rbp-38],0                            |</span><br><span class="line">00007FFBC9879E28 | 0F1145 E8                | movups xmmword ptr ss:[rbp-18],xmm0                   |</span><br><span class="line">00007FFBC9879E2C | 48:8B01                  | mov rax,qword ptr ds:[rcx]                            |</span><br><span class="line">00007FFBC9879E2F | 4C:8D45 C8               | lea r8,qword ptr ss:[rbp-38]                          |</span><br><span class="line">00007FFBC9879E33 | FF50 30                  | call qword ptr ds:[rax+30]                            | 验证序列号</span><br><span class="line">00007FFBC9879E36 | 85C0                     | test eax,eax                                          |</span><br><span class="line">00007FFBC9879E38 | 0F85 59010000            | jne libcc.7FFBC9879F97                                |</span><br></pre></td></tr></table></figure>
+<p>伪代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Hidden C++ exception states: #wind=5</span><br><span class="line">__int64 __fastcall sub_182149FF0(__int64 a1, __int64 a2, __int64 a3)</span><br><span class="line">&#123;</span><br><span class="line">    // 省略...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>AI 给出的总结：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">**这是一个复杂的密钥验证和解析函数**，主要用于验证和解析某种格式的注册密钥。</span><br><span class="line"></span><br><span class="line">### 主要功能：</span><br><span class="line"></span><br><span class="line">1. **密钥预处理**：</span><br><span class="line">   - 将输入字符串中的字符进行替换：&#x27;8&#x27; → &#x27;I&#x27;，&#x27;9&#x27; → &#x27;O&#x27;</span><br><span class="line">   - 检查密钥格式是否以 &quot;h*&quot; 开头（h=0x68, *=0x2A）</span><br><span class="line">   - 如果是正确格式，移除前两个字符</span><br><span class="line"></span><br><span class="line">2. **密钥解码**：</span><br><span class="line">   - 调用解码函数处理处理后的密钥</span><br><span class="line">   - 提取8字节的密钥数据</span><br><span class="line"></span><br><span class="line">3. **版本和类型检查**：</span><br><span class="line">   - 检查密钥的第6字节的高4位，确保版本号 &gt;= 17 (0x11)</span><br><span class="line">   - 根据密钥的不同字节进行复杂的验证逻辑</span><br><span class="line"></span><br><span class="line">4. **许可证类型验证**：</span><br><span class="line">   - 根据密钥的第5字节（&#x27;e&#x27;, &#x27;f&#x27;, &#x27;g&#x27;）确定许可证类型</span><br><span class="line">   - 调用不同的验证函数检查许可证状态</span><br><span class="line"></span><br><span class="line">5. **产品类型映射**：</span><br><span class="line">   - 根据密钥的第7字节（高字节）映射到不同的产品类型：</span><br><span class="line">     - 0xFF: 默认类型</span><br><span class="line">     - 0xFE: 类型9</span><br><span class="line">     - 0xFD: 类型6或8</span><br><span class="line">     - 0xFC: 类型5或7</span><br><span class="line">     - 0xFB: 类型4</span><br><span class="line">     - 0xFA: 类型3</span><br><span class="line">     - 其他: 类型1</span><br><span class="line"></span><br><span class="line">6. **全局数据表查找**：</span><br><span class="line">   - 在两个全局数据表中查找匹配的条目</span><br><span class="line">   - 使用线程局部存储进行线程安全的初始化</span><br><span class="line"></span><br><span class="line">7. **结果输出**：</span><br><span class="line">   - 将验证结果保存到输出结构体中</span><br><span class="line">   - 包含产品类型、许可证状态、版本信息等</span><br><span class="line"></span><br><span class="line">### 关键特征：</span><br><span class="line"></span><br><span class="line">- **字符替换**：将容易混淆的字符进行标准化</span><br><span class="line">- **格式验证**：严格的密钥格式检查</span><br><span class="line">- **多级验证**：版本、类型、许可证状态的多重验证</span><br><span class="line">- **线程安全**：使用线程局部存储和初始化锁</span><br><span class="line">- **错误处理**：完整的错误码返回机制</span><br><span class="line"></span><br><span class="line">### 返回值：</span><br><span class="line">- 0: 成功</span><br><span class="line">- 1: 格式错误</span><br><span class="line">- 2: 版本过低</span><br><span class="line">- 3: 未找到匹配项</span><br><span class="line">- 4: 验证失败</span><br><span class="line"></span><br><span class="line">### 总结：</span><br><span class="line">这是一个**软件注册密钥验证和解析函数**，负责验证用户输入的注册密钥的有效性，解析其中的产品类型、许可证信息等，并将结果保存到输出结构体中。函数包含完整的格式检查、版本验证、许可证状态检查等机制。</span><br></pre></td></tr></table></figure>
+<p>关键在解码函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">00007FFBC987A11F | 48:8D55 40               | lea rdx,qword ptr ss:[rbp+40]                         | 序列号</span><br><span class="line">00007FFBC987A123 | 48:8D4D F0               | lea rcx,qword ptr ss:[rbp-10]                         | 准备输出缓冲区</span><br><span class="line">00007FFBC987A127 | E8 241F0000              | call libcc.7FFBC987C050                               | Base32 解码</span><br><span class="line">00007FFBC987A12C | 90                       | nop                                                   |</span><br><span class="line">00007FFBC987A12D | 48:8B55 08               | mov rdx,qword ptr ss:[rbp+8]                          |</span><br><span class="line">00007FFBC987A131 | 4C:8B45 F0               | mov r8,qword ptr ss:[rbp-10]                          |</span><br><span class="line">00007FFBC987A135 | 48:837D 00 0A            | cmp qword ptr ss:[rbp],A                              |</span><br><span class="line">00007FFBC987A13A | 0F85 96020000            | jne libcc.7FFBC987A3D6                                |</span><br><span class="line">00007FFBC987A140 | 48:8D45 F0               | lea rax,qword ptr ss:[rbp-10]                         |</span><br><span class="line">00007FFBC987A144 | 48:83FA 0F               | cmp rdx,F                                             |</span><br><span class="line">00007FFBC987A148 | 49:0F47C0                | cmova rax,r8                                          |</span><br><span class="line">00007FFBC987A14C | 8038 68                  | cmp byte ptr ds:[rax],68                              | 第1个字符是否等于&#x27;h&#x27;</span><br><span class="line">00007FFBC987A14F | 0F85 81020000            | jne libcc.7FFBC987A3D6                                |</span><br><span class="line">00007FFBC987A155 | 48:8D45 F0               | lea rax,qword ptr ss:[rbp-10]                         |</span><br><span class="line">00007FFBC987A159 | 48:83FA 0F               | cmp rdx,F                                             |</span><br><span class="line">00007FFBC987A15D | 49:0F47C0                | cmova rax,r8                                          |</span><br><span class="line">00007FFBC987A161 | 8078 01 2A               | cmp byte ptr ds:[rax+1],2A                            | 第2个字符是否等于&#x27;*&#x27;</span><br><span class="line">00007FFBC987A165 | 0F85 6B020000            | jne libcc.7FFBC987A3D6                                |</span><br><span class="line">00007FFBC987A16B | 48:8D4D F0               | lea rcx,qword ptr ss:[rbp-10]                         |</span><br><span class="line">00007FFBC987A16F | 48:83FA 0F               | cmp rdx,F                                             |</span><br><span class="line">00007FFBC987A173 | 49:0F47C8                | cmova rcx,r8                                          |</span><br><span class="line">00007FFBC987A177 | 48:8D51 02               | lea rdx,qword ptr ds:[rcx+2]                          |</span><br><span class="line">00007FFBC987A17B | 41:B8 09000000           | mov r8d,9                                             |</span><br><span class="line">00007FFBC987A181 | E8 5C1BA601              | call &lt;JMP.&amp;memcpy&gt;                                    |</span><br><span class="line">00007FFBC987A186 | B9 08000000              | mov ecx,8                                             |</span><br><span class="line">00007FFBC987A18B | 48:894D 00               | mov qword ptr ss:[rbp],rcx                            |</span><br><span class="line">00007FFBC987A18F | 48:8B03                  | mov rax,qword ptr ds:[rbx]                            |</span><br><span class="line">00007FFBC987A192 | 894C24 20                | mov dword ptr ss:[rsp+20],ecx                         |</span><br><span class="line">00007FFBC987A196 | 4C:8D0D 037F9C04         | lea r9,qword ptr ds:[7FFBCE2420A0]                    | DES Key</span><br><span class="line">00007FFBC987A19D | 4C:8D45 F0               | lea r8,qword ptr ss:[rbp-10]                          |</span><br><span class="line">00007FFBC987A1A1 | 48:8D55 10               | lea rdx,qword ptr ss:[rbp+10]                         | 去除头2字节的序列号 Hex</span><br><span class="line">00007FFBC987A1A5 | 48:8BCB                  | mov rcx,rbx                                           |</span><br><span class="line">00007FFBC987A1A8 | FF50 60                  | call qword ptr ds:[rax+60]                            | DES 解密</span><br><span class="line">00007FFBC987A1AB | 90                       | nop                                                   | RAX = 序列号 Hex</span><br></pre></td></tr></table></figure>
+<p>DES密钥是硬编码：<code>E9 7F B0 60 77 45 90 AE</code>。</p>
+<p><br>至于序列号的一些含义可以参考其他文章，这里不展开了。<br>生成序列号的流程是这样：</p>
+<ol>
+<li>根据各个位的含义，手动构造一个 8 字节的 Hex。</li>
+<li>用 DES 对上面的 Hex 进行加密，DES 密钥是<code>E97FB060774590AE</code>。</li>
+<li>得到解密后的 Hex 后在前面追加固定 2 个字节<code>0x682A</code>。</li>
+<li>将上面得到的 Hex 用 Base32 编码，就得到了一个序列号。</li>
+</ol>
+<h2 id="解密请求码"><a href="#解密请求码" class="headerlink" title="解密请求码"></a>解密请求码</h2><p>断网，输入有效序列号开始激活，出现离线激活对话框<br>去 <a target="_blank" rel="noopener" href="http://tool.chacuo.net/cryptrsaprikey">http://tool.chacuo.net/cryptrsaprikey</a> 用自己的私钥来解密请求码，得到一个类似这样的 JSON 内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;K&quot;</span><span class="punctuation">:</span><span class="string">&quot;NAVPLTBQ2X7G7BNS&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;DI&quot;</span><span class="punctuation">:</span><span class="string">&quot;0A4897AEF970D541827A&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;P&quot;</span><span class="punctuation">:</span><span class="string">&quot;WIN&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>根据前人的经验，只需要在 JSON 中加入<code>N</code>、<code>O</code>、<code>T</code>即可</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;K&quot;</span><span class="punctuation">:</span><span class="string">&quot;NAVPLTBQ2X7G7BNS&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;DI&quot;</span><span class="punctuation">:</span><span class="string">&quot;0A4897AEF970D541827A&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;P&quot;</span><span class="punctuation">:</span><span class="string">&quot;WIN&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;N&quot;</span><span class="punctuation">:</span><span class="string">&quot;admin&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;O&quot;</span><span class="punctuation">:</span><span class="string">&quot;google&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;T&quot;</span><span class="punctuation">:</span><span class="number">1516280990</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>最后用私钥文件加密这个 JSON 就能得到最终的激活码了。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/08/09/20250809-1/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-10-03 16:18:00
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/%E9%80%86%E5%90%91/" title="逆向">
+                        #逆向
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+              <a href="/2025/10/03/jetbrains-keygen/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%BE%E5%88%B0%E5%85%AC%E9%92%A5"><span class="toc-text">找到公钥</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E6%96%B0%E7%9A%84%E7%A7%81%E9%92%A5%E3%80%81%E5%85%AC%E9%92%A5"><span class="toc-text">构造新的私钥、公钥</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%85%AC%E9%92%A5%E4%BF%AE%E6%94%B9%E7%82%B9"><span class="toc-text">查找公钥修改点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%BA%8F%E5%88%97%E5%8F%B7"><span class="toc-text">计算序列号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%AF%86%E8%AF%B7%E6%B1%82%E7%A0%81"><span class="toc-text">解密请求码</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%AD%A6%E4%B9%A0%E7%A0%B4%E8%A7%A3%20Navicat%20Premium%2017.3.4 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F09%2F30%2Fcrack-navicat-premium-17-3-4%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/09/30/crack-navicat-premium-17-3-4/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>

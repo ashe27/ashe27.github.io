@@ -146,7 +146,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-07-01 20:55:10
+          2025-10-03 19:52:08
         </span>
         
               <span class="post-tags">
@@ -167,7 +167,7 @@
 <h2 id="配置-ja-netfilter"><a href="#配置-ja-netfilter" class="headerlink" title="配置 ja-netfilter"></a>配置 ja-netfilter</h2><p>默认是没有任何规则的，需要自己手动添加。</p>
 <ol>
 <li>编辑<code>ja-netfilter\config\dns.conf</code>，将内容替换为<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[DNS]</span><br><span class="line">EQUAL,jetbrains.com</span><br></pre></td></tr></table></figure></li>
-<li>编辑<code>ja-netfilter\config\url.conf</code>，将内容替换为<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[URL]</span><br><span class="line">PREFIX,https://account.jetbrains.com/lservice/rpc/validateKey.action</span><br></pre></td></tr></table></figure></li>
+<li>编辑<code>ja-netfilter\config\url.conf</code>，将内容替换为<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[URL]</span><br><span class="line">PREFIX,https://account.jetbrains.com/lservice/rpc/validateKey.action</span><br><span class="line">PREFIX,https://account.jetbrains.com.cn/lservice/rpc/validateKey.action</span><br></pre></td></tr></table></figure></li>
 <li>编辑<code>idea.vmoptions</code>文件，在安装目录下<code>C:\Program Files\JetBrains\IntelliJ IDEA 2022.2.2\bin\idea64.exe.vmoptions</code><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-javaagent:E:/ja-netfilter/ja-netfilter.jar</span><br><span class="line">--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED</span><br><span class="line">--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED</span><br></pre></td></tr></table></figure>
 将其中<code>-javaagent</code>替换为<code>ja-netfilter.jar</code>的本地路径即可。<br>至此，就阻断了网络验证功能。但我们还需要一个可用的激活码才能离线激活</li>
 </ol>
@@ -207,7 +207,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
+              2025-10-03 19:52:08
             </span>
             
                   <span class="post-tags">
