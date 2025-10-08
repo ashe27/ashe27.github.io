@@ -146,7 +146,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-10-03 20:21:14
+          2025-10-05 21:09:40
         </span>
         
               <span class="post-tags">
@@ -162,12 +162,12 @@
           
       </div>
       <div class="markdown-body">
-        <p>之前都是用别人的 KeyGen，但是好奇想了解以下 JetBrains 系列软件的注册原理，所以查阅了一些文章：<br><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-251584.htm">IDEA 2019.1版本的破解文件JetbrainsCrack.jar分析 </a><br><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-271052.htm">注册码证书验证过程</a><br><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-271578.htm">ja-netfilter 代理框架</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/668667982">ja-netfilter破解某IDE原理分析及生成激活码</a><br><a target="_blank" rel="noopener" href="https://www.xuzhengtong.com/2022/07/25/ja-netfilter/ja-netfilter-plugins-power/">ja-netfilter power插件原理</a><br><a target="_blank" rel="noopener" href="https://blog.novitechie.com/archives/idea-cracking">Idea破解原理</a></p>
+        <p>之前都是用别人的 KeyGen，但是好奇想了解一下 JetBrains 系列软件的注册原理，所以查阅了一些文章：<br><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-251584.htm">IDEA 2019.1版本的破解文件JetbrainsCrack.jar分析 </a><br><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-271052.htm">注册码证书验证过程</a><br><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-271578.htm">ja-netfilter 代理框架</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/668667982">ja-netfilter破解某IDE原理分析及生成激活码</a><br><a target="_blank" rel="noopener" href="https://www.xuzhengtong.com/2022/07/25/ja-netfilter/ja-netfilter-plugins-power/">ja-netfilter power插件原理</a><br><a target="_blank" rel="noopener" href="https://blog.novitechie.com/archives/idea-cracking">Idea破解原理</a></p>
 <h2 id="激活码验证流程"><a href="#激活码验证流程" class="headerlink" title="激活码验证流程"></a>激活码验证流程</h2><p>激活码由4部分组成，用<code>-</code>字符分隔</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">key = &quot;1OOG7EX2FA-xxx-xxx-xxx&quot;</span><br><span class="line"></span><br><span class="line">licenseParts = key.split(&#x27;-&#x27;)</span><br><span class="line">licenseId = licenseParts[0]</span><br><span class="line">licensePartBase64 = licenseParts[1]        # 授权信息，就是 JSON 内容</span><br><span class="line">signatureBase64 = licenseParts[2]          # 授权信息的签名</span><br><span class="line">certBase64 = licenseParts[3]               # 证书</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">key = &quot;1OOG7EX2FA-xxx-xxx-xxx&quot;</span><br><span class="line"></span><br><span class="line">licenseParts = key.split(&#x27;-&#x27;)</span><br><span class="line">licenseId = licenseParts[0]                # ID，明文，无关紧要，和授权信息中的id保持一致就行</span><br><span class="line">licensePartBase64 = licenseParts[1]        # 授权信息，就是 JSON 内容</span><br><span class="line">signatureBase64 = licenseParts[2]          # 授权信息的签名</span><br><span class="line">certBase64 = licenseParts[3]               # 证书</span><br></pre></td></tr></table></figure>
 <p>软件验证激活码流程：</p>
 <ol>
-<li>验证激活码中的证书是否由自家的CA证书签发。</li>
+<li>软件内会先用内置 CA 证书对激活码中的证书验证。</li>
 <li>用激活码中的证书、签名对<code>licensePart</code>部分验签，目的是防止篡改<code>licensePart</code>。</li>
 </ol>
 <p><br>而 <a target="_blank" rel="noopener" href="https://gitee.com/ja-netfilter/ja-netfilter">ja-netfilter</a> 这个项目正好可以解决第一步中对证书的验签。<br>而第二步我们可以自行创建一个证书对授权信息签名，这样激活码中的签名部分就是正确的。</p>
@@ -198,7 +198,7 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-10-03 20:21:14
+              2025-10-05 21:09:40
             </span>
             
                   <span class="post-tags">
@@ -214,6 +214,11 @@
               
           </div>
           <div class="post-foot-prev">
+            
+              <a href="/2025/10/05/crack-resharper2025/" target="_self">
+                <span>下一页</span>
+                <i class="iconfont icon-chevronright"></i>
+              </a>
             
           </div>
         </div>
