@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,53 +172,85 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="配置符号路径"><a href="#配置符号路径" class="headerlink" title="配置符号路径"></a>配置符号路径</h2><p>使用 WinDbg 的第一件事就是配置符号文件路径，通常有以下方法：</p>
+        <h2 id="配置符号路径"><a class="header-anchor" href="#配置符号路径">#</a>配置符号路径</h2>
+<p>使用 WinDbg 的第一件事就是配置符号文件路径，通常有以下方法：</p>
 <ol>
-<li><p>通过 WinDbg 菜单设置<br>打开<code>File</code>菜单，点击<code>Symbol File Path ...</code>打开配置窗口（快捷键为 Ctrl + S）。输入：</p>
+<li>通过 WinDbg 菜单设置<br>
+打开<code>File</code>菜单，点击<code>Symbol File Path ...</code>打开配置窗口（快捷键为 Ctrl + S）。输入：</li>
+</ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SRV*C:\\Symbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置系统环境变量<br>比起在 WinDbg 中设置，我更喜欢用设置环境变量的方式，因为很多开发工具或调试软件都会读取<code>_NT_SYMBOL_PATH</code>环境变量的内容作为符号搜索路径。<br>新建一个<code>_NT_SYMBOL_PATH.reg</code>文件，内容：</p>
+<ol start="2">
+<li>设置系统环境变量<br>
+比起在 WinDbg 中设置，我更喜欢用设置环境变量的方式，因为很多开发工具或调试软件都会读取<code>_NT_SYMBOL_PATH</code>环境变量的内容作为符号搜索路径。<br>
+新建一个<code>_NT_SYMBOL_PATH.reg</code>文件，内容：</li>
+</ol>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment]</span><br><span class="line">&quot;_NT_SYMBOL_PATH&quot;=&quot;SRV*C:\\Symbols*http://msdl.microsoft.com/download/symbols&quot;</span><br></pre></td></tr></table></figure>
 <p>双击该文件导入到注册表即可。如果未生效的话就注销一下系统重新登录。</p>
-</li>
-<li><p>通过启动参数<br>启动参数<code>-y</code>可以指定符号路径，仅本次运行生效。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">windbg -y &quot;SRV*C:\Symbols*http://msdl.microsoft.com/download/symbols&quot; notepad.exe</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>通过命令设置<br>在 WinDbg 调试过程中用命令设置符号路径，仅本次运行生效。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.sympath SRV*C:\Symbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure></li>
+<ol start="3">
+<li>通过启动参数<br>
+启动参数<code>-y</code>可以指定符号路径，仅本次运行生效。</li>
 </ol>
-<h2 id="符号相关命令"><a href="#符号相关命令" class="headerlink" title="符号相关命令"></a>符号相关命令</h2><ul>
-<li><p>开启符号文件加载信息的详细输出。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">windbg -y &quot;SRV*C:\Symbols*http://msdl.microsoft.com/download/symbols&quot; notepad.exe</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>通过命令设置<br>
+在 WinDbg 调试过程中用命令设置符号路径，仅本次运行生效。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.sympath SRV*C:\Symbols*http://msdl.microsoft.com/download/symbols</span><br></pre></td></tr></table></figure>
+<h2 id="符号相关命令"><a class="header-anchor" href="#符号相关命令">#</a>符号相关命令</h2>
+<ul>
+<li>开启符号文件加载信息的详细输出。</li>
+</ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!sym noisy</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>显示当前符号搜索路径。</p>
+<ul>
+<li>显示当前符号搜索路径。</li>
+</ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.sympath</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>设置符号搜索路径。</p>
+<ul>
+<li>设置符号搜索路径。</li>
+</ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.sympath C:\Symbols</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>追加符号搜索路径。</p>
+<ul>
+<li>追加符号搜索路径。</li>
+</ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.sympath+ C:\Symbols2</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>自动将符号路径设置为 Microsoft 符号服务器。</p>
+<ul>
+<li>自动将符号路径设置为 Microsoft 符号服务器。</li>
+</ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.symfix C:\Symbols</span><br></pre></td></tr></table></figure>
 <p>这条指令将符号路径设置为<code>SRV*C:\Symbols*http://msdl.microsoft.com/download/symbols</code>。简化了<code>.sympath</code>命令。</p>
-</li>
-<li><p>重新加载符号。</p>
+<ul>
+<li>重新加载符号。</li>
+</ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.reload</span><br></pre></td></tr></table></figure>
 <p>这条命令并不会真正的重新加载符号，只是把已加载模块的符号信息清除，在具体执行需要解析符号的命令时，才真正加载符号。</p>
-</li>
-<li><p>强制重新加载符号。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.reload /f</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重新加载某个模块的符号。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.reload ntdll.dll</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>打印指定模块的符号信息。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!chksym ntdll.dll</span><br></pre></td></tr></table></figure></li>
+<ul>
+<li>强制重新加载符号。</li>
 </ul>
-<h2 id="离线符号包"><a href="#离线符号包" class="headerlink" title="离线符号包"></a>离线符号包</h2><p>微软曾经推出过符号离线安装包，不过后来没有再提供了，所以只有一些老系统有安装包。新的符号必须在线下载。<br><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/d/3/0/d30e32d8-418a-469d-b600-f32ce3edf42d/WindowsXP-KB936929-SP3-x86-ENU.exe">WindowsXP-KB936929-SP3-x86-ENU.exe</a><br><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/e/d/9/ed9b7861-4e43-4c62-a007-4e93aa109602/WindowsXP-KB936929-SP3-x86-CHS.exe">WindowsXP-KB936929-SP3-x86-CHS.exe</a><br><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/2/2/a/22a44f8b-2f1b-46a9-940a-cf4099fd1de9/WindowsXP-KB936929-SP3-x86-CHT.exe">WindowsXP-KB936929-SP3-x86-CHT.exe</a><br><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/2/9/0/29008fe5-f699-47d5-ab32-91bae6c548bf/WindowsXP-KB936929-SP3-x86-CHH.exe">WindowsXP-KB936929-SP3-x86-CHH.exe</a><br><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/7/F/B/7FBF7E6A-D0DE-442A-A683-4F9885A96FC9/Windows_Win7.7600.16385.090713-1255.X86FRE.Symbols.msi">Windows_Win7.7600.16385.090713-1255.X86FRE.Symbols.msi</a><br><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/7/F/B/7FBF7E6A-D0DE-442A-A683-4F9885A96FC9/Windows_Win7.7600.16385.090713-1255.X86CHK.Symbols.msi">Windows_Win7.7600.16385.090713-1255.X86CHK.Symbols.msi</a><br><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/F/1/1/F11206A1-C532-4C9E-86FF-1261A693AA53/Windows_Win7.7600.16385.090713-1255.X64FRE.Symbols.msi">Windows_Win7.7600.16385.090713-1255.X64FRE.Symbols.msi</a><br><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/F/1/1/F11206A1-C532-4C9E-86FF-1261A693AA53/Windows_Win7.7600.16385.090713-1255.X64CHK.Symbols.msi">Windows_Win7.7600.16385.090713-1255.X64CHK.Symbols.msi</a><br><a target="_blank" rel="noopener" href="http://download.microsoft.com/download/0/A/F/0AFB5316-3062-494A-AB78-7FB0D4461357/Windows_Win7SP1.7601.17514.101119-1850.X86FRE.Symbols.msi">Windows_Win7SP1.7601.17514.101119-1850.X86FRE.Symbols.msi</a><br><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/0/A/F/0AFB5316-3062-494A-AB78-7FB0D4461357/Windows_Win7SP1.7601.17514.101119-1850.X86CHK.Symbols.msi">Windows_Win7SP1.7601.17514.101119-1850.X86CHK.Symbols.msi</a><br><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/0/A/F/0AFB5316-3062-494A-AB78-7FB0D4461357/Windows_Win7SP1.7601.17514.101119-1850.AMD64FRE.Symbols.msi">Windows_Win7SP1.7601.17514.101119-1850.AMD64FRE.Symbols.msi</a><br><a target="_blank" rel="noopener" href="https://download.microsoft.com/download/0/A/F/0AFB5316-3062-494A-AB78-7FB0D4461357/Windows_Win7SP1.7601.17514.101119-1850.AMD64CHK.Symbols.msi">Windows_Win7SP1.7601.17514.101119-1850.AMD64CHK.Symbols.msi</a></p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-251052.htm">关于WinDbg的符号文件设置</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.reload /f</span><br></pre></td></tr></table></figure>
+<ul>
+<li>重新加载某个模块的符号。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.reload ntdll.dll</span><br></pre></td></tr></table></figure>
+<ul>
+<li>打印指定模块的符号信息。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!chksym ntdll.dll</span><br></pre></td></tr></table></figure>
+<h2 id="离线符号包"><a class="header-anchor" href="#离线符号包">#</a>离线符号包</h2>
+<p>微软曾经推出过符号离线安装包，不过后来没有再提供了，所以只有一些老系统有安装包。新的符号必须在线下载。<br>
+<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/d/3/0/d30e32d8-418a-469d-b600-f32ce3edf42d/WindowsXP-KB936929-SP3-x86-ENU.exe">WindowsXP-KB936929-SP3-x86-ENU.exe</a><br>
+<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/e/d/9/ed9b7861-4e43-4c62-a007-4e93aa109602/WindowsXP-KB936929-SP3-x86-CHS.exe">WindowsXP-KB936929-SP3-x86-CHS.exe</a><br>
+<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/2/2/a/22a44f8b-2f1b-46a9-940a-cf4099fd1de9/WindowsXP-KB936929-SP3-x86-CHT.exe">WindowsXP-KB936929-SP3-x86-CHT.exe</a><br>
+<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/2/9/0/29008fe5-f699-47d5-ab32-91bae6c548bf/WindowsXP-KB936929-SP3-x86-CHH.exe">WindowsXP-KB936929-SP3-x86-CHH.exe</a><br>
+<a target="_blank" rel="noopener" href="https://download.microsoft.com/download/7/F/B/7FBF7E6A-D0DE-442A-A683-4F9885A96FC9/Windows_Win7.7600.16385.090713-1255.X86FRE.Symbols.msi">Windows_Win7.7600.16385.090713-1255.X86FRE.Symbols.msi</a><br>
+<a target="_blank" rel="noopener" href="https://download.microsoft.com/download/7/F/B/7FBF7E6A-D0DE-442A-A683-4F9885A96FC9/Windows_Win7.7600.16385.090713-1255.X86CHK.Symbols.msi">Windows_Win7.7600.16385.090713-1255.X86CHK.Symbols.msi</a><br>
+<a target="_blank" rel="noopener" href="https://download.microsoft.com/download/F/1/1/F11206A1-C532-4C9E-86FF-1261A693AA53/Windows_Win7.7600.16385.090713-1255.X64FRE.Symbols.msi">Windows_Win7.7600.16385.090713-1255.X64FRE.Symbols.msi</a><br>
+<a target="_blank" rel="noopener" href="https://download.microsoft.com/download/F/1/1/F11206A1-C532-4C9E-86FF-1261A693AA53/Windows_Win7.7600.16385.090713-1255.X64CHK.Symbols.msi">Windows_Win7.7600.16385.090713-1255.X64CHK.Symbols.msi</a><br>
+<a target="_blank" rel="noopener" href="http://download.microsoft.com/download/0/A/F/0AFB5316-3062-494A-AB78-7FB0D4461357/Windows_Win7SP1.7601.17514.101119-1850.X86FRE.Symbols.msi">Windows_Win7SP1.7601.17514.101119-1850.X86FRE.Symbols.msi</a><br>
+<a target="_blank" rel="noopener" href="https://download.microsoft.com/download/0/A/F/0AFB5316-3062-494A-AB78-7FB0D4461357/Windows_Win7SP1.7601.17514.101119-1850.X86CHK.Symbols.msi">Windows_Win7SP1.7601.17514.101119-1850.X86CHK.Symbols.msi</a><br>
+<a target="_blank" rel="noopener" href="https://download.microsoft.com/download/0/A/F/0AFB5316-3062-494A-AB78-7FB0D4461357/Windows_Win7SP1.7601.17514.101119-1850.AMD64FRE.Symbols.msi">Windows_Win7SP1.7601.17514.101119-1850.AMD64FRE.Symbols.msi</a><br>
+<a target="_blank" rel="noopener" href="https://download.microsoft.com/download/0/A/F/0AFB5316-3062-494A-AB78-7FB0D4461357/Windows_Win7SP1.7601.17514.101119-1850.AMD64CHK.Symbols.msi">Windows_Win7SP1.7601.17514.101119-1850.AMD64CHK.Symbols.msi</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-251052.htm">关于WinDbg的符号文件设置</a></p>
 
       </div>
       
@@ -226,30 +262,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/WinDbg/" title="WinDbg">
-                        #WinDbg
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E8%BD%AF%E4%BB%B6%E8%B0%83%E8%AF%95/" title="软件调试">
-                        #软件调试
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -291,13 +303,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -517,43 +532,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + WinDbg%20%E9%85%8D%E7%BD%AE%E7%AC%A6%E5%8F%B7%E8%B7%AF%E5%BE%84 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F04%2F10%2Fwindbg-symbols%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/04/10/windbg-symbols/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

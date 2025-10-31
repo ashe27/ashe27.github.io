@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,15 +166,18 @@
           
       </div>
       <div class="markdown-body">
-        <h3 id="CWinApp-ProcessMessageFilter"><a href="#CWinApp-ProcessMessageFilter" class="headerlink" title="CWinApp::ProcessMessageFilter"></a>CWinApp::ProcessMessageFilter</h3><p>WinCE 下没有 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class#processmessagefilter">CWinApp::ProcessMessageFilter</a> 函数。<br>考虑用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class#pretranslatemessage">CWinApp::PreTranslateMessage</a> 代替。</p>
-<h3 id="链接库文件名不同"><a href="#链接库文件名不同" class="headerlink" title="链接库文件名不同"></a>链接库文件名不同</h3><p>一些Win32函数的链接库文件名会不同</p>
+        <h3 id="CWinApp-ProcessMessageFilter"><a class="header-anchor" href="#CWinApp-ProcessMessageFilter">#</a>CWinApp::ProcessMessageFilter</h3>
+<p>WinCE 下没有 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#processmessagefilter">CWinApp::ProcessMessageFilter</a> 函数。<br>
+考虑用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#pretranslatemessage">CWinApp::PreTranslateMessage</a> 代替。</p>
+<h3 id="链接库文件名不同"><a class="header-anchor" href="#链接库文件名不同">#</a>链接库文件名不同</h3>
+<p>一些Win32函数的链接库文件名会不同</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> _WIN32_WCE</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib, <span class="string">&quot;ws2.lib&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib, <span class="string">&quot;toolhelp.lib&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib, <span class="string">&quot;Ws2_32.lib&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-
-<h3 id="头文件定义缺少一些常量"><a href="#头文件定义缺少一些常量" class="headerlink" title="头文件定义缺少一些常量"></a>头文件定义缺少一些常量</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _USE_MATH_DEFINES</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="头文件定义缺少一些常量"><a class="header-anchor" href="#头文件定义缺少一些常量">#</a>头文件定义缺少一些常量</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> _USE_MATH_DEFINES</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br></pre></td></tr></table></figure>
 <p>win32下是有<code>M_PI</code>等数学符号的，wince下则没有，所以需要自己定义</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> M_PI</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> M_PI  3.1415926535897931</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-
-<h3 id="没有RegOpenKey"><a href="#没有RegOpenKey" class="headerlink" title="没有RegOpenKey"></a>没有RegOpenKey</h3><p>某些老旧的函数如 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyw">RegOpenKey</a> 是没有的，只有新的版本 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw">RegOpenKeyEx</a></p>
+<h3 id="没有RegOpenKey"><a class="header-anchor" href="#没有RegOpenKey">#</a>没有RegOpenKey</h3>
+<p>某些老旧的函数如 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyw">RegOpenKey</a> 是没有的，只有新的版本 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw">RegOpenKeyEx</a></p>
 
       </div>
       
@@ -182,24 +189,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows-CE/" title="Windows CE">
-                        #Windows CE
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -241,13 +230,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -467,43 +459,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Win32%20%E5%92%8C%20WinCE%20%E5%BC%80%E5%8F%91%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B7%AE%E5%BC%82 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F08%2F23%2FoJiwcUVws%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/08/23/oJiwcUVws/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

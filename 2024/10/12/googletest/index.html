@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -174,7 +178,9 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="将-GoogleTest-添加到项目中"><a href="#将-GoogleTest-添加到项目中" class="headerlink" title="将 GoogleTest 添加到项目中"></a>将 GoogleTest 添加到项目中</h2><p>GoogleTest 仓库地址：<a target="_blank" rel="noopener" href="https://github.com/google/googletest">https://github.com/google/googletest</a><br>包含两个项目：GoogleTest 和 GoogleMock，目录结构是这样的：</p>
+        <h2 id="将-GoogleTest-添加到项目中"><a class="header-anchor" href="#将-GoogleTest-添加到项目中">#</a>将 GoogleTest 添加到项目中</h2>
+<p>GoogleTest 仓库地址：<a target="_blank" rel="noopener" href="https://github.com/google/googletest">https://github.com/google/googletest</a><br>
+包含两个项目：GoogleTest 和 GoogleMock，目录结构是这样的：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">googletest/</span><br><span class="line">├── googletest/</span><br><span class="line">│   └── CMakeLists.txt</span><br><span class="line">├── googlemock/</span><br><span class="line">│   └── CMakeLists.txt</span><br><span class="line">└── CMakeLists.txt</span><br></pre></td></tr></table></figure>
 <p>GoogleMock 是用于模拟数据用的，简单测试的话用不上它。只需要将 googletest 拷贝到项目中，大概是这样的结构：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">MyProject/</span><br><span class="line">├── CMakeLists.txt</span><br><span class="line">├── ModuleA/</span><br><span class="line">│   └── CMakeLists.txt</span><br><span class="line">└── googletest/</span><br><span class="line">    ├── googletest/</span><br><span class="line">    │   └── CMakeLists.txt</span><br><span class="line">    └── CMakeLists.txt</span><br></pre></td></tr></table></figure>
@@ -182,27 +188,37 @@
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(BUILD_GMOCK <span class="keyword">OFF</span>)</span><br><span class="line"><span class="keyword">add_subdirectory</span>(googletest)</span><br></pre></td></tr></table></figure>
 <p>接着创建一个测试项目，比如<code>ModuleA-Test</code>，在它的<code>CMakeLists.txt</code>中链接<code>gtest_main</code>即可。</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">target_link_libraries</span>(ModuleA-<span class="keyword">Test</span> PRIVATE gtest_main)</span><br></pre></td></tr></table></figure>
-<p>注意，GoogleTest 添加了两个 target，<code>gtest</code>和<code>gtest_main</code>。<br><code>gtest_main</code>是 GoogleTest 测试框架中的一个库，它提供了一个预定义的<code>main()</code>函数，用于运行所有的测试用例。<br>在使用 GoogleTest 编写测试时，通常需要定义一个<code>main()</code>函数来初始化测试框架并运行测试用例。而<code>gtest_main</code>库提供了一个默认的<code>main()</code>函数实现，<br>通过使用<code>gtest_main</code>库，可以避免在每个测试文件中编写相同的<code>main()</code>函数，从而简化测试代码的编写和维护。<br>下面是一个使用<code>gtest_main</code>库的简单示例：</p>
+<p>注意，GoogleTest 添加了两个 target，<code>gtest</code>和<code>gtest_main</code>。<br>
+<code>gtest_main</code>是 GoogleTest 测试框架中的一个库，它提供了一个预定义的<code>main()</code>函数，用于运行所有的测试用例。<br>
+在使用 GoogleTest 编写测试时，通常需要定义一个<code>main()</code>函数来初始化测试框架并运行测试用例。而<code>gtest_main</code>库提供了一个默认的<code>main()</code>函数实现，<br>
+通过使用<code>gtest_main</code>库，可以避免在每个测试文件中编写相同的<code>main()</code>函数，从而简化测试代码的编写和维护。<br>
+下面是一个使用<code>gtest_main</code>库的简单示例：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gtest/gtest.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="built_in">TEST</span>(ExampleTest, SimpleTest) &#123;</span><br><span class="line">    <span class="built_in">ASSERT_EQ</span>(<span class="number">2</span>, <span class="number">1</span> + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 无需编写 main() 函数，gtest_main 会自动提供</span></span><br></pre></td></tr></table></figure>
 <p>而<code>gtest_main</code>是依赖<code>gtest</code>的，所以我们只需要链接<code>gtest_main</code>即可。</p>
-<h2 id="断言"><a href="#断言" class="headerlink" title="断言"></a>断言</h2><p>断言分成两大类：</p>
+<h2 id="断言"><a class="header-anchor" href="#断言">#</a>断言</h2>
+<p>断言分成两大类：</p>
 <ul>
 <li><code>ASSERT_*</code>系列：如果检测失败就直接退出当前函数。</li>
 <li><code>EXPECT_*</code>系列：如果检测失败发出提示，并继续往下执行。</li>
 </ul>
 <p>通常情况应该首选使用 EXPECT，因为 ASSERT 在报告完错误后不会进行清理工作。</p>
-<h3 id="判断布尔类型"><a href="#判断布尔类型" class="headerlink" title="判断布尔类型"></a>判断布尔类型</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ASSERT_TRUE</span>(condition);      <span class="comment">// 判断条件是否为真</span></span><br><span class="line"><span class="built_in">ASSERT_FALSE</span>(condition);     <span class="comment">// 判断条件是否为假</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">EXPECT_TRUE</span>(condition);      <span class="comment">// 判断条件是否为真</span></span><br><span class="line"><span class="built_in">EXPECT_FALSE</span>(condition);     <span class="comment">// 判断条件是否为假</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="逻辑判断"><a href="#逻辑判断" class="headerlink" title="逻辑判断"></a>逻辑判断</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ASSERT_EQ</span>(val1, val2);       <span class="comment">// 判断是否相等</span></span><br><span class="line"><span class="built_in">ASSERT_NE</span>(val1, val2);       <span class="comment">// 判断是否不相等</span></span><br><span class="line"><span class="built_in">ASSERT_LT</span>(val1, val2);       <span class="comment">// 判断是否小于</span></span><br><span class="line"><span class="built_in">ASSERT_LE</span>(val1, val2);       <span class="comment">// 判断是否小于等于</span></span><br><span class="line"><span class="built_in">ASSERT_GT</span>(val1, val2);       <span class="comment">// 判断是否大于</span></span><br><span class="line"><span class="built_in">ASSERT_GE</span>(val1, val2);       <span class="comment">// 判断是否大于等于</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="比较字符串类型"><a href="#比较字符串类型" class="headerlink" title="比较字符串类型"></a>比较字符串类型</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ASSERT_STREQ</span>(str1,str2);     <span class="comment">// 判断字符串是否相等</span></span><br><span class="line"><span class="built_in">ASSERT_STRNE</span>(str1,str2);     <span class="comment">// 判断字符串是否不相等</span></span><br><span class="line"><span class="built_in">ASSERT_STRCASEEQ</span>(str1,str2); <span class="comment">// 判断字符串是否相等，忽视大小写</span></span><br><span class="line"><span class="built_in">ASSERT_STRCASENE</span>(str1,str2); <span class="comment">// 判断字符串是否不相等，忽视大小写</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">EXPECT_STREQ</span>(str1,str2);     <span class="comment">// 判断字符串是否相等</span></span><br><span class="line"><span class="built_in">EXPECT_STRNE</span>(str1,str2);     <span class="comment">// 判断字符串是否不相等</span></span><br><span class="line"><span class="built_in">EXPECT_STRCASEEQ</span>(str1,str2); <span class="comment">// 判断字符串是否相等，忽视大小写</span></span><br><span class="line"><span class="built_in">EXPECT_STRCASENE</span>(str1,str2); <span class="comment">// 判断字符串是否不相等，忽视大小写</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="谓词"><a href="#谓词" class="headerlink" title="谓词"></a>谓词</h3><p>谓词用于编写自定义的断言。这些宏允许你定义一个谓词函数，该函数接受一定数量的参数并返回一个布尔值，然后将该谓词函数应用于实际的参数，并根据返回值来确定断言是否通过。</p>
+<h3 id="判断布尔类型"><a class="header-anchor" href="#判断布尔类型">#</a>判断布尔类型</h3>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ASSERT_TRUE</span>(condition);      <span class="comment">// 判断条件是否为真</span></span><br><span class="line"><span class="built_in">ASSERT_FALSE</span>(condition);     <span class="comment">// 判断条件是否为假</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">EXPECT_TRUE</span>(condition);      <span class="comment">// 判断条件是否为真</span></span><br><span class="line"><span class="built_in">EXPECT_FALSE</span>(condition);     <span class="comment">// 判断条件是否为假</span></span><br></pre></td></tr></table></figure>
+<h3 id="逻辑判断"><a class="header-anchor" href="#逻辑判断">#</a>逻辑判断</h3>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ASSERT_EQ</span>(val1, val2);       <span class="comment">// 判断是否相等</span></span><br><span class="line"><span class="built_in">ASSERT_NE</span>(val1, val2);       <span class="comment">// 判断是否不相等</span></span><br><span class="line"><span class="built_in">ASSERT_LT</span>(val1, val2);       <span class="comment">// 判断是否小于</span></span><br><span class="line"><span class="built_in">ASSERT_LE</span>(val1, val2);       <span class="comment">// 判断是否小于等于</span></span><br><span class="line"><span class="built_in">ASSERT_GT</span>(val1, val2);       <span class="comment">// 判断是否大于</span></span><br><span class="line"><span class="built_in">ASSERT_GE</span>(val1, val2);       <span class="comment">// 判断是否大于等于</span></span><br></pre></td></tr></table></figure>
+<h3 id="比较字符串类型"><a class="header-anchor" href="#比较字符串类型">#</a>比较字符串类型</h3>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ASSERT_STREQ</span>(str1,str2);     <span class="comment">// 判断字符串是否相等</span></span><br><span class="line"><span class="built_in">ASSERT_STRNE</span>(str1,str2);     <span class="comment">// 判断字符串是否不相等</span></span><br><span class="line"><span class="built_in">ASSERT_STRCASEEQ</span>(str1,str2); <span class="comment">// 判断字符串是否相等，忽视大小写</span></span><br><span class="line"><span class="built_in">ASSERT_STRCASENE</span>(str1,str2); <span class="comment">// 判断字符串是否不相等，忽视大小写</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">EXPECT_STREQ</span>(str1,str2);     <span class="comment">// 判断字符串是否相等</span></span><br><span class="line"><span class="built_in">EXPECT_STRNE</span>(str1,str2);     <span class="comment">// 判断字符串是否不相等</span></span><br><span class="line"><span class="built_in">EXPECT_STRCASEEQ</span>(str1,str2); <span class="comment">// 判断字符串是否相等，忽视大小写</span></span><br><span class="line"><span class="built_in">EXPECT_STRCASENE</span>(str1,str2); <span class="comment">// 判断字符串是否不相等，忽视大小写</span></span><br></pre></td></tr></table></figure>
+<h3 id="谓词"><a class="header-anchor" href="#谓词">#</a>谓词</h3>
+<p>谓词用于编写自定义的断言。这些宏允许你定义一个谓词函数，该函数接受一定数量的参数并返回一个布尔值，然后将该谓词函数应用于实际的参数，并根据返回值来确定断言是否通过。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">EXPECT_PRED1</span>(pred,val1);</span><br><span class="line"><span class="built_in">EXPECT_PRED2</span>(pred,val1,val2);</span><br><span class="line"><span class="built_in">EXPECT_PRED3</span>(pred,val1,val2,val3);</span><br><span class="line"><span class="built_in">EXPECT_PRED4</span>(pred,val1,val2,val3,val4);</span><br><span class="line"><span class="built_in">EXPECT_PRED5</span>(pred,val1,val2,val3,val4,val5);</span><br><span class="line"></span><br><span class="line"><span class="built_in">ASSERT_PRED1</span>(pred,val1);</span><br><span class="line"><span class="built_in">ASSERT_PRED2</span>(pred,val1,val2);</span><br><span class="line"><span class="built_in">ASSERT_PRED3</span>(pred,val1,val2,val3);</span><br><span class="line"><span class="built_in">ASSERT_PRED4</span>(pred,val1,val2,val3,val4);</span><br><span class="line"><span class="built_in">ASSERT_PRED5</span>(pred,val1,val2,val3,val4,val5);</span><br></pre></td></tr></table></figure>
 <p>一个使用 EXPECT_PRED2 的例子：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;gtest/gtest.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">IsPositiveAndEven</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x &gt; <span class="number">0</span> &amp;&amp; y &gt; <span class="number">0</span> &amp;&amp; x % <span class="number">2</span> == <span class="number">0</span> &amp;&amp; y % <span class="number">2</span> == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">TEST</span>(PredTest, IsPositiveAndEven) &#123;</span><br><span class="line">    <span class="built_in">EXPECT_PRED2</span>(IsPositiveAndEven, <span class="number">2</span>, <span class="number">4</span>);</span><br><span class="line">    <span class="built_in">EXPECT_PRED2</span>(IsPositiveAndEven, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/coderzh/tag/Google%20Test/">玩转Google开源C++单元测试框架Google Test系列</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/shift_wwx/article/details/102857567">C++单元测试框架Google Test系列(gtest)</a><br><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/1419710">C++单元测试GoogleTest和GoogleMock十分钟快速上手</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1510229">C++ 项目之Googletest单元测试</a><br><a target="_blank" rel="noopener" href="https://www.jetbrains.com.cn/en-us/help/clion/creating-google-test-run-debug-configuration-for-test.html">CLion 中使用 Google Test</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/coderzh/tag/Google%20Test/">玩转Google开源C++单元测试框架Google Test系列</a><br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/shift_wwx/article/details/102857567">C++单元测试框架Google Test系列(gtest)</a><br>
+<a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/1419710">C++单元测试GoogleTest和GoogleMock十分钟快速上手</a><br>
+<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1510229">C++ 项目之Googletest单元测试</a><br>
+<a target="_blank" rel="noopener" href="https://www.jetbrains.com.cn/en-us/help/clion/creating-google-test-run-debug-configuration-for-test.html">CLion 中使用 Google Test</a></p>
 
       </div>
       
@@ -214,36 +230,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/c-plus-plus/" title="C++">
-                        #C++
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/GoogleTest/" title="GoogleTest">
-                        #GoogleTest
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Unit-Test/" title="Unit Test">
-                        #Unit Test
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -285,13 +271,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -511,43 +500,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%94%A8%20GoogleTest%20%E8%BF%9B%E8%A1%8C%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F10%2F12%2Fgoogletest%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/10/12/googletest/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

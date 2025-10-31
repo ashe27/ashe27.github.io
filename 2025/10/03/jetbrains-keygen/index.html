@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,21 +166,33 @@
           
       </div>
       <div class="markdown-body">
-        <p>之前都是用别人的 KeyGen，但是好奇想了解一下 JetBrains 系列软件的注册原理，所以查阅了一些文章：<br><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-251584.htm">IDEA 2019.1版本的破解文件JetbrainsCrack.jar分析 </a><br><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-271052.htm">注册码证书验证过程</a><br><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-271578.htm">ja-netfilter 代理框架</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/668667982">ja-netfilter破解某IDE原理分析及生成激活码</a><br><a target="_blank" rel="noopener" href="https://www.xuzhengtong.com/2022/07/25/ja-netfilter/ja-netfilter-plugins-power/">ja-netfilter power插件原理</a><br><a target="_blank" rel="noopener" href="https://blog.novitechie.com/archives/idea-cracking">Idea破解原理</a></p>
-<h2 id="激活码验证流程"><a href="#激活码验证流程" class="headerlink" title="激活码验证流程"></a>激活码验证流程</h2><p>激活码由4部分组成，用<code>-</code>字符分隔</p>
+        <p>之前都是用别人的 KeyGen，但是好奇想了解一下 JetBrains 系列软件的注册原理，所以查阅了一些文章：<br>
+<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-251584.htm">IDEA 2019.1版本的破解文件JetbrainsCrack.jar分析 </a><br>
+<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-271052.htm">注册码证书验证过程</a><br>
+<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-271578.htm">ja-netfilter 代理框架</a><br>
+<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/668667982">ja-netfilter破解某IDE原理分析及生成激活码</a><br>
+<a target="_blank" rel="noopener" href="https://www.xuzhengtong.com/2022/07/25/ja-netfilter/ja-netfilter-plugins-power/">ja-netfilter power插件原理</a><br>
+<a target="_blank" rel="noopener" href="https://blog.novitechie.com/archives/idea-cracking">Idea破解原理</a></p>
+<h2 id="激活码验证流程"><a class="header-anchor" href="#激活码验证流程">#</a>激活码验证流程</h2>
+<p>激活码由4部分组成，用<code>-</code>字符分隔</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">key = &quot;1OOG7EX2FA-xxx-xxx-xxx&quot;</span><br><span class="line"></span><br><span class="line">licenseParts = key.split(&#x27;-&#x27;)</span><br><span class="line">licenseId = licenseParts[0]                # ID，明文，无关紧要，和授权信息中的id保持一致就行</span><br><span class="line">licensePartBase64 = licenseParts[1]        # 授权信息，就是 JSON 内容</span><br><span class="line">signatureBase64 = licenseParts[2]          # 授权信息的签名</span><br><span class="line">certBase64 = licenseParts[3]               # 证书</span><br></pre></td></tr></table></figure>
 <p>软件验证激活码流程：</p>
 <ol>
 <li>软件内会先用内置 CA 证书对激活码中的证书验证。</li>
 <li>用激活码中的证书、签名对<code>licensePart</code>部分验签，目的是防止篡改<code>licensePart</code>。</li>
 </ol>
-<p><br>而 <a target="_blank" rel="noopener" href="https://gitee.com/ja-netfilter/ja-netfilter">ja-netfilter</a> 这个项目正好可以解决第一步中对证书的验签。<br>而第二步我们可以自行创建一个证书对授权信息签名，这样激活码中的签名部分就是正确的。</p>
-<h2 id="注册机"><a href="#注册机" class="headerlink" title="注册机"></a>注册机</h2><p>抄的大佬们的，优化了一下。<br>注册分两步：</p>
+<p><br>
+而 <a target="_blank" rel="noopener" href="https://gitee.com/ja-netfilter/ja-netfilter">ja-netfilter</a> 这个项目正好可以解决第一步中对证书的验签。<br>
+而第二步我们可以自行创建一个证书对授权信息签名，这样激活码中的签名部分就是正确的。</p>
+<h2 id="注册机"><a class="header-anchor" href="#注册机">#</a>注册机</h2>
+<p>抄的大佬们的，优化了一下。<br>
+注册分两步：</p>
 <ol>
 <li>生成自己的证书。</li>
 <li>自己定义授权信息，然后用自己的证书签名。</li>
 </ol>
-<p><br>创建证书的脚本：</p>
+<p><br>
+创建证书的脚本：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> cryptography <span class="keyword">import</span> x509</span><br><span class="line"><span class="keyword">from</span> cryptography.hazmat.backends <span class="keyword">import</span> default_backend</span><br><span class="line"><span class="keyword">from</span> cryptography.hazmat.primitives <span class="keyword">import</span> hashes, serialization</span><br><span class="line"><span class="keyword">from</span> cryptography.hazmat.primitives.asymmetric <span class="keyword">import</span> rsa</span><br><span class="line"><span class="keyword">from</span> cryptography.x509.oid <span class="keyword">import</span> NameOID</span><br><span class="line"></span><br><span class="line">one_day = datetime.timedelta(days=<span class="number">1</span>)</span><br><span class="line">ten_day = datetime.timedelta(days=<span class="number">3650</span>)</span><br><span class="line">today = datetime.datetime.today()</span><br><span class="line">yesterday = today - one_day</span><br><span class="line">tomorrow = today + ten_day</span><br><span class="line"></span><br><span class="line">private_key = rsa.generate_private_key(</span><br><span class="line">    public_exponent=<span class="number">65537</span>,</span><br><span class="line">    key_size=<span class="number">4096</span>,</span><br><span class="line">    backend=default_backend()</span><br><span class="line">)</span><br><span class="line">public_key = private_key.public_key()</span><br><span class="line">builder = x509.CertificateBuilder()</span><br><span class="line"></span><br><span class="line">builder = builder.subject_name(x509.Name([</span><br><span class="line">    x509.NameAttribute(NameOID.COMMON_NAME, <span class="string">&#x27;jack&#x27;</span>),</span><br><span class="line">]))</span><br><span class="line">builder = builder.issuer_name(x509.Name([</span><br><span class="line">    x509.NameAttribute(NameOID.COMMON_NAME, <span class="string">&#x27;JetProfile CA&#x27;</span>),</span><br><span class="line">]))</span><br><span class="line">builder = builder.not_valid_before(yesterday)</span><br><span class="line">builder = builder.not_valid_after(tomorrow)</span><br><span class="line">builder = builder.serial_number(x509.random_serial_number())</span><br><span class="line">builder = builder.public_key(public_key)</span><br><span class="line"></span><br><span class="line">certificate = builder.sign(</span><br><span class="line">    private_key=private_key, algorithm=hashes.SHA256(),</span><br><span class="line">    backend=default_backend()</span><br><span class="line">)</span><br><span class="line">private_bytes = private_key.private_bytes(</span><br><span class="line">    encoding=serialization.Encoding.PEM,</span><br><span class="line">    <span class="built_in">format</span>=serialization.PrivateFormat.TraditionalOpenSSL,</span><br><span class="line">    encryption_algorithm=serialization.NoEncryption())</span><br><span class="line">public_bytes = certificate.public_bytes(</span><br><span class="line">    encoding=serialization.Encoding.PEM)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;ca.key&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> fout:</span><br><span class="line">    fout.write(private_bytes)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;ca.cer&quot;</span>, <span class="string">&quot;wb&quot;</span>) <span class="keyword">as</span> fout:</span><br><span class="line">    fout.write(public_bytes)</span><br></pre></td></tr></table></figure>
 <p>注册机：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> Crypto.Hash <span class="keyword">import</span> SHA1, SHA256</span><br><span class="line"><span class="keyword">from</span> Crypto.PublicKey <span class="keyword">import</span> RSA</span><br><span class="line"><span class="keyword">from</span> Crypto.Signature <span class="keyword">import</span> pkcs1_15</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.asn1 <span class="keyword">import</span> DerSequence, DerObjectId, DerNull, DerOctetString</span><br><span class="line"><span class="keyword">from</span> cryptography <span class="keyword">import</span> x509</span><br><span class="line"><span class="keyword">from</span> cryptography.hazmat.primitives <span class="keyword">import</span> hashes</span><br><span class="line"><span class="keyword">from</span> cryptography.hazmat.primitives.asymmetric <span class="keyword">import</span> padding</span><br><span class="line"><span class="keyword">from</span> cryptography.hazmat.primitives <span class="keyword">import</span> serialization</span><br><span class="line"></span><br><span class="line"><span class="comment"># JetBrains CA</span></span><br><span class="line"><span class="comment"># 来自 https://github.com/JetBrains/marketplace-makemecoffee-plugin/blob/master/src/main/java/com/company/license/CheckLicense.java</span></span><br><span class="line">ROOT_CERTIFICATES = (<span class="string">&quot;MIIFOzCCAyOgAwIBAgIJANJssYOyg3nhMA0GCSqGSIb3DQEBCwUAMBgxFjAUBgNV\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;BAMMDUpldFByb2ZpbGUgQ0EwHhcNMTUxMDAyMTEwMDU2WhcNNDUxMDI0MTEwMDU2\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;WjAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBMIICIjANBgkqhkiG9w0BAQEFAAOC\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;Ag8AMIICCgKCAgEA0tQuEA8784NabB1+T2XBhpB+2P1qjewHiSajAV8dfIeWJOYG\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;y+ShXiuedj8rL8VCdU+yH7Ux/6IvTcT3nwM/E/3rjJIgLnbZNerFm15Eez+XpWBl\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;m5fDBJhEGhPc89Y31GpTzW0vCLmhJ44XwvYPntWxYISUrqeR3zoUQrCEp1C6mXNX\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;EpqIGIVbJ6JVa/YI+pwbfuP51o0ZtF2rzvgfPzKtkpYQ7m7KgA8g8ktRXyNrz8bo\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;iwg7RRPeqs4uL/RK8d2KLpgLqcAB9WDpcEQzPWegbDrFO1F3z4UVNH6hrMfOLGVA\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;xoiQhNFhZj6RumBXlPS0rmCOCkUkWrDr3l6Z3spUVgoeea+QdX682j6t7JnakaOw\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;jzwY777SrZoi9mFFpLVhfb4haq4IWyKSHR3/0BlWXgcgI6w6LXm+V+ZgLVDON52F\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;LcxnfftaBJz2yclEwBohq38rYEpb+28+JBvHJYqcZRaldHYLjjmb8XXvf2MyFeXr\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;SopYkdzCvzmiEJAewrEbPUaTllogUQmnv7Rv9sZ9jfdJ/cEn8e7GSGjHIbnjV2ZM\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;Q9vTpWjvsT/cqatbxzdBo/iEg5i9yohOC9aBfpIHPXFw+fEj7VLvktxZY6qThYXR\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;Rus1WErPgxDzVpNp+4gXovAYOxsZak5oTV74ynv1aQ93HSndGkKUE/qA/JECAwEA\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;AaOBhzCBhDAdBgNVHQ4EFgQUo562SGdCEjZBvW3gubSgUouX8bMwSAYDVR0jBEEw\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;P4AUo562SGdCEjZBvW3gubSgUouX8bOhHKQaMBgxFjAUBgNVBAMMDUpldFByb2Zp\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;bGUgQ0GCCQDSbLGDsoN54TAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIBBjANBgkq\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;hkiG9w0BAQsFAAOCAgEAjrPAZ4xC7sNiSSqh69s3KJD3Ti4etaxcrSnD7r9rJYpK\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;BMviCKZRKFbLv+iaF5JK5QWuWdlgA37ol7mLeoF7aIA9b60Ag2OpgRICRG79QY7o\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;uLviF/yRMqm6yno7NYkGLd61e5Huu+BfT459MWG9RVkG/DY0sGfkyTHJS5xrjBV6\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;hjLG0lf3orwqOlqSNRmhvn9sMzwAP3ILLM5VJC5jNF1zAk0jrqKz64vuA8PLJZlL\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;S9TZJIYwdesCGfnN2AETvzf3qxLcGTF038zKOHUMnjZuFW1ba/12fDK5GJ4i5y+n\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;fDWVZVUDYOPUixEZ1cwzmf9Tx3hR8tRjMWQmHixcNC8XEkVfztID5XeHtDeQ+uPk\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;X+jTDXbRb+77BP6n41briXhm57AwUI3TqqJFvoiFyx5JvVWG3ZqlVaeU/U9e0gxn\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;8qyR+ZA3BGbtUSDDs8LDnE67URzK+L+q0F2BC758lSPNB2qsJeQ63bYyzf0du3wB\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;/gb2+xJijAvscU3KgNpkxfGklvJD/oDUIqZQAnNcHe7QEf8iG2WqaMJIyXZlW3me\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;0rn+cgvxHPt6N4EBh5GgNZR4l0eaFEV+fxVsydOQYo1RIyFMXtafFBqQl6DDxujl\n&quot;</span> +</span><br><span class="line">      <span class="string">&quot;FeU3FZ+Bcp12t7dlM4E0/sS1XdL47CfGVj4Bp+/VbF862HmkAbd7shs7sDQkHbU=\n&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_power_file</span>(<span class="params">active_code</span>):</span><br><span class="line">    subcert = x509.load_der_x509_certificate(base64.b64decode(active_code.split(<span class="string">&#x27;-&#x27;</span>)[<span class="number">3</span>]))</span><br><span class="line">    s = <span class="built_in">int</span>.from_bytes(subcert.signature, byteorder=<span class="string">&#x27;big&#x27;</span>, signed=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">    digest_cert = SHA256.new(subcert.tbs_certificate_bytes)</span><br><span class="line">    digest_info = create_digest_info(digest_cert)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 使用标准的 PKCS#1 v1.5 填充构造</span></span><br><span class="line">    key_size_bytes = subcert.public_key().key_size // <span class="number">8</span>  <span class="comment"># 转换为字节数</span></span><br><span class="line">    padded_data = create_pkcs1v15_padding(digest_info, key_size_bytes)</span><br><span class="line">    r = <span class="built_in">int</span>.from_bytes(padded_data, byteorder=<span class="string">&#x27;big&#x27;</span>, signed=<span class="literal">False</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 写入 power.conf 文件</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;power.conf&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        jb_ca = x509.load_der_x509_certificate(base64.b64decode(ROOT_CERTIFICATES))</span><br><span class="line">        jb_ca_public_key = jb_ca.public_key()</span><br><span class="line">        jb_ca_public_key_n = jb_ca_public_key.public_numbers().n</span><br><span class="line">        jb_ca_public_key_e = jb_ca_public_key.public_numbers().e</span><br><span class="line"></span><br><span class="line">        f.write(<span class="string">&quot;[Result]\n&quot;</span>)</span><br><span class="line">        f.write(<span class="string">f&quot;EQUAL,<span class="subst">&#123;s&#125;</span>,<span class="subst">&#123;jb_ca_public_key_e&#125;</span>,<span class="subst">&#123;jb_ca_public_key_n&#125;</span>-&gt;<span class="subst">&#123;r&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_digest_info</span>(<span class="params">hash_obj</span>):</span><br><span class="line">    <span class="comment"># 构造 AlgorithmIdentifier</span></span><br><span class="line">    algorithm_id = DerSequence([</span><br><span class="line">        DerObjectId(hash_obj.oid),  <span class="comment"># 哈希算法的 OID</span></span><br><span class="line">        DerNull()  <span class="comment"># NULL 参数</span></span><br><span class="line">    ])</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 构造完整的 DigestInfo</span></span><br><span class="line">    digest_info = DerSequence([</span><br><span class="line">        algorithm_id,</span><br><span class="line">        DerOctetString(hash_obj.digest())</span><br><span class="line">    ])</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> digest_info.encode()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">create_pkcs1v15_padding</span>(<span class="params">digest_info, key_size_bytes</span>):</span><br><span class="line">    <span class="comment"># 计算所需的填充长度</span></span><br><span class="line">    padding_length = key_size_bytes - <span class="built_in">len</span>(digest_info) - <span class="number">3</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 验证填充长度（PKCS#1 要求至少8字节填充）</span></span><br><span class="line">    <span class="keyword">if</span> padding_length &lt; <span class="number">8</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">f&quot;Key size (<span class="subst">&#123;key_size_bytes * <span class="number">8</span>&#125;</span> bits) too small for hash digest&quot;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 构造标准的 PKCS#1 v1.5 填充格式</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">b&#x27;\x00\x01&#x27;</span> + <span class="string">b&#x27;\xff&#x27;</span> * padding_length + <span class="string">b&#x27;\x00&#x27;</span> + digest_info</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从 ca.cer 文件中读取证书 (PEM 格式)</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;ca.cer&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> cert_file:</span><br><span class="line">    cert = x509.load_pem_x509_certificate(cert_file.read())</span><br><span class="line">    cert_der = cert.public_bytes(encoding=serialization.Encoding.DER)</span><br><span class="line">    my_cert_content = base64.b64encode(cert_der).decode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从 license.json 文件中读取许可证数据</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;license.json&#x27;</span>, <span class="string">&#x27;r&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    license_config = json.load(f)</span><br><span class="line"></span><br><span class="line">licenseId = license_config[<span class="string">&#x27;licenseId&#x27;</span>]</span><br><span class="line">licensePart = json.dumps(license_config)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;ca.key&#x27;</span>) <span class="keyword">as</span> prifile:</span><br><span class="line">    <span class="comment"># 使用私钥对HASH值进行签名</span></span><br><span class="line">    private_key = RSA.import_key(prifile.read())</span><br><span class="line">    digest = SHA1.new(licensePart.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">    signature = pkcs1_15.new(private_key).sign(digest)</span><br><span class="line"></span><br><span class="line">    sig_results = base64.b64encode(signature)</span><br><span class="line">    licensePartBase64 = base64.b64encode(licensePart.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 验签</span></span><br><span class="line">    cert.public_key().verify(</span><br><span class="line">        base64.b64decode(sig_results),</span><br><span class="line">        base64.b64decode(licensePartBase64),</span><br><span class="line">        padding=padding.PKCS1v15(),</span><br><span class="line">        algorithm=hashes.SHA1(),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将激活码写入 key.txt 文件</span></span><br><span class="line">    active_code = licenseId + <span class="string">&quot;-&quot;</span> + licensePartBase64.decode(<span class="string">&#x27;utf-8&#x27;</span>) + <span class="string">&quot;-&quot;</span> + sig_results.decode(<span class="string">&#x27;utf-8&#x27;</span>) + <span class="string">&quot;-&quot;</span> + my_cert_content</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;key.txt&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(active_code)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 生成 power.conf 文件</span></span><br><span class="line">    create_power_file(active_code)</span><br></pre></td></tr></table></figure>
@@ -194,24 +210,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-10-05 21:09:40
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/JetBrains/" title="JetBrains">
-                        #JetBrains
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -253,13 +251,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -479,43 +480,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%AD%A6%E4%B9%A0%E5%88%B6%E4%BD%9C%20JetBrains%20KeyGen + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F10%2F03%2Fjetbrains-keygen%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/10/03/jetbrains-keygen/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

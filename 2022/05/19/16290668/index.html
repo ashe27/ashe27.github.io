@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,44 +166,55 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="CWinApp-的配置管理接口"><a href="#CWinApp-的配置管理接口" class="headerlink" title="CWinApp 的配置管理接口"></a>CWinApp 的配置管理接口</h2><p><code>CWinApp</code>与设置相关的接口有<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class#writeprofileint">CWinApp::WriteProfileInt</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class#writeprofilestring">CWinApp::WriteProfileString</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class#writeprofilebinary">CWinApp::WriteProfileBinary</a></p>
+        <h2 id="CWinApp-的配置管理接口"><a class="header-anchor" href="#CWinApp-的配置管理接口">#</a>CWinApp 的配置管理接口</h2>
+<p><code>CWinApp</code>与设置相关的接口有<br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#writeprofileint">CWinApp::WriteProfileInt</a><br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#writeprofilestring">CWinApp::WriteProfileString</a><br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#writeprofilebinary">CWinApp::WriteProfileBinary</a></p>
 <p>看看<code>WriteProfileInt</code>的实现</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CWinApp::WriteProfileInt</span><span class="params">(LPCTSTR lpszSection, LPCTSTR lpszEntry,</span></span></span><br><span class="line"><span class="params"><span class="function">	<span class="type">int</span> nValue)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">ASSERT</span>(lpszSection != <span class="literal">NULL</span>);</span><br><span class="line">	<span class="built_in">ASSERT</span>(lpszEntry != <span class="literal">NULL</span>);</span><br><span class="line">	<span class="keyword">if</span> (m_pszRegistryKey != <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		HKEY hSecKey = <span class="built_in">GetSectionKey</span>(lpszSection);</span><br><span class="line">		<span class="keyword">if</span> (hSecKey == <span class="literal">NULL</span>)</span><br><span class="line">			<span class="keyword">return</span> FALSE;</span><br><span class="line">		LONG lResult = <span class="built_in">RegSetValueEx</span>(hSecKey, lpszEntry, <span class="literal">NULL</span>, REG_DWORD,</span><br><span class="line">			(LPBYTE)&amp;nValue, <span class="built_in">sizeof</span>(nValue));</span><br><span class="line">		<span class="built_in">RegCloseKey</span>(hSecKey);</span><br><span class="line">		<span class="keyword">return</span> lResult == ERROR_SUCCESS;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">ASSERT</span>(m_pszProfileName != <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">		TCHAR szT[<span class="number">16</span>];</span><br><span class="line">		_stprintf_s(szT, _countof(szT), _T(<span class="string">&quot;%d&quot;</span>), nValue);</span><br><span class="line">		<span class="keyword">return</span> ::<span class="built_in">WritePrivateProfileString</span>(lpszSection, lpszEntry, szT,</span><br><span class="line">			m_pszProfileName);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>知识点：</p>
 <ol>
 <li>优先考虑写入到注册表，但如果未设置<code>m_pszRegistryKey</code>值，则会写入到 ini 文件中。</li>
-<li><code>m_pszRegistryKey</code>默认值是<code>nullptr</code>，可以用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class#setregistrykey">CWinApp::SetRegistryKey</a> 修改它。</li>
-<li><code>m_pszProfileName</code>是在程序启动时初始化的，默认用程序的文件名加上<code>INI</code>后缀。MFC 没有提供函数修改它，但是可以直接对其赋值。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">CWinApp::SetCurrentHandles</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (m_pszProfileName == <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">        Checked::<span class="built_in">tcscat_s</span>(szExeName, _countof(szExeName), _T(<span class="string">&quot;.INI&quot;</span>)); <span class="comment">// will be enough room in buffer</span></span><br><span class="line">        BOOL bEnable = <span class="built_in">AfxEnableMemoryTracking</span>(FALSE);</span><br><span class="line">        m_pszProfileName = _tcsdup(szExeName);</span><br><span class="line">        <span class="built_in">AfxEnableMemoryTracking</span>(bEnable);</span><br><span class="line">        <span class="keyword">if</span>(!m_pszProfileName)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">AfxThrowMemoryException</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>如果<code>m_pszProfileName</code>仅仅只有文件名，文件会保存到<code>C:\Windows</code>目录下，所以建议用相对路径的形式<code>.\Config.ini</code>，或着绝对路径。</li>
-<li>当使用注册表保存时，<code>m_pszProfileName</code>就变为了<code>Key</code><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>-&gt;<span class="built_in">SetRegistryKey</span>(_T(<span class="string">&quot;XX公司&quot;</span>));</span><br><span class="line"><span class="keyword">this</span>-&gt;<span class="built_in">WriteProfileInt</span>(_T(<span class="string">&quot;root&quot;</span>), _T(<span class="string">&quot;entry&quot;</span>), <span class="number">123</span>);</span><br></pre></td></tr></table></figure>
-如果程序文件名为<code>MyApp.exe</code>，最终写入的注册表位置为<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_CURRENT_USER\SOFTWARE\&#123;m_pszRegistryKey&#125;\&#123;m_pszProfileName&#125;\</span><br></pre></td></tr></table></figure></li>
+<li><code>m_pszRegistryKey</code>默认值是<code>nullptr</code>，可以用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinapp-class?#setregistrykey">CWinApp::SetRegistryKey</a> 修改它。</li>
+<li><code>m_pszProfileName</code>是在程序启动时初始化的，默认用程序的文件名加上<code>INI</code>后缀。MFC 没有提供函数修改它，但是可以直接对其赋值。</li>
 </ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">CWinApp::SetCurrentHandles</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (m_pszProfileName == <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">        Checked::<span class="built_in">tcscat_s</span>(szExeName, _countof(szExeName), _T(<span class="string">&quot;.INI&quot;</span>)); <span class="comment">// will be enough room in buffer</span></span><br><span class="line">        BOOL bEnable = <span class="built_in">AfxEnableMemoryTracking</span>(FALSE);</span><br><span class="line">        m_pszProfileName = _tcsdup(szExeName);</span><br><span class="line">        <span class="built_in">AfxEnableMemoryTracking</span>(bEnable);</span><br><span class="line">        <span class="keyword">if</span>(!m_pszProfileName)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">AfxThrowMemoryException</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>如果<code>m_pszProfileName</code>仅仅只有文件名，文件会保存到<code>C:\Windows</code>目录下，所以建议用相对路径的形式<code>.\Config.ini</code>，或着绝对路径。</li>
+<li>当使用注册表保存时，<code>m_pszProfileName</code>就变为了<code>Key</code></li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>-&gt;<span class="built_in">SetRegistryKey</span>(_T(<span class="string">&quot;XX公司&quot;</span>));</span><br><span class="line"><span class="keyword">this</span>-&gt;<span class="built_in">WriteProfileInt</span>(_T(<span class="string">&quot;root&quot;</span>), _T(<span class="string">&quot;entry&quot;</span>), <span class="number">123</span>);</span><br></pre></td></tr></table></figure>
+<p>如果程序文件名为<code>MyApp.exe</code>，最终写入的注册表位置为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_CURRENT_USER\SOFTWARE\&#123;m_pszRegistryKey&#125;\&#123;m_pszProfileName&#125;\</span><br></pre></td></tr></table></figure>
 <p>INI文件例子：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>-&gt;<span class="built_in">WriteProfileInt</span>(_T(<span class="string">&quot;root&quot;</span>), _T(<span class="string">&quot;item&quot;</span>), <span class="number">123</span>);</span><br></pre></td></tr></table></figure>
 <p>ini 内容</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[root]</span></span><br><span class="line"><span class="attr">item</span>=<span class="number">123</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="CWinAppEx-的配置管理接口"><a href="#CWinAppEx-的配置管理接口" class="headerlink" title="CWinAppEx 的配置管理接口"></a>CWinAppEx 的配置管理接口</h2><p><code>CWinAppEx</code>在<code>CWinApp</code>的基础上，扩充了一些接口，相关函数同样以<code>Write</code>开头，扩展的方法是</p>
+<h2 id="CWinAppEx-的配置管理接口"><a class="header-anchor" href="#CWinAppEx-的配置管理接口">#</a>CWinAppEx 的配置管理接口</h2>
+<p><code>CWinAppEx</code>在<code>CWinApp</code>的基础上，扩充了一些接口，相关函数同样以<code>Write</code>开头，扩展的方法是</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class#writeint">CWinAppEx::WriteInt</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class#writestring">CWinAppEx::WriteString</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class#writebinary">CWinAppEx::WriteBinary</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class#writeobject">CWinAppEx::WriteObject</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class#writesectionint">CWinAppEx::WriteSectionInt</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class#writesectionstring">CWinAppEx::WriteSectionString</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class#writesectionbinary">CWinAppEx::WriteSectionBinary</a></li>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class#writesectionobject">CWinAppEx::WriteSectionObject</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writeint">CWinAppEx::WriteInt</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writestring">CWinAppEx::WriteString</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writebinary">CWinAppEx::WriteBinary</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writeobject">CWinAppEx::WriteObject</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionint">CWinAppEx::WriteSectionInt</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionstring">CWinAppEx::WriteSectionString</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionbinary">CWinAppEx::WriteSectionBinary</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#writesectionobject">CWinAppEx::WriteSectionObject</a></li>
 </ul>
 <p>方法中带<code>Section</code>的写入注册表位置是</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_CURRENT_USER\SOFTWARE\&#123;m_pszRegistryKey&#125;\&#123;m_pszProfileName&#125;\&#123;m_strRegSection&#125;\&#123;Section&#125;</span><br></pre></td></tr></table></figure>
 <p>方法中不带<code>Section</code>的写入注册表位置是</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_CURRENT_USER\SOFTWARE\&#123;m_pszRegistryKey&#125;\&#123;m_pszProfileName&#125;\&#123;m_strRegSection&#125;\</span><br></pre></td></tr></table></figure>
-<p>路径中<code>m_strRegSection</code>的默认值是<code>Workspace</code>，可以通过 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class#setregistrybase">CWinAppEx::SetRegistryBase</a> 方法修改它。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<p>路径中<code>m_strRegSection</code>的默认值是<code>Workspace</code>，可以通过 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwinappex-class?#setregistrybase">CWinAppEx::SetRegistryBase</a> 方法修改它。</p>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<ul>
 <li><code>CWinApp</code>的方法可选择写入注册表或是INI文件，默认情况下写INI文件。</li>
 <li><code>CWinAppEx</code>提供的方法只能写入注册表，所以必须填充<code>m_pszRegistryKey</code>值。</li>
 </ul>
-<p>对于写注册表来说，<code>m_pszRegistryKey</code>一般填入组织名称，<code>m_pszProfileName</code>填入产品名称，<code>m_strRegSection</code>填入子模块名称。<br><code>CWinApp</code>的以<code>WriteProfile</code>开头的方法虽然可以写注册表，但是因为没有<code>m_strRegSection</code>字段，没法按模块分别写入不同的位置，所以不建议使用，除非你的工程只有一个模块。</p>
+<p>对于写注册表来说，<code>m_pszRegistryKey</code>一般填入组织名称，<code>m_pszProfileName</code>填入产品名称，<code>m_strRegSection</code>填入子模块名称。<br>
+<code>CWinApp</code>的以<code>WriteProfile</code>开头的方法虽然可以写注册表，但是因为没有<code>m_strRegSection</code>字段，没法按模块分别写入不同的位置，所以不建议使用，除非你的工程只有一个模块。</p>
 
       </div>
       
@@ -211,24 +226,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/MFC/" title="MFC">
-                        #MFC
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -270,13 +267,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -496,43 +496,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + MFC%E5%AD%A6%E4%B9%A0%EF%BC%9A%E7%AE%A1%E7%90%86%E7%A8%8B%E5%BA%8F%E9%85%8D%E7%BD%AE + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F05%2F19%2F16290668%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/05/19/16290668/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

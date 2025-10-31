@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -163,106 +167,140 @@
       </div>
       <div class="markdown-body">
         <p>第三方 IoC 容器库不少，之所以选择这个是因为只有它支持 .NET Framework 4.0，这样可以让那些古老的程序也能焕发青春。</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>包地址：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Unity.Container/">https://www.nuget.org/packages/Unity.Container/</a></p>
-<h2 id="注册方式"><a href="#注册方式" class="headerlink" title="注册方式"></a>注册方式</h2><p>注册主要分为三种方式</p>
-<h3 id="按类型注册"><a href="#按类型注册" class="headerlink" title="按类型注册"></a>按类型注册</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Container.RegisterType&lt;Foo&gt;(); <span class="comment">// 可有可无的一行代码</span></span><br><span class="line"><span class="keyword">var</span> foo = Container.Resolve&lt;Foo&gt;();</span><br></pre></td></tr></table></figure>
+<h2 id="安装"><a class="header-anchor" href="#安装">#</a>安装</h2>
+<p>包地址：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Unity.Container/">https://www.nuget.org/packages/Unity.Container/</a></p>
+<h2 id="注册方式"><a class="header-anchor" href="#注册方式">#</a>注册方式</h2>
+<p>注册主要分为三种方式</p>
+<h3 id="按类型注册"><a class="header-anchor" href="#按类型注册">#</a>按类型注册</h3>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Container.RegisterType&lt;Foo&gt;(); <span class="comment">// 可有可无的一行代码</span></span><br><span class="line"><span class="keyword">var</span> foo = Container.Resolve&lt;Foo&gt;();</span><br></pre></td></tr></table></figure>
 <p>如果是非接口类型，可以不用注册。</p>
-<h3 id="按接口注册"><a href="#按接口注册" class="headerlink" title="按接口注册"></a>按接口注册</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">container.RegisterType&lt;IFoo, Foo&gt;();</span><br><span class="line"><span class="keyword">var</span> foo = container.Resolve&lt;IFoo&gt;();</span><br></pre></td></tr></table></figure>
+<h3 id="按接口注册"><a class="header-anchor" href="#按接口注册">#</a>按接口注册</h3>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">container.RegisterType&lt;IFoo, Foo&gt;();</span><br><span class="line"><span class="keyword">var</span> foo = container.Resolve&lt;IFoo&gt;();</span><br></pre></td></tr></table></figure>
 <p>如果接口有多个实现，默认按最后一次注册的为准</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Container.RegisterType&lt;IFoo, Foo&gt;();</span><br><span class="line">Container.RegisterType&lt;IFoo, Foo2&gt;();</span><br><span class="line"><span class="keyword">var</span> foo = Container.Resolve&lt;IFoo&gt;(); <span class="comment">// Foo2</span></span><br></pre></td></tr></table></figure>
 <p>具名注册，解决同一接口有多个实现的问题</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Container.RegisterType&lt;IFoo, Foo&gt;(<span class="string">&quot;xxx&quot;</span>); <span class="comment">// 给一个名称</span></span><br><span class="line">Container.RegisterType&lt;IFoo, Foo2&gt;();</span><br><span class="line"><span class="keyword">var</span> foo = Container.Resolve&lt;IFoo&gt;(<span class="string">&quot;xxx&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h3 id="按实例注册"><a href="#按实例注册" class="headerlink" title="按实例注册"></a>按实例注册</h3><p>和按类型注册差不多，只是传入的参数是实例。传入后容器会持有引用，以后检索会返回该实例。</p>
+<h3 id="按实例注册"><a class="header-anchor" href="#按实例注册">#</a>按实例注册</h3>
+<p>和按类型注册差不多，只是传入的参数是实例。传入后容器会持有引用，以后检索会返回该实例。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> sampleClass = <span class="keyword">new</span> SampleClass();</span><br><span class="line"></span><br><span class="line">container.RegisterInstance(sampleClass);</span><br><span class="line"><span class="keyword">var</span> obj1 = (SampleClass)container.Resolve(<span class="keyword">typeof</span>(SampleClass));</span><br><span class="line">obj1.Increase();</span><br><span class="line">Debug.WriteLine(obj1.ReferenceCount);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj2 = (SampleClass)container.Resolve(<span class="keyword">typeof</span>(SampleClass));</span><br><span class="line">obj2.Increase();</span><br><span class="line">Debug.WriteLine(obj2.ReferenceCount);</span><br></pre></td></tr></table></figure>
-<p>这样每次获得的都是同一个实例，起到了单例的效果。<br>支持具名化，方便检索同类型的不同实例</p>
+<p>这样每次获得的都是同一个实例，起到了单例的效果。<br>
+支持具名化，方便检索同类型的不同实例</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container.RegisterInstance(<span class="string">&quot;name&quot;</span>, sampleClass);</span><br></pre></td></tr></table></figure>
-
-<h3 id="工厂函数"><a href="#工厂函数" class="headerlink" title="工厂函数"></a>工厂函数</h3><p>注册一个工厂函数，以便在解析时动态创建实例。</p>
+<h3 id="工厂函数"><a class="header-anchor" href="#工厂函数">#</a>工厂函数</h3>
+<p>注册一个工厂函数，以便在解析时动态创建实例。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> container = <span class="keyword">new</span> UnityContainer();</span><br><span class="line">container.RegisterType&lt;School&gt;();</span><br><span class="line">container.RegisterFactory&lt;People&gt;(c =&gt; <span class="keyword">new</span> People());</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x = container.Resolve&lt;School&gt;();</span><br><span class="line">x.Foo();</span><br><span class="line"></span><br><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">School</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> Func&lt;People&gt; _factory;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">School</span>(<span class="params">Func&lt;People&gt; factory</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _factory = factory;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Foo</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> people = _factory();</span><br><span class="line">        Console.WriteLine(people);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">People</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><h3 id="瞬态生存期"><a href="#瞬态生存期" class="headerlink" title="瞬态生存期"></a>瞬态生存期</h3><p>类型：<code>TypeLifetime.Transient</code><br>所谓瞬态就是每次解析时都创建一个新的实例。这也是默认的生命周期管理方式。</p>
+<h2 id="生命周期"><a class="header-anchor" href="#生命周期">#</a>生命周期</h2>
+<h3 id="瞬态生存期"><a class="header-anchor" href="#瞬态生存期">#</a>瞬态生存期</h3>
+<p>类型：<code>TypeLifetime.Transient</code><br>
+所谓瞬态就是每次解析时都创建一个新的实例。这也是默认的生命周期管理方式。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Container.RegisterType&lt;SampleClass&gt;();</span><br><span class="line"><span class="comment">// or</span></span><br><span class="line">Container.RegisterType&lt;SampleClass&gt;(TypeLifetime.Transient);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj1 = Container.Resolve&lt;SampleClass&gt;(); <span class="comment">// 新实例</span></span><br><span class="line"><span class="keyword">var</span> obj2 = Container.Resolve&lt;SampleClass&gt;(); <span class="comment">// 新实例</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="解析生存期"><a href="#解析生存期" class="headerlink" title="解析生存期"></a>解析生存期</h3><p>类型：<code>TypeLifetime.PerResolve</code><br>这个稍微难理解点，表面上看和<code>Transient</code>是一样的，但是它发生在库内部隐式注入对象时。<br>直接看例子比较容易理解</p>
+<h3 id="解析生存期"><a class="header-anchor" href="#解析生存期">#</a>解析生存期</h3>
+<p>类型：<code>TypeLifetime.PerResolve</code><br>
+这个稍微难理解点，表面上看和<code>Transient</code>是一样的，但是它发生在库内部隐式注入对象时。<br>
+直接看例子比较容易理解</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">A</span></span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">B</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> A a &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">B</span>(<span class="params">A arg</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">$&quot;B: <span class="subst">&#123;arg.GetHashCode()&#125;</span>&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">C</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">C</span>(<span class="params">A arg1, B arg2</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">$&quot;A: <span class="subst">&#123;arg1.GetHashCode()&#125;</span>&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果按瞬态类型：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Container.RegisterType&lt;A&gt;(TypeLifetime.Transient);</span><br><span class="line"><span class="keyword">var</span> x = Container.Resolve&lt;C&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出B: 30631159</span></span><br><span class="line"><span class="comment">// 输出A: 7244975</span></span><br></pre></td></tr></table></figure>
-<p>两次输出结果不同，意味着传递给 C 的对象 a 实例与传递给 B 对象的 a 实例不同。<br>如果改为<code>PerResolve</code>方式：</p>
+<p>两次输出结果不同，意味着传递给 C 的对象 a 实例与传递给 B 对象的 a 实例不同。<br>
+如果改为<code>PerResolve</code>方式：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Container.RegisterType&lt;A&gt;(TypeLifetime.PerResolve);</span><br><span class="line"><span class="keyword">var</span> x = Container.Resolve&lt;C&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出B: 65204782</span></span><br><span class="line"><span class="comment">// 输出A: 65204782</span></span><br></pre></td></tr></table></figure>
-
 <p>顾名思义，就是每次调用<code>Resolve</code>时对于同一类型只会创建一个实例。</p>
-<h3 id="容器树单例-全局唯一"><a href="#容器树单例-全局唯一" class="headerlink" title="容器树单例(全局唯一)"></a>容器树单例(全局唯一)</h3><p>类型：<code>TypeLifetime.Singleton</code><br>它确保对象在整个容器树内只被创建一次。<br>注册类型总是将注册放置在容器树的根，并使其对该容器的所有子容器全局可用。注册是否发生在子容器的根节点并不重要，注册目的地总是根节点。</p>
+<h3 id="容器树单例-全局唯一"><a class="header-anchor" href="#容器树单例-全局唯一">#</a>容器树单例(全局唯一)</h3>
+<p>类型：<code>TypeLifetime.Singleton</code><br>
+它确保对象在整个容器树内只被创建一次。<br>
+注册类型总是将注册放置在容器树的根，并使其对该容器的所有子容器全局可用。注册是否发生在子容器的根节点并不重要，注册目的地总是根节点。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">IUnityContainer container1 = <span class="keyword">new</span> UnityContainer();</span><br><span class="line"><span class="keyword">var</span> container2 = container1.CreateChildContainer();</span><br><span class="line"></span><br><span class="line">container2.RegisterType&lt;IA, A&gt;(TypeLifetime.Singleton); <span class="comment">// 在子容器上注册的注册行为，实际上推到了根容器</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj1 = container1.Resolve&lt;IA&gt;(); <span class="comment">// 根容器可以检索到实例</span></span><br><span class="line"><span class="keyword">var</span> obj2 = container2.Resolve&lt;IA&gt;();</span><br><span class="line">Console.WriteLine(obj1 == obj2); <span class="comment">// 输出 True</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="容器树单例-向下传递"><a href="#容器树单例-向下传递" class="headerlink" title="容器树单例(向下传递)"></a>容器树单例(向下传递)</h3><p>类型：<code>TypeLifetime.PerContainer</code>、<code>TypeLifetime.ContainerControlled</code><br>与<code>TypeLifetime.Singleton</code>类似，只不过不会推到根容器去注册，但是会向子容器传递。</p>
+<h3 id="容器树单例-向下传递"><a class="header-anchor" href="#容器树单例-向下传递">#</a>容器树单例(向下传递)</h3>
+<p>类型：<code>TypeLifetime.PerContainer</code>、<code>TypeLifetime.ContainerControlled</code><br>
+与<code>TypeLifetime.Singleton</code>类似，只不过不会推到根容器去注册，但是会向子容器传递。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">IUnityContainer container1 = <span class="keyword">new</span> UnityContainer();</span><br><span class="line"><span class="keyword">var</span> container2 = container1.CreateChildContainer();</span><br><span class="line"></span><br><span class="line">container1.RegisterType&lt;IA, A&gt;(TypeLifetime.PerContainer);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj1 = container1.Resolve&lt;IA&gt;();</span><br><span class="line"><span class="keyword">var</span> obj2 = container2.Resolve&lt;IA&gt;();</span><br><span class="line">Console.WriteLine(obj1 == obj2);  <span class="comment">// 输出 True。因为子容器共享父容器的实例</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="容器单例"><a href="#容器单例" class="headerlink" title="容器单例"></a>容器单例</h3><p>类型：<code>TypeLifetime.Hierarchical</code>、<code>TypeLifetime.Scoped</code><br>容器级别的单例。父容器与子容器都可以有自己唯一的实例，互不打扰。</p>
+<h3 id="容器单例"><a class="header-anchor" href="#容器单例">#</a>容器单例</h3>
+<p>类型：<code>TypeLifetime.Hierarchical</code>、<code>TypeLifetime.Scoped</code><br>
+容器级别的单例。父容器与子容器都可以有自己唯一的实例，互不打扰。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">IUnityContainer container1 = <span class="keyword">new</span> UnityContainer();</span><br><span class="line"><span class="keyword">var</span> container2 = container1.CreateChildContainer();</span><br><span class="line"></span><br><span class="line">container1.RegisterType&lt;IA, A&gt;(TypeLifetime.Scoped);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj1 = container1.Resolve&lt;IA&gt;();</span><br><span class="line"><span class="keyword">var</span> obj2 = container2.Resolve&lt;IA&gt;();</span><br><span class="line">Console.WriteLine(obj1 == obj2);  <span class="comment">// 输出 False。因为子容器有自己的实例</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="容器瞬态"><a href="#容器瞬态" class="headerlink" title="容器瞬态"></a>容器瞬态</h3><p>类型：<code>TypeLifetime.PerContainerTransient</code><br>容器会持有对象，直到容器销毁。且如果对象实现了 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.idisposable">IDisposable </a> 接口，则会在释放时调用。</p>
+<h3 id="容器瞬态"><a class="header-anchor" href="#容器瞬态">#</a>容器瞬态</h3>
+<p>类型：<code>TypeLifetime.PerContainerTransient</code><br>
+容器会持有对象，直到容器销毁。且如果对象实现了 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.idisposable">IDisposable </a> 接口，则会在释放时调用。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> container = <span class="keyword">new</span> UnityContainer();</span><br><span class="line">container.RegisterType&lt;IFoo, Foo&gt;(TypeLifetime.PerContainerTransient); <span class="comment">// 容器级瞬态</span></span><br><span class="line"><span class="keyword">var</span> x = container1.Resolve&lt;IFoo&gt;(); <span class="comment">// 容器会持有 x，直到容器销毁</span></span><br><span class="line">container.Dispose(); <span class="comment">// 销毁容器，会触发 x.Dispose()</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="线程单例"><a href="#线程单例" class="headerlink" title="线程单例"></a>线程单例</h3><p>类型：<code>TypeLifetime.PerThread</code><br>每个线程都有自己的一个单例。</p>
+<h3 id="线程单例"><a class="header-anchor" href="#线程单例">#</a>线程单例</h3>
+<p>类型：<code>TypeLifetime.PerThread</code><br>
+每个线程都有自己的一个单例。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Container.RegisterType&lt;IFoo, Foo&gt;(TypeLifetime.PerThread);</span><br></pre></td></tr></table></figure>
-
-<h3 id="外部生存期"><a href="#外部生存期" class="headerlink" title="外部生存期"></a>外部生存期</h3><p>类型：<code>TypeLifetime.External</code><br>容器将持有对象实例的弱引用，每次调用<code>Resolve</code>都会返回该实例。如果实例不再有效，则创建新实例。</p>
+<h3 id="外部生存期"><a class="header-anchor" href="#外部生存期">#</a>外部生存期</h3>
+<p>类型：<code>TypeLifetime.External</code><br>
+容器将持有对象实例的弱引用，每次调用<code>Resolve</code>都会返回该实例。如果实例不再有效，则创建新实例。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Container.RegisterType&lt;IFoo, Foo&gt;(TypeLifetime.External);</span><br><span class="line">    </span><br><span class="line"><span class="keyword">var</span> x1 = Container.Resolve&lt;IFoo&gt;(); <span class="comment">// 容器会持有 x 的弱引用</span></span><br><span class="line"><span class="keyword">var</span> x2 = Container.Resolve&lt;IFoo&gt;(); <span class="comment">// x 还在有效范围内，会返回上一次的实例</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Hash相同</span></span><br><span class="line">Debug.WriteLine(x1.GetHashCode());</span><br><span class="line">Debug.WriteLine(x2.GetHashCode());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 让GC回收x引用</span></span><br><span class="line">x1 = <span class="literal">null</span>;</span><br><span class="line">x2 = <span class="literal">null</span>;</span><br><span class="line">GC.Collect();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x3 = Container.Resolve&lt;IFoo&gt;(); <span class="comment">// 由于容器持有的弱引用对象已经被GC回收，这里会产生新对象</span></span><br><span class="line">Debug.WriteLine(x3.GetHashCode());</span><br></pre></td></tr></table></figure>
-<h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><p>通过一系列以<code>Injection</code>开头的类注入。用的最多的就三类：构造注入、属性注入、方法注入。</p>
-<h3 id="构造注入"><a href="#构造注入" class="headerlink" title="构造注入"></a>构造注入</h3><ol>
-<li><p>如果一个类有多个构造函数，容器会选择具有最多参数的构造函数来进行注入。</p>
+<h2 id="依赖注入"><a class="header-anchor" href="#依赖注入">#</a>依赖注入</h2>
+<p>通过一系列以<code>Injection</code>开头的类注入。用的最多的就三类：构造注入、属性注入、方法注入。</p>
+<h3 id="构造注入"><a class="header-anchor" href="#构造注入">#</a>构造注入</h3>
+<ol>
+<li>如果一个类有多个构造函数，容器会选择具有最多参数的构造函数来进行注入。</li>
+</ol>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>(<span class="params">IA a</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>(<span class="params">IA a, IB b</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>(<span class="params">IA a, IB b, <span class="built_in">string</span> name</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;3&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;IA, A&gt;();</span><br><span class="line">container.RegisterType&lt;IB, B&gt;();</span><br><span class="line"><span class="keyword">var</span> myObject = container.Resolve&lt;MyClass&gt;(); <span class="comment">// 输出&quot;2&quot;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>使用 <a target="_blank" rel="noopener" href="http://unitycontainer.org/api/Unity.InjectionConstructorAttribute.html">InjectionConstructor</a> 标记构造函数。</p>
+<ol start="2">
+<li>使用 <a target="_blank" rel="noopener" href="http://unitycontainer.org/api/Unity.InjectionConstructorAttribute.html">InjectionConstructor</a> 标记构造函数。</li>
+</ol>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">InjectionConstructor</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>(<span class="params">IA a</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>(<span class="params">IA a, IB b</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;IA, A&gt;();</span><br><span class="line">container.RegisterType&lt;IB, B&gt;();</span><br><span class="line"><span class="keyword">var</span> myObject = container.Resolve&lt;MyClass&gt;(); <span class="comment">// 输出&quot;1&quot;</span></span><br></pre></td></tr></table></figure>
 <p>根据默认规则，容器会匹配最多参数的构造函数。但可以用<code>[InjectionConstructor]</code>指定构造函数。</p>
-</li>
-<li><p>通过 <a target="_blank" rel="noopener" href="http://unitycontainer.org/api/Unity.Injection.InjectionConstructor.html">InjectionConstructor</a> 配置构造参数信息，以便可以调用指定的构造函数。</p>
+<ol start="3">
+<li>通过 <a target="_blank" rel="noopener" href="http://unitycontainer.org/api/Unity.Injection.InjectionConstructor.html">InjectionConstructor</a> 配置构造参数信息，以便可以调用指定的构造函数。</li>
+</ol>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>(<span class="params"><span class="built_in">string</span> name</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>(<span class="params">IA a</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;IA, A&gt;();</span><br><span class="line">container.RegisterType&lt;MyClass&gt;(<span class="keyword">new</span> InjectionConstructor(<span class="string">&quot;jack&quot;</span>));</span><br><span class="line">container.Resolve&lt;MyClass&gt;(); <span class="comment">// 输出 &quot;jack&quot;</span></span><br></pre></td></tr></table></figure>
 <p>容器虽然能匹配到带有<code>IA</code>参数的构造函数，但是仍会调用 InjectionConstructor 指定构造函数。</p>
-</li>
-<li><p>容器将优先使用注册类型时指定的构造函数</p>
+<ol start="4">
+<li>容器将优先使用注册类型时指定的构造函数</li>
+</ol>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>(<span class="params"><span class="built_in">string</span> name</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">InjectionConstructor</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>(<span class="params">IA a</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;IA, A&gt;();</span><br><span class="line">container.RegisterType&lt;MyClass&gt;(<span class="keyword">new</span> InjectionConstructor(<span class="string">&quot;jack&quot;</span>));</span><br><span class="line">container.Resolve&lt;MyClass&gt;(); <span class="comment">// 输出 &quot;jack&quot;</span></span><br></pre></td></tr></table></figure>
 <p>在这个例子中，同时使用了注解和注册时指定两种方式。后者优先级更高。</p>
-</li>
-<li><p>覆盖参数</p>
+<ol start="5">
+<li>覆盖参数</li>
+</ol>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>(<span class="params"><span class="built_in">string</span> name</span>)</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;MyClass&gt;(<span class="keyword">new</span> InjectionConstructor(<span class="string">&quot;jack&quot;</span>));</span><br><span class="line">container.Resolve&lt;MyClass&gt;(<span class="keyword">new</span> ParameterOverride(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;annie&quot;</span>)); <span class="comment">// 参数名大小写敏感。不能写为 &quot;Name&quot;</span></span><br></pre></td></tr></table></figure>
-<p>注意，<strong>参数名是区分大小写的</strong>。<br>覆盖参数主要应用在需要向构造函数传递参数的时候。</p>
-</li>
+<p>注意，<strong>参数名是区分大小写的</strong>。<br>
+覆盖参数主要应用在需要向构造函数传递参数的时候。</p>
+<h3 id="属性注入"><a class="header-anchor" href="#属性注入">#</a>属性注入</h3>
+<ol>
+<li>使用 <a target="_blank" rel="noopener" href="http://unitycontainer.org/api/Unity.DependencyAttribute.html">Dependency</a> 标记属性。</li>
 </ol>
-<h3 id="属性注入"><a href="#属性注入" class="headerlink" title="属性注入"></a>属性注入</h3><ol>
-<li><p>使用 <a target="_blank" rel="noopener" href="http://unitycontainer.org/api/Unity.DependencyAttribute.html">Dependency</a> 标记属性。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Dependency</span>]</span><br><span class="line"><span class="keyword">public</span> IFoo Foo &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><a target="_blank" rel="noopener" href="http://unitycontainer.org/api/Unity.Injection.InjectionProperty.html">InjectionProperty</a></p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;MyClass&gt;(<span class="keyword">new</span> InjectionProperty(<span class="string">&quot;Name&quot;</span>, <span class="string">&quot;jack&quot;</span>));</span><br><span class="line"><span class="keyword">var</span> obj = container.Resolve&lt;MyClass&gt;();</span><br><span class="line">Debug.WriteLine(obj.Name); <span class="comment">// 输出 &quot;jack&quot;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>覆盖属性</p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;MyClass&gt;(<span class="keyword">new</span> InjectionProperty(<span class="string">&quot;Name&quot;</span>));</span><br><span class="line">container.Resolve&lt;MyClass&gt;(<span class="keyword">new</span> PropertyOverride(<span class="string">&quot;Name&quot;</span>, <span class="string">&quot;annie&quot;</span>));</span><br></pre></td></tr></table></figure></li>
+<ol start="2">
+<li><a target="_blank" rel="noopener" href="http://unitycontainer.org/api/Unity.Injection.InjectionProperty.html">InjectionProperty</a></li>
 </ol>
-<h3 id="方法注入"><a href="#方法注入" class="headerlink" title="方法注入"></a>方法注入</h3><ol>
-<li><p>使用 <a target="_blank" rel="noopener" href="http://unitycontainer.org/api/Unity.InjectionMethodAttribute.html">InjectionMethod</a> 标记方法。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;MyClass&gt;(<span class="keyword">new</span> InjectionProperty(<span class="string">&quot;Name&quot;</span>, <span class="string">&quot;jack&quot;</span>));</span><br><span class="line"><span class="keyword">var</span> obj = container.Resolve&lt;MyClass&gt;();</span><br><span class="line">Debug.WriteLine(obj.Name); <span class="comment">// 输出 &quot;jack&quot;</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>覆盖属性</li>
+</ol>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;MyClass&gt;(<span class="keyword">new</span> InjectionProperty(<span class="string">&quot;Name&quot;</span>));</span><br><span class="line">container.Resolve&lt;MyClass&gt;(<span class="keyword">new</span> PropertyOverride(<span class="string">&quot;Name&quot;</span>, <span class="string">&quot;annie&quot;</span>));</span><br></pre></td></tr></table></figure>
+<h3 id="方法注入"><a class="header-anchor" href="#方法注入">#</a>方法注入</h3>
+<ol>
+<li>使用 <a target="_blank" rel="noopener" href="http://unitycontainer.org/api/Unity.InjectionMethodAttribute.html">InjectionMethod</a> 标记方法。</li>
+</ol>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>(<span class="params">IA a, IB b</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">InjectionMethod</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Foo1</span>(<span class="params">IA a</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;InjectionMethod 1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">InjectionMethod</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Foo2</span>(<span class="params">IB b</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;InjectionMethod 2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;IA, A&gt;();</span><br><span class="line">container.RegisterType&lt;IB, B&gt;();</span><br><span class="line">container.Resolve&lt;MyClass&gt;(); <span class="comment">// 依次输出 &quot;2&quot;、&quot;InjectionMethod 1&quot;、&quot;InjectionMethod 2&quot;</span></span><br></pre></td></tr></table></figure>
 <p>方法会在构造函数结束时调用。</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="http://unitycontainer.org/api/Unity.Injection.InjectionMethod.html">InjectionMethod</a></p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Foo</span>(<span class="params">IB b</span>)</span> &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;MyClass&gt;(<span class="keyword">new</span> InjectionMethod(<span class="string">&quot;Foo&quot;</span>));</span><br></pre></td></tr></table></figure></li>
+<ol start="2">
+<li><a target="_blank" rel="noopener" href="http://unitycontainer.org/api/Unity.Injection.InjectionMethod.html">InjectionMethod</a></li>
 </ol>
-<h3 id="字段注入"><a href="#字段注入" class="headerlink" title="字段注入"></a>字段注入</h3><p>一般很少会用这种方式注入。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Foo</span>(<span class="params">IB b</span>)</span> &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;MyClass&gt;(<span class="keyword">new</span> InjectionMethod(<span class="string">&quot;Foo&quot;</span>));</span><br></pre></td></tr></table></figure>
+<h3 id="字段注入"><a class="header-anchor" href="#字段注入">#</a>字段注入</h3>
+<p>一般很少会用这种方式注入。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">Dependency</span>]</span><br><span class="line">    <span class="keyword">public</span> IA a;</span><br><span class="line">	</span><br><span class="line">    <span class="keyword">public</span> IB b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">container.RegisterType&lt;MyClass&gt;(<span class="keyword">new</span> InjectionField(<span class="string">&quot;b&quot;</span>));</span><br></pre></td></tr></table></figure>
 <p>注意字段访问权限要求是<code>public</code>。</p>
-<h2 id="实践经验"><a href="#实践经验" class="headerlink" title="实践经验"></a>实践经验</h2><ul>
-<li><p>不要互相注入</p>
+<h2 id="实践经验"><a class="header-anchor" href="#实践经验">#</a>实践经验</h2>
+<ul>
+<li>不要互相注入</li>
+</ul>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title">IA</span> &#123;&#125;</span><br><span class="line"><span class="keyword">interface</span> <span class="title">IB</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">internal</span> <span class="keyword">sealed</span> <span class="keyword">class</span> <span class="title">A</span> : <span class="title">IA</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">internal</span> <span class="title">A</span>(<span class="params">IB b</span>)</span> &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">internal</span> <span class="keyword">sealed</span> <span class="keyword">class</span> <span class="title">B</span> : <span class="title">IB</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">internal</span> <span class="title">B</span>(<span class="params">IA a</span>)</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这会陷入死循环，从而引发 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn//dotnet/api/system.stackoverflowexception">System.StackOverflowException</a> 异常。</p>
-</li>
-<li><p>子容器可以使用父容器的接口，反之则不行。</p>
+<ul>
+<li>子容器可以使用父容器的接口，反之则不行。</li>
+</ul>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">IUnityContainer container = <span class="keyword">new</span> UnityContainer();</span><br><span class="line">container.RegisterType&lt;IA, A&gt;();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> childContainer = container.CreateChildContainer();</span><br><span class="line">childContainer.RegisterType&lt;IB, B&gt;();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = childContainer.Resolve&lt;IA&gt;(); <span class="comment">// 子容器知道父容器注册的接口</span></span><br><span class="line"><span class="keyword">var</span> b = container.Resolve&lt;IB&gt;();      <span class="comment">// 错误！父容器不知道子容器注册的接口</span></span><br></pre></td></tr></table></figure>
 <p>单例是例外，因为单例被推到了父容器中注册</p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">childContainer.RegisterType&lt;IB, B&gt;(TypeLifetime.Singleton); <span class="comment">// 单例会在父容器中注册</span></span><br><span class="line">container.Resolve&lt;IB&gt;();</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="http://unitycontainer.org/tutorials/Composition/composition.html">http://unitycontainer.org/tutorials/Composition/composition.html</a><br><a target="_blank" rel="noopener" href="https://www.tutorialsteacher.com/ioc/unity-container">https://www.tutorialsteacher.com/ioc/unity-container</a><br><a target="_blank" rel="noopener" href="https://nblumhardt.com/2010/01/the-relationship-zoo/">The Relationship Zoo</a></p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">childContainer.RegisterType&lt;IB, B&gt;(TypeLifetime.Singleton); <span class="comment">// 单例会在父容器中注册</span></span><br><span class="line">container.Resolve&lt;IB&gt;();</span><br></pre></td></tr></table></figure>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="http://unitycontainer.org/tutorials/Composition/composition.html">http://unitycontainer.org/tutorials/Composition/composition.html</a><br>
+<a target="_blank" rel="noopener" href="https://www.tutorialsteacher.com/ioc/unity-container">https://www.tutorialsteacher.com/ioc/unity-container</a><br>
+<a target="_blank" rel="noopener" href="https://nblumhardt.com/2010/01/the-relationship-zoo/">The Relationship Zoo</a></p>
 
       </div>
       
@@ -274,24 +312,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/" title="依赖注入">
-                        #依赖注入
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -333,13 +353,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -559,43 +582,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Unity.Container%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F10%2F15%2Funitycontainer%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/10/15/unitycontainer/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

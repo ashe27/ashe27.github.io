@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -153,6 +157,12 @@
                 <i class="iconfont icon-tags mr-10" title="标签"></i>
                 
                 <span class="span--tag mr-8">
+                  <a href="/tags/Qt/" title="Qt">
+                    #Qt
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
                   <a href="/tags/Linux/" title="Linux">
                     #Linux
                   </a>
@@ -164,47 +174,60 @@
                   </a>
                 </span>
                 
-                <span class="span--tag mr-8">
-                  <a href="/tags/Qt/" title="Qt">
-                    #Qt
-                  </a>
-                </span>
-                
               </span>
           
       </div>
       <div class="markdown-body">
-        <p>最近拿到一个 Ubuntu 16.04 ARM 的嵌入式板子，要求能在上面跑 QML 程序。<br>因为通过软件仓库安装的 Qt 版本过低（5.5.1），所以要自行编译新版本的 Qt，折腾了一天踩了几个坑，记录一下。</p>
-<h2 id="编译-Qt"><a href="#编译-Qt" class="headerlink" title="编译 Qt"></a>编译 Qt</h2><p>我这里选择了 Qt 5.7.1 版本，因为：</p>
+        <p>最近拿到一个 Ubuntu 16.04 ARM 的嵌入式板子，要求能在上面跑 QML 程序。<br>
+因为通过软件仓库安装的 Qt 版本过低（5.5.1），所以要自行编译新版本的 Qt，折腾了一天踩了几个坑，记录一下。</p>
+<h2 id="编译-Qt"><a class="header-anchor" href="#编译-Qt">#</a>编译 Qt</h2>
+<p>我这里选择了 Qt 5.7.1 版本，因为：</p>
 <ol>
 <li>它是最后一个可以编译支持 XP 系统的版本，考虑到 Windows 平台可能有支持 XP 的需求。</li>
 <li>QtQuick.Controls2 是从 5.7 开始引入的。</li>
 </ol>
-<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><p>在配置阶段就报错了，大概就是关于 Linux 显示的插件所依赖的包没有安装。</p>
+<h3 id="安装依赖"><a class="header-anchor" href="#安装依赖">#</a>安装依赖</h3>
+<p>在配置阶段就报错了，大概就是关于 Linux 显示的插件所依赖的包没有安装。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install <span class="string">&quot;^libxcb.*&quot;</span> libx11-xcb-dev libglu1-mesa-dev libxrender-dev libfontconfig1-dev</span><br></pre></td></tr></table></figure>
 <p>方案来自 <a target="_blank" rel="noopener" href="https://stackoverflow.com/a/39068500/22121934">https://stackoverflow.com/a/39068500/22121934</a></p>
-<h3 id="编译错误"><a href="#编译错误" class="headerlink" title="编译错误"></a>编译错误</h3><p>编译过程中仅有的一个错误</p>
+<h3 id="编译错误"><a class="header-anchor" href="#编译错误">#</a>编译错误</h3>
+<p>编译过程中仅有的一个错误</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">qeglfskmsegldevice.cpp:74:82: error: invalid conversion from ‘EGLDeviceEXT &#123;aka void*&#125;’ to ‘EGLNativeDisplayType &#123;aka gbm_device*&#125;’ [-fpermissive]</span><br><span class="line">     return static_cast&lt;QEglFSKmsEglDeviceIntegration *&gt;(m_integration)-&gt;eglDevice();</span><br></pre></td></tr></table></figure>
-<p>这个错误提示表明在将<code>EGLDeviceEXT</code>类型转换为<code>EGLNativeDisplayType</code>类型时发生了无效的转换。根据错误信息,可以看出<code>EGLDeviceEXT</code>实际上是<code>void*</code>类型,而<code>EGLNativeDisplayType</code>是<code>gbm_device*</code>类型。<br>查了半天在这里找到了修复补丁：<a target="_blank" rel="noopener" href="https://code.qt.io/cgit/qt/qtbase.git/commit/?id=f577a01f5e8d9678d268917ca727a6e9a3e819a6">https://code.qt.io/cgit/qt/qtbase.git/commit/?id=f577a01f5e8d9678d268917ca727a6e9a3e819a6</a></p>
+<p>这个错误提示表明在将<code>EGLDeviceEXT</code>类型转换为<code>EGLNativeDisplayType</code>类型时发生了无效的转换。根据错误信息,可以看出<code>EGLDeviceEXT</code>实际上是<code>void*</code>类型,而<code>EGLNativeDisplayType</code>是<code>gbm_device*</code>类型。<br>
+查了半天在这里找到了修复补丁：<a target="_blank" rel="noopener" href="https://code.qt.io/cgit/qt/qtbase.git/commit/?id=f577a01f5e8d9678d268917ca727a6e9a3e819a6">https://code.qt.io/cgit/qt/qtbase.git/commit/?id=f577a01f5e8d9678d268917ca727a6e9a3e819a6</a></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function">EGLNativeDisplayType <span class="title">QEglFSKmsEglDevice::nativeDisplay</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"> </span>&#123;</span><br><span class="line">-    <span class="keyword">return</span> <span class="built_in">static_cast</span>&lt;QEglFSKmsEglDeviceIntegration *&gt;(m_integration)-&gt;<span class="built_in">eglDevice</span>();</span><br><span class="line">+    <span class="keyword">return</span> <span class="built_in">reinterpret_cast</span>&lt;EGLNativeDisplayType&gt;(<span class="built_in">static_cast</span>&lt;QEglFSKmsEglDeviceIntegration *&gt;(m_integration)-&gt;<span class="built_in">eglDevice</span>());</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置动态库搜索路径"><a href="#配置动态库搜索路径" class="headerlink" title="配置动态库搜索路径"></a>配置动态库搜索路径</h2><p>因为系统内已经安装了 Qt 5.5.1，我开始的想法是用第三方工具切换默认 Qt 版本，但我想错了，看我如何踩坑。。。<br>根据 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/39735998/">Make qmake use qt5 by default</a> 这里的讨论，我创建了<code>/usr/share/qtchooser/qt571.conf</code>文件，并写入以下内容：</p>
+<h2 id="配置动态库搜索路径"><a class="header-anchor" href="#配置动态库搜索路径">#</a>配置动态库搜索路径</h2>
+<p>因为系统内已经安装了 Qt 5.5.1，我开始的想法是用第三方工具切换默认 Qt 版本，但我想错了，看我如何踩坑。。。<br>
+根据 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/39735998/">Make qmake use qt5 by default</a> 这里的讨论，我创建了<code>/usr/share/qtchooser/qt571.conf</code>文件，并写入以下内容：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/opt/Qt/5.7.1/bin</span><br><span class="line">/opt/Qt/5.7.1/lib</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>注意文件末尾保持一个空行，否则最后的<code>lib</code>就会变为<code>li</code>。<br>然后将 qtchooser 的<code>default.conf</code>软连接指向它即可。<br>输入<code>qmake -v</code>查看，显示的确是 5.7.1 版本，看上去是成功的。</p>
-<p><br>尝试运行 QML 程序，提示 QtQuick 未安装：</p>
+<p>注意文件末尾保持一个空行，否则最后的<code>lib</code>就会变为<code>li</code>。<br>
+然后将 qtchooser 的<code>default.conf</code>软连接指向它即可。<br>
+输入<code>qmake -v</code>查看，显示的确是 5.7.1 版本，看上去是成功的。</p>
+<p><br>
+尝试运行 QML 程序，提示 QtQuick 未安装：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">QQmlApplicationEngine failed to load component</span><br><span class="line">qrc:/main.qml:1 module <span class="string">&quot;QtQuick&quot;</span> version 2.7 is not installed</span><br></pre></td></tr></table></figure>
-<p>但是明明在 Windows 上是可以运行的。此处又被坑了一个多小时，终于在 <a target="_blank" rel="noopener" href="https://stackoverflow.com/a/30304009/22121934">https://stackoverflow.com/a/30304009/22121934</a> 这里看到了一个看似最不可能的答案，抱着试试的态度试了下，竟然不再报错了，程序能启动成功（但还有其他问题）。<br>原因是<code>qtchooser</code>工具主要用于切换不同版本的Qt编译器和工具链,如qmake、moc等，而不会直接修改Qt库的软链接。也就是说在编译程序时用的还是 Qt 5.5.1 的工具链。<br>其实想想也是，如果随便修改系统默认 Qt 库的软连接，那肯定会导致其他 Qt 应用都出问题。</p>
-<p><br>所以正确用法是在适当的地方设置环境变量，一般有两种选择：</p>
+<p>但是明明在 Windows 上是可以运行的。此处又被坑了一个多小时，终于在 <a target="_blank" rel="noopener" href="https://stackoverflow.com/a/30304009/22121934">https://stackoverflow.com/a/30304009/22121934</a> 这里看到了一个看似最不可能的答案，抱着试试的态度试了下，竟然不再报错了，程序能启动成功（但还有其他问题）。<br>
+原因是<code>qtchooser</code>工具主要用于切换不同版本的Qt编译器和工具链,如qmake、moc等，而不会直接修改Qt库的软链接。也就是说在编译程序时用的还是 Qt 5.5.1 的工具链。<br>
+其实想想也是，如果随便修改系统默认 Qt 库的软连接，那肯定会导致其他 Qt 应用都出问题。</p>
+<p><br>
+所以正确用法是在适当的地方设置环境变量，一般有两种选择：</p>
 <ol>
 <li>将新版本 Qt 的 lib 目录路径加入到<code>LD_LIBRARY_PATH</code>环境变量中。</li>
 <li>编译链接时设置<code>-Wl,-rpath</code>参数，将搜索路径写入<code>ELF</code>文件中。</li>
 </ol>
-<h2 id="软件渲染"><a href="#软件渲染" class="headerlink" title="软件渲染"></a>软件渲染</h2><p>再次运行，又报错：</p>
+<h2 id="软件渲染"><a class="header-anchor" href="#软件渲染">#</a>软件渲染</h2>
+<p>再次运行，又报错：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">QXcbIntegration: Cannot create platform OpenGL context, neither GLX nor EGL are enabled</span><br><span class="line">Failed to create OpenGL context <span class="keyword">for</span> format QSurfaceFormat(version 2.0, options QFlags(), depthBufferSize 24, redBufferSize -1, greenBufferSize -1, blueBufferSize -1, alphaBufferSize -1, stencilBufferSize 8, samples -1, swapBehavior 2, swapInterval 1, profile  0) </span><br></pre></td></tr></table></figure>
-<p>这个倒好说，因为设备没有 GPU 驱动，所以 OpenGL 没法用，不得不改为软件渲染。<br>软件渲染需要编译安装 Qt Quick 2D Render 模块：<a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qtdeclarative-render2d-opensource-src-5.7.1.7z">qtdeclarative-render2d-opensource-src-5.7.1.7z</a><br>为了使用软件渲染，也要设置环境变量：</p>
+<p>这个倒好说，因为设备没有 GPU 驱动，所以 OpenGL 没法用，不得不改为软件渲染。<br>
+软件渲染需要编译安装 Qt Quick 2D Render 模块：<a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qtdeclarative-render2d-opensource-src-5.7.1.7z">qtdeclarative-render2d-opensource-src-5.7.1.7z</a><br>
+为了使用软件渲染，也要设置环境变量：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">qputenv</span>(<span class="string">&quot;QMLSCENE_DEVICE&quot;</span>, <span class="string">&quot;softwarecontext&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://gitee.com/kayven/qt-builder">qt-builder 图形化QT源码编译工具</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/21488072">What is the use of various Qt platform plugins?</a><br><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/embedded-linux.html">Qt for Embedded Linux</a><br><a target="_blank" rel="noopener" href="https://doc.qt.io/QtQuick2DRenderer">QtQuick2DRenderer</a><br><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtquickcontrols-index.html#versions">QuickControls Versions</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://gitee.com/kayven/qt-builder">qt-builder 图形化QT源码编译工具</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/21488072">What is the use of various Qt platform plugins?</a><br>
+<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/embedded-linux.html">Qt for Embedded Linux</a><br>
+<a target="_blank" rel="noopener" href="https://doc.qt.io/QtQuick2DRenderer">QtQuick2DRenderer</a><br>
+<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtquickcontrols-index.html#versions">QuickControls Versions</a></p>
 
       </div>
       
@@ -216,36 +239,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Linux/" title="Linux">
-                        #Linux
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Ubuntu/" title="Ubuntu">
-                        #Ubuntu
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Qt/" title="Qt">
-                        #Qt
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -287,13 +280,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -513,43 +509,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E8%B8%A9%E5%9D%91%EF%BC%81%E5%9C%A8%20Ubuntu%2016.04%20ARM%20%E5%B9%B3%E5%8F%B0%E8%BF%90%E8%A1%8C%20QML%20%E7%A8%8B%E5%BA%8F + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F12%2F03%2Fbuild-qt-ubuntu1604-arm%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/12/03/build-qt-ubuntu1604-arm/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

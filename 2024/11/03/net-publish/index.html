@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,8 +166,10 @@
           
       </div>
       <div class="markdown-body">
-        <p>很久以前，发布程序都是将配置改为 Release 编译一下，得到二进制文件打包给客户，这个习惯一直延续至今。<br>好像是从 .NET Core 时代开始，微软为了跨平台搞了个推出了一个<code>发布</code>的概念，也就是在<code>编译</code>后多了一个打包的过程。</p>
-<h2 id="dotnet-命令行发布"><a href="#dotnet-命令行发布" class="headerlink" title="dotnet 命令行发布"></a>dotnet 命令行发布</h2><p>废话不多说，先看一条发布命令：</p>
+        <p>很久以前，发布程序都是将配置改为 Release 编译一下，得到二进制文件打包给客户，这个习惯一直延续至今。<br>
+好像是从 .NET Core 时代开始，微软为了跨平台搞了个推出了一个<code>发布</code>的概念，也就是在<code>编译</code>后多了一个打包的过程。</p>
+<h2 id="dotnet-命令行发布"><a class="header-anchor" href="#dotnet-命令行发布">#</a>dotnet 命令行发布</h2>
+<p>废话不多说，先看一条发布命令：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet publish MyProject -c Release -f net8.0-windows -r win-x64 --sc false -o ./publish -p:Platform=x64 -p:PublishSingleFile=true</span><br></pre></td></tr></table></figure>
 <table>
 <thead>
@@ -173,7 +179,8 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>-c</td>
 <td>Configuration</td>
 <td>解决方案配置，一般就是<code>Debug</code>或<code>Release。</code></td>
@@ -208,19 +215,21 @@
 <td>PublishSingleFile</td>
 <td>是否将托管 DLL 文件合并为一个 exe 文件，这样发布目录会很干净，不会有大量 DLL 文件。</td>
 </tr>
-</tbody></table>
-<p><br>可以输入<code>dotnet publish /?</code>查看详细的说明。</p>
+</tbody>
+</table>
+<p><br>
+可以输入<code>dotnet publish /?</code>查看详细的说明。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Description:</span><br><span class="line">  适用于 .NET 平台的发布服务器</span><br><span class="line"></span><br><span class="line">用法:</span><br><span class="line">  dotnet publish [&lt;PROJECT | SOLUTION&gt;...] [options]</span><br><span class="line"></span><br><span class="line">参数:</span><br><span class="line">  &lt;PROJECT | SOLUTION&gt;  要操作的项目或解决方案文件。如果没有指定文件，则命令将在当前目录里搜索一个文件。</span><br><span class="line"></span><br><span class="line">选项:</span><br><span class="line">  --ucr, --use-current-runtime         将当前运行时用作目标运行时。</span><br><span class="line">  -o, --output &lt;OUTPUT_DIR&gt;            要放置已发布项目的输出目录。</span><br><span class="line">  --artifacts-path &lt;ARTIFACTS_DIR&gt;     工件路径。项目中的所有输出(包括生成、发布和打包输出)都将放到指定路径下的子文件夹中。</span><br><span class="line">  --manifest &lt;MANIFEST&gt;                指向目标清单文件的路径，该文件包含要通过发布步骤执行的包的列表。</span><br><span class="line">  --no-build                           发布之前不要生成项目。Implies --no-restore.</span><br><span class="line">  --sc, --self-contained               随应用程序一起发布 .NET 运行时，这样就不需要在目标计算机上安装运行时。</span><br><span class="line">                                       默认值为 &quot;false&quot;。但目标为 .NET 7 或更低版本时，如果指定了运行时标识符，则默认值为 &quot;true&quot;。</span><br><span class="line">  --no-self-contained                  将应用程序发布为依赖框架的应用程序。目标计算机上必须安装兼容的 .NET 运行时才能运行该应用程序。</span><br><span class="line">  --nologo                             不显示启动版权标志或版权消息。</span><br><span class="line">  -f, --framework &lt;FRAMEWORK&gt;          要发布的目标框架。必须在项目文件中指定目标框架。</span><br><span class="line">  -r, --runtime &lt;RUNTIME_IDENTIFIER&gt;   要发布的目标运行时。在创建自包含部署时使用。</span><br><span class="line">                                       默认情况下发布依赖于框架的应用程序。</span><br><span class="line">  -c, --configuration &lt;CONFIGURATION&gt;  发布所对应的配置。对于 NET 8.0 及更高版本的项目，默认值为 &quot;Release&quot;，但对于较低版本的项目，默认值为 &quot;Debug&quot;。</span><br><span class="line">  --version-suffix &lt;VERSION_SUFFIX&gt;    设置生成项目时使用的 $(VersionSuffix) 属性的值。</span><br><span class="line">  --interactive                        允许命令停止和等待用户输入或操作(例如，用以完成身份验证)。</span><br><span class="line">  --no-restore                         生成前请勿还原项目。</span><br><span class="line">  -v, --verbosity &lt;LEVEL&gt;              设置 MSBuild 详细程度。允许值为 q[uiet]、m[inimal]、n[ormal]、d[etailed] 和 diag[nostic]。</span><br><span class="line">  -a, --arch &lt;ARCH&gt;                    目标体系结构。</span><br><span class="line">  --os &lt;OS&gt;                            目标操作系统。</span><br><span class="line">  --disable-build-servers              强制命令忽略任何永久性生成服务器。</span><br><span class="line">  -?, -h, --help                       显示命令行帮助。</span><br></pre></td></tr></table></figure>
-
-<h2 id="pubxml-文件发布"><a href="#pubxml-文件发布" class="headerlink" title=".pubxml 文件发布"></a>.pubxml 文件发布</h2><p>在 Visual Studio 中右键选择项目，点击<code>发布</code>也可以用向导方式发布程序</p>
-<p><img src="/images/net-publish/01.webp"></p>
+<h2 id="pubxml-文件发布"><a class="header-anchor" href="#pubxml-文件发布">#</a>.pubxml 文件发布</h2>
+<p>在 Visual Studio 中右键选择项目，点击<code>发布</code>也可以用向导方式发布程序</p>
+<p><img src="images/net-publish/01.webp" alt=""></p>
 <p>然后项目文件夹<code>Properties\PublishProfiles</code>下会生成相应的<code>.pubxml</code>文件。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Configuration</span>&gt;</span>Release<span class="tag">&lt;/<span class="name">Configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TargetFramework</span>&gt;</span>net8.0-windows<span class="tag">&lt;/<span class="name">TargetFramework</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Platform</span>&gt;</span>x64<span class="tag">&lt;/<span class="name">Platform</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PublishDir</span>&gt;</span>./publish<span class="tag">&lt;/<span class="name">PublishDir</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RuntimeIdentifier</span>&gt;</span>win-x64<span class="tag">&lt;/<span class="name">RuntimeIdentifier</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">SelfContained</span>&gt;</span>false<span class="tag">&lt;/<span class="name">SelfContained</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PublishSingleFile</span>&gt;</span>true<span class="tag">&lt;/<span class="name">PublishSingleFile</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>还可以用命令行来引用<code>.pubxml</code>文件来发布</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet publish MyProject -p:PublishProfile=FolderProfile</span><br></pre></td></tr></table></figure>
 <p>但是我个人不推荐这么做，因为<code>dotnet</code>不会去读取某些属性值，MSDN 上说的：</p>
 <blockquote>
-<p>.pubxml 文件中的某些属性仅受 Visual Studio 使用，对 dotnet publish 没有影响。 我们正在努力使 CLI 与 Visual Studio 的行为更加一致。 但 CLI 永远不会使用某些属性。 CLI 和 Visual Studio 都执行发布的打包方面，dotnet&#x2F;sdk#29817 计划添加对更多与此相关的属性的支持。 但 CLI 不执行发布时部署自动化方面的操作，与此相关的属性不受支持。 不支持的最值得注意的 .pubxmldotnet publish 属性是影响生成的以下属性：</p>
+<p>.pubxml 文件中的某些属性仅受 Visual Studio 使用，对 dotnet publish 没有影响。 我们正在努力使 CLI 与 Visual Studio 的行为更加一致。 但 CLI 永远不会使用某些属性。 CLI 和 Visual Studio 都执行发布的打包方面，dotnet/sdk#29817 计划添加对更多与此相关的属性的支持。 但 CLI 不执行发布时部署自动化方面的操作，与此相关的属性不受支持。 不支持的最值得注意的 .pubxmldotnet publish 属性是影响生成的以下属性：</p>
 </blockquote>
 <ul>
 <li>LastUsedBuildConfiguration</li>
@@ -232,14 +241,19 @@
 <li>RuntimeIdentifier</li>
 <li>RuntimeIdentifiers</li>
 </ul>
-<p><br>所以我还是喜欢用命令行的方式发布。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>简单地说，<code>发布</code>的最终目的就是为了以下三个功能：</p>
+<p><br>
+所以我还是喜欢用命令行的方式发布。</p>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<p>简单地说，<code>发布</code>的最终目的就是为了以下三个功能：</p>
 <ol>
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props#selfcontained">SelfContained</a>。决定是否将 .NET 运行库文件一并打包，这样客户机可以避免安装 .NET 运行时。</li>
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/deploying/single-file/overview">PublishSingleFile</a>。决定是否将所以依赖的程序集文件合并到一个可执行文件中。</li>
-<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot">PublishAot</a>。是否启用 AOT 编译，生成的文件是非托管文件，不依赖 .NET 运行时，和 C&#x2F;C++ 一样，一般用于 DLL 项目。</li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot">PublishAot</a>。是否启用 AOT 编译，生成的文件是非托管文件，不依赖 .NET 运行时，和 C/C++ 一样，一般用于 DLL 项目。</li>
 </ol>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/tools/dotnet-publish">dotnet publish 命令</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/aspnet/core/host-and-deploy/visual-studio-publish-profiles#publish-profiles">发布配置文件</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/deploying/single-file/overview">单文件部署</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/tools/dotnet-publish">dotnet publish 命令</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/aspnet/core/host-and-deploy/visual-studio-publish-profiles#publish-profiles">发布配置文件</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/deploying/single-file/overview">单文件部署</a></p>
 
       </div>
       
@@ -251,24 +265,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -310,13 +306,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -536,43 +535,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%94%A8%20dotnet%20%E5%91%BD%E4%BB%A4%E5%8F%91%E5%B8%83%E7%A8%8B%E5%BA%8F + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F11%2F03%2Fnet-publish%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/11/03/net-publish/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

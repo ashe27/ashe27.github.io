@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -163,35 +167,44 @@
       </div>
       <div class="markdown-body">
         <p>默认情况下，MFC的主窗口标题由<strong>文档标题和Frame标题组成</strong>，格式为：<code>file - frame</code>。</p>
-<h2 id="设置标题"><a href="#设置标题" class="headerlink" title="设置标题"></a>设置标题</h2><p>设置窗口标题用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwnd-class#setwindowtext">CWnd::SetWindowText</a> 方法。</p>
-<h2 id="设置文档标题"><a href="#设置文档标题" class="headerlink" title="设置文档标题"></a>设置文档标题</h2><p>新建一个文档时，MFC 会使用字符串资源<code>AFX_IDS_UNTITLED</code>作为文档的默认标题，接着会触发 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class#onnewdocument">CDocument::OnNewDocument</a> 方法，我们可以在文件新建成功后使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class#settitle">CDocument::SetTitle</a> 方法来设置标题。</p>
+<h2 id="设置标题"><a class="header-anchor" href="#设置标题">#</a>设置标题</h2>
+<p>设置窗口标题用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cwnd-class?#setwindowtext">CWnd::SetWindowText</a> 方法。</p>
+<h2 id="设置文档标题"><a class="header-anchor" href="#设置文档标题">#</a>设置文档标题</h2>
+<p>新建一个文档时，MFC 会使用字符串资源<code>AFX_IDS_UNTITLED</code>作为文档的默认标题，接着会触发 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#onnewdocument">CDocument::OnNewDocument</a> 方法，我们可以在文件新建成功后使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#settitle">CDocument::SetTitle</a> 方法来设置标题。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CMFCApplication2Doc::OnNewDocument</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!CDocument::<span class="built_in">OnNewDocument</span>())</span><br><span class="line">        <span class="keyword">return</span> FALSE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>-&gt;<span class="built_in">SetTitle</span>(_T(<span class="string">&quot;新文件&quot;</span>));</span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果是<code>打开文档</code>就不能在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class#onopendocument">CDocument::OnOpenDocument</a> 中处理，因为 MFC 在打开文档后会使用文件名作为标题</p>
+<p>如果是<code>打开文档</code>就不能在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#onopendocument">CDocument::OnOpenDocument</a> 中处理，因为 MFC 在打开文档后会使用文件名作为标题</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">TCHAR szTitle[_MAX_FNAME];</span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">AfxGetFileTitle</span>(szFullPath, szTitle, _MAX_FNAME) == <span class="number">0</span>)</span><br><span class="line">    <span class="built_in">SetTitle</span>(szTitle);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>最早的修改时机是在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class#setpathname">CDocument::SetPathName</a> 中，我们可以重载它</p>
+<p>最早的修改时机是在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#setpathname">CDocument::SetPathName</a> 中，我们可以重载它</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">SetPathName</span><span class="params">(LPCTSTR lpszPathName, BOOL bAddToMRU)</span> <span class="keyword">override</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    CDocument::<span class="built_in">SetPathName</span>(lpszPathName, bAddToMRU);</span><br><span class="line">    <span class="keyword">this</span>-&gt;<span class="built_in">SetTitle</span>(_T(<span class="string">&quot;new title&quot;</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但是更建议在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class#ondocumentevent">CDocument::OnDocumentEvent</a> 中处理</p>
+<p>但是更建议在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdocument-class?#ondocumentevent">CDocument::OnDocumentEvent</a> 中处理</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">OnDocumentEvent</span><span class="params">(DocumentEvent deEvent)</span> <span class="keyword">override</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (deEvent == onAfterNewDocument || deEvent == onAfterOpenDocument) &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;<span class="built_in">SetTitle</span>(_T(<span class="string">&quot;new title&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="固定窗口标题"><a href="#固定窗口标题" class="headerlink" title="固定窗口标题"></a>固定窗口标题</h2><p>我们有时候希望应用程序标题是固定的，不会随着文档变化，可以通过以下几种方式来做。</p>
-<h3 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h3><p>因为文档在设置标题后会触发 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cframewndex-class#onupdateframetitle">CFrameWndEx::OnUpdateFrameTitle</a> 方法，而这个方法会改变窗口标题，所以我们覆盖它即可避免被影响。<br>在 <a href="CFrameWndEx::OnCreate">CFrameWndEx::OnCreate</a> 中设置固定标题</p>
+<h2 id="固定窗口标题"><a class="header-anchor" href="#固定窗口标题">#</a>固定窗口标题</h2>
+<p>我们有时候希望应用程序标题是固定的，不会随着文档变化，可以通过以下几种方式来做。</p>
+<h3 id="方式一"><a class="header-anchor" href="#方式一">#</a>方式一</h3>
+<p>因为文档在设置标题后会触发 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cframewndex-class?#onupdateframetitle">CFrameWndEx::OnUpdateFrameTitle</a> 方法，而这个方法会改变窗口标题，所以我们覆盖它即可避免被影响。<br>
+在 <a href="CFrameWndEx::OnCreate">CFrameWndEx::OnCreate</a> 中设置固定标题</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>-&gt;<span class="built_in">SetWindowText</span>(_T(<span class="string">&quot;title&quot;</span>));</span><br></pre></td></tr></table></figure>
-<p>重载 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cframewndex-class#onupdateframetitle">CFrameWndEx::OnUpdateFrameTitle</a> 方法，不调用父类操作。</p>
+<p>重载 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cframewndex-class?#onupdateframetitle">CFrameWndEx::OnUpdateFrameTitle</a> 方法，不调用父类操作。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">CMainFrame::OnUpdateFrameTitle</span><span class="params">(BOOL bAddToTitle)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Ignore</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h3><p>跟进<code>OnUpdateFrameTitle</code>后：</p>
+<h3 id="方式二"><a class="header-anchor" href="#方式二">#</a>方式二</h3>
+<p>跟进<code>OnUpdateFrameTitle</code>后：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">CFrameWnd::OnUpdateFrameTitle</span><span class="params">(BOOL bAddToTitle)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> ((<span class="built_in">GetStyle</span>() &amp; FWS_ADDTOTITLE) == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span>;     <span class="comment">// leave it alone!</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// allow hook to set the title (used for OLE support)</span></span><br><span class="line">    <span class="keyword">if</span> (m_pNotifyHook != <span class="literal">NULL</span> &amp;&amp; m_pNotifyHook-&gt;<span class="built_in">OnUpdateFrameTitle</span>())</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    CDocument* pDocument = <span class="built_in">GetActiveDocument</span>();</span><br><span class="line">    <span class="keyword">if</span> (bAddToTitle &amp;&amp; pDocument != <span class="literal">NULL</span>)</span><br><span class="line">        <span class="built_in">UpdateFrameTitleForDocument</span>(pDocument-&gt;<span class="built_in">GetTitle</span>());</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">UpdateFrameTitleForDocument</span>(<span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里发现了一个新东西<code>FWS_ADDTOTITLE</code>，如果窗口样式不包含它的话就退出函数了，所以我们也可以在创建<code>Frame</code>时去除这个Flag</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CMainFrame::PreCreateWindow</span><span class="params">(CREATESTRUCT&amp; cs)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!CFrameWndEx::<span class="built_in">PreCreateWindow</span>(cs))</span><br><span class="line">        <span class="keyword">return</span> FALSE;</span><br><span class="line"></span><br><span class="line">    cs.style &amp;= ~FWS_ADDTOTITLE;</span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>所以这个方式和方式一是一样的，本质上就是忽略<code>OnUpdateFrameTitle</code>的默认行为。</p>
-<h3 id="方式三"><a href="#方式三" class="headerlink" title="方式三"></a>方式三</h3><p>继续跟进源码，创建窗口的地方</p>
+<h3 id="方式三"><a class="header-anchor" href="#方式三">#</a>方式三</h3>
+<p>继续跟进源码，创建窗口的地方</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CWnd::CreateEx</span><span class="params">(DWORD dwExStyle, LPCTSTR lpszClassName,</span></span></span><br><span class="line"><span class="params"><span class="function">    LPCTSTR lpszWindowName, DWORD dwStyle,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> nWidth, <span class="type">int</span> nHeight,</span></span></span><br><span class="line"><span class="params"><span class="function">    HWND hWndParent, HMENU nIDorHMenu, LPVOID lpParam)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">ASSERT</span>(lpszClassName == <span class="literal">NULL</span> || <span class="built_in">AfxIsValidString</span>(lpszClassName) ||</span><br><span class="line">        <span class="built_in">AfxIsValidAtom</span>(lpszClassName));</span><br><span class="line">    <span class="built_in">ENSURE_ARG</span>(lpszWindowName == <span class="literal">NULL</span> || <span class="built_in">AfxIsValidString</span>(lpszWindowName));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// allow modification of several common create parameters</span></span><br><span class="line">    CREATESTRUCT cs;</span><br><span class="line">    cs.dwExStyle = dwExStyle;</span><br><span class="line">    cs.lpszClass = lpszClassName;</span><br><span class="line">    cs.lpszName = lpszWindowName;</span><br><span class="line">    cs.style = dwStyle;</span><br><span class="line">    cs.x = x;</span><br><span class="line">    cs.y = y;</span><br><span class="line">    cs.cx = nWidth;</span><br><span class="line">    cs.cy = nHeight;</span><br><span class="line">    cs.hwndParent = hWndParent;</span><br><span class="line">    cs.hMenu = nIDorHMenu;</span><br><span class="line">    cs.hInstance = <span class="built_in">AfxGetInstanceHandle</span>();</span><br><span class="line">    cs.lpCreateParams = lpParam;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">PreCreateWindow</span>(cs)) &#123;</span><br><span class="line">        <span class="built_in">PostNcDestroy</span>();</span><br><span class="line">        <span class="keyword">return</span> FALSE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">AfxHookWindowCreate</span>(<span class="keyword">this</span>);</span><br><span class="line">    HWND hWnd = <span class="built_in">CreateWindowEx</span>(cs.dwExStyle, cs.lpszClass,</span><br><span class="line">        cs.lpszName, cs.style, cs.x, cs.y, cs.cx, cs.cy,</span><br><span class="line">        cs.hwndParent, cs.hMenu, cs.hInstance, cs.lpCreateParams);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> _DEBUG</span></span><br><span class="line">    <span class="keyword">if</span> (hWnd == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">TRACE</span>(traceAppMsg, <span class="number">0</span>, <span class="string">&quot;Warning: Window creation failed: GetLastError returns 0x%8.8X\n&quot;</span>,</span><br><span class="line">            <span class="built_in">GetLastError</span>());</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">AfxUnhookWindowCreate</span>())</span><br><span class="line">        <span class="built_in">PostNcDestroy</span>();        <span class="comment">// cleanup if CreateWindowEx fails too soon</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (hWnd == <span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span> FALSE;</span><br><span class="line">    <span class="built_in">ASSERT</span>(hWnd == m_hWnd); <span class="comment">// should have been set in send msg hook</span></span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在调用<code>CreateWindowEx</code>创建窗口之前调用过了一次<code>PreCreateWindow</code>，然后用<code>cs.lpszName</code>作为窗口标题，那么就可以在<code>PreCreateWindow</code>中设置固定标题</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CMainFrame::PreCreateWindow</span><span class="params">(CREATESTRUCT&amp; cs)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!CFrameWnd::<span class="built_in">PreCreateWindow</span>(cs))</span><br><span class="line">        <span class="keyword">return</span> FALSE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在整个创建窗口过程中，PreCreateWindow 会被调用两次。仅在第二次实际创建窗口前再操作</span></span><br><span class="line">    <span class="keyword">if</span> (cs.hInstance) &#123;</span><br><span class="line">        cs.style &amp;= ~FWS_ADDTOTITLE; <span class="comment">// 禁止被文档改变标题</span></span><br><span class="line">        cs.lpszName = _T(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>比前两种方式简单直观，推荐使用这种方式。</p>
-<h2 id="Frame-默认标题从哪来？"><a href="#Frame-默认标题从哪来？" class="headerlink" title="Frame 默认标题从哪来？"></a>Frame 默认标题从哪来？</h2><p>如果我们不做任何设置，Frame 始终会有一个默认标题，这个标题字符串从哪来？还是看源码</p>
+<h2 id="Frame-默认标题从哪来？"><a class="header-anchor" href="#Frame-默认标题从哪来？">#</a>Frame 默认标题从哪来？</h2>
+<p>如果我们不做任何设置，Frame 始终会有一个默认标题，这个标题字符串从哪来？还是看源码</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CFrameWnd::LoadFrame</span><span class="params">(UINT nIDResource, DWORD dwDefaultStyle,</span></span></span><br><span class="line"><span class="params"><span class="function">    CWnd* pParentWnd, CCreateContext* pContext)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">...</span><br><span class="line">    CString strFullString;</span><br><span class="line">    <span class="keyword">if</span> (strFullString.<span class="built_in">LoadString</span>(nIDResource))</span><br><span class="line">        <span class="built_in">AfxExtractSubString</span>(m_strTitle, strFullString, <span class="number">0</span>);    <span class="comment">// first sub-string</span></span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>原来在创建 MFC 工程时，资源文件中生成了它</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">STRINGTABLE</span><br><span class="line">BEGIN</span><br><span class="line">    IDR_MAINFRAME    &quot;MFCApplication2\n\nMFCApplication2\n\n\nMFCApplication2.Document\nMFCApplication2.Document&quot;</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
-<p>这是一个用<code>\n</code>分隔的字符串列表，第一个子串就是默认标题。<br>关于其他子串的解释可以查看 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdoctemplate-class#getdocstring">CDocTemplate::GetDocString</a> 的解释。</p>
+<p>这是一个用<code>\n</code>分隔的字符串列表，第一个子串就是默认标题。<br>
+关于其他子串的解释可以查看 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cdoctemplate-class#getdocstring">CDocTemplate::GetDocString</a> 的解释。</p>
 
       </div>
       
@@ -203,24 +216,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/MFC/" title="MFC">
-                        #MFC
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -262,13 +257,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -488,43 +486,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + MFC%E5%AD%A6%E4%B9%A0%EF%BC%9A%E8%AE%BE%E7%BD%AE%E7%AA%97%E5%8F%A3%E6%A0%87%E9%A2%98 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F05%2F07%2F16244353%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/05/07/16244353/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

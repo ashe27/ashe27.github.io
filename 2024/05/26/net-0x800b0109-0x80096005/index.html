@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -163,21 +167,33 @@
       </div>
       <div class="markdown-body">
         <p>在 Windows Thin PC 上安装 .NET Framework 4.8 时报错。</p>
-<h2 id="错误-0x800B0109"><a href="#错误-0x800B0109" class="headerlink" title="错误 0x800B0109"></a>错误 0x800B0109</h2><p>错误消息：已处理证书链，但是在不受信任提供程序信任的根证书中终止。</p>
-<p><img src="/images/net-0x800b0109-0x80096005/01.webp"></p>
+<h2 id="错误-0x800B0109"><a class="header-anchor" href="#错误-0x800B0109">#</a>错误 0x800B0109</h2>
+<p>错误消息：已处理证书链，但是在不受信任提供程序信任的根证书中终止。</p>
+<p><img src="/images/net-0x800b0109-0x80096005/01.webp" alt=""></p>
 <p>看上去和数字证书有关。</p>
-<p><img src="/images/net-0x800b0109-0x80096005/02.webp"></p>
-<p>因为 Windows 7 SP1 (x86) 系统在未安装系统所需补丁的情况下不带此证书，而 Windows 7 SP1 (x64) 系统的最新版带有此证书。<br>网上找到解决方法说要将 <a target="_blank" rel="noopener" href="http://download.microsoft.com/download/2/4/8/248D8A62-FCCD-475C-85E7-6ED59520FC0F/MicrosoftRootCertificateAuthority2011.cer">MicrosoftRootCertificateAuthority2011.cer</a> 这个证书添加到<code>受信任的根证书颁发机构</code>中。</p>
-<h2 id="错误-0x80096005"><a href="#错误-0x80096005" class="headerlink" title="错误 0x80096005"></a>错误 0x80096005</h2><p>此时又出现新的错误：时间戳签名和&#x2F;或证书无法验证或已损坏。</p>
-<p><img src="/images/net-0x800b0109-0x80096005/03.webp"></p>
+<p><img src="/images/net-0x800b0109-0x80096005/02.webp" alt=""></p>
+<p>因为 Windows 7 SP1 (x86) 系统在未安装系统所需补丁的情况下不带此证书，而 Windows 7 SP1 (x64) 系统的最新版带有此证书。<br>
+网上找到解决方法说要将 <a target="_blank" rel="noopener" href="http://download.microsoft.com/download/2/4/8/248D8A62-FCCD-475C-85E7-6ED59520FC0F/MicrosoftRootCertificateAuthority2011.cer">MicrosoftRootCertificateAuthority2011.cer</a> 这个证书添加到<code>受信任的根证书颁发机构</code>中。</p>
+<h2 id="错误-0x80096005"><a class="header-anchor" href="#错误-0x80096005">#</a>错误 0x80096005</h2>
+<p>此时又出现新的错误：时间戳签名和/或证书无法验证或已损坏。</p>
+<p><img src="/images/net-0x800b0109-0x80096005/03.webp" alt=""></p>
 <p>解决方法：安装 <a target="_blank" rel="noopener" href="http://support.microsoft.com/kb/KB2813430">KB2813430</a> 补丁。</p>
-<h2 id="绕过-0x800B0109"><a href="#绕过-0x800B0109" class="headerlink" title="绕过 0x800B0109"></a>绕过 0x800B0109</h2><p>有人说只用只用安装 <a target="_blank" rel="noopener" href="http://support.microsoft.com/kb/KB2813430">KB2813430</a> 补丁就能解决了，并不用导入证书。<br>我在一个优化了服务程序的系统上测试结果的确是这样。怀疑是禁用某个服务导致安装程序跳过证书验证了。<br>经过反复试验后发现，同时禁用掉<code>Software Protection</code>和<code>DNS Client</code>服务的确可以顺利安装 .NET Framework 4.8。<br>禁用服务前：</p>
-<p><img src="/images/net-0x800b0109-0x80096005/04.webp"></p>
+<h2 id="绕过-0x800B0109"><a class="header-anchor" href="#绕过-0x800B0109">#</a>绕过 0x800B0109</h2>
+<p>有人说只用只用安装 <a target="_blank" rel="noopener" href="http://support.microsoft.com/kb/KB2813430">KB2813430</a> 补丁就能解决了，并不用导入证书。<br>
+我在一个优化了服务程序的系统上测试结果的确是这样。怀疑是禁用某个服务导致安装程序跳过证书验证了。<br>
+经过反复试验后发现，同时禁用掉<code>Software Protection</code>和<code>DNS Client</code>服务的确可以顺利安装 .NET Framework 4.8。<br>
+禁用服务前：</p>
+<p><img src="/images/net-0x800b0109-0x80096005/04.webp" alt=""></p>
 <p>禁用服务后：</p>
-<p><img src="/images/net-0x800b0109-0x80096005/05.webp"></p>
-<p>虽然证书仍然显示异常，但是确实可以安装成功。至于背后的原理我也没有再深究了，也不建议这样绕过。<br>正常的办法就是按照前面说的两步解决：安装根证书和打补丁。</p>
-<h2 id="直接从-msi-文件安装"><a href="#直接从-msi-文件安装" class="headerlink" title="直接从 .msi 文件安装"></a>直接从 .msi 文件安装</h2><p>后来我发现 .NET Framework 4.8 可以先提取出 .msi 文件再安装，这样就可以跳过前面的验证的步骤了。<br>运行<code>ndp48-x86-x64-allos-enu.exe /x</code>命令将安装文件提取到指定的目录，然后双击<code>netfx_full_x86.msi</code>或<code>netfx_full_x64.msi</code>就可以直接安装了。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://help.seewo.com/easinote/JBXIKMagzq">解决安装 .NET Framework 组件时会遇到的若干问题</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/richardfjf/article/details/108112229">安装net-framework4.8弹出“已处理证书链,但是在不受信任提供程序信任的根证书中终止”错误的解决方法</a></p>
+<p><img src="/images/net-0x800b0109-0x80096005/05.webp" alt=""></p>
+<p>虽然证书仍然显示异常，但是确实可以安装成功。至于背后的原理我也没有再深究了，也不建议这样绕过。<br>
+正常的办法就是按照前面说的两步解决：安装根证书和打补丁。</p>
+<h2 id="直接从-msi-文件安装"><a class="header-anchor" href="#直接从-msi-文件安装">#</a>直接从 .msi 文件安装</h2>
+<p>后来我发现 .NET Framework 4.8 可以先提取出 .msi 文件再安装，这样就可以跳过前面的验证的步骤了。<br>
+运行<code>ndp48-x86-x64-allos-enu.exe /x</code>命令将安装文件提取到指定的目录，然后双击<code>netfx_full_x86.msi</code>或<code>netfx_full_x64.msi</code>就可以直接安装了。</p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://help.seewo.com/easinote/JBXIKMagzq">解决安装 .NET Framework 组件时会遇到的若干问题</a><br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/richardfjf/article/details/108112229">安装net-framework4.8弹出“已处理证书链,但是在不受信任提供程序信任的根证书中终止”错误的解决方法</a></p>
 
       </div>
       
@@ -189,24 +205,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -248,13 +246,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -474,43 +475,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%AE%89%E8%A3%85%20.NET%20Framework%20%E6%8A%A5%200x800B0109%20%E7%AD%89%E9%94%99%E8%AF%AF%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F05%2F26%2Fnet-0x800b0109-0x80096005%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/05/26/net-0x800b0109-0x80096005/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

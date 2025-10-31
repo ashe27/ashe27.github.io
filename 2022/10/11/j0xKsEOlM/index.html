@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,16 +172,19 @@
           
       </div>
       <div class="markdown-body">
-        <p>七麦数据的APP数据是通过 xhr 动态请求的。为了反爬虫，url 中有一个名为<code>analisys</code>的参数，<br>分析过程可以参考这篇文章（<a target="_blank" rel="noopener" href="https://swzhao.blog.csdn.net/article/details/124821311">【python专场】20220806 qimai爬虫请求参数加密analisys解析以及代理使用</a>）。<br>原文中的算法已经失效，不过还好新的算法改动不大。<br>我分析了一下后用 js 写出了解密方法（2022年12月2日测试有效），这样看会比较清晰，其实并不复杂，只是官方的 js 都经过混淆了。</p>
+        <p>七麦数据的APP数据是通过 xhr 动态请求的。为了反爬虫，url 中有一个名为<code>analisys</code>的参数，<br>
+分析过程可以参考这篇文章（<a target="_blank" rel="noopener" href="https://swzhao.blog.csdn.net/article/details/124821311">【python专场】20220806 qimai爬虫请求参数加密analisys解析以及代理使用</a>）。<br>
+原文中的算法已经失效，不过还好新的算法改动不大。<br>
+我分析了一下后用 js 写出了解密方法（2022年12月2日测试有效），这样看会比较清晰，其实并不复杂，只是官方的 js 都经过混淆了。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">setAnalysis</span>(<span class="params">fullUrl</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> secret = <span class="string">&#x27;xyz517cda96abcd&#x27;</span>;</span><br><span class="line">    <span class="keyword">const</span> diffTime = (<span class="keyword">new</span> <span class="title class_">Date</span>()).<span class="title function_">getTime</span>() - <span class="number">1661224081041</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> url = <span class="keyword">new</span> <span class="title function_">URL</span>(fullUrl);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查询参数转字符串</span></span><br><span class="line">    <span class="keyword">const</span> params = <span class="title class_">Object</span>.<span class="title function_">fromEntries</span>(url.<span class="property">searchParams</span>.<span class="title function_">entries</span>());</span><br><span class="line">    <span class="keyword">let</span> query = [];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> params) &#123;</span><br><span class="line">        <span class="keyword">if</span> (key == <span class="string">&#x27;analysis&#x27;</span>)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        query.<span class="title function_">push</span>(params[key]);</span><br><span class="line">    &#125;</span><br><span class="line">    query = <span class="built_in">decodeURIComponent</span>(query.<span class="title function_">sort</span>().<span class="title function_">join</span>(<span class="string">&#x27;&#x27;</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> temp = <span class="string">`<span class="subst">$&#123;btoa(query)&#125;</span>@#<span class="subst">$&#123;url.pathname&#125;</span>@#<span class="subst">$&#123;diffTime&#125;</span>@#3`</span>;</span><br><span class="line">    <span class="keyword">let</span> arr = <span class="keyword">new</span> <span class="title class_">Uint8Array</span>(temp.<span class="property">length</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> k <span class="keyword">in</span> temp) &#123;</span><br><span class="line">        <span class="keyword">const</span> i = <span class="built_in">parseInt</span>(k);</span><br><span class="line">        arr[k] = temp.<span class="title function_">charCodeAt</span>(i) ^ (secret.<span class="title function_">charCodeAt</span>((i + <span class="number">10</span>) % secret.<span class="property">length</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> analysis = <span class="title function_">btoa</span>(<span class="title class_">String</span>.<span class="property">fromCharCode</span>.<span class="title function_">apply</span>(<span class="literal">null</span>, arr));</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">debug</span>(<span class="string">`analysis: <span class="subst">$&#123;temp&#125;</span> &gt; <span class="subst">$&#123;analysis&#125;</span>`</span>);</span><br><span class="line"></span><br><span class="line">    url.<span class="property">searchParams</span>.<span class="title function_">set</span>(<span class="string">&#x27;analysis&#x27;</span>, analysis);</span><br><span class="line">    <span class="keyword">return</span> url.<span class="property">href</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>使用方式：输入一个完整URL，得到可访问的URL</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> url = <span class="string">&#x27;https://api.qimai.cn/andapp/detail?appid=1&amp;market=1&#x27;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">setAnalysis</span>(url));</span><br></pre></td></tr></table></figure>
-
-<h2 id="定位算法"><a href="#定位算法" class="headerlink" title="定位算法"></a>定位算法</h2><p>算法有个固定的时间戳<code>1661224081041</code>，通过它可以定位到算法函数。官方<code>analisys</code>的计算过程如下</p>
+<h2 id="定位算法"><a class="header-anchor" href="#定位算法">#</a>定位算法</h2>
+<p>算法有个固定的时间戳<code>1661224081041</code>，通过它可以定位到算法函数。官方<code>analisys</code>的计算过程如下</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> n;</span><br><span class="line">    f || F != s || (n = (<span class="number">0</span>,</span><br><span class="line">            i[<span class="title class_">Wt</span>])(m),</span><br><span class="line">        s = c[x][k][<span class="title class_">Pt</span>] = -(<span class="number">0</span>,</span><br><span class="line">            i[<span class="title class_">Wt</span>])(l) || +<span class="keyword">new</span> z[W] - a2 * n);</span><br><span class="line">    <span class="keyword">var</span> e, r = +<span class="keyword">new</span> z[W] - (s || H) - <span class="number">1661224081041</span>,</span><br><span class="line">        a = [];</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">void</span> <span class="number">0</span> === t[<span class="title class_">Zt</span>] &amp;&amp; (t[<span class="title class_">Zt</span>] = &#123;&#125;),</span><br><span class="line">        z[Z][i7](t[<span class="title class_">Zt</span>])[M](<span class="keyword">function</span>(<span class="params">n</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (n == p)</span><br><span class="line">                <span class="keyword">return</span> !B;</span><br><span class="line">            t[<span class="title class_">Zt</span>][<span class="variable constant_">N2</span>](n) &amp;&amp; a[b](t[<span class="title class_">Zt</span>][n])</span><br><span class="line">        &#125;),</span><br><span class="line">        a = a[<span class="title class_">Ot</span>]()[<span class="variable constant_">I1</span>](_),</span><br><span class="line">        a = (<span class="number">0</span>,</span><br><span class="line">            i[jt])(a),</span><br><span class="line">        a = (a += v + t[<span class="title class_">Jt</span>][T](t[<span class="title class_">Mt</span>], _)) + (v + r) + (v + <span class="number">3</span>),</span><br><span class="line">        e = (<span class="number">0</span>,</span><br><span class="line">            i[jt])((<span class="number">0</span>,</span><br><span class="line">            i[qt])(a, d)),</span><br><span class="line">        -B == t[<span class="title class_">Jt</span>][j](p) &amp;&amp; (t[<span class="title class_">Jt</span>] += (-B != t[<span class="title class_">Jt</span>][j](<span class="title class_">Rn</span>) ? <span class="title class_">Hn</span> : <span class="title class_">Rn</span>) + p + <span class="variable constant_">B1</span> + z[<span class="variable constant_">V1</span>](e)),</span><br><span class="line">        t</span><br><span class="line">&#125; <span class="keyword">catch</span> (t) &#123;&#125;</span><br></pre></td></tr></table></figure>
 <p>其中<code>1661224081041</code>就是时间戳，表示的是北京时间<code>2022-08-23 11:08:01</code>。</p>
 <blockquote>
-<p>如果以后变更算法仍然采用减去时间戳的方式，则可以在浏览器的调试器中按正则搜索”- [0-9]{13}”，这样就很容易定位到算法函数。</p>
+<p>如果以后变更算法仍然采用减去时间戳的方式，则可以在浏览器的调试器中按正则搜索&quot;- [0-9]{13}&quot;，这样就很容易定位到算法函数。</p>
 </blockquote>
 
       </div>
@@ -190,30 +197,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E4%B8%83%E9%BA%A6%E6%95%B0%E6%8D%AE/" title="七麦数据">
-                        #七麦数据
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E7%88%AC%E8%99%AB/" title="爬虫">
-                        #爬虫
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -255,13 +238,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -481,43 +467,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E4%B8%83%E9%BA%A6%E6%95%B0%E6%8D%AE%E8%AF%B7%E6%B1%82%E5%8F%82%E6%95%B0analisys%E7%9A%84%E7%AE%97%E6%B3%95 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F10%2F11%2Fj0xKsEOlM%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/10/11/j0xKsEOlM/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

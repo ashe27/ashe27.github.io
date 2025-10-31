@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,63 +172,84 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="点亮主板LED灯"><a href="#点亮主板LED灯" class="headerlink" title="点亮主板LED灯"></a>点亮主板LED灯</h2><p>Firefly-RK3288 主板上有两颗 LED 灯，在 OTG 接口附近，一颗黄色，一颗蓝色。蓝色灯在开机后会被点亮。<br>根据 Firefly-RK3288 的文档说明，这两颗 LED 是由 GPIO 控制的。</p>
-<p><img src="/images/firefly-rk3288-leds/01.webp"></p>
+        <h2 id="点亮主板LED灯"><a class="header-anchor" href="#点亮主板LED灯">#</a>点亮主板LED灯</h2>
+<p>Firefly-RK3288 主板上有两颗 LED 灯，在 OTG 接口附近，一颗黄色，一颗蓝色。蓝色灯在开机后会被点亮。<br>
+根据 Firefly-RK3288 的文档说明，这两颗 LED 是由 GPIO 控制的。</p>
+<p><img src="/images/firefly-rk3288-leds/01.webp" alt=""></p>
 <p>分别是：</p>
 <ul>
 <li><code>GPIO8_A1</code>控制黄色灯。</li>
 <li><code>GPIO8_A2</code>控制蓝色灯。</li>
 </ul>
-<p><br>从官方源码仓库中搜索<code>les</code>关键字发现其设备树定义在 <a target="_blank" rel="noopener" href="https://gitlab.com/firefly-linux/kernel/-/blob/rk3288/firefly/arch/arm/boot/dts/rk3288-firefly-port.dtsi?ref_type=heads#L255">kernel&#x2F;arch&#x2F;arm&#x2F;boot&#x2F;dts&#x2F;rk3288-firefly-port.dtsi</a> 文件中：</p>
+<p><br>
+从官方源码仓库中搜索<code>les</code>关键字发现其设备树定义在 <a target="_blank" rel="noopener" href="https://gitlab.com/firefly-linux/kernel/-/blob/rk3288/firefly/arch/arm/boot/dts/rk3288-firefly-port.dtsi?ref_type=heads#L255">kernel/arch/arm/boot/dts/rk3288-firefly-port.dtsi</a> 文件中：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">leds &#123;</span><br><span class="line">    compatible = &quot;gpio-leds&quot;;</span><br><span class="line"></span><br><span class="line">    work &#123;</span><br><span class="line">        label = &quot;firefly:blue:power&quot;;</span><br><span class="line">        linux,default-trigger = &quot;ir-power-click&quot;;</span><br><span class="line">        gpios = &lt;&amp;gpio8 1 GPIO_ACTIVE_LOW&gt;;</span><br><span class="line">        pinctrl-names = &quot;default&quot;;</span><br><span class="line">        pinctrl-0 = &lt;&amp;led_power&gt;;</span><br><span class="line">        default-state = &quot;on&quot;;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    user &#123;</span><br><span class="line">        label = &quot;firefly:yellow:user&quot;;</span><br><span class="line">        linux,default-trigger = &quot;ir-user-click&quot;;</span><br><span class="line">        gpios = &lt;&amp;gpio8 2 GPIO_ACTIVE_LOW&gt;;</span><br><span class="line">        pinctrl-names = &quot;default&quot;;</span><br><span class="line">        pinctrl-0 = &lt;&amp;led_user&gt;;</span><br><span class="line">        default-state = &quot;off&quot;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>分别有两个名字：</p>
 <ul>
 <li>firefly:blue:power</li>
 <li>firefly:yellow:user</li>
 </ul>
-<h3 id="以设备的方式控制-LED"><a href="#以设备的方式控制-LED" class="headerlink" title="以设备的方式控制 LED"></a>以设备的方式控制 LED</h3><p>查看 LED 设备也能发现它们：</p>
+<h3 id="以设备的方式控制-LED"><a class="header-anchor" href="#以设备的方式控制-LED">#</a>以设备的方式控制 LED</h3>
+<p>查看 LED 设备也能发现它们：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> /sys/class/leds/</span><br><span class="line">firefly:blue:power  firefly:yellow:user</span><br></pre></td></tr></table></figure>
 <p>所以在用户层可以通过设备文件控制它：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关灯</span></span><br><span class="line"><span class="built_in">echo</span> 0 &gt;/sys/class/leds/firefly:blue:power/brightness</span><br><span class="line"></span><br><span class="line"><span class="comment"># 开灯</span></span><br><span class="line"><span class="built_in">echo</span> 1 &gt;/sys/class/leds/firefly:blue:power/brightness</span><br></pre></td></tr></table></figure>
-
-<p><br>用户还可以使用 cat 命令获取 trigger 的可用值：</p>
+<p><br>
+用户还可以使用 cat 命令获取 trigger 的可用值：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> /sys/class/leds/firefly:blue:power/trigger</span><br><span class="line">[none] kbd-scrolllock kbd-numlock kbd-capslock kbd-kanalock kbd-shiftlock kbd-altgrlock kbd-ctrllock kbd-altlock kbd-shiftllock kbd-shiftrlock kbd-ctrlllock kbd-ctrlrlock ir-power-click mmc0 mmc1 mmc2 timer oneshot default-on rfkill0 rfkill1 rfkill2</span><br></pre></td></tr></table></figure>
 <p>还可以通过 echo 向其 trigger 属性输入命令控制每一个 LED：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> none &gt;/sys/class/leds/firefly:blue:power/trigger</span><br><span class="line"><span class="built_in">echo</span> default-on &gt;/sys/class/leds/firefly:blue:power/trigger</span><br></pre></td></tr></table></figure>
-
-<h3 id="在内核中操作-LED"><a href="#在内核中操作-LED" class="headerlink" title="在内核中操作 LED"></a>在内核中操作 LED</h3><p>这部分是复制官方的。</p>
+<h3 id="在内核中操作-LED"><a class="header-anchor" href="#在内核中操作-LED">#</a>在内核中操作 LED</h3>
+<p>这部分是复制官方的。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;linux/leds.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义LED触发器</span></span><br><span class="line">DEFINE_LED_TRIGGER(ledtrig_ir_click);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注册该触发器</span></span><br><span class="line">led_trigger_register_simple(<span class="string">&quot;ir-power-click&quot;</span>, &amp;ledtrig_ir_click);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 控制 LED 的亮灭</span></span><br><span class="line">led_trigger_event(ledtrig_ir_click, LED_FULL); <span class="comment">//亮</span></span><br><span class="line">led_trigger_event(ledtrig_ir_click, LED_OFF);  <span class="comment">//灭</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="查找-GPIO-编号"><a href="#查找-GPIO-编号" class="headerlink" title="查找 GPIO 编号"></a>查找 GPIO 编号</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> /sys/kernel/debug/gpio</span><br><span class="line">GPIOs 0-23, platform/pinctrl, gpio0:</span><br><span class="line"> gpio-5   (                    |GPIO Key Power      ) <span class="keyword">in</span>  hi    </span><br><span class="line"> gpio-10  (                    |hp_ctl_gpio         ) out lo    </span><br><span class="line"> gpio-11  (                    |vcc28_dvp           ) out hi    </span><br><span class="line"> gpio-12  (                    |vcc_otg_5v          ) out hi    </span><br><span class="line"> gpio-14  (                    |vcc_host_5v         ) out hi    </span><br><span class="line"></span><br><span class="line">GPIOs 24-55, platform/pinctrl, gpio1:</span><br><span class="line"></span><br><span class="line">GPIOs 56-87, platform/pinctrl, gpio2:</span><br><span class="line"></span><br><span class="line">GPIOs 88-119, platform/pinctrl, gpio3:</span><br><span class="line"></span><br><span class="line">GPIOs 120-151, platform/pinctrl, gpio4:</span><br><span class="line"> gpio-127 (                    |mdio-reset          ) out hi    </span><br><span class="line"> gpio-139 (                    |bt_default_rts      ) <span class="keyword">in</span>  hi    </span><br><span class="line"> gpio-146 (                    |bt_default_wake     ) <span class="keyword">in</span>  hi    </span><br><span class="line"> gpio-148 (                    |reset               ) out hi    </span><br><span class="line"> gpio-149 (                    |bt_default_reset    ) out lo    </span><br><span class="line"> gpio-151 (                    |bt_default_wake_host) <span class="keyword">in</span>  hi    </span><br><span class="line"></span><br><span class="line">GPIOs 152-183, platform/pinctrl, gpio5:</span><br><span class="line"></span><br><span class="line">GPIOs 184-215, platform/pinctrl, gpio6:</span><br><span class="line"></span><br><span class="line">GPIOs 216-247, platform/pinctrl, gpio7:</span><br><span class="line"> gpio-227 (                    |vcc_sd              ) out hi    </span><br><span class="line"> gpio-228 (                    |dvdd_1v2            ) out lo    </span><br><span class="line"> gpio-231 (                    |?                   ) <span class="keyword">in</span>  lo    </span><br><span class="line"></span><br><span class="line">GPIOs 248-263, platform/pinctrl, gpio8:</span><br><span class="line"> gpio-249 (                    |?                   ) out hi    </span><br><span class="line"> gpio-250 (                    |?                   ) out lo    </span><br></pre></td></tr></table></figure>
-<p>显然，gpio8 中仅有的<code>249</code>和<code>250</code>对应了两颗LED灯。<br>尝试反复开关灯，检查后面是<code>out lo</code>还是<code>out hi</code>即可将编号对应起来，不过这属于“笨”办法。</p>
-<p><br>官方文档中提供了GPIO编号的计算公式：</p>
+<h3 id="查找-GPIO-编号"><a class="header-anchor" href="#查找-GPIO-编号">#</a>查找 GPIO 编号</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> /sys/kernel/debug/gpio</span><br><span class="line">GPIOs 0-23, platform/pinctrl, gpio0:</span><br><span class="line"> gpio-5   (                    |GPIO Key Power      ) <span class="keyword">in</span>  hi    </span><br><span class="line"> gpio-10  (                    |hp_ctl_gpio         ) out lo    </span><br><span class="line"> gpio-11  (                    |vcc28_dvp           ) out hi    </span><br><span class="line"> gpio-12  (                    |vcc_otg_5v          ) out hi    </span><br><span class="line"> gpio-14  (                    |vcc_host_5v         ) out hi    </span><br><span class="line"></span><br><span class="line">GPIOs 24-55, platform/pinctrl, gpio1:</span><br><span class="line"></span><br><span class="line">GPIOs 56-87, platform/pinctrl, gpio2:</span><br><span class="line"></span><br><span class="line">GPIOs 88-119, platform/pinctrl, gpio3:</span><br><span class="line"></span><br><span class="line">GPIOs 120-151, platform/pinctrl, gpio4:</span><br><span class="line"> gpio-127 (                    |mdio-reset          ) out hi    </span><br><span class="line"> gpio-139 (                    |bt_default_rts      ) <span class="keyword">in</span>  hi    </span><br><span class="line"> gpio-146 (                    |bt_default_wake     ) <span class="keyword">in</span>  hi    </span><br><span class="line"> gpio-148 (                    |reset               ) out hi    </span><br><span class="line"> gpio-149 (                    |bt_default_reset    ) out lo    </span><br><span class="line"> gpio-151 (                    |bt_default_wake_host) <span class="keyword">in</span>  hi    </span><br><span class="line"></span><br><span class="line">GPIOs 152-183, platform/pinctrl, gpio5:</span><br><span class="line"></span><br><span class="line">GPIOs 184-215, platform/pinctrl, gpio6:</span><br><span class="line"></span><br><span class="line">GPIOs 216-247, platform/pinctrl, gpio7:</span><br><span class="line"> gpio-227 (                    |vcc_sd              ) out hi    </span><br><span class="line"> gpio-228 (                    |dvdd_1v2            ) out lo    </span><br><span class="line"> gpio-231 (                    |?                   ) <span class="keyword">in</span>  lo    </span><br><span class="line"></span><br><span class="line">GPIOs 248-263, platform/pinctrl, gpio8:</span><br><span class="line"> gpio-249 (                    |?                   ) out hi    </span><br><span class="line"> gpio-250 (                    |?                   ) out lo    </span><br></pre></td></tr></table></figure>
+<p>显然，gpio8 中仅有的<code>249</code>和<code>250</code>对应了两颗LED灯。<br>
+尝试反复开关灯，检查后面是<code>out lo</code>还是<code>out hi</code>即可将编号对应起来，不过这属于“笨”办法。</p>
+<p><br>
+官方文档中提供了GPIO编号的计算公式：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">PIO pin 脚计算公式：</span><br><span class="line"></span><br><span class="line">pin = bank * 32 + number</span><br><span class="line">GPIO 小组编号计算公式：</span><br><span class="line"></span><br><span class="line">number = group * 8 + X</span><br><span class="line">例如 GPIO0_B5：</span><br><span class="line"></span><br><span class="line">bank = 0;      // GPIO0_B5 =&gt; 0, bank ∈ [0,4]</span><br><span class="line">group = 1;     // GPIO0_B5 =&gt; 1, group ∈ &#123;(A=0), (B=1), (C=2), (D=3)&#125;</span><br><span class="line">X = 5;         // GPIO0_B5 =&gt; 5, X ∈ [0,7]</span><br><span class="line">number = group * 8 + X = 1 * 8 + 5 = 13;</span><br><span class="line">pin = bank * 32 + number = 0 * 32 + 13 = 13;</span><br></pre></td></tr></table></figure>
-<p><strong>但是要注意了，这个公式中假定了每组GPIO有32个引脚，然而GPIO0只有24个，GPIO8是16个，所以需要调整这个公式。</strong><br>这点可以从<code>/sys/kernel/debug/pinctrl/pinctrl/pins</code>中查看：</p>
+<p><strong>但是要注意了，这个公式中假定了每组GPIO有32个引脚，然而GPIO0只有24个，GPIO8是16个，所以需要调整这个公式。</strong><br>
+这点可以从<code>/sys/kernel/debug/pinctrl/pinctrl/pins</code>中查看：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> /sys/kernel/debug/pinctrl/pinctrl/pins</span><br><span class="line">registered pins: 264</span><br><span class="line">pin 0 (gpio0-0) </span><br><span class="line">pin 1 (gpio0-1) </span><br><span class="line">pin 2 (gpio0-2) </span><br><span class="line">pin 3 (gpio0-3) </span><br><span class="line">pin 4 (gpio0-4) </span><br><span class="line">pin 5 (gpio0-5) </span><br><span class="line">pin 6 (gpio0-6) </span><br><span class="line">pin 7 (gpio0-7) </span><br><span class="line">pin 8 (gpio0-8) </span><br><span class="line">pin 9 (gpio0-9) </span><br><span class="line">pin 10 (gpio0-10) </span><br><span class="line">pin 11 (gpio0-11) </span><br><span class="line">pin 12 (gpio0-12) </span><br><span class="line">pin 13 (gpio0-13) </span><br><span class="line">pin 14 (gpio0-14) </span><br><span class="line">pin 15 (gpio0-15) </span><br><span class="line">pin 16 (gpio0-16) </span><br><span class="line">pin 17 (gpio0-17) </span><br><span class="line">pin 18 (gpio0-18) </span><br><span class="line">pin 19 (gpio0-19) </span><br><span class="line">pin 20 (gpio0-20) </span><br><span class="line">pin 21 (gpio0-21) </span><br><span class="line">pin 22 (gpio0-22) </span><br><span class="line">pin 23 (gpio0-23) </span><br><span class="line">...</span><br><span class="line">pin 248 (gpio8-0) </span><br><span class="line">pin 249 (gpio8-1) </span><br><span class="line">pin 250 (gpio8-2) </span><br><span class="line">pin 251 (gpio8-3) </span><br><span class="line">pin 252 (gpio8-4) </span><br><span class="line">pin 253 (gpio8-5) </span><br><span class="line">pin 254 (gpio8-6) </span><br><span class="line">pin 255 (gpio8-7) </span><br><span class="line">pin 256 (gpio8-8) </span><br><span class="line">pin 257 (gpio8-9) </span><br><span class="line">pin 258 (gpio8-10) </span><br><span class="line">pin 259 (gpio8-11) </span><br><span class="line">pin 260 (gpio8-12) </span><br><span class="line">pin 261 (gpio8-13) </span><br><span class="line">pin 262 (gpio8-14) </span><br><span class="line">pin 263 (gpio8-15) </span><br></pre></td></tr></table></figure>
-
-<p><br>根据前面的返回结果：</p>
+<p><br>
+根据前面的返回结果：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GPIOs 248-263, platform/pinctrl, gpio8:</span><br><span class="line"> gpio-249 (                    |?                   ) out hi    </span><br><span class="line"> gpio-250 (                    |?                   ) out lo  </span><br></pre></td></tr></table></figure>
 <p>应该是：</p>
 <ul>
-<li><code>GPIO8_A1</code>对应的是 248 + (0 * 8) + 1 &#x3D; 249。</li>
-<li><code>GPIO8_A2</code>对应的是 248 + (0 * 8) + 2 &#x3D; 250。</li>
+<li><code>GPIO8_A1</code>对应的是 248 + (0 * 8) + 1 = 249。</li>
+<li><code>GPIO8_A2</code>对应的是 248 + (0 * 8) + 2 = 250。</li>
 </ul>
-<h2 id="用-GPIO-点亮自己的-LED"><a href="#用-GPIO-点亮自己的-LED" class="headerlink" title="用 GPIO 点亮自己的 LED"></a>用 GPIO 点亮自己的 LED</h2><p>前面点亮的是主板上自带的 LED，如果想进一步，可以用 GPIO 口来点亮扩展的 LED。<br>首先查看主板说明，从扩展接口中找到一个没有使用的 GPIO：<br><img src="/images/firefly-rk3288--headers.webp"><br>我这里选择了图片中的第37个角，GPIO8_A7_U。</p>
-<h3 id="增加设备树"><a href="#增加设备树" class="headerlink" title="增加设备树"></a>增加设备树</h3><p>根据前面的经验，我们编辑文件<code>/kernel/arch/arm/boot/dts/rk3288-firefly-port.dtsi</code>，在<code>leds</code>下增加一个节点：</p>
+<h2 id="用-GPIO-点亮自己的-LED"><a class="header-anchor" href="#用-GPIO-点亮自己的-LED">#</a>用 GPIO 点亮自己的 LED</h2>
+<p>前面点亮的是主板上自带的 LED，如果想进一步，可以用 GPIO 口来点亮扩展的 LED。<br>
+首先查看主板说明，从扩展接口中找到一个没有使用的 GPIO：<br>
+<img src="/images/firefly-rk3288--headers.webp" alt=""><br>
+我这里选择了图片中的第37个角，GPIO8_A7_U。</p>
+<h3 id="增加设备树"><a class="header-anchor" href="#增加设备树">#</a>增加设备树</h3>
+<p>根据前面的经验，我们编辑文件<code>/kernel/arch/arm/boot/dts/rk3288-firefly-port.dtsi</code>，在<code>leds</code>下增加一个节点：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">leds &#123;</span><br><span class="line">    compatible = &quot;gpio-leds&quot;;</span><br><span class="line"></span><br><span class="line">    work &#123;</span><br><span class="line">        label = &quot;firefly:blue:power&quot;;</span><br><span class="line">        linux,default-trigger = &quot;ir-power-click&quot;;</span><br><span class="line">        gpios = &lt;&amp;gpio8 1 GPIO_ACTIVE_LOW&gt;;</span><br><span class="line">        pinctrl-names = &quot;default&quot;;</span><br><span class="line">        pinctrl-0 = &lt;&amp;led_power&gt;;</span><br><span class="line">        default-state = &quot;on&quot;;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    user &#123;</span><br><span class="line">        label = &quot;firefly:yellow:user&quot;;</span><br><span class="line">        linux,default-trigger = &quot;ir-user-click&quot;;</span><br><span class="line">        gpios = &lt;&amp;gpio8 2 GPIO_ACTIVE_LOW&gt;;</span><br><span class="line">        pinctrl-names = &quot;default&quot;;</span><br><span class="line">        pinctrl-0 = &lt;&amp;led_user&gt;;</span><br><span class="line">        default-state = &quot;off&quot;;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    user2 &#123;</span><br><span class="line">        label = &quot;firefly:blue:user2&quot;;</span><br><span class="line">        gpios = &lt;&amp;gpio8 7 GPIO_ACTIVE_HIGH&gt;;</span><br><span class="line">        pinctrl-names = &quot;default&quot;;</span><br><span class="line">        pinctrl-0 = &lt;&amp;led_user2&gt;;</span><br><span class="line">        default-state = &quot;off&quot;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>从<code>user</code>粘贴一份，将其配置为高电平有效，即<code>GPIO_ACTIVE_HIGH</code>，因为我们将其用作电源输入，物理上接线是这样：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GPIO -&gt; LED(+) -&gt; LED(-) -&gt; GND</span><br></pre></td></tr></table></figure>
 <p>然后向下翻到<code>pinctrl</code>节点配置引脚：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">leds &#123;</span><br><span class="line">    led_power: led-power &#123;</span><br><span class="line">        rockchip,pins = &lt;8 1 RK_FUNC_GPIO &amp;pcfg_pull_none&gt;;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    led_user: led-work &#123;</span><br><span class="line">        rockchip,pins = &lt;8 2 RK_FUNC_GPIO &amp;pcfg_pull_none&gt;;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    led_user2: led-work2 &#123;</span><br><span class="line">        rockchip,pins = &lt;8 7 RK_FUNC_GPIO &amp;pcfg_pull_none&gt;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p><br>重新编译内核</p>
+<p><br>
+重新编译内核</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译 kernel</span></span><br><span class="line">./build.sh kernel</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新各部分镜像链接到 rockdev/ 目录</span></span><br><span class="line">./mkfirmware.sh</span><br></pre></td></tr></table></figure>
 <p>刷入固件即可。</p>
-<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">firefly@firefly:~$ ll /sys/class/leds</span><br><span class="line">total 0</span><br><span class="line">drwxr-xr-x  2 root root 0 Mar 23 19:09 ./</span><br><span class="line">drwxr-xr-x 60 root root 0 Mar 23 19:08 ../</span><br><span class="line">lrwxrwxrwx  1 root root 0 Mar 23 19:08 firefly:blue:power -&gt; ../../devices/platform/leds/leds/firefly:blue:power/</span><br><span class="line">lrwxrwxrwx  1 root root 0 Mar 23 19:08 firefly:blue:user2 -&gt; ../../devices/platform/leds/leds/firefly:blue:user2/</span><br><span class="line">lrwxrwxrwx  1 root root 0 Mar 23 19:08 firefly:yellow:user -&gt; ../../devices/platform/leds/leds/firefly:yellow:user/</span><br></pre></td></tr></table></figure>
+<h3 id="验证"><a class="header-anchor" href="#验证">#</a>验证</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">firefly@firefly:~$ ll /sys/class/leds</span><br><span class="line">total 0</span><br><span class="line">drwxr-xr-x  2 root root 0 Mar 23 19:09 ./</span><br><span class="line">drwxr-xr-x 60 root root 0 Mar 23 19:08 ../</span><br><span class="line">lrwxrwxrwx  1 root root 0 Mar 23 19:08 firefly:blue:power -&gt; ../../devices/platform/leds/leds/firefly:blue:power/</span><br><span class="line">lrwxrwxrwx  1 root root 0 Mar 23 19:08 firefly:blue:user2 -&gt; ../../devices/platform/leds/leds/firefly:blue:user2/</span><br><span class="line">lrwxrwxrwx  1 root root 0 Mar 23 19:08 firefly:yellow:user -&gt; ../../devices/platform/leds/leds/firefly:yellow:user/</span><br></pre></td></tr></table></figure>
 <p>找到了 led，测试一下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> 1 &gt;/sys/class/leds/firefly:blue:user2/brightness</span><br></pre></td></tr></table></figure>
-<p>成功点亮<br><img src="/images/firefly-rk3288-leds/02.webp"><br>万用表测了下电压为2.9V。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://www.t-firefly.com/index.php/doc/product/info/id/49.html">LED 使用</a><br><a target="_blank" rel="noopener" href="https://wiki.t-firefly.com/zh_CN/Firefly-RK3288/driver_gpio.html">GPIO 使用</a><br><a target="_blank" rel="noopener" href="https://wiki.t-firefly.com/zh_CN/Firefly-Linux-Guide/gpio.html">GPIO 配置与使用</a><br><a target="_blank" rel="noopener" href="https://wiki.t-firefly.com/zh_CN/Firefly-Linux-Guide/first_use.html#she-bei-shu-shi-yong-gpio">设备树使用 GPIO</a><br><a target="_blank" rel="noopener" href="https://www.t-firefly.com/doc/product/info/id/61.html">Firefly-RK3288 硬件文档</a><br><a target="_blank" rel="noopener" href="https://opensource.rock-chips.com/images/4/49/Rockchip_RK3288_Datasheet_V2.7-20191227.pdf">Rockchip_RK3288_Datasheet_V2.7-20191227.pdf</a></p>
+<p>成功点亮<br>
+<img src="images/firefly-rk3288-leds/02.webp" alt=""><br>
+万用表测了下电压为2.9V。</p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://www.t-firefly.com/index.php/doc/product/info/id/49.html">LED 使用</a><br>
+<a target="_blank" rel="noopener" href="https://wiki.t-firefly.com/zh_CN/Firefly-RK3288/driver_gpio.html">GPIO 使用</a><br>
+<a target="_blank" rel="noopener" href="https://wiki.t-firefly.com/zh_CN/Firefly-Linux-Guide/gpio.html">GPIO 配置与使用</a><br>
+<a target="_blank" rel="noopener" href="https://wiki.t-firefly.com/zh_CN/Firefly-Linux-Guide/first_use.html#she-bei-shu-shi-yong-gpio">设备树使用 GPIO</a><br>
+<a target="_blank" rel="noopener" href="https://www.t-firefly.com/doc/product/info/id/61.html">Firefly-RK3288 硬件文档</a><br>
+<a target="_blank" rel="noopener" href="https://opensource.rock-chips.com/images/4/49/Rockchip_RK3288_Datasheet_V2.7-20191227.pdf">Rockchip_RK3288_Datasheet_V2.7-20191227.pdf</a></p>
 
       </div>
       
@@ -236,30 +261,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Firefly/" title="Firefly">
-                        #Firefly
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/RK3288/" title="RK3288">
-                        #RK3288
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -301,13 +302,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -527,43 +531,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Firefly-RK3288%20%E7%82%B9%E4%BA%AELED%E7%81%AF + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F03%2F22%2Ffirefly-rk3288-leds%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/03/22/firefly-rk3288-leds/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

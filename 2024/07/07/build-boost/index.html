@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,10 +172,13 @@
           
       </div>
       <div class="markdown-body">
-        <p>第一步，下载源码：<a target="_blank" rel="noopener" href="https://archives.boost.io/release/">https://archives.boost.io/release/</a><br>解压源码后双击运行<code>bootstrap.bat</code>，它会自动检测本机可用的编译器，并编译出<code>b2.exe</code>文件，后面的编译都需要靠它。</p>
-<h2 id="编译-stage"><a href="#编译-stage" class="headerlink" title="编译(stage)"></a>编译(stage)</h2><p>boost 中大多数库都是仅头文件的，不需要编译，直接包含到项目中就能用。<br>当然也并不是所有库都是仅头文件的，可以使用<code>--show-libraries</code>选项查看当前版本中所有需要编译才能使用的库。<br>1.85.0 版中的库：</p>
+        <p>第一步，下载源码：<a target="_blank" rel="noopener" href="https://archives.boost.io/release/">https://archives.boost.io/release/</a><br>
+解压源码后双击运行<code>bootstrap.bat</code>，它会自动检测本机可用的编译器，并编译出<code>b2.exe</code>文件，后面的编译都需要靠它。</p>
+<h2 id="编译-stage"><a class="header-anchor" href="#编译-stage">#</a>编译(stage)</h2>
+<p>boost 中大多数库都是仅头文件的，不需要编译，直接包含到项目中就能用。<br>
+当然也并不是所有库都是仅头文件的，可以使用<code>--show-libraries</code>选项查看当前版本中所有需要编译才能使用的库。<br>
+1.85.0 版中的库：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&gt;b2 --show-libraries</span><br><span class="line">The following libraries require building:</span><br><span class="line">    - atomic</span><br><span class="line">    - charconv</span><br><span class="line">    - chrono</span><br><span class="line">    - cobalt</span><br><span class="line">    - container</span><br><span class="line">    - context</span><br><span class="line">    - contract</span><br><span class="line">    - coroutine</span><br><span class="line">    - date_time</span><br><span class="line">    - exception</span><br><span class="line">    - fiber</span><br><span class="line">    - filesystem</span><br><span class="line">    - graph</span><br><span class="line">    - graph_parallel</span><br><span class="line">    - headers</span><br><span class="line">    - iostreams</span><br><span class="line">    - json</span><br><span class="line">    - locale</span><br><span class="line">    - log</span><br><span class="line">    - math</span><br><span class="line">    - mpi</span><br><span class="line">    - nowide</span><br><span class="line">    - program_options</span><br><span class="line">    - python</span><br><span class="line">    - random</span><br><span class="line">    - regex</span><br><span class="line">    - serialization</span><br><span class="line">    - stacktrace</span><br><span class="line">    - system</span><br><span class="line">    - test</span><br><span class="line">    - thread</span><br><span class="line">    - timer</span><br><span class="line">    - type_erasure</span><br><span class="line">    - url</span><br><span class="line">    - wave</span><br></pre></td></tr></table></figure>
-
 <p>一些主要的编译选项：</p>
 <table>
 <thead>
@@ -182,15 +189,16 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>–build-dir</td>
-<td>.&#x2F;bin.v2</td>
+<td>./bin.v2</td>
 <td></td>
 <td>编译产生的临时文件位置</td>
 </tr>
 <tr>
 <td>–stagedir</td>
-<td>.&#x2F;stage</td>
+<td>./stage</td>
 <td></td>
 <td>存放编译后库文件的位置</td>
 </tr>
@@ -242,21 +250,33 @@
 <td></td>
 <td>不编译哪些库</td>
 </tr>
-</tbody></table>
-<p>一般编译搞清楚这几个选项就够了，更多选项可以使用<code>b2 --help</code>查看。<br>一个例子：</p>
+</tbody>
+</table>
+<p>一般编译搞清楚这几个选项就够了，更多选项可以使用<code>b2 --help</code>查看。<br>
+一个例子：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b2 --toolset=msvc-14.1 --with-program_options link=static runtime-link=static</span><br></pre></td></tr></table></figure>
 <p>这条配置仅编译<code>program_options</code>静态库，并且静态链接运行时库。</p>
-<h2 id="安装-install"><a href="#安装-install" class="headerlink" title="安装(install)"></a>安装(install)</h2><p>b2 分为<code>编译</code>和<code>安装</code>两种方式，对应的选项就是<code>stage</code>和<code>install</code>，默认值是<code>stage</code>。</p>
+<h2 id="安装-install"><a class="header-anchor" href="#安装-install">#</a>安装(install)</h2>
+<p>b2 分为<code>编译</code>和<code>安装</code>两种方式，对应的选项就是<code>stage</code>和<code>install</code>，默认值是<code>stage</code>。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b2 ... install</span><br></pre></td></tr></table></figure>
-<p>如果指定了<code>install</code>，则会使用<code>--prefix</code>、<code>--includedir</code>、<code>--libdir</code>这几个位置选项。<br>一般用不到，就不细说了。</p>
-<h2 id="使用-bcp"><a href="#使用-bcp" class="headerlink" title="使用 bcp"></a>使用 bcp</h2><p>我们用 boost 时基本只是用到其中的小部分，但是打包时不清楚哪些头文件是没有用到的，所以会将所有头文件都拷贝到项目中。<br>bcp 就是解决这个问题的，可以用它将仅用到的头文件提取出来。<br><br>编译：</p>
+<p>如果指定了<code>install</code>，则会使用<code>--prefix</code>、<code>--includedir</code>、<code>--libdir</code>这几个位置选项。<br>
+一般用不到，就不细说了。</p>
+<h2 id="使用-bcp"><a class="header-anchor" href="#使用-bcp">#</a>使用 bcp</h2>
+<p>我们用 boost 时基本只是用到其中的小部分，但是打包时不清楚哪些头文件是没有用到的，所以会将所有头文件都拷贝到项目中。<br>
+bcp 就是解决这个问题的，可以用它将仅用到的头文件提取出来。<br>
+<br>
+编译：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b2 tools\bcp</span><br></pre></td></tr></table></figure>
 <p>注意，1.85 版中的 bcp 源码有错误，无法编译。到 <a target="_blank" rel="noopener" href="https://github.com/boostorg/bcp/tree/develop">https://github.com/boostorg/bcp/tree/develop</a> 下载一份最新的代码覆盖到<code>tools\bcp</code>目录下再编译。</p>
-<p><br>如果你用的是最新的 VS2022 也会无法编译，因为当前的 b2 版本不支持最新的编译器<code>vc144</code>，要使用低版本的编译器编译。</p>
-<p><br>使用：</p>
+<p><br>
+如果你用的是最新的 VS2022 也会无法编译，因为当前的 b2 版本不支持最新的编译器<code>vc144</code>，要使用低版本的编译器编译。</p>
+<p><br>
+使用：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir output</span><br><span class="line">dist\bin\bcp filesystem.hpp output</span><br></pre></td></tr></table></figure>
 <p>这样就能将<code>filesystem.hpp</code>及其相关的文件提取到<code>output</code>目录，然后把头文件拷贝到项目中即可。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/1_85_0/more/getting_started/windows.html">Getting Started on Windows</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_50964512/article/details/128499318">windows 编译C++ boost库（超详细）</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/1_85_0/more/getting_started/windows.html">Getting Started on Windows</a><br>
+<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_50964512/article/details/128499318">windows 编译C++ boost库（超详细）</a></p>
 
       </div>
       
@@ -268,30 +288,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Boost/" title="Boost">
-                        #Boost
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/c-plus-plus/" title="C++">
-                        #C++
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -333,13 +329,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -559,43 +558,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%BC%96%E8%AF%91%20boost%201.85.0 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F07%2F07%2Fbuild-boost%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/07/07/build-boost/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

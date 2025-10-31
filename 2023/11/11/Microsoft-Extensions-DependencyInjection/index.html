@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,39 +166,62 @@
           
       </div>
       <div class="markdown-body">
-        <p><a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/">Microsoft.Extensions.DependencyInjection</a> 是 .NET Core 中用于依赖注入的库。<br>但是它也支持 .NET Framework。</p>
-<h2 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">IServiceProvider serviceProvider = <span class="keyword">new</span> ServiceCollection()</span><br><span class="line">    .AddTransient&lt;IService, Service&gt;()</span><br><span class="line">    .BuildServiceProvider();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> service = serviceProvider.GetService&lt;IService&gt;();</span><br><span class="line">service.PrintMessage();</span><br></pre></td></tr></table></figure>
-<p>IServiceCollection：用于注册应用程序所需的服务。并通过<code>BuildServiceProvider</code>方法构建<code>ServiceProvider</code>。<br>IServiceProvider：提供服务的容器。构建<code>ServiceProvider</code>时，<code>IServiceCollection</code>中注册的所有服务都会被实例化，并按照其生命周期进行管理。</p>
-<h2 id="注册服务"><a href="#注册服务" class="headerlink" title="注册服务"></a>注册服务</h2><ul>
-<li><p>以三种不同的生命周期方式注册：</p>
+        <p><a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection/">Microsoft.Extensions.DependencyInjection</a> 是 .NET Core 中用于依赖注入的库。<br>
+但是它也支持 .NET Framework。</p>
+<h2 id="快速开始"><a class="header-anchor" href="#快速开始">#</a>快速开始</h2>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">IServiceProvider serviceProvider = <span class="keyword">new</span> ServiceCollection()</span><br><span class="line">    .AddTransient&lt;IService, Service&gt;()</span><br><span class="line">    .BuildServiceProvider();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> service = serviceProvider.GetService&lt;IService&gt;();</span><br><span class="line">service.PrintMessage();</span><br></pre></td></tr></table></figure>
+<p>IServiceCollection：用于注册应用程序所需的服务。并通过<code>BuildServiceProvider</code>方法构建<code>ServiceProvider</code>。<br>
+IServiceProvider：提供服务的容器。构建<code>ServiceProvider</code>时，<code>IServiceCollection</code>中注册的所有服务都会被实例化，并按照其生命周期进行管理。</p>
+<h2 id="注册服务"><a class="header-anchor" href="#注册服务">#</a>注册服务</h2>
+<ul>
+<li>以三种不同的生命周期方式注册：</li>
+</ul>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AddSingleton&lt;IService, Service&gt;();</span><br><span class="line">AddScoped&lt;IService, Service&gt;();</span><br><span class="line">AddTransient&lt;IService, Service&gt;();</span><br></pre></td></tr></table></figure>
 <p>生命周期内容可以看下一节。</p>
-</li>
-<li><p>支持带<code>Key</code>注册服务，以便区分不同的实现：</p>
+<ul>
+<li>支持带<code>Key</code>注册服务，以便区分不同的实现：</li>
+</ul>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> serviceCollection = <span class="keyword">new</span> ServiceCollection();</span><br><span class="line">    <span class="keyword">var</span> serviceProvider = serviceCollection</span><br><span class="line">        .AddKeyedTransient&lt;IServiceA, ServiceA1&gt;(<span class="string">&quot;A1&quot;</span>)</span><br><span class="line">        .AddKeyedTransient&lt;IServiceA, ServiceA2&gt;(<span class="string">&quot;A2&quot;</span>)</span><br><span class="line">        .BuildServiceProvider();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> obj = serviceProvider.GetKeyedService&lt;IServiceA&gt;(<span class="string">&quot;A1&quot;</span>);</span><br><span class="line">    obj.Say();</span><br><span class="line"></span><br><span class="line">    obj = serviceProvider.GetKeyedService&lt;IServiceA&gt;(<span class="string">&quot;A2&quot;</span>);</span><br><span class="line">    obj.Say();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>参数<code>Key</code>是一个<code>object</code>类型，所以也可以是其他类型作为 Key。</p>
-</li>
+<h2 id="生命周期"><a class="header-anchor" href="#生命周期">#</a>生命周期</h2>
+<h3 id="Singleton"><a class="header-anchor" href="#Singleton">#</a>Singleton</h3>
+<ul>
+<li>单例。每次请求都会返回相同的实例。<code>ServiceProvider</code>会引用该实例。</li>
 </ul>
-<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><h3 id="Singleton"><a href="#Singleton" class="headerlink" title="Singleton"></a>Singleton</h3><ul>
-<li>单例。每次请求都会返回相同的实例。<code>ServiceProvider</code>会引用该实例。<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> serviceProvider = <span class="keyword">new</span> ServiceCollection()</span><br><span class="line">        .AddSingleton&lt;IService, Service&gt;()</span><br><span class="line">        .BuildServiceProvider();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> service = serviceProvider.GetService&lt;IService&gt;();</span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;service.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 4094363</span></span><br><span class="line"></span><br><span class="line">    service = serviceProvider.GetService&lt;IService&gt;();</span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;service.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 4094363</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-两次输出相同的 HashCode。</li>
-<li>支持从已有实例进行注册<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddSingleton(<span class="keyword">new</span> Service());</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> serviceProvider = <span class="keyword">new</span> ServiceCollection()</span><br><span class="line">        .AddSingleton&lt;IService, Service&gt;()</span><br><span class="line">        .BuildServiceProvider();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> service = serviceProvider.GetService&lt;IService&gt;();</span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;service.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 4094363</span></span><br><span class="line"></span><br><span class="line">    service = serviceProvider.GetService&lt;IService&gt;();</span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;service.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 4094363</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>两次输出相同的 HashCode。</p>
+<ul>
+<li>支持从已有实例进行注册</li>
 </ul>
-<h3 id="Scoped"><a href="#Scoped" class="headerlink" title="Scoped"></a>Scoped</h3><ul>
-<li>作用域。在同一个作用域内请求会返回相同的实例。<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> serviceProvider = <span class="keyword">new</span> ServiceCollection()</span><br><span class="line">        .AddScoped&lt;IService, Service&gt;()</span><br><span class="line">        .BuildServiceProvider();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> scope = serviceProvider.CreateScope())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> s1 = scope.ServiceProvider.GetService&lt;IService&gt;();</span><br><span class="line">        Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s1.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 4094363</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> s2 = scope.ServiceProvider.GetService&lt;IService&gt;();</span><br><span class="line">        Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s2.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 4094363</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> scope = serviceProvider.CreateScope())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> s1 = scope.ServiceProvider.GetService&lt;IService&gt;();</span><br><span class="line">        Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s1.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 41962596</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> s2 = scope.ServiceProvider.GetService&lt;IService&gt;();</span><br><span class="line">        Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s2.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 41962596</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-如果不在作用域内请求也是可以的，但是会产生单例的效果：<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> serviceProvider = <span class="keyword">new</span> ServiceCollection()</span><br><span class="line">        .AddScoped&lt;IService, Service&gt;()</span><br><span class="line">        .BuildServiceProvider();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> s3 = serviceProvider.GetService&lt;IService&gt;();</span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s3.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 42119052</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> s4 = serviceProvider.GetService&lt;IService&gt;();</span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s4.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 42119052</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-在作用域外请求被认为是反模式，为了约束这种错误的用法，可以在<code>BuildServiceProvider</code>方法中传入<code>validateScopes = true</code>。<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> serviceProvider = <span class="keyword">new</span> ServiceCollection()</span><br><span class="line">        .AddScoped&lt;IService, Service&gt;()</span><br><span class="line">        .BuildServiceProvider(validateScopes: <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> s3 = serviceProvider.GetService&lt;IService&gt;();  <span class="comment">// InvalidOperationException</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-错误的用法将会抛出一个<code>InvalidOperationException</code>异常。</li>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AddSingleton(<span class="keyword">new</span> Service());</span><br></pre></td></tr></table></figure>
+<h3 id="Scoped"><a class="header-anchor" href="#Scoped">#</a>Scoped</h3>
+<ul>
+<li>作用域。在同一个作用域内请求会返回相同的实例。</li>
 </ul>
-<h3 id="Transient"><a href="#Transient" class="headerlink" title="Transient"></a>Transient</h3><ul>
-<li>瞬态。每次请求都创建一个新的实例。<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> serviceProvider = <span class="keyword">new</span> ServiceCollection()</span><br><span class="line">        .AddTransient&lt;IServiceA, ServiceA&gt;()</span><br><span class="line">        .BuildServiceProvider();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> s1 = serviceProvider.GetService&lt;IServiceA&gt;();</span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s1.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 4094363</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> s2 = serviceProvider.GetService&lt;IServiceA&gt;();</span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s2.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 19575591</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-每次请求都是新的实例。</li>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> serviceProvider = <span class="keyword">new</span> ServiceCollection()</span><br><span class="line">        .AddScoped&lt;IService, Service&gt;()</span><br><span class="line">        .BuildServiceProvider();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> scope = serviceProvider.CreateScope())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> s1 = scope.ServiceProvider.GetService&lt;IService&gt;();</span><br><span class="line">        Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s1.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 4094363</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> s2 = scope.ServiceProvider.GetService&lt;IService&gt;();</span><br><span class="line">        Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s2.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 4094363</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">using</span> (<span class="keyword">var</span> scope = serviceProvider.CreateScope())</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> s1 = scope.ServiceProvider.GetService&lt;IService&gt;();</span><br><span class="line">        Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s1.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 41962596</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> s2 = scope.ServiceProvider.GetService&lt;IService&gt;();</span><br><span class="line">        Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s2.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 41962596</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果不在作用域内请求也是可以的，但是会产生单例的效果：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> serviceProvider = <span class="keyword">new</span> ServiceCollection()</span><br><span class="line">        .AddScoped&lt;IService, Service&gt;()</span><br><span class="line">        .BuildServiceProvider();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> s3 = serviceProvider.GetService&lt;IService&gt;();</span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s3.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 42119052</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> s4 = serviceProvider.GetService&lt;IService&gt;();</span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s4.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 42119052</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在作用域外请求被认为是反模式，为了约束这种错误的用法，可以在<code>BuildServiceProvider</code>方法中传入<code>validateScopes = true</code>。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> serviceProvider = <span class="keyword">new</span> ServiceCollection()</span><br><span class="line">        .AddScoped&lt;IService, Service&gt;()</span><br><span class="line">        .BuildServiceProvider(validateScopes: <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> s3 = serviceProvider.GetService&lt;IService&gt;();  <span class="comment">// InvalidOperationException</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>错误的用法将会抛出一个<code>InvalidOperationException</code>异常。</p>
+<h3 id="Transient"><a class="header-anchor" href="#Transient">#</a>Transient</h3>
+<ul>
+<li>瞬态。每次请求都创建一个新的实例。</li>
 </ul>
-<h2 id="注入"><a href="#注入" class="headerlink" title="注入"></a>注入</h2><p><code>Microsoft.Extensions.DependencyInjection</code>仅有构造函数注入。并不支持属性注入。</p>
-<h3 id="构造注入"><a href="#构造注入" class="headerlink" title="构造注入"></a>构造注入</h3><ul>
-<li>容器会选择具有最多参数的构造函数来进行注入。<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">AddTransient&lt;IServiceA, ServiceA&gt;();</span><br><span class="line">AddTransient&lt;IServiceB, ServiceB&gt;();</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServiceC</span> : <span class="title">IServiceC</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ServiceC</span>(<span class="params">IServiceA a</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ServiceC</span>(<span class="params">IServiceA a, IServiceB b</span>)  <span class="comment">// 命中</span></span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ServiceC</span>(<span class="params"><span class="built_in">int</span> n1, <span class="built_in">int</span> n2, <span class="built_in">int</span> n3</span>)  <span class="comment">// 参数虽多，但是类型没有注册</span></span></span><br><span class="line">    &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> serviceProvider = <span class="keyword">new</span> ServiceCollection()</span><br><span class="line">        .AddTransient&lt;IServiceA, ServiceA&gt;()</span><br><span class="line">        .BuildServiceProvider();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> s1 = serviceProvider.GetService&lt;IServiceA&gt;();</span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s1.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 4094363</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> s2 = serviceProvider.GetService&lt;IServiceA&gt;();</span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;<span class="subst">&#123;s2.GetHashCode()&#125;</span>&quot;</span>);  <span class="comment">// 19575591</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每次请求都是新的实例。</p>
+<h2 id="注入"><a class="header-anchor" href="#注入">#</a>注入</h2>
+<p><code>Microsoft.Extensions.DependencyInjection</code>仅有构造函数注入。并不支持属性注入。</p>
+<h3 id="构造注入"><a class="header-anchor" href="#构造注入">#</a>构造注入</h3>
+<ul>
+<li>容器会选择具有最多参数的构造函数来进行注入。</li>
 </ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Microsoft.Extensions.DependencyInjection</code>很轻量，它并不是一个大而全的 IoC 容器。对于复杂的依赖注入场景来说功能有限。为了满足更高级的需求，可以使用其他第三方容器。<br>它只是微软官方一系列扩展包中的一个公共模块，是为了服务其他扩展的。<br><br>以下是其他部分扩展：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">AddTransient&lt;IServiceA, ServiceA&gt;();</span><br><span class="line">AddTransient&lt;IServiceB, ServiceB&gt;();</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServiceC</span> : <span class="title">IServiceC</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ServiceC</span>(<span class="params">IServiceA a</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ServiceC</span>(<span class="params">IServiceA a, IServiceB b</span>)  <span class="comment">// 命中</span></span></span><br><span class="line">    &#123;</span><br><span class="line">        Debug.WriteLine(<span class="string">&quot;2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ServiceC</span>(<span class="params"><span class="built_in">int</span> n1, <span class="built_in">int</span> n2, <span class="built_in">int</span> n3</span>)  <span class="comment">// 参数虽多，但是类型没有注册</span></span></span><br><span class="line">    &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<p><code>Microsoft.Extensions.DependencyInjection</code>很轻量，它并不是一个大而全的 IoC 容器。对于复杂的依赖注入场景来说功能有限。为了满足更高级的需求，可以使用其他第三方容器。<br>
+它只是微软官方一系列扩展包中的一个公共模块，是为了服务其他扩展的。<br>
+<br>
+以下是其他部分扩展：</p>
 <ol>
 <li><code>Microsoft.Extensions.Logging</code>：提供了日志记录功能的扩展，可以与各种日志记录器（如Console、Debug、File、EventSource等）集成。</li>
 <li><code>Microsoft.Extensions.Configuration</code>：提供了配置管理功能的扩展，可以从不同的配置源（如JSON、XML、环境变量等）读取和解析配置信息。</li>
@@ -202,8 +229,11 @@
 <li><code>Microsoft.Extensions.Options</code>：提供了配置选项功能的扩展，可以轻松地将配置选项注入到应用程序中，并进行验证和转换。</li>
 <li><code>Microsoft.Extensions.Diagnostics.HealthChecks</code>：提供了应用程序健康检查功能的扩展，可以检查应用程序的各种依赖和状态。</li>
 </ol>
-<p><br>官方的扩展远不止这几个，更多的可以直接去 nuget 网站搜索前缀<code>Microsoft.Extensions</code>即可。<a target="_blank" rel="noopener" href="https://www.nuget.org/packages?q=Microsoft.Extensions">便民链接</a><br>这些包的设计目标是提供可插拔的模块，以便开发人员根据项目需求选择适当的功能和扩展。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.codeproject.com/Articles/5339241/Exploring-the-Microsoft-Extensions-DependencyInjec">Exploring the Microsoft.Extensions.DependencyInjection Machinery</a></p>
+<p><br>
+官方的扩展远不止这几个，更多的可以直接去 nuget 网站搜索前缀<code>Microsoft.Extensions</code>即可。<a target="_blank" rel="noopener" href="https://www.nuget.org/packages?q=Microsoft.Extensions">便民链接</a><br>
+这些包的设计目标是提供可插拔的模块，以便开发人员根据项目需求选择适当的功能和扩展。</p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://www.codeproject.com/Articles/5339241/Exploring-the-Microsoft-Extensions-DependencyInjec">Exploring the Microsoft.Extensions.DependencyInjection Machinery</a></p>
 
       </div>
       
@@ -215,24 +245,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/" title="依赖注入">
-                        #依赖注入
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -274,13 +286,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -500,43 +515,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Microsoft.Extensions.DependencyInjection%20%E5%85%A5%E9%97%A8 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F11%2F11%2FMicrosoft-Extensions-DependencyInjection%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/11/11/Microsoft-Extensions-DependencyInjection/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

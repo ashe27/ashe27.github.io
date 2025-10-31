@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,19 +166,28 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="Win8平台自带API"><a href="#Win8平台自带API" class="headerlink" title="Win8平台自带API"></a>Win8平台自带API</h2><p>挂载虚拟磁盘文件VHD或ISO镜像文件可以用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-openvirtualdisk">OpenVirtualDisk</a> 相关API。其中ISO文件要求Win8及以上的系统，Win7不支持ISO文件</p>
+        <h2 id="Win8平台自带API"><a class="header-anchor" href="#Win8平台自带API">#</a>Win8平台自带API</h2>
+<p>挂载虚拟磁盘文件VHD或ISO镜像文件可以用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-openvirtualdisk">OpenVirtualDisk</a> 相关API。其中ISO文件要求Win8及以上的系统，Win7不支持ISO文件</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;initguid.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;virtdisk.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib, <span class="string">&quot;VirtDisk&quot;</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> _tmain(<span class="type">int</span> argc, _TCHAR* argv[])</span><br><span class="line">&#123;</span><br><span class="line">	HANDLE hVirtualDisk = <span class="literal">nullptr</span>;</span><br><span class="line">	VIRTUAL_STORAGE_TYPE vst;</span><br><span class="line">	vst.DeviceId = VIRTUAL_STORAGE_TYPE_DEVICE_ISO;   <span class="comment">// Win7不支持ISO</span></span><br><span class="line">	vst.VendorId = VIRTUAL_STORAGE_TYPE_VENDOR_MICROSOFT;</span><br><span class="line"></span><br><span class="line">	OPEN_VIRTUAL_DISK_PARAMETERS openParams;</span><br><span class="line">	openParams.Version = OPEN_VIRTUAL_DISK_VERSION_1;</span><br><span class="line">	</span><br><span class="line">	DWORD dwError = <span class="built_in">OpenVirtualDisk</span>(&amp;vst, <span class="string">L&quot;E:\\vs2013.4_ult_chs.iso&quot;</span>, VIRTUAL_DISK_ACCESS_ATTACH_RO, OPEN_VIRTUAL_DISK_FLAG_NONE, &amp;openParams, &amp;hVirtualDisk);</span><br><span class="line">	<span class="keyword">if</span> (dwError == ERROR_SUCCESS) &#123;</span><br><span class="line">		ATTACH_VIRTUAL_DISK_PARAMETERS attachParameters;</span><br><span class="line">		attachParameters.Version = ATTACH_VIRTUAL_DISK_VERSION_1;</span><br><span class="line">		dwError = <span class="built_in">AttachVirtualDisk</span>(hVirtualDisk, <span class="literal">nullptr</span>, ATTACH_VIRTUAL_DISK_FLAG_READ_ONLY | ATTACH_VIRTUAL_DISK_FLAG_PERMANENT_LIFETIME, <span class="number">0</span>, &amp;attachParameters, <span class="literal">nullptr</span>);</span><br><span class="line">		<span class="keyword">if</span> (dwError == ERROR_SUCCESS) &#123;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			std::cout &lt;&lt; <span class="string">&quot;AttachVirtualDisk error: &quot;</span> &lt;&lt; dwError &lt;&lt; std::endl;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">&quot;OpenVirtualDisk error: &quot;</span> &lt;&lt; dwError &lt;&lt; std::endl;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面的方法虽然可以挂载了，但是分配的挂载点是随机的，如果要手动指定挂载点则需要额外处理。</p>
-<p>1、在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-openvirtualdisk">OpenVirtualDisk</a> 的第3个参数带上 VIRTUAL_DISK_ACCESS_GET_INFO，否则后面的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-getvirtualdiskphysicalpath">GetVirtualDiskPhysicalPath</a> 函数会失败。<br>2、在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-attachvirtualdisk">AttachVirtualDisk</a> 的第3个参数带上 ATTACH_VIRTUAL_DISK_FLAG_NO_DRIVE_LETTER，表示不自动分配分区。<br>3、使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-getvirtualdiskphysicalpath">GetVirtualDiskPhysicalPath</a> 得到设备名称。<br>4、用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstvolumew">FindFirstVolume</a>、<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findnextvolumew">FindNextVolume</a>来枚举所有卷，并用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-querydosdevicew">QueryDosDevice</a> 查询每个卷的设备名，和上一步得到的设备名做比对，从而确认卷名称。<br>5、用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setvolumemountpointw">SetVolumeMountPoint</a> 挂载到指定分区上。</p>
+<p>1、在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-openvirtualdisk">OpenVirtualDisk</a> 的第3个参数带上 VIRTUAL_DISK_ACCESS_GET_INFO，否则后面的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-getvirtualdiskphysicalpath">GetVirtualDiskPhysicalPath</a> 函数会失败。<br>
+2、在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-attachvirtualdisk">AttachVirtualDisk</a> 的第3个参数带上 ATTACH_VIRTUAL_DISK_FLAG_NO_DRIVE_LETTER，表示不自动分配分区。<br>
+3、使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-getvirtualdiskphysicalpath">GetVirtualDiskPhysicalPath</a> 得到设备名称。<br>
+4、用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstvolumew">FindFirstVolume</a>、<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findnextvolumew">FindNextVolume</a>来枚举所有卷，并用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-querydosdevicew">QueryDosDevice</a> 查询每个卷的设备名，和上一步得到的设备名做比对，从而确认卷名称。<br>
+5、用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setvolumemountpointw">SetVolumeMountPoint</a> 挂载到指定分区上。</p>
 <p>其中第四步枚举的方法有点愚蠢，更简单的方式是用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumenameforvolumemountpointw">GetVolumeNameForVolumeMountPointW</a> 函数代替，它可以直接获取卷名称，参数是设备路径（注意末尾必须是反斜杠）</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\\.\GLOBALROOT\Device\CDROM0\</span><br></pre></td></tr></table></figure>
 <p>卸载虚拟磁盘用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/virtdisk/nf-virtdisk-detachvirtualdisk">DetachVirtualDisk</a> 函数</p>
-<h2 id="兼容Win7平台方案"><a href="#兼容Win7平台方案" class="headerlink" title="兼容Win7平台方案"></a>兼容Win7平台方案</h2><p>如果要兼容Win7可以考虑使用第三方工具，比如这个 <a target="_blank" rel="noopener" href="https://www.osforensics.com/tools/mount-disk-images.html">https://www.osforensics.com/tools/mount-disk-images.html</a><br>提取 OSFMount.com 文件和 OSFMount.sys 文件即可，驱动程序会自动注册进系统<br>只读挂载命令</p>
+<h2 id="兼容Win7平台方案"><a class="header-anchor" href="#兼容Win7平台方案">#</a>兼容Win7平台方案</h2>
+<p>如果要兼容Win7可以考虑使用第三方工具，比如这个 <a target="_blank" rel="noopener" href="https://www.osforensics.com/tools/mount-disk-images.html">https://www.osforensics.com/tools/mount-disk-images.html</a><br>
+提取 <a target="_blank" rel="noopener" href="http://OSFMount.com">OSFMount.com</a> 文件和 OSFMount.sys 文件即可，驱动程序会自动注册进系统<br>
+只读挂载命令</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OSFMount.com -a -t file -m Z: -o ro -f &quot;D:\vs2013.4_ce_enu.iso&quot;</span><br></pre></td></tr></table></figure>
 <p>卸载命令</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OSFMount.com -D -m Z:</span><br></pre></td></tr></table></figure>
 <p>V2.0.1001版本的驱动在Win7 x64下无法使用，提示无法验证驱动签名。V1.5.1015版本可用。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/24396644/programmatically-mount-a-microsoft-virtual-hard-drive-vhd">https://stackoverflow.com/questions/24396644/programmatically-mount-a-microsoft-virtual-hard-drive-vhd</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/24396644/programmatically-mount-a-microsoft-virtual-hard-drive-vhd">https://stackoverflow.com/questions/24396644/programmatically-mount-a-microsoft-virtual-hard-drive-vhd</a></p>
 
       </div>
       
@@ -186,24 +199,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows%E7%BC%96%E7%A8%8B/" title="Windows编程">
-                        #Windows编程
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -245,13 +240,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -471,43 +469,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%BC%96%E7%A8%8B%E5%AE%9E%E7%8E%B0%E6%8C%82%E8%BD%BDISO%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2021%2F08%2F06%2FYLuwFEjkM%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2021/08/06/YLuwFEjkM/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

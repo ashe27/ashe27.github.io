@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -169,7 +173,8 @@
       </div>
       <div class="markdown-body">
         <p>Ubuntu 16.04 安装的 CMake 是 3.5.1 版本，不能满足很多第三方开源工具的编译要求，必须升级才行。</p>
-<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>首先卸载本机的旧版本：</p>
+<h2 id="编译"><a class="header-anchor" href="#编译">#</a>编译</h2>
+<p>首先卸载本机的旧版本：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt autoremove cmake</span><br></pre></td></tr></table></figure>
 <p>安装 CMake 的依赖工具</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt install g++</span><br><span class="line">apt install openssl</span><br><span class="line">apt install libssl-dev</span><br></pre></td></tr></table></figure>
@@ -179,21 +184,27 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xf cmake-3.31.1.tar.gz</span><br></pre></td></tr></table></figure>
 <p>然后进入 CMake 源码目录编译，依次执行命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> cmake-3.31.1</span><br><span class="line">./bootstrap</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>安装步骤有两个选择，考量点是是否需要将编译好的程序打包为<code>.deb</code>，以便日后再次安装或在其他机器上安装，这样可以避免软件的编译过程。<br>如果不需要打包，则直接用 make 安装：</p>
+<h2 id="安装"><a class="header-anchor" href="#安装">#</a>安装</h2>
+<p>安装步骤有两个选择，考量点是是否需要将编译好的程序打包为<code>.deb</code>，以便日后再次安装或在其他机器上安装，这样可以避免软件的编译过程。<br>
+如果不需要打包，则直接用 make 安装：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make install</span><br></pre></td></tr></table></figure>
 <p>否则就先安装<code>checkinstall</code>这个工具</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt install checkinstall</span><br></pre></td></tr></table></figure>
 <p>然后在源码目录下执行命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">checkinstall</span><br></pre></td></tr></table></figure>
-<p>这样在安装的同时也会同时将安装文件打包到一个<code>.deb</code>文件中。<br>最后验证一下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~<span class="comment"># cmake --version</span></span><br><span class="line">cmake version 3.31.1</span><br><span class="line"></span><br><span class="line">CMake suite maintained and supported by Kitware (kitware.com/cmake).</span><br></pre></td></tr></table></figure>
-
-<h2 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h2><p>进入源码目录执行命令：</p>
+<p>这样在安装的同时也会同时将安装文件打包到一个<code>.deb</code>文件中。<br>
+最后验证一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~# cmake --version</span><br><span class="line">cmake version 3.31.1</span><br><span class="line"></span><br><span class="line">CMake suite maintained and supported by Kitware (kitware.com/cmake).</span><br></pre></td></tr></table></figure>
+<h2 id="卸载"><a class="header-anchor" href="#卸载">#</a>卸载</h2>
+<p>进入源码目录执行命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make uninstall</span><br></pre></td></tr></table></figure>
-<p>这样卸载的前提是源码目录一直存在，且没有重新配置过。<br>所以推荐做法是在源码编译后用<code>checkinstall</code>打包，再从软件包安装，这样方便管理。</p>
-<h2 id="dpkg-常用选项"><a href="#dpkg-常用选项" class="headerlink" title="dpkg 常用选项"></a>dpkg 常用选项</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看包信息</span></span><br><span class="line">dpkg -I cmake_3.31.1-1_i386.deb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出包内的文件</span></span><br><span class="line">dpkg -c cmake_3.31.1-1_i386.deb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装包</span></span><br><span class="line">dpkg -i cmake_3.31.1-1_i386.deb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看已安装的包</span></span><br><span class="line">dpkg --get-selections</span><br><span class="line"></span><br><span class="line"><span class="comment"># 卸载包</span></span><br><span class="line">dpkg -r cmake</span><br></pre></td></tr></table></figure>
-
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/seansheep/p/15976768.html">Linux CMake安装教程</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/tigertnt/archive/2008/12/21/1359242.html">使用CheckInstall生成deb安装包</a></p>
+<p>这样卸载的前提是源码目录一直存在，且没有重新配置过。<br>
+所以推荐做法是在源码编译后用<code>checkinstall</code>打包，再从软件包安装，这样方便管理。</p>
+<h2 id="dpkg-常用选项"><a class="header-anchor" href="#dpkg-常用选项">#</a>dpkg 常用选项</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看包信息</span></span><br><span class="line">dpkg -I cmake_3.31.1-1_i386.deb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出包内的文件</span></span><br><span class="line">dpkg -c cmake_3.31.1-1_i386.deb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装包</span></span><br><span class="line">dpkg -i cmake_3.31.1-1_i386.deb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看已安装的包</span></span><br><span class="line">dpkg --get-selections</span><br><span class="line"></span><br><span class="line"><span class="comment"># 卸载包</span></span><br><span class="line">dpkg -r cmake</span><br></pre></td></tr></table></figure>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/seansheep/p/15976768.html">Linux CMake安装教程</a><br>
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/tigertnt/archive/2008/12/21/1359242.html">使用CheckInstall生成deb安装包</a></p>
 
       </div>
       
@@ -205,30 +216,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Linux/" title="Linux">
-                        #Linux
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/CMake/" title="CMake">
-                        #CMake
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -270,13 +257,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -496,43 +486,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Linux%20%E4%BB%8E%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E6%96%B0%E7%89%88%20CMake + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F11%2F30%2Flinux-build-cmake%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/11/30/linux-build-cmake/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

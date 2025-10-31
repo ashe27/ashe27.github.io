@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,13 +166,15 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>Hexo在生成静态文件时会忽略不合法的URL字符，典型的如<code>#</code>、<code>&amp;</code>、<code>+</code>等等。</p>
+        <h2 id="问题"><a class="header-anchor" href="#问题">#</a>问题</h2>
+<p>Hexo在生成静态文件时会忽略不合法的URL字符，典型的如<code>#</code>、<code>&amp;</code>、<code>+</code>等等。</p>
 <p>但是在编程领域这些字符是非常常见的，如<code>C++</code>、<code>C#</code>，如果用这两个单词作为 Tag，那么最终在 URL 里会显示为 <code>site.com/tags/C</code></p>
 <p>这就导致了两个不相关的文章被打上了同一个标签。</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>Hexo 提供了 <a target="_blank" rel="noopener" href="https://hexo.io/docs/configuration.html#Category-amp-Tag">tag_map</a> 功能，编辑<code>_config.yml</code> 文件即可，比如这样</p>
+<h2 id="解决方案"><a class="header-anchor" href="#解决方案">#</a>解决方案</h2>
+<p>Hexo 提供了 <a target="_blank" rel="noopener" href="https://hexo.io/docs/configuration.html#Category-amp-Tag">tag_map</a> 功能，编辑<code>_config.yml</code> 文件即可，比如这样</p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">tag_map:</span></span><br><span class="line">  <span class="string">C++:</span> <span class="string">c-plus-plus</span></span><br><span class="line">  <span class="string">C#:</span> <span class="string">c-sharp</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://bitbadger.solutions/blog/2017/mapping-categories-and-tags-with-hexo.html">https://bitbadger.solutions/blog/2017/mapping-categories-and-tags-with-hexo.html</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://bitbadger.solutions/blog/2017/mapping-categories-and-tags-with-hexo.html">https://bitbadger.solutions/blog/2017/mapping-categories-and-tags-with-hexo.html</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues/908">https://github.com/hexojs/hexo/issues/908</a></p>
 
       </div>
@@ -181,24 +187,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Hexo/" title="Hexo">
-                        #Hexo
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -240,13 +228,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -466,43 +457,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E8%A7%A3%E5%86%B3Hexo%E6%A0%87%E7%AD%BE%E4%B8%A2%E5%A4%B1%E7%89%B9%E6%AE%8A%E7%AC%A6%E5%8F%B7%E7%9A%84%E9%97%AE%E9%A2%98 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F06%2F22%2Fhexo-tag-map%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/06/22/hexo-tag-map/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

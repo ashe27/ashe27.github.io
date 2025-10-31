@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,19 +166,16 @@
           
       </div>
       <div class="markdown-body">
-        <p>最近在写一个 COM 组件，没有用 ATL 模板，而是纯C++实现。<br>碰到一件麻烦事，每个接口的实现类都要反复实现 <code>AddRef</code>、<code>Release</code> 和 <code>QueryInterface</code> 方法。</p>
+        <p>最近在写一个 COM 组件，没有用 ATL 模板，而是纯C++实现。<br>
+碰到一件麻烦事，每个接口的实现类都要反复实现 <code>AddRef</code>、<code>Release</code> 和 <code>QueryInterface</code> 方法。</p>
 <p>比如有两个接口</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">IA</span> : IUnknown &#123;&#125;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">IB</span> : IUnknown &#123;&#125;</span><br></pre></td></tr></table></figure>
-
 <p>那么每个类都要实现一次 IUnknown 接口</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> : <span class="keyword">public</span> IA</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> HRESULT STDMETHODCALLTYPE <span class="title">QueryInterface</span><span class="params">(REFIID riid, <span class="type">void</span>** ppv)</span> </span>&#123; &#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> ULONG STDMETHODCALLTYPE <span class="title">AddRef</span><span class="params">()</span> </span>&#123; &#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> ULONG STDMETHODCALLTYPE <span class="title">Release</span><span class="params">()</span> </span>&#123; &#125;</span><br><span class="line">    ULONG _ref_count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">public</span> IB</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> HRESULT STDMETHODCALLTYPE <span class="title">QueryInterface</span><span class="params">(REFIID riid, <span class="type">void</span>** ppv)</span> </span>&#123; &#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> ULONG STDMETHODCALLTYPE <span class="title">AddRef</span><span class="params">()</span> </span>&#123; &#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> ULONG STDMETHODCALLTYPE <span class="title">Release</span><span class="params">()</span> </span>&#123; &#125;</span><br><span class="line">    ULONG _ref_count;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>在查阅了一些资料后，发现 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern">CRTP</a> 技巧可以不错的解决计数器代码复用的需求</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> once</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;Windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RefCounted</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">RefCounted</span>()</span><br><span class="line">	&#123;</span><br><span class="line">		_ref_count = <span class="number">1</span>;</span><br><span class="line">		<span class="comment">//::InterlockedIncrement(&amp;g_obj_count);</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">virtual</span> ~<span class="built_in">RefCounted</span>()</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">//::InterlockedDecrement(&amp;g_obj_count);</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function">HRESULT <span class="title">Query</span><span class="params">(REFIID riid, <span class="type">void</span>** ppv)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (riid == IID_IUnknown)</span><br><span class="line">		&#123;</span><br><span class="line">			*ppv = <span class="built_in">static_cast</span>&lt;T*&gt;(<span class="keyword">this</span>);</span><br><span class="line">			<span class="built_in">static_cast</span>&lt;IUnknown*&gt;(*ppv)-&gt;<span class="built_in">AddRef</span>();</span><br><span class="line">			<span class="keyword">return</span> S_OK;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		HRESULT hr = E_NOINTERFACE;</span><br><span class="line">		<span class="keyword">for</span> (std::<span class="type">size_t</span> i = <span class="number">0</span>; i &lt; _interfaces.<span class="built_in">size</span>(); ++i)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">if</span> (riid == _interfaces[i].first)</span><br><span class="line">			&#123;</span><br><span class="line">				*ppv = _interfaces[i].second;</span><br><span class="line">				<span class="built_in">static_cast</span>&lt;IUnknown*&gt;(*ppv)-&gt;<span class="built_in">AddRef</span>();</span><br><span class="line">				hr = S_OK;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> hr;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function">ULONG <span class="title">Increment</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">InterlockedIncrement</span>(<span class="built_in">reinterpret_cast</span>&lt;<span class="keyword">volatile</span> LONG*&gt;(&amp;_ref_count));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function">ULONG <span class="title">Decrement</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		<span class="type">const</span> ULONG ref_count = <span class="built_in">InterlockedDecrement</span>(<span class="built_in">reinterpret_cast</span>&lt;<span class="keyword">volatile</span> LONG*&gt;(&amp;_ref_count));</span><br><span class="line">		<span class="keyword">if</span> (ref_count == <span class="number">0</span>)</span><br><span class="line">			<span class="keyword">delete</span> <span class="built_in">static_cast</span>&lt;T*&gt;(<span class="keyword">this</span>);</span><br><span class="line">		<span class="keyword">return</span> ref_count;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">AddInterface</span><span class="params">(REFIID iid, <span class="type">void</span>* p)</span></span></span><br><span class="line"><span class="function">	</span>&#123;</span><br><span class="line">		_interfaces.<span class="built_in">push_back</span>(std::<span class="built_in">make_pair</span>(iid, p));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	std::vector&lt;std::pair&lt;IID, <span class="type">void</span>*&gt;&gt; _interfaces;</span><br><span class="line">	<span class="keyword">volatile</span> ULONG _ref_count;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
 <p>当一个派生类要实现计数器时这么用</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyFile</span> : </span><br><span class="line">	<span class="keyword">private</span> RefCounted&lt;MyFile&gt;,</span><br><span class="line">	<span class="keyword">public</span> IRead,</span><br><span class="line">    <span class="keyword">public</span> IWrite</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">typedef</span> RefCounted&lt;MyFile&gt; super;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">MyFile</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 注册支持的接口</span></span><br><span class="line">        super::<span class="built_in">AddInterface</span>(__uuidof(IRead), <span class="built_in">static_cast</span>&lt;IRead*&gt;(<span class="keyword">this</span>));</span><br><span class="line">        super::<span class="built_in">AddInterface</span>(__uuidof(IWrite), <span class="built_in">static_cast</span>&lt;IWrite*&gt;(<span class="keyword">this</span>));</span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="comment">/* 实现 IUnknown */</span></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> HRESULT STDMETHODCALLTYPE <span class="title">QueryInterface</span><span class="params">(REFIID riid, <span class="type">void</span>** ppv)</span> </span>&#123; <span class="keyword">return</span> super::<span class="built_in">Query</span>(riid, ppv); &#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> ULONG STDMETHODCALLTYPE <span class="title">AddRef</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> super::<span class="built_in">Increment</span>(); &#125;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> ULONG STDMETHODCALLTYPE <span class="title">Release</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> super::<span class="built_in">Decrement</span>(); &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="comment">/* 实现 IRead */</span></span><br><span class="line">    <span class="comment">/* 实现 IWrite */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
 <p>通过 CRTP 技巧，将计数器的实现隐藏了起来，而派生类只需要关心业务接口的实现即可。</p>
 
       </div>
@@ -187,24 +188,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/COM%E7%BC%96%E7%A8%8B/" title="COM编程">
-                        #COM编程
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -229,13 +212,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -455,43 +441,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%94%A8%20CRTP%20%E6%8A%80%E5%B7%A7%E5%AE%9E%E7%8E%B0%E9%80%9A%E7%94%A8%E7%9A%84%20IUnknown%20%E5%AE%9E%E7%8E%B0 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F04%2F15%2FCRTP%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/04/15/CRTP/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

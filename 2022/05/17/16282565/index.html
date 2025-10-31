@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,42 +166,62 @@
           
       </div>
       <div class="markdown-body">
-        <p>在 MFC 中，<code>打开</code>和<code>保存</code>对话框都是用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cfiledialog-class">CFileDialog</a> 来实现的，构造函数的第一个参数决定了是”打开”还是”保存”。</p>
-<h2 id="打开对话框"><a href="#打开对话框" class="headerlink" title="打开对话框"></a>打开对话框</h2><p>一个简单的对话框如下</p>
+        <p>在 MFC 中，<code>打开</code>和<code>保存</code>对话框都是用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cfiledialog-class">CFileDialog</a> 来实现的，构造函数的第一个参数决定了是&quot;打开&quot;还是&quot;保存&quot;。</p>
+<h2 id="打开对话框"><a class="header-anchor" href="#打开对话框">#</a>打开对话框</h2>
+<p>一个简单的对话框如下</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这个对话框有两个问题：</p>
 <ol>
 <li>用户如果未输入扩展名，<code>ext</code>将为空。</li>
 <li>允许用户输入不存在的文件名。</li>
 </ol>
-<h3 id="解决问题一"><a href="#解决问题一" class="headerlink" title="解决问题一"></a>解决问题一</h3><p>可以将第二个参数为默认的扩展名，当用户没有输入扩展名的时候，会自动附加默认扩展名。</p>
+<h3 id="解决问题一"><a class="header-anchor" href="#解决问题一">#</a>解决问题一</h3>
+<p>可以将第二个参数为默认的扩展名，当用户没有输入扩展名的时候，会自动附加默认扩展名。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, _T(<span class="string">&quot;txt&quot;</span>), <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>输入<code>123</code>，会得到文件名<code>123.txt</code>。</p>
 <ul>
-<li>过滤器优先于默认扩展名。如果用户未输入文件名，但是选择了有效的过滤器：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, _T(<span class="string">&quot;ini&quot;</span>), <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*|TXT|*.txt||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-如果用户选择了<code>txt</code>过滤器，但是输入<code>123</code>作为文件名，将会得到<code>123.txt</code>，而不是<code>123.ini</code>。</li>
-<li>如果过滤器有多个扩展名，则采用第一个：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, _T(<span class="string">&quot;ini&quot;</span>), <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*|TXT|*.txt;*.doc||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-输入了<code>123</code>作为文件名，得到<code>123.txt</code>。</li>
-<li>当默认扩展名为<code>nullptr</code>时，即使选择了过滤器也不会追加扩展名。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*|TXT|*.txt||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-选择过滤器<code>txt</code>，输入<code>123</code>作为文件名将会得到<code>123</code>文件名，而不是<code>123.txt</code>。</li>
+<li>过滤器优先于默认扩展名。如果用户未输入文件名，但是选择了有效的过滤器：</li>
 </ul>
-<h3 id="解决问题二"><a href="#解决问题二" class="headerlink" title="解决问题二"></a>解决问题二</h3><p>可以在第四个参数上指定<code>OFN_FILEMUSTEXIST</code>，意味着必须输入一个存在的文件名</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, _T(<span class="string">&quot;ini&quot;</span>), <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*|TXT|*.txt||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果用户选择了<code>txt</code>过滤器，但是输入<code>123</code>作为文件名，将会得到<code>123.txt</code>，而不是<code>123.ini</code>。</p>
+<ul>
+<li>如果过滤器有多个扩展名，则采用第一个：</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, _T(<span class="string">&quot;ini&quot;</span>), <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*|TXT|*.txt;*.doc||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输入了<code>123</code>作为文件名，得到<code>123.txt</code>。</p>
+<ul>
+<li>当默认扩展名为<code>nullptr</code>时，即使选择了过滤器也不会追加扩展名。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, <span class="number">0</span>, _T(<span class="string">&quot;ALL|*.*|TXT|*.txt||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>选择过滤器<code>txt</code>，输入<code>123</code>作为文件名将会得到<code>123</code>文件名，而不是<code>123.txt</code>。</p>
+<h3 id="解决问题二"><a class="header-anchor" href="#解决问题二">#</a>解决问题二</h3>
+<p>可以在第四个参数上指定<code>OFN_FILEMUSTEXIST</code>，意味着必须输入一个存在的文件名</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(TRUE, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, OFN_FILEMUSTEXIST, _T(<span class="string">&quot;ALL|*.*||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果用户输入<code>123</code>且文件不存在就会出现警告，这样可以保证<code>DoModal</code>返回时文件名必然有效。<br><img src="https://pic.rmb.bdstatic.com/bjh/45c55e9fea121b211b903ed96a6f6c88.png"></p>
-<h2 id="保存对话框"><a href="#保存对话框" class="headerlink" title="保存对话框"></a>保存对话框</h2><ul>
-<li>当默认扩展名为<code>nullptr</code>时，即使选择了过滤器也不会追加扩展名。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(FALSE, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, OFN_OVERWRITEPROMPT, _T(<span class="string">&quot;TXT|*.txt||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();  <span class="comment">// &quot;&quot;</span></span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>(); <span class="comment">// &quot;123&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-输入<code>123</code>得到<code>123</code>。</li>
-<li>以用户输入的扩展名为准。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(FALSE, _T(<span class="string">&quot;&quot;</span>), <span class="literal">nullptr</span>, OFN_OVERWRITEPROMPT, _T(<span class="string">&quot;TXT|*.txt||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-输入<code>123.doc</code>得到<code>123.doc</code>，而不是<code>123.txt</code>。</li>
+<p>如果用户输入<code>123</code>且文件不存在就会出现警告，这样可以保证<code>DoModal</code>返回时文件名必然有效。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/45c55e9fea121b211b903ed96a6f6c88.png" alt=""></p>
+<h2 id="保存对话框"><a class="header-anchor" href="#保存对话框">#</a>保存对话框</h2>
+<ul>
+<li>当默认扩展名为<code>nullptr</code>时，即使选择了过滤器也不会追加扩展名。</li>
 </ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(FALSE, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, OFN_OVERWRITEPROMPT, _T(<span class="string">&quot;TXT|*.txt||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();  <span class="comment">// &quot;&quot;</span></span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>(); <span class="comment">// &quot;123&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输入<code>123</code>得到<code>123</code>。</p>
+<ul>
+<li>以用户输入的扩展名为准。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CFileDialog <span class="title">dlg</span><span class="params">(FALSE, _T(<span class="string">&quot;&quot;</span>), <span class="literal">nullptr</span>, OFN_OVERWRITEPROMPT, _T(<span class="string">&quot;TXT|*.txt||&quot;</span>))</span></span>;</span><br><span class="line"><span class="keyword">if</span> (dlg.<span class="built_in">DoModal</span>() == IDOK) &#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> ext = dlg.<span class="built_in">GetFileExt</span>();</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> fileName = dlg.<span class="built_in">GetFileName</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输入<code>123.doc</code>得到<code>123.doc</code>，而不是<code>123.txt</code>。</p>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<ol>
 <li>如果用户输入了扩展名，则以用户输入为最终值。</li>
 <li>如果用户未输入扩展名，且设置了默认扩展名，就先采用过滤器中的扩展名，只有用户选择通配符<code>*.*</code>时才采用默认扩展名。</li>
 <li>默认扩展名为<code>nullptr</code>时，在任何情况下都不会自动追加扩展名。</li>
 </ol>
-<h3 id="对于打开对话框"><a href="#对于打开对话框" class="headerlink" title="对于打开对话框"></a>对于打开对话框</h3><p>相信没有人会愿意打开不存在的文件，那么<code>OFN_FILEMUSTEXIST</code>几乎是必选项，而这正好也确保了文件名是正确的，所以默认扩展名可有可无。</p>
-<h3 id="对于保存对话框"><a href="#对于保存对话框" class="headerlink" title="对于保存对话框"></a>对于保存对话框</h3><p>建议总是设置一个默认扩展名。如果默认扩展名为<code>nullptr</code>，即使选择了有效的过滤器，对话框则也不会追加扩展名，用户必须手动输入才行。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cfiledialog-class">CFileDialog 类</a></p>
+<h3 id="对于打开对话框"><a class="header-anchor" href="#对于打开对话框">#</a>对于打开对话框</h3>
+<p>相信没有人会愿意打开不存在的文件，那么<code>OFN_FILEMUSTEXIST</code>几乎是必选项，而这正好也确保了文件名是正确的，所以默认扩展名可有可无。</p>
+<h3 id="对于保存对话框"><a class="header-anchor" href="#对于保存对话框">#</a>对于保存对话框</h3>
+<p>建议总是设置一个默认扩展名。如果默认扩展名为<code>nullptr</code>，即使选择了有效的过滤器，对话框则也不会追加扩展名，用户必须手动输入才行。</p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/cpp/mfc/reference/cfiledialog-class">CFileDialog 类</a></p>
 
       </div>
       
@@ -209,24 +233,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/MFC/" title="MFC">
-                        #MFC
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -268,13 +274,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -494,43 +503,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + CFileDialog%20%E6%89%A9%E5%B1%95%E5%90%8D%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F05%2F17%2F16282565%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/05/17/16282565/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

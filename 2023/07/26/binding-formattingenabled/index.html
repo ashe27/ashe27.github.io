@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -170,13 +174,17 @@
       <div class="markdown-body">
         <p>在数据绑定中，有种常见的需求就是将枚举类型绑定到下拉框列表，比如这样：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="built_in">enum</span> MyOptions</span><br><span class="line">&#123;</span><br><span class="line">    Option1,</span><br><span class="line">    Option2,</span><br><span class="line">    Option3</span><br><span class="line">&#125;</span><br><span class="line">	</span><br><span class="line">comboBox1.DataBindings.Add(<span class="keyword">nameof</span>(comboBox1.SelectedIndex), <span class="keyword">this</span>, <span class="keyword">nameof</span>(Option));</span><br></pre></td></tr></table></figure>
-<p>众所周知 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.combobox.selectedindex">ComboBox.SelectedIndex</a> 属性是一个 int 类型，当绑定的控件读取属性时会将 MyOptions 强转为 int 类型，所以从数据源到控件是没有问题的。<br>但是当控件值变化时却无法写回数据源，会得到一个运行时错误：</p>
+<p>众所周知 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.combobox.selectedindex">ComboBox.SelectedIndex</a> 属性是一个 int 类型，当绑定的控件读取属性时会将 MyOptions 强转为 int 类型，所以从数据源到控件是没有问题的。<br>
+但是当控件值变化时却无法写回数据源，会得到一个运行时错误：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">引发的异常:“System.InvalidCastException”(位于 mscorlib.dll 中)</span><br></pre></td></tr></table></figure>
 <p>这个异常在内部消化了，并不会引起应用崩溃，但是这会导致绑定只有单向的效果。</p>
-<h2 id="用-Binding-Parse-事件转换"><a href="#用-Binding-Parse-事件转换" class="headerlink" title="用 Binding.Parse 事件转换"></a>用 Binding.Parse 事件转换</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.binding.parse">Binding.Parse</a> 事件在绑定控件的值更改时发生。</p>
+<h2 id="用-Binding-Parse-事件转换"><a class="header-anchor" href="#用-Binding-Parse-事件转换">#</a>用 Binding.Parse 事件转换</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.binding.parse">Binding.Parse</a> 事件在绑定控件的值更改时发生。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ParseEnum</span>&lt;<span class="title">T</span>&gt;(<span class="params"><span class="built_in">object</span> sender, ConvertEventArgs e</span>) <span class="keyword">where</span> T: Enum</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (e.DesiredType != <span class="keyword">typeof</span>(T)) <span class="keyword">return</span>;</span><br><span class="line">    e.Value = (T)e.Value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> bind = <span class="keyword">new</span> Binding(<span class="keyword">nameof</span>(comboBox1.SelectedIndex), <span class="keyword">this</span>, <span class="keyword">nameof</span>(Option), <span class="literal">false</span>, DataSourceUpdateMode.OnPropertyChanged);</span><br><span class="line">bind.Parse += ParseEnum&lt;MyOptions&gt;;</span><br><span class="line">comboBox1.DataBindings.Add(bind);</span><br></pre></td></tr></table></figure>
 <p>它可以工作，但是不够完美。因为在绑定 Parse 事件时需要提供具体的目标类型，没有通用性。</p>
-<h2 id="用-TypeConverter-转换"><a href="#用-TypeConverter-转换" class="headerlink" title="用 TypeConverter 转换"></a>用 TypeConverter 转换</h2><p>在 WPF 中，数据绑定有 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.data.ivalueconverter">IValueConverter</a> 接口可以实现转换功能。而在 .NET Framework 中有个类似的类 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.componentmodel.typeconverter">TypeConverter</a>。<br>使用很简单，主要有4个方法：</p>
+<h2 id="用-TypeConverter-转换"><a class="header-anchor" href="#用-TypeConverter-转换">#</a>用 TypeConverter 转换</h2>
+<p>在 WPF 中，数据绑定有 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.data.ivalueconverter">IValueConverter</a> 接口可以实现转换功能。而在 .NET Framework 中有个类似的类 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.componentmodel.typeconverter">TypeConverter</a>。<br>
+使用很简单，主要有4个方法：</p>
 <ol>
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.componentmodel.typeconverter.canconvertto">CanConvertTo</a></li>
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.componentmodel.typeconverter.convertto">ConvertTo</a></li>
@@ -189,7 +197,9 @@
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TypeConverter(typeof(EnumValueConverter))</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="built_in">enum</span> MyOptions</span><br><span class="line">&#123;</span><br><span class="line">    Option1,</span><br><span class="line">    Option2,</span><br><span class="line">    Option3</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>接着需要在绑定时将第4个参数<code>formattingEnabled</code>属性设置为<code>true</code>，表示启用数据格式化。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> bind = <span class="keyword">new</span> Binding(<span class="keyword">nameof</span>(comboBox1.SelectedIndex), <span class="keyword">this</span>, <span class="keyword">nameof</span>(Option), <span class="literal">true</span>, DataSourceUpdateMode.OnPropertyChanged);</span><br><span class="line">comboBox1.DataBindings.Add(bind);</span><br></pre></td></tr></table></figure>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/2044067/">How to convert enum to a bool for DataBinding in Winforms?</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3430217/">Winforms data binding: Can a TypeConverter be used instead of the Format&#x2F;Parse events?</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/2044067/">How to convert enum to a bool for DataBinding in Winforms?</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3430217/">Winforms data binding: Can a TypeConverter be used instead of the Format/Parse events?</a></p>
 
       </div>
       
@@ -201,30 +211,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/WinForms/" title="WinForms">
-                        #WinForms
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -266,13 +252,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -492,43 +481,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + WinForms%20%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F07%2F26%2Fbinding-formattingenabled%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/07/26/binding-formattingenabled/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

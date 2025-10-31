@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -164,17 +168,19 @@
       <div class="markdown-body">
         <p><code>WantCaptureMouse</code>是类<code>ImGuiIO</code>的成员方法，源码中对于<code>WantCaptureMouse</code>的注释是这么写的：</p>
 <blockquote>
-<p>Set when Dear ImGui will use mouse inputs, in this case do not dispatch them to your main game&#x2F;application (either way, always pass on mouse inputs to imgui). (e.g. unclicked mouse is hovering over an imgui window, widget is active, mouse was clicked over an imgui window, etc.).</p>
+<p>Set when Dear ImGui will use mouse inputs, in this case do not dispatch them to your main game/application (either way, always pass on mouse inputs to imgui). (e.g. unclicked mouse is hovering over an imgui window, widget is active, mouse was clicked over an imgui window, etc.).</p>
 </blockquote>
-<p>简单地说就是可以用来它判断鼠标是否在 imgui 窗口内，大部分使用场景是用来覆盖游戏引擎自身的鼠标数据。<br>比如我在游戏内show出窗口时，默认情况下鼠标在窗口上的点击都会传递给游戏处理，而此时我需要避免将 imgui 的鼠标事件传递给游戏处理，那么就可以通过<code>WantCaptureMouse</code>来判断</p>
+<p>简单地说就是可以用来它判断鼠标是否在 imgui 窗口内，大部分使用场景是用来覆盖游戏引擎自身的鼠标数据。<br>
+比如我在游戏内show出窗口时，默认情况下鼠标在窗口上的点击都会传递给游戏处理，而此时我需要避免将 imgui 的鼠标事件传递给游戏处理，那么就可以通过<code>WantCaptureMouse</code>来判断</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LRESULT WINAPI <span class="title">MyWndProc</span><span class="params">(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">ImGui_ImplWin32_WndProcHandler</span>(hWnd, uMsg, wParam, lParam)) &#123;</span><br><span class="line">        <span class="keyword">return</span> ERROR_SUCCESS;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> ImGuiIO&amp; io = ImGui::<span class="built_in">GetIO</span>();</span><br><span class="line">    <span class="keyword">if</span> (io.WantCaptureMouse &amp;&amp; (uMsg == WM_LBUTTONDOWN || uMsg == WM_LBUTTONUP || uMsg == WM_RBUTTONDOWN || uMsg == WM_RBUTTONUP || uMsg == WM_MBUTTONDOWN || uMsg == WM_MBUTTONUP || uMsg == WM_MOUSEWHEEL || uMsg == WM_MOUSEMOVE)) &#123;</span><br><span class="line">        <span class="keyword">return</span> ERROR_SUCCESS;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">CallWindowProcW</span>(g_pOldWindowProc, hWnd, uMsg, wParam, lParam);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>鼠标在 imgui 窗口外时，imgui 默认会渲染指针样式，再加上游戏引擎渲染的指针样式，就出现了游戏内同时有两个指针的问题，所以我们在渲染时也可以通过<code>WantCaptureMouse</code>来检查，避免在 imgui 窗口外二次渲染指针。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ImGui_ImplDX11_NewFrame</span>();</span><br><span class="line"><span class="built_in">ImGui_ImplWin32_NewFrame</span>();</span><br><span class="line">ImGui::<span class="built_in">NewFrame</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 鼠标不在imgui窗口内就不要渲染指针了</span></span><br><span class="line"><span class="type">const</span> ImGuiIO&amp; io = ImGui::<span class="built_in">GetIO</span>();</span><br><span class="line"><span class="keyword">if</span> (!io.WantCaptureMouse) &#123;</span><br><span class="line">    ImGui::<span class="built_in">SetMouseCursor</span>(ImGuiMouseCursor_None);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ImGui::<span class="built_in">Begin</span>(<span class="string">&quot;Demo&quot;</span>);</span><br><span class="line">ImGui::<span class="built_in">Text</span>(<span class="string">&quot;FPS:%.1f&quot;</span>, io.Framerate);</span><br><span class="line">ImGui::<span class="built_in">End</span>();</span><br><span class="line"></span><br><span class="line">ImGui::<span class="built_in">Render</span>();</span><br></pre></td></tr></table></figure>
-
 <p><strong>注意，永远不要手动去设置 WantCaptureMouse。</strong></p>
 <hr>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://github.com/ocornut/imgui/issues/4593">io.WantCaptureMouse is not working. So im using an alternative bool. But i still want to understand what im doing wrong.</a><br><a target="_blank" rel="noopener" href="https://github.com/ocornut/imgui/issues/5061">How to use imgui in an existing win32 dx11 application properly.</a><br><a target="_blank" rel="noopener" href="https://www.unknowncheats.me/forum/direct3d/340355-mouse-input-imgui-window.html">Mouse input going through ImGui window</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/ocornut/imgui/issues/4593">io.WantCaptureMouse is not working. So im using an alternative bool. But i still want to understand what im doing wrong.</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/ocornut/imgui/issues/5061">How to use imgui in an existing win32 dx11 application properly.</a><br>
+<a target="_blank" rel="noopener" href="https://www.unknowncheats.me/forum/direct3d/340355-mouse-input-imgui-window.html">Mouse input going through ImGui window</a></p>
 
       </div>
       
@@ -186,24 +192,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Dear-ImGui/" title="Dear ImGui">
-                        #Dear ImGui
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -245,13 +233,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -471,43 +462,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Dear%20ImGui%E5%AD%A6%E4%B9%A0%EF%BC%9A%E4%BD%BF%E7%94%A8%20WantCaptureMouse%20%E6%A3%80%E6%9F%A5%E9%BC%A0%E6%A0%87%E6%B6%88%E6%81%AF + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F04%2F23%2F16183345%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/04/23/16183345/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

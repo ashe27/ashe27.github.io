@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,46 +166,65 @@
           
       </div>
       <div class="markdown-body">
-        <p>因为 QML 自带的控件不算多，所以不得不写一些基础控件，将这些控件放在一个动态库中也方便其他程序使用。<br>在学习开发控件库的时候遇到一些问题，网上的好多文章都写的不清不楚，很多细节也忽略了，自己折腾了一天总算成功了。</p>
-<p><br>本文内容在 Qt 5.7.1 版下而写，可能在更新的版本中有些类名或方法发生了变化。</p>
-<h2 id="import-时会发生什么？"><a href="#import-时会发生什么？" class="headerlink" title="import 时会发生什么？"></a>import 时会发生什么？</h2><p>在 QML 中，导入一个模块的时候程序会从哪里去找？</p>
+        <p>因为 QML 自带的控件不算多，所以不得不写一些基础控件，将这些控件放在一个动态库中也方便其他程序使用。<br>
+在学习开发控件库的时候遇到一些问题，网上的好多文章都写的不清不楚，很多细节也忽略了，自己折腾了一天总算成功了。</p>
+<p><br>
+本文内容在 Qt 5.7.1 版下而写，可能在更新的版本中有些类名或方法发生了变化。</p>
+<h2 id="import-时会发生什么？"><a class="header-anchor" href="#import-时会发生什么？">#</a>import 时会发生什么？</h2>
+<p>在 QML 中，导入一个模块的时候程序会从哪里去找？</p>
 <figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.mycompany.Controls <span class="number">1.0</span></span><br></pre></td></tr></table></figure>
 <p>我用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/sysinternals/downloads/procmon">Process Monitor</a> 工具监控发现程序会从根目录开始搜索：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./com/mycompany/Controls.1.0/qmldir</span><br><span class="line">./com/mycompany.1.0/Controls/qmldir</span><br><span class="line">./com.1.0/mycompany/Controls/qmldir</span><br></pre></td></tr></table></figure>
-<p>按照<code>.</code>分层，从最后一层开始，加上版本号向上找。找不到就换下一个目录（<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qqmlengine.html#importPathList">QQmlEngine::importPathList</a> 是模块目录列表）。<br>所有目录都找不到的话，则将小版本号丢弃，仅从大版本号再从开搜一遍：</p>
+<p>按照<code>.</code>分层，从最后一层开始，加上版本号向上找。找不到就换下一个目录（<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qqmlengine.html#importPathList">QQmlEngine::importPathList</a> 是模块目录列表）。<br>
+所有目录都找不到的话，则将小版本号丢弃，仅从大版本号再从开搜一遍：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./com/mycompany/Controls.1/qmldir</span><br><span class="line">./com/mycompany.1/Controls/qmldir</span><br><span class="line">./com.1/mycompany/Controls/qmldir</span><br></pre></td></tr></table></figure>
 <p>还找不到就干脆不带版本号找</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./com/mycompany/Controls/qmldir</span><br></pre></td></tr></table></figure>
 <p>最后找不到就报错退出程序。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qrc:/main.qml:5 module &quot;MyControls&quot; is not installed</span><br></pre></td></tr></table></figure>
 <p>所以路径中有版本号的话优先级更高。</p>
-<p><br>默认情况下，<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qqmlengine.html#importPathList">QQmlEngine::importPathList</a> 返回3个目录：</p>
+<p><br>
+默认情况下，<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qqmlengine.html#importPathList">QQmlEngine::importPathList</a> 返回3个目录：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;C:/demo/debug&quot;</span><br><span class="line">&quot;qrc:/qt-project.org/imports&quot;</span><br><span class="line">&quot;C:/qt/qml&quot;</span><br></pre></td></tr></table></figure>
-<p>第一个是应用所在目录。第二个是 Qt 自己的资源目录，但是什么都没有。第三个是 Qt 安装目录。<br>可以用 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qqmlengine.html#addImportPath">QQmlEngine::addImportPath</a> 方法添加模块目录，添加后会插入到第一位。</p>
-<h2 id="qmldir-文件"><a href="#qmldir-文件" class="headerlink" title="qmldir 文件"></a>qmldir 文件</h2><p>当模块目录存在时，Qt 会尝试读取模块目录下的<code>qmldir</code>文件，这个文件的作用就是告诉 Qt 如何找到相关资源，相当于一个索引文件，比如一个最小的<code>qmldir</code>：</p>
+<p>第一个是应用所在目录。第二个是 Qt 自己的资源目录，但是什么都没有。第三个是 Qt 安装目录。<br>
+可以用 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qqmlengine.html#addImportPath">QQmlEngine::addImportPath</a> 方法添加模块目录，添加后会插入到第一位。</p>
+<h2 id="qmldir-文件"><a class="header-anchor" href="#qmldir-文件">#</a>qmldir 文件</h2>
+<p>当模块目录存在时，Qt 会尝试读取模块目录下的<code>qmldir</code>文件，这个文件的作用就是告诉 Qt 如何找到相关资源，相当于一个索引文件，比如一个最小的<code>qmldir</code>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">module com.mycompany.controls</span><br><span class="line">MyButton 1.0 MyButton.qml</span><br></pre></td></tr></table></figure>
-<p><code>module</code>指定了模块的完整路径，也是<code>import</code>的路径。<br>在我的例子中，整个目录结构就是这样的：</p>
+<p><code>module</code>指定了模块的完整路径，也是<code>import</code>的路径。<br>
+在我的例子中，整个目录结构就是这样的：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.exe</span><br><span class="line">com/</span><br><span class="line">└── mycompany/</span><br><span class="line">    └── controls/</span><br><span class="line">        ├── qmldir</span><br><span class="line">        └── MyButton.qml</span><br></pre></td></tr></table></figure>
 <p><code>qmldir</code>还有一些其他属性，可以查看官方手册了解：<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtqml-modules-qmldir.html">Module Definition qmldir Files</a></p>
-<h2 id="封装模块"><a href="#封装模块" class="headerlink" title="封装模块"></a>封装模块</h2><p>实际中，我们不太可能会直接将<code>.qml</code>文件暴露给用户，还有另一种可能是控件由 C++ 绘制，没有<code>.qml</code>文件，这种时候更好的选择的是将控件封装到一个动态库中。<br>新建一个动态库项目，从 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-6/qqmlextensionplugin.html">QQmlExtensionPlugin</a> 继承并覆盖其纯虚方法。<br>主要就是在 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-6/qqmlextensionplugin.html#registerTypes">QQmlExtensionPlugin::registerTypes</a> 方法内注册所有控件。</p>
+<h2 id="封装模块"><a class="header-anchor" href="#封装模块">#</a>封装模块</h2>
+<p>实际中，我们不太可能会直接将<code>.qml</code>文件暴露给用户，还有另一种可能是控件由 C++ 绘制，没有<code>.qml</code>文件，这种时候更好的选择的是将控件封装到一个动态库中。<br>
+新建一个动态库项目，从 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-6/qqmlextensionplugin.html">QQmlExtensionPlugin</a> 继承并覆盖其纯虚方法。<br>
+主要就是在 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-6/qqmlextensionplugin.html#registerTypes">QQmlExtensionPlugin::registerTypes</a> 方法内注册所有控件。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">MyPlugin::registerTypes</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *uri)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// C++实现的控件</span></span><br><span class="line">    <span class="built_in">qmlRegisterType</span>&lt;FPSText&gt;(uri, <span class="number">1</span>, <span class="number">0</span>, <span class="string">&quot;MyRectangle&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// .qml 控件</span></span><br><span class="line">    <span class="built_in">qmlRegisterType</span>(<span class="built_in">QUrl</span>(<span class="string">&quot;qrc:/MyButton.qml&quot;</span>), uri, <span class="number">1</span>, <span class="number">0</span>, <span class="string">&quot;MyButton&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">MyPlugin::initializeEngine</span><span class="params">(QQmlEngine *engine, <span class="type">const</span> <span class="type">char</span> *uri)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">Q_UNUSED</span>(engine);</span><br><span class="line">    <span class="built_in">Q_UNUSED</span>(uri);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>当我们以插件形式提供 QML 模块时，<code>qmldir</code>文件内容就要修改下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">module com.mycompany.controls</span><br><span class="line">plugin MyPlugin</span><br></pre></td></tr></table></figure>
 <p><code>MyPlugin</code>就是不带后缀的动态库文件名，完整目录结构：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.exe</span><br><span class="line">com/</span><br><span class="line">└── mycompany/</span><br><span class="line">    └── controls/</span><br><span class="line">        ├── qmldir</span><br><span class="line">        └── MyPlugin.dll</span><br></pre></td></tr></table></figure>
 <p>Qt 在找到模块目录后会根据<code>qmldir</code>文件内容，加载<code>.dll</code>插件，并调用<code>registerTypes</code>方法，这样就成功注册了控件等资源。</p>
-<p><br>另外有个小细节，debug 版本程序会优先加载<code>d</code>后缀的动态库文件。<br>比如<code>qmldir</code>文件中写的是<code>plugin MyPlugin</code>，对于 debug 程序来说，会先尝试加载<code>MyPlugind.dll</code>，找不到才会加载<code>MyPlugin.dll</code>。<br>release 版程序则不会。</p>
-<h2 id="生成元数据"><a href="#生成元数据" class="headerlink" title="生成元数据"></a>生成元数据</h2><p>事情还没完，QtCreator 中对于自定义控件全是红色警告：</p>
-<p><img src="/images/qt-qml-module/01.webp"></p>
-<p>因为默认情况下，IDE 并不知道这些自定义控件有哪些属性、方法。这就需要我们提供一个<code>.qmltypes</code>元数据文件来告诉 IDE，让其有智能提示和静态分析的能力。<br>Qt 目录下有个<code>qmlplugindump.exe</code>工具，将模块搜索路径传递给它，并给定一个模块名称就能生成一个<code>.qmltypes</code>文件。</p>
+<p><br>
+另外有个小细节，debug 版本程序会优先加载<code>d</code>后缀的动态库文件。<br>
+比如<code>qmldir</code>文件中写的是<code>plugin MyPlugin</code>，对于 debug 程序来说，会先尝试加载<code>MyPlugind.dll</code>，找不到才会加载<code>MyPlugin.dll</code>。<br>
+release 版程序则不会。</p>
+<h2 id="生成元数据"><a class="header-anchor" href="#生成元数据">#</a>生成元数据</h2>
+<p>事情还没完，QtCreator 中对于自定义控件全是红色警告：</p>
+<p><img src="/images/qt-qml-module/01.webp" alt=""></p>
+<p>因为默认情况下，IDE 并不知道这些自定义控件有哪些属性、方法。这就需要我们提供一个<code>.qmltypes</code>元数据文件来告诉 IDE，让其有智能提示和静态分析的能力。<br>
+Qt 目录下有个<code>qmlplugindump.exe</code>工具，将模块搜索路径传递给它，并给定一个模块名称就能生成一个<code>.qmltypes</code>文件。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qmlplugindump -nonrelocatable MyControls 1.0 . &gt; plugin.qmltypes</span><br></pre></td></tr></table></figure>
-<p>这表示在当前目录下搜索<code>MyControls</code>模块的<code>1.0</code>版本，并生成元数据到<code>plugin.qmltypes</code>文件中。<br>然后在<code>qmldir</code>文件中加入一行：</p>
+<p>这表示在当前目录下搜索<code>MyControls</code>模块的<code>1.0</code>版本，并生成元数据到<code>plugin.qmltypes</code>文件中。<br>
+然后在<code>qmldir</code>文件中加入一行：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">typeinfo plugin.qmltypes</span><br></pre></td></tr></table></figure>
-<p>这是标准做法，但是我发现 QtCreator 会自动查找目录下<code>.qmltypes</code>后缀的文件作为元数据，并不需要使用<code>typeinfo</code>去标注。<br>另外要注意的是，Debug 版的程序不能用来生成元数据。</p>
-<p><br>最后，对于 cmake 项目，要在<code>CMakeLists.txt</code>中设置<code>QML_IMPORT_PATH</code>环境变量，告诉 IDE 去哪里查找模块元数据。</p>
+<p>这是标准做法，但是我发现 QtCreator 会自动查找目录下<code>.qmltypes</code>后缀的文件作为元数据，并不需要使用<code>typeinfo</code>去标注。<br>
+另外要注意的是，Debug 版的程序不能用来生成元数据。</p>
+<p><br>
+最后，对于 cmake 项目，要在<code>CMakeLists.txt</code>中设置<code>QML_IMPORT_PATH</code>环境变量，告诉 IDE 去哪里查找模块元数据。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set(QML_IMPORT_PATH C:/app/bin/debug/qml/ CACHE STRING &quot;&quot; FORCE)</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<ol>
 <li>开发 QML 插件，需要一个继承自 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-6/qqmlextensionplugin.html">QQmlExtensionPlugin</a> 的类，并在其中注册所有的模块。</li>
 <li><code>import</code>后面的名称就是模块的名称。</li>
 <li>模块路径可以用 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qqmlengine.html#addImportPath">QQmlEngine::addImportPath</a> 添加。</li>
@@ -210,7 +233,12 @@
 <li>元数据文件只是告诉 IDE 相关信息，提供代码提示等功能，在程序运行时是不需要的。</li>
 <li><code>qmldir</code>中的<code>typeinfo</code>属性可以省略，Qt 会自动查找<code>.qmltypes</code>后缀的文件作为元数据。</li>
 </ol>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/cloud_castle/article/details/37043047">Qt5官方demo解析集20——Chapter 6: Writing an Extension Plugin</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/625057deaeac">Qt&#x2F;QML 插件系统</a><br><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtqml-modules-topic.html">QML Modules</a><br><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtqml-modules-qmldir.html">Module Definition qmldir Files</a><br><a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtqml-tutorials-extending-qml-example.html">Writing QML Extensions with C++</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/cloud_castle/article/details/37043047">Qt5官方demo解析集20——Chapter 6: Writing an Extension Plugin</a><br>
+<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/625057deaeac">Qt/QML 插件系统</a><br>
+<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtqml-modules-topic.html">QML Modules</a><br>
+<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtqml-modules-qmldir.html">Module Definition qmldir Files</a><br>
+<a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtqml-tutorials-extending-qml-example.html">Writing QML Extensions with C++</a></p>
 
       </div>
       
@@ -222,24 +250,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Qt/" title="Qt">
-                        #Qt
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -281,13 +291,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -507,43 +520,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%AD%A6%E4%B9%A0%E5%88%B6%E4%BD%9C%20QML%20%E6%A8%A1%E5%9D%97 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F12%2F05%2Fqt-qml-module%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/12/05/qt-qml-module/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

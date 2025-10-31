@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -163,14 +167,33 @@
       </div>
       <div class="markdown-body">
         <p>驱动由一个<code>.inf</code>文件和若干其他文件组成，搜索驱动的过程本质上就是查找<code>.inf</code>文件。然后通过文件中提供的信息查找二进制文件并进行注册安装。所以<code>.inf</code>文件就类似于一个安装脚本，包含着驱动的安装逻辑。</p>
-<h2 id="搜索驱动"><a href="#搜索驱动" class="headerlink" title="搜索驱动"></a>搜索驱动</h2><p>当系统检测到新设备时会发生什么事呢？<br>首先 Windows 会从注册表</p>
+<h2 id="搜索驱动"><a class="header-anchor" href="#搜索驱动">#</a>搜索驱动</h2>
+<p>当系统检测到新设备时会发生什么事呢？<br>
+首先 Windows 会从注册表</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\DevicePath</span><br></pre></td></tr></table></figure>
-<p>所指向的目录下遍历<code>.inf</code>文件，这个值默认是<code>%SystemRoot%\inf</code>。支持多个目录，每个目录之间用分号隔开。<br>匹配到驱动后会从 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/driver-store">DriverStore</a> 文件夹，也就是<code>%SystemRoot%\System32\DriverStore\FileRepository</code>下查找驱动文件并安装。</p>
-<p><br>如果是手动从其他目录安装的驱动，那么系统会将驱动文件复制到 DriverStore 文件夹下，以便下次使用。<br>所以这个目录会随着时间的推移而膨胀，因为其中包含着曾经使用过的所有驱动。</p>
-<h2 id="工具、网站"><a href="#工具、网站" class="headerlink" title="工具、网站"></a>工具、网站</h2><p>几个驱动下载网站，支持用硬件ID搜索驱动，比如<code>VEN_15AD&amp;DEV_0740</code>。</p>
-<p><a target="_blank" rel="noopener" href="https://catalog.update.microsoft.com/">https://catalog.update.microsoft.com</a><br><a target="_blank" rel="noopener" href="https://driverslab.ru/">https://driverslab.ru</a><br><a target="_blank" rel="noopener" href="https://devicehunt.com/">https://devicehunt.com</a><br><a target="_blank" rel="noopener" href="https://deviceinbox.com/">https://deviceinbox.com</a><br><a target="_blank" rel="noopener" href="https://www.devicekb.com/">https://www.devicekb.com</a><br><a target="_blank" rel="noopener" href="https://download-drivers.net/">https://download-drivers.net</a></p>
-<p><br>软件：<br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/devtest/pnputil">PnPUtil</a><br><a target="_blank" rel="noopener" href="https://github.com/lostindark/DriverStoreExplorer">Driver Store Explorer</a><br><a target="_blank" rel="noopener" href="https://www.nirsoft.net/utils/device_manager_view.html">DevManView</a></p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/how-windows-selects-a-driver-for-a-device">Windows 如何为设备选择驱动程序包</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/preloading-driver-packages">预加载驱动程序包</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/overview-of-device-and-driver-installation">设备安装概述</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/foohack/p/3437983.html">windows设备驱动安装指南</a></p>
+<p>所指向的目录下遍历<code>.inf</code>文件，这个值默认是<code>%SystemRoot%\inf</code>。支持多个目录，每个目录之间用分号隔开。<br>
+匹配到驱动后会从 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/driver-store">DriverStore</a> 文件夹，也就是<code>%SystemRoot%\System32\DriverStore\FileRepository</code>下查找驱动文件并安装。</p>
+<p><br>
+如果是手动从其他目录安装的驱动，那么系统会将驱动文件复制到 DriverStore 文件夹下，以便下次使用。<br>
+所以这个目录会随着时间的推移而膨胀，因为其中包含着曾经使用过的所有驱动。</p>
+<h2 id="工具、网站"><a class="header-anchor" href="#工具、网站">#</a>工具、网站</h2>
+<p>几个驱动下载网站，支持用硬件ID搜索驱动，比如<code>VEN_15AD&amp;DEV_0740</code>。</p>
+<p><a target="_blank" rel="noopener" href="https://catalog.update.microsoft.com">https://catalog.update.microsoft.com</a><br>
+<a target="_blank" rel="noopener" href="https://driverslab.ru">https://driverslab.ru</a><br>
+<a target="_blank" rel="noopener" href="https://devicehunt.com">https://devicehunt.com</a><br>
+<a target="_blank" rel="noopener" href="https://deviceinbox.com">https://deviceinbox.com</a><br>
+<a target="_blank" rel="noopener" href="https://www.devicekb.com">https://www.devicekb.com</a><br>
+<a target="_blank" rel="noopener" href="https://download-drivers.net">https://download-drivers.net</a></p>
+<p><br>
+软件：<br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/devtest/pnputil">PnPUtil</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/lostindark/DriverStoreExplorer">Driver Store Explorer</a><br>
+<a target="_blank" rel="noopener" href="https://www.nirsoft.net/utils/device_manager_view.html">DevManView</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/how-windows-selects-a-driver-for-a-device">Windows 如何为设备选择驱动程序包</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/preloading-driver-packages">预加载驱动程序包</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/install/overview-of-device-and-driver-installation">设备安装概述</a><br>
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/foohack/p/3437983.html">windows设备驱动安装指南</a></p>
 
       </div>
       
@@ -182,24 +205,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows/" title="Windows">
-                        #Windows
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -241,13 +246,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -467,43 +475,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Windows%20%E5%A6%82%E4%BD%95%E6%90%9C%E7%B4%A2%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F05%2F28%2Fwindows-drivers%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/05/28/windows-drivers/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

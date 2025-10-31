@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -165,17 +169,17 @@
         <p>在新的.NET框架下，官方自带了一些用于判断框架版本的条件变量（<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/preprocessor-directives">C#预处理器指令</a>）</p>
 <p>但是在老的编译系统上没有此功能，所以只能模拟实现。</p>
 <p>终于在 stackoverflow 上找到了答案，思路很不错，在<code>.csproj</code>工程文件中利用框架的<code>System.Version</code>去动态比较版本号，然后定义相关的条件变量。</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>在原答案的基础上修改了一下，兼容了微软官方的条件变量。</p>
+<h2 id="解决方案"><a class="header-anchor" href="#解决方案">#</a>解决方案</h2>
+<p>在原答案的基础上修改了一下，兼容了微软官方的条件变量。</p>
 <p>创建一个新文件<code>FrameworkSymbols.Common.prop</code>，内容如下</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;4.8&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET48;NET48_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;4.7.2&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET472;NET472_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;4.7.1&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET471;NET471_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;4.7&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET47;NET47_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;4.6.2&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET462;NET462_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;4.6.1&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET461;NET461_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;4.6&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET46;NET46_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;4.5.2&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET452;NET452_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;4.5.1&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET451;NET451_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;4.5&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET45;NET45_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;4.0&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET40;NET40_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;3.5&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET35;NET35_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;3.0&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET30;NET30_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span> <span class="attr">Condition</span>=<span class="string">&quot;$([System.Version]::Parse(&#x27;$(TargetFrameworkVersion.Substring(1))&#x27;).CompareTo($([System.Version]::Parse(&#x27;2.0&#x27;)))) <span class="symbol">&amp;gt;</span>= 0&quot;</span>&gt;</span>$(DefineConstants);NET20;NET20_OR_GREATER<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>在工程文件中导入</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;FrameworkSymbols.Common.prop&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>使用</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">if</span> NET20</span></span><br><span class="line">    Console.WriteLine(<span class="string">&quot;NET20&quot;</span>);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">...</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> NET35_OR_GREATER</span></span><br><span class="line">    Console.WriteLine(<span class="string">&quot;NET35_OR_GREATER&quot;</span>);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-
 <hr>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3436526/detect-target-framework-version-at-compile-time">Detect target framework version at compile time</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3436526/detect-target-framework-version-at-compile-time">Detect target framework version at compile time</a></p>
 <p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/preprocessor-directives">C#预处理器指令</a></p>
 
       </div>
@@ -188,24 +192,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -247,13 +233,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -473,43 +462,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%BC%96%E8%AF%91%E6%97%B6%E6%A3%80%E6%B5%8B.NET%20Framework%E6%A1%86%E6%9E%B6%E7%89%88%E6%9C%AC + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F04%2F15%2F16150088%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/04/15/16150088/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

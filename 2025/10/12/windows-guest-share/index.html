@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,14 +166,34 @@
           
       </div>
       <div class="markdown-body">
-        <p>偶尔有时候要和同事共享文件时，首先考虑的是局域网共享，之前一直用的一个老软件不知道什么时候被报毒了。。。<br>网上这类开启局域网共享的工具软件很多，要么有的不好用，要么附带一大堆用不上的功能，于是想自己研究看看是如何实现的。</p>
-<p><br>我的需求是能一键开启某个文件夹的共享，别人不用输入密码就能访问。</p>
-<h2 id="防火墙"><a href="#防火墙" class="headerlink" title="防火墙"></a>防火墙</h2><p>访问目标计算机共享时第一关就是防火墙，报错：<br><img src="/images/windows-guest-share/01.webp"><br>解决方法是开启”文件和打印机共享”<br><img src="/images/windows-guest-share/02.webp"><br>根据网上一些脚本得知，这个选项会设置如下注册表值：</p>
+        <p>偶尔有时候要和同事共享文件时，首先考虑的是局域网共享，之前一直用的一个老软件不知道什么时候被报毒了。。。<br>
+网上这类开启局域网共享的工具软件很多，要么有的不好用，要么附带一大堆用不上的功能，于是想自己研究看看是如何实现的。</p>
+<p><br>
+我的需求是能一键开启某个文件夹的共享，别人不用输入密码就能访问。</p>
+<h2 id="防火墙"><a class="header-anchor" href="#防火墙">#</a>防火墙</h2>
+<p>访问目标计算机共享时第一关就是防火墙，报错：<br>
+<img src="/images/windows-guest-share/01.webp" alt=""><br>
+解决方法是开启&quot;文件和打印机共享&quot;<br>
+<img src="/images/windows-guest-share/02.webp" alt=""><br>
+根据网上一些脚本得知，这个选项会设置如下注册表值：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SharedAccess\Parameters\FirewallPolicy\StandardProfile\GloballyOpenPorts\List]</span><br><span class="line">&quot;137:UDP&quot;=&quot;137:UDP:LocalSubNet:Enabled:@xpsp2res.dll,-22001&quot;</span><br><span class="line">&quot;138:UDP&quot;=&quot;138:UDP:LocalSubNet:Enabled:@xpsp2res.dll,-22002&quot;</span><br><span class="line">&quot;139:TCP&quot;=&quot;139:TCP:LocalSubNet:Enabled:@xpsp2res.dll,-22004&quot;</span><br><span class="line">&quot;445:TCP&quot;=&quot;445:TCP:LocalSubNet:Enabled:@xpsp2res.dll,-22005&quot;</span><br></pre></td></tr></table></figure>
-<p>如果仅仅只是要开启共享的话，则只需要放行<code>TCP 139</code>端口即可。<br><img src="/images/windows-guest-share/03.webp"></p>
-<h2 id="LamanServer-服务程序"><a href="#LamanServer-服务程序" class="headerlink" title="LamanServer 服务程序"></a>LamanServer 服务程序</h2><p>网络文件共享依赖<code>LamanServer</code>服务（显示名称Server），Windows 默认启用该服务。<br><img src="/images/windows-guest-share/04.webp"></p>
-<h2 id="启用-Guest-帐户"><a href="#启用-Guest-帐户" class="headerlink" title="启用 Guest 帐户"></a>启用 Guest 帐户</h2><p>到提示输入用户名密码时就说明目标计算机允许远程访问了，但是需要凭证<br><img src="/images/windows-guest-share/05.webp"><br>而我们的目的是免输密码，所以需要开启<code>Guest</code>帐户，这个帐户默认是禁用的，在控制面板中开启它<br><img src="/images/windows-guest-share/06.webp"><br>再次访问，提示错误“未授予用户在此计算机上的请求登录类型”。<br><img src="/images/windows-guest-share/07.webp"><br>这是因为 Windows 的安全策略默认是禁止 Guest 帐户访问的，运行<code>secpol.msc</code>打开<code>安全策略</code>对话框<br><img src="/images/windows-guest-share/08.webp"><br>编辑<code>拒绝从网络访问这台计算机</code>，将<code>Guest</code>从中删除。</p>
-<h2 id="一些管理共享的命令"><a href="#一些管理共享的命令" class="headerlink" title="一些管理共享的命令"></a>一些管理共享的命令</h2><ul>
+<p>如果仅仅只是要开启共享的话，则只需要放行<code>TCP 139</code>端口即可。<br>
+<img src="/images/windows-guest-share/03.webp" alt=""></p>
+<h2 id="LamanServer-服务程序"><a class="header-anchor" href="#LamanServer-服务程序">#</a>LamanServer 服务程序</h2>
+<p>网络文件共享依赖<code>LamanServer</code>服务（显示名称Server），Windows 默认启用该服务。<br>
+<img src="/images/windows-guest-share/04.webp" alt=""></p>
+<h2 id="启用-Guest-帐户"><a class="header-anchor" href="#启用-Guest-帐户">#</a>启用 Guest 帐户</h2>
+<p>到提示输入用户名密码时就说明目标计算机允许远程访问了，但是需要凭证<br>
+<img src="/images/windows-guest-share/05.webp" alt=""><br>
+而我们的目的是免输密码，所以需要开启<code>Guest</code>帐户，这个帐户默认是禁用的，在控制面板中开启它<br>
+<img src="/images/windows-guest-share/06.webp" alt=""><br>
+再次访问，提示错误“未授予用户在此计算机上的请求登录类型”。<br>
+<img src="/images/windows-guest-share/07.webp" alt=""><br>
+这是因为 Windows 的安全策略默认是禁止 Guest 帐户访问的，运行<code>secpol.msc</code>打开<code>安全策略</code>对话框<br>
+<img src="/images/windows-guest-share/08.webp" alt=""><br>
+编辑<code>拒绝从网络访问这台计算机</code>，将<code>Guest</code>从中删除。</p>
+<h2 id="一些管理共享的命令"><a class="header-anchor" href="#一些管理共享的命令">#</a>一些管理共享的命令</h2>
+<ul>
 <li><code>net share</code>：列出本机共享文件夹。</li>
 <li><code>shrpubw.exe</code>：向导方式创建共享文件夹。</li>
 <li><code>fsmgmt.msc</code>：打开<code>共享文件夹</code>对话框。</li>
@@ -185,24 +209,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-10-30 21:05:00
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows/" title="Windows">
-                        #Windows
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -244,13 +250,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -470,43 +479,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%BC%80%E5%90%AF%20Windows%20%E5%B1%80%E5%9F%9F%E7%BD%91%E5%85%B1%E4%BA%AB%EF%BC%88%E5%85%8D%E5%AF%86%EF%BC%89 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F10%2F12%2Fwindows-guest-share%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/10/12/windows-guest-share/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

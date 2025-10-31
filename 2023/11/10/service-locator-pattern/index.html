@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -174,23 +178,38 @@
           
       </div>
       <div class="markdown-body">
-        <p>当我第一次看到<code>ServiceLocator</code>这个名字的时候以为只是一个常见的类名而已，后来才知道这其实是一种设计模式。<br>ServiceLocator 充当了一个中介的角色，负责定位和提供服务的实例。它最终目的是为了解决依赖管理的问题。</p>
-<h2 id="ServiceLocator-实现"><a href="#ServiceLocator-实现" class="headerlink" title="ServiceLocator 实现"></a>ServiceLocator 实现</h2><p>一个简单的例子：</p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Execute</span>()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServiceA</span> : <span class="title">IService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;Service A is executing.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServiceB</span> : <span class="title">IService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;Service B is executing.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServiceLocator</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Dictionary&lt;<span class="built_in">string</span>, IService&gt; services = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">string</span>, IService&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">RegisterService</span>(<span class="params"><span class="built_in">string</span> key, IService service</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        services[key] = service;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IService <span class="title">GetService</span>(<span class="params"><span class="built_in">string</span> key</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (services.ContainsKey(key))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> services[key];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> KeyNotFoundException(<span class="string">$&quot;Service with key &#x27;<span class="subst">&#123;key&#125;</span>&#x27; is not registered.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 注册服务</span></span><br><span class="line">        ServiceLocator.RegisterService(<span class="string">&quot;ServiceA&quot;</span>, <span class="keyword">new</span> ServiceA());</span><br><span class="line">        ServiceLocator.RegisterService(<span class="string">&quot;ServiceB&quot;</span>, <span class="keyword">new</span> ServiceB());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取并使用服务</span></span><br><span class="line">        IService serviceA = ServiceLocator.GetService(<span class="string">&quot;ServiceA&quot;</span>);</span><br><span class="line">        serviceA.Execute();</span><br><span class="line"></span><br><span class="line">        IService serviceB = ServiceLocator.GetService(<span class="string">&quot;ServiceB&quot;</span>);</span><br><span class="line">        serviceB.Execute();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>当我第一次看到<code>ServiceLocator</code>这个名字的时候以为只是一个常见的类名而已，后来才知道这其实是一种设计模式。<br>
+ServiceLocator 充当了一个中介的角色，负责定位和提供服务的实例。它最终目的是为了解决依赖管理的问题。</p>
+<h2 id="ServiceLocator-实现"><a class="header-anchor" href="#ServiceLocator-实现">#</a>ServiceLocator 实现</h2>
+<p>一个简单的例子：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Execute</span>()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServiceA</span> : <span class="title">IService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;Service A is executing.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServiceB</span> : <span class="title">IService</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;Service B is executing.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServiceLocator</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Dictionary&lt;<span class="built_in">string</span>, IService&gt; services = <span class="keyword">new</span> Dictionary&lt;<span class="built_in">string</span>, IService&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">RegisterService</span>(<span class="params"><span class="built_in">string</span> key, IService service</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        services[key] = service;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> IService <span class="title">GetService</span>(<span class="params"><span class="built_in">string</span> key</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (services.ContainsKey(key))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> services[key];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> KeyNotFoundException(<span class="string">$&quot;Service with key &#x27;<span class="subst">&#123;key&#125;</span>&#x27; is not registered.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] <span class="keyword">args</span></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 注册服务</span></span><br><span class="line">        ServiceLocator.RegisterService(<span class="string">&quot;ServiceA&quot;</span>, <span class="keyword">new</span> ServiceA());</span><br><span class="line">        ServiceLocator.RegisterService(<span class="string">&quot;ServiceB&quot;</span>, <span class="keyword">new</span> ServiceB());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取并使用服务</span></span><br><span class="line">        IService serviceA = ServiceLocator.GetService(<span class="string">&quot;ServiceA&quot;</span>);</span><br><span class="line">        serviceA.Execute();</span><br><span class="line"></span><br><span class="line">        IService serviceB = ServiceLocator.GetService(<span class="string">&quot;ServiceB&quot;</span>);</span><br><span class="line">        serviceB.Execute();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>ServiceLocator 就做了一件事：<strong>负责提供服务的实例</strong>。</p>
-<h2 id="为什么需要-ServiceLocator？"><a href="#为什么需要-ServiceLocator？" class="headerlink" title="为什么需要 ServiceLocator？"></a>为什么需要 ServiceLocator？</h2><p>当我们还是小白，没有任何设计模式的概念时，代码应该是这样写的：</p>
+<h2 id="为什么需要-ServiceLocator？"><a class="header-anchor" href="#为什么需要-ServiceLocator？">#</a>为什么需要 ServiceLocator？</h2>
+<p>当我们还是小白，没有任何设计模式的概念时，代码应该是这样写的：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServiceA</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;Service A is executing.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServiceB</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> serviceA = <span class="keyword">new</span> ServiceA();</span><br><span class="line">        serviceA.Execute();</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;Service B is executing.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> serviceA = <span class="keyword">new</span> ServiceB();</span><br><span class="line">serviceA.Execute();</span><br></pre></td></tr></table></figure>
-<p>显然，ServiceA 依赖于 ServiceB 的实现，这违反了<strong>依赖倒置原则</strong>。<br>于是我们引入了接口：</p>
+<p>显然，ServiceA 依赖于 ServiceB 的实现，这违反了<strong>依赖倒置原则</strong>。<br>
+于是我们引入了接口：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IServiceA</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">Execute</span>()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServiceA</span> : <span class="title">IServiceA</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;Service A is executing.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServiceB</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Execute</span>(<span class="params">IServiceA serviceA</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        serviceA.Execute();</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;Service B is executing.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> serviceB = <span class="keyword">new</span> ServiceB();</span><br><span class="line">serviceB.Execute(<span class="keyword">new</span> ServiceA());  <span class="comment">// 注入依赖参数，术语称为 &quot;依赖注入&quot;</span></span><br></pre></td></tr></table></figure>
-<p>现在符合了依赖倒置原则，即：<strong>抽象不应该依赖于细节，细节应该依赖于抽象</strong>。<br>为什么需要服务定位器？当我们频繁使用依赖注入时，实际上在注入上下文中也产生了依赖：</p>
+<p>现在符合了依赖倒置原则，即：<strong>抽象不应该依赖于细节，细节应该依赖于抽象</strong>。<br>
+为什么需要服务定位器？当我们频繁使用依赖注入时，实际上在注入上下文中也产生了依赖：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Foo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Bar</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> serviceB = <span class="keyword">new</span> ServiceB();</span><br><span class="line">        serviceB.Execute(<span class="keyword">new</span> ServiceA());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>此时虽然 ServiceB 不依赖 ServiceA，但是 Foo 却和 ServiceA、ServiceB 耦合了。<br>此时就需要 ServiceLocator 登场了。通过使用 ServiceLocator，应用程序的各个部分可以统一通过服务定位器获取它们所需的服务，而无需直接依赖于具体的实现类。这有助于减少类之间的直接依赖，提高灵活性和可维护性。<br>采用 ServiceLocator 后的代码：</p>
+<p>此时虽然 ServiceB 不依赖 ServiceA，但是 Foo 却和 ServiceA、ServiceB 耦合了。<br>
+此时就需要 ServiceLocator 登场了。通过使用 ServiceLocator，应用程序的各个部分可以统一通过服务定位器获取它们所需的服务，而无需直接依赖于具体的实现类。这有助于减少类之间的直接依赖，提高灵活性和可维护性。<br>
+采用 ServiceLocator 后的代码：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Foo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Bar</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> serviceB = ServiceLocator.GetService&lt;IServiceB&gt;();</span><br><span class="line">        serviceB.Execute(ServiceLocator.GetService&lt;IServiceA&gt;());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Common-Service-Locator"><a href="#Common-Service-Locator" class="headerlink" title="Common Service Locator"></a>Common Service Locator</h2><p><a target="_blank" rel="noopener" href="https://www.nuget.org/packages/CommonServiceLocator">CommonServiceLocator</a> 是一个服务定位器的通用实现。相较于普通的服务定位器，<code>CommonServiceLocator</code>的区别在于它是全局唯一的服务定位器，通过设置全局的 ServiceLocator 提供者，可以在整个应用程序中使用同一个 ServiceLocator 来解析服务，而不需要每个地方都创建一个新的服务定位器实例。<br><br>以 <a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Unity.Container">Unity</a> 容器为例：</p>
+<h2 id="Common-Service-Locator"><a class="header-anchor" href="#Common-Service-Locator">#</a>Common Service Locator</h2>
+<p><a target="_blank" rel="noopener" href="https://www.nuget.org/packages/CommonServiceLocator">CommonServiceLocator</a> 是一个服务定位器的通用实现。相较于普通的服务定位器，<code>CommonServiceLocator</code>的区别在于它是全局唯一的服务定位器，通过设置全局的 ServiceLocator 提供者，可以在整个应用程序中使用同一个 ServiceLocator 来解析服务，而不需要每个地方都创建一个新的服务定位器实例。<br>
+<br>
+以 <a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Unity.Container">Unity</a> 容器为例：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> CommonServiceLocator;</span><br><span class="line"><span class="keyword">using</span> Unity;</span><br><span class="line"><span class="keyword">using</span> Unity.ServiceLocation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> container = <span class="keyword">new</span> UnityContainer();</span><br><span class="line">container.RegisterType&lt;School&gt;();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> locator = <span class="keyword">new</span> UnityServiceLocator(container);</span><br><span class="line">ServiceLocator.SetLocatorProvider(() =&gt; locator);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> obj = ServiceLocator.Current.GetInstance&lt;School&gt;();</span><br></pre></td></tr></table></figure>
-<p>服务定位器会隐藏具体的容器，使得调用者依赖定位器而不是容器。<br>除了 Unity 外，一些主流的容器都有对应的 CommonServiceLocator 包装。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.codeproject.com/Articles/5337102/Service-Locator-Pattern-in-Csharp">Service Locator Pattern in C#</a><br><a target="_blank" rel="noopener" href="https://johnnyqian.net/blog/common-service-locator.html">Common Service Locator</a><br><a target="_blank" rel="noopener" href="https://blog.ploeh.dk/2010/02/03/ServiceLocatorisanAnti-Pattern/">Service Locator is an Anti-Pattern</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/4985455/dependency-injection-vs-service-location">Dependency Injection vs Service Location</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1557781/whats-the-difference-between-the-dependency-injection-and-service-locator-patte">What’s the difference between the Dependency Injection and Service Locator patterns?</a></p>
+<p>服务定位器会隐藏具体的容器，使得调用者依赖定位器而不是容器。<br>
+除了 Unity 外，一些主流的容器都有对应的 CommonServiceLocator 包装。</p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://www.codeproject.com/Articles/5337102/Service-Locator-Pattern-in-Csharp">Service Locator Pattern in C#</a><br>
+<a target="_blank" rel="noopener" href="https://johnnyqian.net/blog/common-service-locator.html">Common Service Locator</a><br>
+<a target="_blank" rel="noopener" href="https://blog.ploeh.dk/2010/02/03/ServiceLocatorisanAnti-Pattern/">Service Locator is an Anti-Pattern</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/4985455/dependency-injection-vs-service-location">Dependency Injection vs Service Location</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1557781/whats-the-difference-between-the-dependency-injection-and-service-locator-patte">What’s the difference between the Dependency Injection and Service Locator patterns?</a></p>
 
       </div>
       
@@ -202,36 +221,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式">
-                        #设计模式
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/IoC/" title="IoC">
-                        #IoC
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -273,13 +262,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -499,43 +491,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + ServiceLocator%20%E6%A8%A1%E5%BC%8F + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F11%2F10%2Fservice-locator-pattern%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/11/10/service-locator-pattern/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

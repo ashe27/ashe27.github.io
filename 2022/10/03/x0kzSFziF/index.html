@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,14 +166,32 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="解密小程序"><a href="#解密小程序" class="headerlink" title="解密小程序"></a>解密小程序</h2><p>PC微信的小程序默认存放在<code>%USERPROFILE%\Documents\WeChat Files\Applet</code>文件夹下，每个以<code>wx</code>开头的文件夹对应一个小程序。<br>进去后会发现有若干以<code>.wxapkg</code>结尾的文件，这都是小程序的包，是经过加密的。<br>已经有网友制作了解密工具 <a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1336730-1-1.html">PC微信小程序包解密工具C#版无需root或模拟器</a>。<br>解密后就会得到一个原始的<code>wxapkg</code>文件。</p>
-<h2 id="wxapkg结构"><a href="#wxapkg结构" class="headerlink" title="wxapkg结构"></a>wxapkg结构</h2><p>类似压缩包的文件，里面存放的是小程序的代码和资源。文件结构也很简单，就是<code>Header + Index + Data</code>。<br><img src="https://pic.rmb.bdstatic.com/bjh/7e82c9067cb2877f032713d70b95a05a.jpeg"><br>我编写了一个 010 Editor 的模板文件来查看文件结构，这样更直观</p>
+        <h2 id="解密小程序"><a class="header-anchor" href="#解密小程序">#</a>解密小程序</h2>
+<p>PC微信的小程序默认存放在<code>%USERPROFILE%\Documents\WeChat Files\Applet</code>文件夹下，每个以<code>wx</code>开头的文件夹对应一个小程序。<br>
+进去后会发现有若干以<code>.wxapkg</code>结尾的文件，这都是小程序的包，是经过加密的。<br>
+已经有网友制作了解密工具 <a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1336730-1-1.html">PC微信小程序包解密工具C#版无需root或模拟器</a>。<br>
+解密后就会得到一个原始的<code>wxapkg</code>文件。</p>
+<h2 id="wxapkg结构"><a class="header-anchor" href="#wxapkg结构">#</a>wxapkg结构</h2>
+<p>类似压缩包的文件，里面存放的是小程序的代码和资源。文件结构也很简单，就是<code>Header + Index + Data</code>。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/7e82c9067cb2877f032713d70b95a05a.jpeg" alt=""><br>
+我编写了一个 010 Editor 的模板文件来查看文件结构，这样更直观</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//------------------------------------------------</span></span><br><span class="line"><span class="comment">//--- 010 Editor v12.0.1 Binary Template</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//      File: </span></span><br><span class="line"><span class="comment">//   Authors: </span></span><br><span class="line"><span class="comment">//   Version: </span></span><br><span class="line"><span class="comment">//   Purpose: </span></span><br><span class="line"><span class="comment">//  Category: WeChat</span></span><br><span class="line"><span class="comment">// File Mask: *.wxapkg</span></span><br><span class="line"><span class="comment">//  ID Bytes: BE, 56 31 4D 4D 57 58</span></span><br><span class="line"><span class="comment">//   History: </span></span><br><span class="line"><span class="comment">//------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">  uchar firstMark &lt;format=hex&gt;;</span><br><span class="line">  uint unknown;</span><br><span class="line">  uint infoListLength;</span><br><span class="line">  uint dataLength;</span><br><span class="line">  uchar lastMark &lt;format=hex&gt;;</span><br><span class="line">  uint fileCount;</span><br><span class="line">&#125; HEADER;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">  uint length;</span><br><span class="line">  <span class="type">char</span> fileName[length];</span><br><span class="line">&#125; FILE_NAME;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">  FILE_NAME fileName;</span><br><span class="line">  uint offset;</span><br><span class="line">  uint size;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    local int64 pos = FTell();</span><br><span class="line">    FSeek(offset);</span><br><span class="line">    uchar data[size];</span><br><span class="line">    FSeek(pos);</span><br><span class="line">  &#125;</span><br><span class="line">&#125; FILE &lt;comment=fileName.fileName&gt;;</span><br><span class="line"></span><br><span class="line">local <span class="built_in">string</span> magic = ReadString(<span class="number">0</span>, <span class="number">6</span>);</span><br><span class="line"><span class="keyword">if</span> (magic == <span class="string">&quot;V1MMWX&quot;</span>) &#123;</span><br><span class="line">  Printf(<span class="string">&quot;无法解析加密文件&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">BigEndian();</span><br><span class="line">HEADER header;</span><br><span class="line"></span><br><span class="line">local <span class="type">int</span> i;</span><br><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; header.fileCount; ++i) &#123;</span><br><span class="line">  FILE file;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>效果如图<br><img src="https://pic.rmb.bdstatic.com/bjh/9a99ca1ab90160a79bd26c387a7f59c9.png"><br>可以看到，<code>wxapkg</code>也没什么神秘的，就是一个压缩包。<br>提取文件也有很多工具软件可用，见文章尾部。这里我贴一个 python3 版本的</p>
+<p>效果如图<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/9a99ca1ab90160a79bd26c387a7f59c9.png" alt=""><br>
+可以看到，<code>wxapkg</code>也没什么神秘的，就是一个压缩包。<br>
+提取文件也有很多工具软件可用，见文章尾部。这里我贴一个 python3 版本的</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="comment"># py2 origin author lrdcq</span></span><br><span class="line"><span class="comment"># usage python3 unwxapkg.py filename</span></span><br><span class="line"></span><br><span class="line">__author__ = <span class="string">&#x27;Integ: https://github.com./integ&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> sys, os</span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">WxapkgFile</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    nameLen = <span class="number">0</span></span><br><span class="line">    name = <span class="string">&quot;&quot;</span></span><br><span class="line">    offset = <span class="number">0</span></span><br><span class="line">    size = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) &lt; <span class="number">2</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;usage: unwxapkg.py filename [output_dir]&#x27;</span>)</span><br><span class="line">    exit()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(sys.argv[<span class="number">1</span>], <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    root = os.path.dirname(os.path.realpath(f.name))</span><br><span class="line">    name = os.path.basename(f.name) + <span class="string">&#x27;_dir&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(sys.argv) &gt; <span class="number">2</span>:</span><br><span class="line">        name = sys.argv[<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment">#read header</span></span><br><span class="line">    firstMark = struct.unpack(<span class="string">&#x27;B&#x27;</span>, f.read(<span class="number">1</span>))[<span class="number">0</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;first header mark = &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(firstMark))</span><br><span class="line"></span><br><span class="line">    info1 = struct.unpack(<span class="string">&#x27;&gt;L&#x27;</span>, f.read(<span class="number">4</span>))[<span class="number">0</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;info1 = &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(info1))</span><br><span class="line"></span><br><span class="line">    indexInfoLength = struct.unpack(<span class="string">&#x27;&gt;L&#x27;</span>, f.read(<span class="number">4</span>))[<span class="number">0</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;indexInfoLength = &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(indexInfoLength))</span><br><span class="line"></span><br><span class="line">    bodyInfoLength = struct.unpack(<span class="string">&#x27;&gt;L&#x27;</span>, f.read(<span class="number">4</span>))[<span class="number">0</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;bodyInfoLength = &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(bodyInfoLength))</span><br><span class="line"></span><br><span class="line">    lastMark = struct.unpack(<span class="string">&#x27;B&#x27;</span>, f.read(<span class="number">1</span>))[<span class="number">0</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;last header mark = &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(lastMark))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> firstMark != <span class="number">0xBE</span> <span class="keyword">or</span> lastMark != <span class="number">0xED</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;its not a wxapkg file!!!!!&#x27;</span>)</span><br><span class="line">        f.close()</span><br><span class="line">        exit()</span><br><span class="line"></span><br><span class="line">    fileCount = struct.unpack(<span class="string">&#x27;&gt;L&#x27;</span>, f.read(<span class="number">4</span>))[<span class="number">0</span>]</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;fileCount = &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(fileCount))</span><br><span class="line"></span><br><span class="line">    <span class="comment">#read index</span></span><br><span class="line">    fileList = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(fileCount):</span><br><span class="line">        data = WxapkgFile()</span><br><span class="line">        data.nameLen = struct.unpack(<span class="string">&#x27;&gt;L&#x27;</span>, f.read(<span class="number">4</span>))[<span class="number">0</span>]</span><br><span class="line">        data.name = f.read(data.nameLen)</span><br><span class="line">        data.offset = struct.unpack(<span class="string">&#x27;&gt;L&#x27;</span>, f.read(<span class="number">4</span>))[<span class="number">0</span>]</span><br><span class="line">        data.size = struct.unpack(<span class="string">&#x27;&gt;L&#x27;</span>, f.read(<span class="number">4</span>))[<span class="number">0</span>]</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;readFile = &#123;&#125; at Offset = &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(<span class="built_in">str</span>(data.name, encoding = <span class="string">&quot;utf-8&quot;</span>), data.offset))</span><br><span class="line"></span><br><span class="line">        fileList.append(data)</span><br><span class="line"></span><br><span class="line">    <span class="comment">#save files</span></span><br><span class="line">    <span class="keyword">for</span> d <span class="keyword">in</span> fileList:</span><br><span class="line">        d.name = <span class="string">&#x27;/&#x27;</span> + name + <span class="built_in">str</span>(d.name, encoding = <span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">        path = root + os.path.dirname(d.name)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(path):</span><br><span class="line">            os.makedirs(path)</span><br><span class="line"></span><br><span class="line">        w = <span class="built_in">open</span>(root + d.name, <span class="string">&#x27;wb&#x27;</span>)</span><br><span class="line">        f.seek(d.offset)</span><br><span class="line">        w.write(f.read(d.size))</span><br><span class="line">        w.close()</span><br><span class="line"></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;writeFile = &#123;&#125;&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(root, d.name))</span><br><span class="line"></span><br><span class="line">    f.close()</span><br></pre></td></tr></table></figure>
 <p>运行命令<code>python unwxapkg.py xxx.wxapkg</code>即可提取文件到磁盘。</p>
-<h2 id="相关工具"><a href="#相关工具" class="headerlink" title="相关工具"></a>相关工具</h2><p><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1336730-1-1.html">PC微信小程序包解密工具C#版无需root或模拟器</a><br><a target="_blank" rel="noopener" href="https://github.com/BlackTrace/pc_wxapkg_decrypt">pc_wxapkg_decrypt</a><br><a target="_blank" rel="noopener" href="https://github.com/chenrensong/SS.UnWxapkg">SS.UnWxapkg</a></p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://lrdcq.com/me/read.php/66.htm">微信小程序源码阅读笔记1</a><br><a target="_blank" rel="noopener" href="https://kangzubin.com/wxapp-decompile-1/">微信小程序“反编译”实战（一）：解包</a><br><a target="_blank" rel="noopener" href="https://kangzubin.com/wxapp-decompile-2/">微信小程序“反编译”实战（二）：源码还原</a><br><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1336342-1-1.html">搜索编程的艺术之C#实现小程序包解密算法</a><br><a target="_blank" rel="noopener" href="https://www.1991.site/2020/11/20/%E5%8F%8D%E7%BC%96%E8%AF%91PC%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/">反编译PC微信小程序</a></p>
+<h2 id="相关工具"><a class="header-anchor" href="#相关工具">#</a>相关工具</h2>
+<p><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1336730-1-1.html">PC微信小程序包解密工具C#版无需root或模拟器</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/BlackTrace/pc_wxapkg_decrypt">pc_wxapkg_decrypt</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/chenrensong/SS.UnWxapkg">SS.UnWxapkg</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://lrdcq.com/me/read.php/66.htm">微信小程序源码阅读笔记1</a><br>
+<a target="_blank" rel="noopener" href="https://kangzubin.com/wxapp-decompile-1/">微信小程序“反编译”实战（一）：解包</a><br>
+<a target="_blank" rel="noopener" href="https://kangzubin.com/wxapp-decompile-2/">微信小程序“反编译”实战（二）：源码还原</a><br>
+<a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1336342-1-1.html">搜索编程的艺术之C#实现小程序包解密算法</a><br>
+<a target="_blank" rel="noopener" href="https://www.1991.site/2020/11/20/%E5%8F%8D%E7%BC%96%E8%AF%91PC%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F/">反编译PC微信小程序</a></p>
 
       </div>
       
@@ -181,24 +203,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E5%BE%AE%E4%BF%A1/" title="微信">
-                        #微信
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -240,13 +244,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -466,43 +473,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%8F%90%E5%8F%96%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E8%B5%84%E6%BA%90 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F10%2F03%2Fx0kzSFziF%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/10/03/x0kzSFziF/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

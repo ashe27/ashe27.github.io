@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,8 +172,13 @@
           
       </div>
       <div class="markdown-body">
-        <p>大部分数据来自网络，亲测可用。<br><br>游戏信息：<br>TID：01007EF00011E000<br>BID：8E9978D50BDD20B4</p>
-<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><table>
+        <p>大部分数据来自网络，亲测可用。<br>
+<br>
+游戏信息：<br>
+TID：01007EF00011E000<br>
+BID：8E9978D50BDD20B4</p>
+<h3 id="数据"><a class="header-anchor" href="#数据">#</a>数据</h3>
+<table>
 <thead>
 <tr>
 <th>数据</th>
@@ -178,17 +187,18 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>生命</td>
 <td>[[main+2CA1A78]+80]+848</td>
 <td>uint</td>
-<td>1颗心&#x3D;4</td>
+<td>1颗心=4</td>
 </tr>
 <tr>
 <td>精力</td>
 <td>[[main+2C9FD70]+38]+2AC</td>
 <td>float</td>
-<td>一圈精力&#x3D;1000</td>
+<td>一圈精力=1000</td>
 </tr>
 <tr>
 <td>精力上限</td>
@@ -208,8 +218,10 @@
 <td>float</td>
 <td>为 0 时可用</td>
 </tr>
-</tbody></table>
-<h2 id="希卡之石技能"><a href="#希卡之石技能" class="headerlink" title="希卡之石技能"></a>希卡之石技能</h2><table>
+</tbody>
+</table>
+<h2 id="希卡之石技能"><a class="header-anchor" href="#希卡之石技能">#</a>希卡之石技能</h2>
+<table>
 <thead>
 <tr>
 <th>数据</th>
@@ -218,7 +230,8 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>圆形炸弹冷却时间</td>
 <td>[[main+2CA3AD8]+30]+80</td>
 <td>float</td>
@@ -248,8 +261,10 @@
 <td>float</td>
 <td>为 0 时目标物体恢复</td>
 </tr>
-</tbody></table>
-<h2 id="英杰技能"><a href="#英杰技能" class="headerlink" title="英杰技能"></a>英杰技能</h2><table>
+</tbody>
+</table>
+<h2 id="英杰技能"><a class="header-anchor" href="#英杰技能">#</a>英杰技能</h2>
+<table>
 <thead>
 <tr>
 <th>数据</th>
@@ -258,7 +273,8 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>英杰力巴尔的勇猛冷却时间</td>
 <td>[[main+2CA1140]+60]+1DF4</td>
 <td>float</td>
@@ -282,35 +298,41 @@
 <td>float</td>
 <td>为 0 时可用</td>
 </tr>
-</tbody></table>
-<h2 id="料理"><a href="#料理" class="headerlink" title="料理"></a>料理</h2><h3 id="移动力提升倒计时"><a href="#移动力提升倒计时" class="headerlink" title="移动力提升倒计时"></a>移动力提升倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+</tbody>
+</table>
+<h2 id="料理"><a class="header-anchor" href="#料理">#</a>料理</h2>
+<h3 id="移动力提升倒计时"><a class="header-anchor" href="#移动力提升倒计时">#</a>移动力提升倒计时</h3>
+<p>float类型，每秒=30。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1ED8</span><br><span class="line">[[main+2CA1140]+60]+1EE4</span><br><span class="line">[[main+2CA1140]+60]+1EF0</span><br></pre></td></tr></table></figure>
-
-<h3 id="攻击提升倒计时"><a href="#攻击提升倒计时" class="headerlink" title="攻击提升倒计时"></a>攻击提升倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<h3 id="攻击提升倒计时"><a class="header-anchor" href="#攻击提升倒计时">#</a>攻击提升倒计时</h3>
+<p>float类型，每秒=30。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F14</span><br></pre></td></tr></table></figure>
-
-<h3 id="防御提升倒计时"><a href="#防御提升倒计时" class="headerlink" title="防御提升倒计时"></a>防御提升倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<h3 id="防御提升倒计时"><a class="header-anchor" href="#防御提升倒计时">#</a>防御提升倒计时</h3>
+<p>float类型，每秒=30。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F20</span><br></pre></td></tr></table></figure>
-
-<h3 id="耐热防护倒计时"><a href="#耐热防护倒计时" class="headerlink" title="耐热防护倒计时"></a>耐热防护倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<h3 id="耐热防护倒计时"><a class="header-anchor" href="#耐热防护倒计时">#</a>耐热防护倒计时</h3>
+<p>float类型，每秒=30。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F2C</span><br></pre></td></tr></table></figure>
-
-<h3 id="耐寒防护倒计时"><a href="#耐寒防护倒计时" class="headerlink" title="耐寒防护倒计时"></a>耐寒防护倒计时</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F38    f32，耐寒防护剩余时间，每秒=30</span><br><span class="line">[[main+2CA1140]+60]+2010    u32，耐寒防护等级</span><br></pre></td></tr></table></figure>
-
-<h3 id="火焰防护倒计时"><a href="#火焰防护倒计时" class="headerlink" title="火焰防护倒计时"></a>火焰防护倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<h3 id="耐寒防护倒计时"><a class="header-anchor" href="#耐寒防护倒计时">#</a>耐寒防护倒计时</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F38    f32，耐寒防护剩余时间，每秒=30</span><br><span class="line">[[main+2CA1140]+60]+2010    u32，耐寒防护等级</span><br></pre></td></tr></table></figure>
+<h3 id="火焰防护倒计时"><a class="header-anchor" href="#火焰防护倒计时">#</a>火焰防护倒计时</h3>
+<p>float类型，每秒=30。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F44</span><br></pre></td></tr></table></figure>
-
-<h3 id="电麻防护倒计时"><a href="#电麻防护倒计时" class="headerlink" title="电麻防护倒计时"></a>电麻防护倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<h3 id="电麻防护倒计时"><a class="header-anchor" href="#电麻防护倒计时">#</a>电麻防护倒计时</h3>
+<p>float类型，每秒=30。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F5C</span><br></pre></td></tr></table></figure>
-
-<h3 id="安静性提升倒计时"><a href="#安静性提升倒计时" class="headerlink" title="安静性提升倒计时"></a>安静性提升倒计时</h3><p>float类型，每秒&#x3D;30。</p>
+<h3 id="安静性提升倒计时"><a class="header-anchor" href="#安静性提升倒计时">#</a>安静性提升倒计时</h3>
+<p>float类型，每秒=30。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[main+2CA1140]+60]+1F74</span><br></pre></td></tr></table></figure>
-
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>当前生效的料理数据，似乎只是显示用（修改无效）。</p>
+<h3 id="其他"><a class="header-anchor" href="#其他">#</a>其他</h3>
+<p>当前生效的料理数据，似乎只是显示用（修改无效）。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[main+2CBDB80]+A4    当前生效料理类型（修改无效）</span><br><span class="line">0 = 耐热防护</span><br><span class="line">1 = 耐寒防护</span><br><span class="line">2 = 电麻防护</span><br><span class="line">3 = 火焰防护（未验证）</span><br><span class="line">4 = 攻击提升</span><br><span class="line">5 = 防御提升</span><br><span class="line">6 = 安静性提升</span><br><span class="line">7 = 移动力提升</span><br><span class="line"></span><br><span class="line">[main+2CBDB80]+A8    当前生效料理等级（修改无效）</span><br><span class="line">[main+2CBDB80]+AC    当前生效料理剩余时间（修改无效）</span><br></pre></td></tr></table></figure>
-
-<h2 id="装备"><a href="#装备" class="headerlink" title="装备"></a>装备</h2><p>修改装备数据有两条路径，一个在游戏界面，一个在背包界面。<br>对于背包数据，打开背包界面后查找林克当前装备的指针定位到数据结构的，这种方式在背包关闭时是无法定位的。<br><strong>注意：修改数据后要在不装备的情况下打开或关闭背包一次才会真正的将数据刷入。否则只是修改了显示数据，将物品丢弃后再拾起数据又会复原</strong>。</p>
-<h3 id="当前武器"><a href="#当前武器" class="headerlink" title="当前武器"></a>当前武器</h3><table>
+<h2 id="装备"><a class="header-anchor" href="#装备">#</a>装备</h2>
+<p>修改装备数据有两条路径，一个在游戏界面，一个在背包界面。<br>
+对于背包数据，打开背包界面后查找林克当前装备的指针定位到数据结构的，这种方式在背包关闭时是无法定位的。<br>
+<strong>注意：修改数据后要在不装备的情况下打开或关闭背包一次才会真正的将数据刷入。否则只是修改了显示数据，将物品丢弃后再拾起数据又会复原</strong>。</p>
+<h3 id="当前武器"><a class="header-anchor" href="#当前武器">#</a>当前武器</h3>
+<table>
 <thead>
 <tr>
 <th>数据</th>
@@ -320,7 +342,8 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>耐久</td>
 <td>[[[[main+2CC4768]+C0]-A0]+48]+D4C</td>
 <td>[[main+2CA6D48]+447D8]+20</td>
@@ -348,8 +371,10 @@
 <td>u32</td>
 <td></td>
 </tr>
-</tbody></table>
-<h3 id="当前弓"><a href="#当前弓" class="headerlink" title="当前弓"></a>当前弓</h3><table>
+</tbody>
+</table>
+<h3 id="当前弓"><a class="header-anchor" href="#当前弓">#</a>当前弓</h3>
+<table>
 <thead>
 <tr>
 <th>数据</th>
@@ -359,15 +384,18 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>耐久</td>
 <td>[[[[main+2CC4768]+C0]-70]+48]+D4C</td>
 <td></td>
 <td>u32</td>
 <td></td>
 </tr>
-</tbody></table>
-<h3 id="当前盾"><a href="#当前盾" class="headerlink" title="当前盾"></a>当前盾</h3><table>
+</tbody>
+</table>
+<h3 id="当前盾"><a class="header-anchor" href="#当前盾">#</a>当前盾</h3>
+<table>
 <thead>
 <tr>
 <th>数据</th>
@@ -377,18 +405,21 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>耐久</td>
 <td>[[[[main+2CC4768]+C0]-88]+48]+D4C</td>
 <td></td>
 <td>u32</td>
 <td></td>
 </tr>
-</tbody></table>
-<h3 id="词条"><a href="#词条" class="headerlink" title="词条"></a>词条</h3><p>词条是一个 Flag。由低到高找到的第一个为 1 的位生效。第 32 位表示属性提升大，比如 0x80000001 表示攻击力提升大。</p>
+</tbody>
+</table>
+<h3 id="词条"><a class="header-anchor" href="#词条">#</a>词条</h3>
+<p>词条是一个 Flag。由低到高找到的第一个为 1 的位生效。第 32 位表示属性提升大，比如 0x80000001 表示攻击力提升大。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">       0x1 = 攻击力提升</span><br><span class="line">       0x2 = 耐力提升</span><br><span class="line">       0x4 = 结束暴击</span><br><span class="line">       0x8 = 远距离投掷</span><br><span class="line">      0x10 = 5连发</span><br><span class="line">      0x20 = 3连发</span><br><span class="line">      0x40 = 速射</span><br><span class="line">     0x100 = 盾防护提升</span><br><span class="line">0x80000000 = 属性提升大</span><br></pre></td></tr></table></figure>
-
-<h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><p><a target="_blank" rel="noopener" href="https://github.com/Pistonight/botw-save-state/blob/main/src/mem/PointerList.txt">https://github.com/Pistonight/botw-save-state/blob/main/src/mem/PointerList.txt</a></p>
+<h2 id="相关资料"><a class="header-anchor" href="#相关资料">#</a>相关资料</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/Pistonight/botw-save-state/blob/main/src/mem/PointerList.txt">https://github.com/Pistonight/botw-save-state/blob/main/src/mem/PointerList.txt</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/xenocard/CheatsHunter/blob/main/01007EF00011E000/cheats/8E9978D50BDD20B4.txt">https://github.com/xenocard/CheatsHunter/blob/main/01007EF00011E000/cheats/8E9978D50BDD20B4.txt</a></p>
 
       </div>
@@ -401,30 +432,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Switch/" title="Switch">
-                        #Switch
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E5%A1%9E%E5%B0%94%E8%BE%BE%E4%BC%A0%E8%AF%B4/" title="塞尔达传说">
-                        #塞尔达传说
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -445,7 +452,7 @@
     <div class="title">目录</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE"><span class="toc-text">数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%8C%E5%8D%A1%E4%B9%8B%E7%9F%B3%E6%8A%80%E8%83%BD"><span class="toc-text">希卡之石技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8B%B1%E6%9D%B0%E6%8A%80%E8%83%BD"><span class="toc-text">英杰技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%99%E7%90%86"><span class="toc-text">料理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E5%8A%9B%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">移动力提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">攻击提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">防御提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%80%90%E7%83%AD%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">耐热防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%80%90%E5%AF%92%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">耐寒防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%81%AB%E7%84%B0%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">火焰防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%B5%E9%BA%BB%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">电麻防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E9%9D%99%E6%80%A7%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">安静性提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E5%A4%87"><span class="toc-text">装备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E6%AD%A6%E5%99%A8"><span class="toc-text">当前武器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E5%BC%93"><span class="toc-text">当前弓</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E7%9B%BE"><span class="toc-text">当前盾</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%8D%E6%9D%A1"><span class="toc-text">词条</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99"><span class="toc-text">相关资料</span></a>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE"><span class="toc-text">数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%8C%E5%8D%A1%E4%B9%8B%E7%9F%B3%E6%8A%80%E8%83%BD"><span class="toc-text">希卡之石技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8B%B1%E6%9D%B0%E6%8A%80%E8%83%BD"><span class="toc-text">英杰技能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%99%E7%90%86"><span class="toc-text">料理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E5%8A%9B%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">移动力提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">攻击提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">防御提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%80%90%E7%83%AD%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">耐热防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%80%90%E5%AF%92%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">耐寒防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%81%AB%E7%84%B0%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">火焰防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%B5%E9%BA%BB%E9%98%B2%E6%8A%A4%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">电麻防护倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E9%9D%99%E6%80%A7%E6%8F%90%E5%8D%87%E5%80%92%E8%AE%A1%E6%97%B6"><span class="toc-text">安静性提升倒计时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E5%A4%87"><span class="toc-text">装备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E6%AD%A6%E5%99%A8"><span class="toc-text">当前武器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E5%BC%93"><span class="toc-text">当前弓</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E7%9B%BE"><span class="toc-text">当前盾</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%8D%E6%9D%A1"><span class="toc-text">词条</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%B5%84%E6%96%99"><span class="toc-text">相关资料</span></a></li></ol>
       
     </div>
   </div>
@@ -466,13 +473,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -692,43 +702,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%A1%9E%E5%B0%94%E8%BE%BE%E4%BC%A0%E8%AF%B4%EF%BC%9A%E6%97%B7%E9%87%8E%E4%B9%8B%E6%81%AF%E6%95%B0%E6%8D%AE%E6%95%B4%E7%90%86 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F01%2F28%2Fbotw-hack%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/01/28/botw-hack/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

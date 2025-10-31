@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -164,12 +168,17 @@
       <div class="markdown-body">
         <p>今天在改一个MFC程序时，在对状态栏设置文本这里耗费了两小时时间，症状是对第一栏设置文本能成功，但是程序不显示。代码大概是这样：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> UINT arr[] = &#123;</span><br><span class="line">    ID_SEPARATOR,</span><br><span class="line">    ID_SEPARATOR,</span><br><span class="line">    ID_SEPARATOR</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">SetIndicators</span>(arr, _countof(arr));</span><br><span class="line"><span class="built_in">SetPaneText</span>(<span class="number">0</span>, _T(<span class="string">&quot;Hello&quot;</span>));</span><br></pre></td></tr></table></figure>
-<p>原来问题出在指示器上，一切源于我没有理解<code>ID_SEPARATOR</code>的含义。<br>它的值等于零，用于占位，MFC会用第一个<code>ID_SEPARATOR</code>窗格显示命令提示信息（鼠标停留在菜单、工具栏时状态栏给出的提示）</p>
+<p>原来问题出在指示器上，一切源于我没有理解<code>ID_SEPARATOR</code>的含义。<br>
+它的值等于零，用于占位，MFC会用第一个<code>ID_SEPARATOR</code>窗格显示命令提示信息（鼠标停留在菜单、工具栏时状态栏给出的提示）</p>
 <p>MFC在窗口初始化时会用ID为<code>AFX_IDS_IDLEMESSAGE</code>的字符串作为窗格初始内容，正好由于我的程序中未定义<code>AFX_IDS_IDLEMESSAGE</code>，导致MFC将空文本覆盖了我设置的文本。</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>只要不用<code>ID_SEPARATOR</code>就行了，但我不想为了不用它就特地去定义一个字符串。<br>可以将ID指定为一个预定义的字符串，比如<code>AFX_IDS_IDLEMESSAGE</code>，但程序要在资源中给出它的定义，否则<code>SetIndicators</code>方法将会返回<code>FALSE</code>。</p>
+<h2 id="解决方案"><a class="header-anchor" href="#解决方案">#</a>解决方案</h2>
+<p>只要不用<code>ID_SEPARATOR</code>就行了，但我不想为了不用它就特地去定义一个字符串。<br>
+可以将ID指定为一个预定义的字符串，比如<code>AFX_IDS_IDLEMESSAGE</code>，但程序要在资源中给出它的定义，否则<code>SetIndicators</code>方法将会返回<code>FALSE</code>。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> UINT arr[] = &#123;</span><br><span class="line">    AFX_IDS_IDLEMESSAGE,</span><br><span class="line">    AFX_IDS_IDLEMESSAGE,</span><br><span class="line">    AFX_IDS_IDLEMESSAGE</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">SetIndicators</span>(arr, _countof(arr));</span><br><span class="line"><span class="built_in">SetPaneText</span>(<span class="number">0</span>, _T(<span class="string">&quot;Hello&quot;</span>));</span><br></pre></td></tr></table></figure>
 <p>这样就可以愉快地使用<code>SetPaneText</code>了。</p>
-<h2 id="另类的解决方案"><a href="#另类的解决方案" class="headerlink" title="另类的解决方案"></a>另类的解决方案</h2><p>MFC强制将命令提示写到状态栏这个特性，看看源码是怎样实现的<br>在<code>winfrm.cpp</code>文件中</p>
+<h2 id="另类的解决方案"><a class="header-anchor" href="#另类的解决方案">#</a>另类的解决方案</h2>
+<p>MFC强制将命令提示写到状态栏这个特性，看看源码是怎样实现的<br>
+在<code>winfrm.cpp</code>文件中</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LRESULT <span class="title">CFrameWnd::OnSetMessageString</span><span class="params">(WPARAM wParam, LPARAM lParam)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	UINT nIDLast = m_nIDLastMessage;</span><br><span class="line">	m_nFlags &amp;= ~WF_NOPOPMSG;</span><br><span class="line"></span><br><span class="line">	CWnd* pMessageBar = <span class="built_in">GetMessageBar</span>();</span><br><span class="line">	<span class="keyword">if</span> (pMessageBar != <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		LPCTSTR lpsz = <span class="literal">NULL</span>;</span><br><span class="line">		CString strMessage;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// set the message bar text</span></span><br><span class="line">		<span class="keyword">if</span> (lParam != <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">ASSERT</span>(wParam == <span class="number">0</span>);    <span class="comment">// can&#x27;t have both an ID and a string</span></span><br><span class="line">			lpsz = (LPCTSTR)lParam; <span class="comment">// set an explicit string</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (wParam != <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="comment">// map SC_CLOSE to PREVIEW_CLOSE when in print preview mode</span></span><br><span class="line">			<span class="keyword">if</span> (wParam == AFX_IDS_SCCLOSE &amp;&amp; m_lpfnCloseProc != <span class="literal">NULL</span>)</span><br><span class="line">				wParam = AFX_IDS_PREVIEW_CLOSE;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// get message associated with the ID indicated by wParam</span></span><br><span class="line">		 <span class="comment">//NT64: Assume IDs are still 32-bit</span></span><br><span class="line">			<span class="built_in">GetMessageString</span>((UINT)wParam, strMessage);</span><br><span class="line">			lpsz = strMessage;</span><br><span class="line">		&#125;</span><br><span class="line">		pMessageBar-&gt;<span class="built_in">SetWindowText</span>(lpsz);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// update owner of the bar in terms of last message selected</span></span><br><span class="line">		CFrameWnd* pFrameWnd = pMessageBar-&gt;<span class="built_in">GetParentFrame</span>();</span><br><span class="line">		<span class="keyword">if</span> (pFrameWnd != <span class="literal">NULL</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			pFrameWnd-&gt;m_nIDLastMessage = (UINT)wParam;</span><br><span class="line">			pFrameWnd-&gt;m_nIDTracking = (UINT)wParam;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	m_nIDLastMessage = (UINT)wParam;    <span class="comment">// new ID (or 0)</span></span><br><span class="line">	m_nIDTracking = (UINT)wParam;       <span class="comment">// so F1 on toolbar buttons work</span></span><br><span class="line">	<span class="keyword">return</span> nIDLast;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>重要的就在这一句</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pMessageBar-&gt;<span class="built_in">SetWindowText</span>(lpsz);</span><br></pre></td></tr></table></figure>
@@ -192,24 +201,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/MFC/" title="MFC">
-                        #MFC
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -251,13 +242,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -477,43 +471,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + CStatusBar%20%E7%A6%81%E7%94%A8%E8%87%AA%E5%8A%A8%E7%8A%B6%E6%80%81%E6%8F%90%E7%A4%BA + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F09%2F14%2FGY06V2QbH%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/09/14/GY06V2QbH/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

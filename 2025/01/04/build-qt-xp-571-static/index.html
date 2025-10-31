@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,14 +166,23 @@
           
       </div>
       <div class="markdown-body">
-        <p>之前写过一篇 <a href="/2024/06/29/build-qt-xp-571/">VS2017 编译 Qt 5.7.1</a> 文章介绍了 Qt 的编译方式。为了支持 XP 系统，不得不使用 VS2017 来编译，这带来一个问题：无法享受 C++ 20 以后的现代式编程。<br>好在有 <a target="_blank" rel="noopener" href="https://github.com/Chuyu-Team/YY-Thunks">YY-Thunks</a> 这个神器可以解决 XP 缺失一些 API 的问题。<br>总体的编译流程和之前差不多，只是一些配置细节不同。</p>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>Qt 5.7.1：<a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/">https://download.qt.io/new_archive&#x2F;qt&#x2F;5.7&#x2F;5.7.1&#x2F;submodules&#x2F;</a><br>VC-LTL5 v5.2.2：<a target="_blank" rel="noopener" href="https://github.com/Chuyu-Team/VC-LTL5/releases/tag/v5.2.2">https://github.com/Chuyu-Team/VC-LTL5/releases/tag/v5.2.2</a></p>
-<p><br>其中 VC-LTL5 是可选的，用了它后可以让 Qt 和应用程序共享 crt 了，这样可以减少程序的体积。<br>不过要注意的是，引入 VC-LTL5 后如果模块（DLL）之间存在互相访问 C++ 数据类型的话，则双方都要引入 VC-LTL5，否则会引发内存访问异常。</p>
-<h2 id="编译-qtbase"><a href="#编译-qtbase" class="headerlink" title="编译 qtbase"></a>编译 qtbase</h2><p>我不喜欢下载完整的源码编译，太笨重了，我更喜欢按需编译，只编译用到的部分。<br>下载 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qtbase-opensource-src-5.7.1.7z">qtbase-opensource-src-5.7.1.7z</a> 并解压。</p>
-<h3 id="编辑-msvc-desktop-conf"><a href="#编辑-msvc-desktop-conf" class="headerlink" title="编辑 msvc-desktop.conf"></a>编辑 msvc-desktop.conf</h3><p>在<code>DEFINES</code>后追加<code>_WIN32_WINNT=0x0501</code>，避免使用 Vista 系统后才有的 Win32 API</p>
+        <p>之前写过一篇 <a href="/2024/06/29/build-qt-xp-571/">VS2017 编译 Qt 5.7.1</a> 文章介绍了 Qt 的编译方式。为了支持 XP 系统，不得不使用 VS2017 来编译，这带来一个问题：无法享受 C++ 20 以后的现代式编程。<br>
+好在有 <a target="_blank" rel="noopener" href="https://github.com/Chuyu-Team/YY-Thunks">YY-Thunks</a> 这个神器可以解决 XP 缺失一些 API 的问题。<br>
+总体的编译流程和之前差不多，只是一些配置细节不同。</p>
+<h2 id="准备"><a class="header-anchor" href="#准备">#</a>准备</h2>
+<p>Qt 5.7.1：<a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/">https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/</a><br>
+VC-LTL5 v5.2.2：<a target="_blank" rel="noopener" href="https://github.com/Chuyu-Team/VC-LTL5/releases/tag/v5.2.2">https://github.com/Chuyu-Team/VC-LTL5/releases/tag/v5.2.2</a></p>
+<p><br>
+其中 VC-LTL5 是可选的，用了它后可以让 Qt 和应用程序共享 crt 了，这样可以减少程序的体积。<br>
+不过要注意的是，引入 VC-LTL5 后如果模块（DLL）之间存在互相访问 C++ 数据类型的话，则双方都要引入 VC-LTL5，否则会引发内存访问异常。</p>
+<h2 id="编译-qtbase"><a class="header-anchor" href="#编译-qtbase">#</a>编译 qtbase</h2>
+<p>我不喜欢下载完整的源码编译，太笨重了，我更喜欢按需编译，只编译用到的部分。<br>
+下载 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qtbase-opensource-src-5.7.1.7z">qtbase-opensource-src-5.7.1.7z</a> 并解压。</p>
+<h3 id="编辑-msvc-desktop-conf"><a class="header-anchor" href="#编辑-msvc-desktop-conf">#</a>编辑 msvc-desktop.conf</h3>
+<p>在<code>DEFINES</code>后追加<code>_WIN32_WINNT=0x0501</code>，避免使用 Vista 系统后才有的 Win32 API</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEFINES += UNICODE WIN32 _UNICODE _WIN32_WINNT=0x0501</span><br></pre></td></tr></table></figure>
-
-<p><br>要在 XP 系统上运行，则必须将子系统版本改为<code>5.01</code>，在任意位置插入<code>QMAKE_SUBSYSTEM_SUFFIX=,5.01</code></p>
+<p><br>
+要在 XP 系统上运行，则必须将子系统版本改为<code>5.01</code>，在任意位置插入<code>QMAKE_SUBSYSTEM_SUFFIX=,5.01</code></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_LFLAGS_CONSOLE    = /SUBSYSTEM:CONSOLE</span><br><span class="line">QMAKE_LFLAGS_WINDOWS    = /SUBSYSTEM:WINDOWS</span><br><span class="line">QMAKE_SUBSYSTEM_SUFFIX  = ,5.01</span><br></pre></td></tr></table></figure>
 <p><code>-MD</code>改为<code>-MT</code>，这样编译出的 Qt DLL 文件就不依赖VC运行库了</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_CFLAGS_RELEASE    = -O2 -MT</span><br><span class="line">QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO += -O2 -MT -Zi</span><br><span class="line">QMAKE_CFLAGS_DEBUG      = -Zi -MTd</span><br></pre></td></tr></table></figure>
@@ -177,41 +190,48 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_LFLAGS_DEBUG      = /DEBUG</span><br></pre></td></tr></table></figure>
 <p>改为</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_LFLAGS_DEBUG      = /DEBUG:NONE</span><br></pre></td></tr></table></figure>
-
-<h3 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h3><p>启动 VS2022 32位命令行工具</p>
+<h3 id="编译"><a class="header-anchor" href="#编译">#</a>编译</h3>
+<p>启动 VS2022 32位命令行工具</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&quot;%programfiles%\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars32.bat&quot; x86</span><br><span class="line">cd C:\Qt\qtbase-opensource-src-5.7.1</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line"></span><br><span class="line"># 启用 VC-LTL5</span><br><span class="line">set WindowsTargetPlatformMinVersion=5.1.2600.0</span><br><span class="line">&quot;C:\VC-LTL-Binary-v5.2.2\VC-LTL helper for nmake.cmd&quot;</span><br><span class="line"></span><br><span class="line"># 编译</span><br><span class="line">..\configure.bat -prefix &quot;C:\qt5.7.1-vc144-i386&quot; -platform win32-msvc2015 -confirm-license -opensource -debug-and-release -nomake examples -nomake tests -no-directwrite -no-angle -opengl desktop -mp</span><br><span class="line">nmake</span><br><span class="line">nmake install</span><br></pre></td></tr></table></figure>
-
-<h3 id="FILE-ID-128-类型重定义"><a href="#FILE-ID-128-类型重定义" class="headerlink" title="_FILE_ID_128 类型重定义"></a>_FILE_ID_128 类型重定义</h3><p>这是第1个错误</p>
+<h3 id="FILE-ID-128-类型重定义"><a class="header-anchor" href="#FILE-ID-128-类型重定义">#</a>_FILE_ID_128 类型重定义</h3>
+<p>这是第1个错误</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\corelib\io\qfilesystemengine_win.cpp(629): error C2011: “_FILE_ID_128”:“struct”类型重定义</span><br></pre></td></tr></table></figure>
 <p>找到<code>qfilesystemengine_win.cpp</code>第<code>629</code>行：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MinGW-64 defines FILE_ID_128 as of gcc-4.8.1 along with FILE_SUPPORTS_INTEGRITY_STREAMS</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> !(defined(Q_CC_MINGW) &amp;&amp; defined(FILE_SUPPORTS_INTEGRITY_STREAMS))</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">_FILE_ID_128</span> &#123;</span><br><span class="line">    BYTE  Identifier[<span class="number">16</span>];</span><br><span class="line">&#125; FILE_ID_128, *PFILE_ID_128;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// !(Q_CC_MINGW &amp;&amp; FILE_SUPPORTS_INTEGRITY_STREAMS)</span></span></span><br></pre></td></tr></table></figure>
 <p>因为新SDK中已经有定义了，所以会提示重定义错误，直接删除这一段即可。</p>
-<h3 id="“binary-function”-不是-“std”-的成员"><a href="#“binary-function”-不是-“std”-的成员" class="headerlink" title="“binary_function”: 不是 “std” 的成员"></a>“binary_function”: 不是 “std” 的成员</h3><p>这是第2个错误</p>
+<h3 id="“binary-function”-不是-“std”-的成员"><a class="header-anchor" href="#“binary-function”-不是-“std”-的成员">#</a>“binary_function”: 不是 “std” 的成员</h3>
+<p>这是第2个错误</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\tools\qlalr\compress.cpp(40): error C2039: &quot;binary_function&quot;: 不是 &quot;std&quot; 的成员</span><br></pre></td></tr></table></figure>
 <p>解决方法：在<code>compress.cpp</code>中添加头文件<code>#include &lt;functional&gt;</code>。</p>
-<h3 id="缺少-tmschema-h"><a href="#缺少-tmschema-h" class="headerlink" title="缺少 tmschema.h"></a>缺少 tmschema.h</h3><p>这是第3个错误</p>
+<h3 id="缺少-tmschema-h"><a class="header-anchor" href="#缺少-tmschema-h">#</a>缺少 tmschema.h</h3>
+<p>这是第3个错误</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\widgets\styles\qwindowsxpstyle_p_p.h(64): fatal error C1083: 无法打开包括文件: “tmschema.h”: No such file or directory</span><br></pre></td></tr></table></figure>
 <p>这个头文件仅在 SDK v7.1A 中才有。可以从 v7.1A SDK 中提取出这个头文件，或从这里下载 <a target="_blank" rel="noopener" href="https://github.com/tpn/winsdk-7/raw/refs/heads/master/v7.1A/Include/Tmschema.h">https://github.com/tpn/winsdk-7/raw/refs/heads/master/v7.1A/Include/Tmschema.h</a> 文件，将它放<code>build\include</code>目录中即可。</p>
-<h3 id="“NIIF-USER”-未声明的标识符"><a href="#“NIIF-USER”-未声明的标识符" class="headerlink" title="“NIIF_USER”: 未声明的标识符"></a>“NIIF_USER”: 未声明的标识符</h3><p>这是第4个错误</p>
+<h3 id="“NIIF-USER”-未声明的标识符"><a class="header-anchor" href="#“NIIF-USER”-未声明的标识符">#</a>“NIIF_USER”: 未声明的标识符</h3>
+<p>这是第4个错误</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\widgets\util\qsystemtrayicon_win.cpp(262): error C2065: “NIIF_USER”: 未声明的标识符</span><br><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\widgets\util\qsystemtrayicon_win.cpp(270): error C2065: “NIF_SHOWTIP”: 未声明的标识符</span><br><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\widgets\util\qsystemtrayicon_win.cpp(283): error C2065: “NIF_SHOWTIP”: 未声明的标 识符</span><br><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\widgets\util\qsystemtrayicon_win.cpp(327): error C2065: “NOTIFYICON_VERSION_4”: 未声明的标识符</span><br></pre></td></tr></table></figure>
 <p>这3个宏是 Vista 后才有的，在<code>qsystemtrayicon_win.cpp</code>文件中追加即可：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> NIIF_USER</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NIIF_USER 0x00000004</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> NIF_SHOWTIP</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NIF_SHOWTIP 0x00000080</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> NOTIFYICON_VERSION_4</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NOTIFYICON_VERSION_4 4</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-
-<h3 id="缺少-RtlCaptureStackBackTrace"><a href="#缺少-RtlCaptureStackBackTrace" class="headerlink" title="缺少 RtlCaptureStackBackTrace"></a>缺少 RtlCaptureStackBackTrace</h3><p>这是第5个错误</p>
+<h3 id="缺少-RtlCaptureStackBackTrace"><a class="header-anchor" href="#缺少-RtlCaptureStackBackTrace">#</a>缺少 RtlCaptureStackBackTrace</h3>
+<p>这是第5个错误</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\testlib\qtestcase.cpp(1578): error C3861: “RtlCaptureStackBackTrace”: 找不到标识符</span><br></pre></td></tr></table></figure>
 <p>这个错误在以前的文章中提到过，在<code>qtestcase.cpp</code>文件中加入以下声明：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> __declspec(dllimport) <span class="function">USHORT WINAPI <span class="title">RtlCaptureStackBackTrace</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    __in ULONG FramesToSkip,</span></span></span><br><span class="line"><span class="params"><span class="function">    __in ULONG FramesToCapture,</span></span></span><br><span class="line"><span class="params"><span class="function">    __out_ecount(FramesToCapture) PVOID *BackTrace,</span></span></span><br><span class="line"><span class="params"><span class="function">    __out_opt PULONG BackTraceHash</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<h2 id="编译其他模块"><a href="#编译其他模块" class="headerlink" title="编译其他模块"></a>编译其他模块</h2><p><code>qtbase</code>只够满足编译最基础的 Qt 程序，缺少了设计师、预言家等工具，一般至少还需要编译配套工具和多语言：</p>
+<h2 id="编译其他模块"><a class="header-anchor" href="#编译其他模块">#</a>编译其他模块</h2>
+<p><code>qtbase</code>只够满足编译最基础的 Qt 程序，缺少了设计师、预言家等工具，一般至少还需要编译配套工具和多语言：</p>
 <ol>
 <li><a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qttools-opensource-src-5.7.1.7z">qttools-opensource-src-5.7.1.7z</a></li>
 <li><a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qttranslations-opensource-src-5.7.1.7z">qttranslations-opensource-src-5.7.1.7z</a></li>
 </ol>
-<p><br>编译模块的方法：进到模块根目录后依次执行</p>
+<p><br>
+编译模块的方法：进到模块根目录后依次执行</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;%programfiles%\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars32.bat&quot; x86</span><br><span class="line">set WindowsTargetPlatformMinVersion=5.1.2600.0</span><br><span class="line">&quot;C:\VC-LTL-Binary-v5.2.2\VC-LTL helper for nmake.cmd&quot;</span><br><span class="line">C:\qt5.7.1-vc144-i386\bin\qmake.exe -makefile -spec win32-msvc2015</span><br><span class="line">nmake</span><br><span class="line">nmake install</span><br></pre></td></tr></table></figure>
-
-<h2 id="分发"><a href="#分发" class="headerlink" title="分发"></a>分发</h2><p>使用<code>configure -prefix &quot;C:\qt5.7.1-vc144-i386&quot; ...</code>命令来配置Qt的编译时，这个绝对路径会被硬编码到编译出来的多个关键文件中，其中最重要的就是 qmake.exe。<br>当其他人将这个编译好的Qt包解压到其他路径（例如 D:\Qt\）下，然后尝试在Qt Creator中添加这个Qt时，Qt Creator会执行 D:\Qt\bin\qmake.exe 来查询Qt的配置信息。然而，qmake.exe 内部记录的路径仍然是编译时的 “C:\qt5.7.1-vc144-i386”。<br>Qt Creator发现 qmake 报告的路径和 qmake 自身的实际路径不符，并且在报告的路径下找不到必需的文件，因此判断这是一个损坏或无效的Qt版本，从而给出 “Invalid Qt version” 的错误。</p>
-<p><br>解决方法，手动创建一个<code>qt.conf</code>文件放到<code>bin</code>目录下，文件内容是：</p>
+<h2 id="分发"><a class="header-anchor" href="#分发">#</a>分发</h2>
+<p>使用<code>configure -prefix &quot;C:\qt5.7.1-vc144-i386&quot; ...</code>命令来配置Qt的编译时，这个绝对路径会被硬编码到编译出来的多个关键文件中，其中最重要的就是 qmake.exe。<br>
+当其他人将这个编译好的Qt包解压到其他路径（例如 D:\Qt\）下，然后尝试在Qt Creator中添加这个Qt时，Qt Creator会执行 D:\Qt\bin\qmake.exe 来查询Qt的配置信息。然而，qmake.exe 内部记录的路径仍然是编译时的 “C:\qt5.7.1-vc144-i386”。<br>
+Qt Creator发现 qmake 报告的路径和 qmake 自身的实际路径不符，并且在报告的路径下找不到必需的文件，因此判断这是一个损坏或无效的Qt版本，从而给出 “Invalid Qt version” 的错误。</p>
+<p><br>
+解决方法，手动创建一个<code>qt.conf</code>文件放到<code>bin</code>目录下，文件内容是：</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Paths]</span></span><br><span class="line"><span class="attr">Prefix</span>=..</span><br></pre></td></tr></table></figure>
 <p>这个配置文件会告诉<code>bin</code>目录中的所有Qt工具（如 qmake.exe, moc.exe, windeployqt.exe 等），Qt的根目录（Prefix）不再是编译时硬编码的绝对路径，而是当前目录的上一级目录。</p>
 
@@ -225,24 +245,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-26 16:19:44
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Qt/" title="Qt">
-                        #Qt
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -284,13 +286,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -510,43 +515,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + VS2022%20%E7%BC%96%E8%AF%91%20Qt%205.7.1 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F01%2F04%2Fbuild-qt-xp-571-static%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/01/04/build-qt-xp-571-static/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

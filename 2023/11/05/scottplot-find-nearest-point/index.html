@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,19 +166,28 @@
           
       </div>
       <div class="markdown-body">
-        <p>官方已经在 <a target="_blank" rel="noopener" href="https://scottplot.net/faq/mouse-position/">Mouse Position - ScottPlot FAQ</a> 中给出了查找鼠标位置和最近点的方法。<br>官方示例是以单个散点图作为说明的。而现实中，一个图表肯定不止一条数据，我们不仅仅需要找出最近的X点，还要找出最近的Y点。<br><br>解决思路如下：</p>
+        <p>官方已经在 <a target="_blank" rel="noopener" href="https://scottplot.net/faq/mouse-position/">Mouse Position - ScottPlot FAQ</a> 中给出了查找鼠标位置和最近点的方法。<br>
+官方示例是以单个散点图作为说明的。而现实中，一个图表肯定不止一条数据，我们不仅仅需要找出最近的X点，还要找出最近的Y点。<br>
+<br>
+解决思路如下：</p>
 <ol>
 <li>遍历绘图对象，找出每个绘图对象当前鼠标所处的XY点。</li>
 <li>再通过上面得到的X点，找出最近的X点。此时便得到了距离鼠标最近的X点。</li>
 <li>用第一步得到的XY点，计算出鼠标所在的像素点位置。</li>
 <li>获取鼠标像素点位置，从第3步的结果中找出离当前鼠标像素位置最近的点即可。</li>
 </ol>
-<p><br>一句话说就是找出距离鼠标最近的每个绘图对象的XY点并转换为像素坐标，再从中找出离鼠标最近的像素坐标即可。<br>伪代码如下：</p>
+<p><br>
+一句话说就是找出距离鼠标最近的每个绘图对象的XY点并转换为像素坐标，再从中找出离鼠标最近的像素坐标即可。<br>
+伪代码如下：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span> (<span class="keyword">var</span> plottable <span class="keyword">in</span> formsPlot.Plot.GetPlottables())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 得到当前 X 点</span></span><br><span class="line">    <span class="keyword">var</span> (mouseCoordX, _) = formsPlot.GetMouseCoordinates(plottable.XAxisIndex, plottable.YAxisIndex);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注意，并非所有绘制对象都有 GetPointNearest 方法。这里以信号图举例</span></span><br><span class="line">    <span class="keyword">if</span> (plottable <span class="keyword">is</span> SignalPlotConst&lt;<span class="built_in">double</span>&gt; signalPlot)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 得到最近的 X 点</span></span><br><span class="line">        <span class="keyword">var</span> (nearestX, nearestY, index) = signalPlot.GetPointNearestX(mouseCoordX);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 得到离鼠标最近的 XY 像素坐标</span></span><br><span class="line">        <span class="keyword">var</span> (xPixel, yPixel) = formsPlot.Plot.GetPixel(nearestX, nearestY, plottable.XAxisIndex, plottable.YAxisIndex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 得到当前鼠标像素位置</span></span><br><span class="line"><span class="keyword">var</span> (mousePixelX, mousePixelY) = formsPlot.GetMousePixel();</span><br><span class="line"></span><br><span class="line"><span class="comment">//<span class="doctag">TODO:</span> 从上面的结果中找出离当前鼠标位置最近的点</span></span><br></pre></td></tr></table></figure>
-<p>至于如何从一系列坐标中找出最近的点，可以用欧氏距离的公式，通过计算 X 坐标和 Y 坐标的差的平方和再开根号得到距离。<br>伪代码：</p>
+<p>至于如何从一系列坐标中找出最近的点，可以用欧氏距离的公式，通过计算 X 坐标和 Y 坐标的差的平方和再开根号得到距离。<br>
+伪代码：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> PointF <span class="title">FindNearestPoint</span>(<span class="params">List&lt;PointF&gt; list, <span class="built_in">float</span> mousePixelX, <span class="built_in">float</span> mousePixelY</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    PointF nearestPoint = <span class="literal">default</span>;</span><br><span class="line">    <span class="keyword">var</span> minDistance = <span class="built_in">double</span>.MaxValue;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> point <span class="keyword">in</span> list)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> distance = Math.Sqrt(Math.Pow(point.X - mousePixelX, <span class="number">2</span>) + Math.Pow(point.Y - mousePixelY, <span class="number">2</span>));</span><br><span class="line">        <span class="keyword">if</span> (distance &gt; minDistance) <span class="keyword">continue</span>;</span><br><span class="line">        minDistance = distance;</span><br><span class="line">        nearestPoint = point;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> nearestPoint;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>效果图：<br><img src="/images/scottplot-find-nearest-point_01.webp"></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://scottplot.net/faq/mouse-position/">Mouse Position</a><br><a target="_blank" rel="noopener" href="https://github.com/ScottPlot/ScottPlot/discussions/1590">How to find the plottable nearest the cursor</a></p>
+<p>效果图：<br>
+<img src="/images/scottplot-find-nearest-point_01.webp" alt=""></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://scottplot.net/faq/mouse-position/">Mouse Position</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/ScottPlot/ScottPlot/discussions/1590">How to find the plottable nearest the cursor</a></p>
 
       </div>
       
@@ -186,24 +199,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/ScottPlot/" title="ScottPlot">
-                        #ScottPlot
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -245,13 +240,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -471,43 +469,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + ScottPlot%20%E6%9F%A5%E6%89%BE%E7%A6%BB%E9%BC%A0%E6%A0%87%E6%9C%80%E8%BF%91%E7%9A%84%E7%82%B9 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F11%2F05%2Fscottplot-find-nearest-point%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/11/05/scottplot-find-nearest-point/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

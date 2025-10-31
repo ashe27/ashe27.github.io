@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -174,52 +178,92 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="按用户代理时的注册表位置"><a href="#按用户代理时的注册表位置" class="headerlink" title="按用户代理时的注册表位置"></a>按用户代理时的注册表位置</h2><p>Windows系统默认是”按用户代理”的，意味着每个系统账户都有属于自己独立的代理设置。我们可以运行命令<code>Inetcpl.cpl</code>来打开IE选项窗口，在”连接”选项卡中点击”局域网设置”便可以显示代理设置界面，<br>代理设置最终会保存在注册表中。</p>
-<h3 id="自动配置部分"><a href="#自动配置部分" class="headerlink" title="自动配置部分"></a>自动配置部分</h3><p><img src="/images/1629342427593.png"></p>
+        <h2 id="按用户代理时的注册表位置"><a class="header-anchor" href="#按用户代理时的注册表位置">#</a>按用户代理时的注册表位置</h2>
+<p>Windows系统默认是&quot;按用户代理&quot;的，意味着每个系统账户都有属于自己独立的代理设置。我们可以运行命令<code>Inetcpl.cpl</code>来打开IE选项窗口，在&quot;连接&quot;选项卡中点击&quot;局域网设置&quot;便可以显示代理设置界面，<br>
+代理设置最终会保存在注册表中。</p>
+<h3 id="自动配置部分"><a class="header-anchor" href="#自动配置部分">#</a>自动配置部分</h3>
+<p><img src="/images/1629342427593.png" alt=""></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings]</span><br><span class="line">&quot;AutoDetect&quot;=dword:00000001</span><br><span class="line">&quot;AutoConfigURL&quot;=&quot;http://localhost/test.pac&quot;</span><br><span class="line">&quot;ProxyEnable&quot;=dword:00000001</span><br><span class="line">&quot;ProxyServer&quot;=&quot;127.0.0.1:7890&quot;</span><br><span class="line">&quot;ProxyOverride&quot;=&quot;&lt;local&gt;&quot;</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p>AutoDetect<br>自动检测设置开关，通过 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/sysinternals/downloads/procmon">Process Monitor</a> 监测发现，打开选项设置窗口后会将其值同步到<code>DefaultConnectionSettings</code>并删除<code>AutoDetect</code>，看上去是一种”升级”操作，将旧设置迁移至新位置，所以尽量还是以<code>DefaultConnectionSettings</code>为准。</p>
+<li>
+<p>AutoDetect<br>
+自动检测设置开关，通过 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/sysinternals/downloads/procmon">Process Monitor</a> 监测发现，打开选项设置窗口后会将其值同步到<code>DefaultConnectionSettings</code>并删除<code>AutoDetect</code>，看上去是一种&quot;升级&quot;操作，将旧设置迁移至新位置，所以尽量还是以<code>DefaultConnectionSettings</code>为准。</p>
 </li>
-<li><p>AutoConfigURL<br>PAC文件URL。如果没有值或值为空，表示未启用状态，会尝试从<code>DefaultConnectionSettings</code>获取最近一次的值并显示。<br>需要注意的是，PAC 地址应该是一个使用HTTP协议的地址，而不应使用本地文件路径，否则会无法加载，原因见 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/troubleshoot/browsers/cannot-read-pac-file">Windows 10 does not read a PAC file referenced by a file protocol</a>。并且服务器应该为其指定MIME类型为<code>application/x-ns-proxy-autoconfig</code>。</p>
+<li>
+<p>AutoConfigURL<br>
+PAC文件URL。如果没有值或值为空，表示未启用状态，会尝试从<code>DefaultConnectionSettings</code>获取最近一次的值并显示。<br>
+需要注意的是，PAC 地址应该是一个使用HTTP协议的地址，而不应使用本地文件路径，否则会无法加载，原因见 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/troubleshoot/browsers/cannot-read-pac-file">Windows 10 does not read a PAC file referenced by a file protocol</a>。并且服务器应该为其指定MIME类型为<code>application/x-ns-proxy-autoconfig</code>。</p>
 </li>
-<li><p>ProxyEnable<br>是否启用代理。</p>
+<li>
+<p>ProxyEnable<br>
+是否启用代理。</p>
 </li>
-<li><p>ProxyServer<br>各协议所使用的代理服务器，用分号分隔。如果不指定具体协议而直接写上服务器与端口号，则表示所有协议使用同一个代理。</p>
+<li>
+<p>ProxyServer<br>
+各协议所使用的代理服务器，用分号分隔。如果不指定具体协议而直接写上服务器与端口号，则表示所有协议使用同一个代理。</p>
 </li>
-<li><p>ProxyOverride<br>禁止使用代理服务器的地址列表，通常指定为本地地址。支持通配符，用分号分隔。它同时也是”对于本地地址不使用代理服务器”选项的开关。</p>
+<li>
+<p>ProxyOverride<br>
+禁止使用代理服务器的地址列表，通常指定为本地地址。支持通配符，用分号分隔。它同时也是&quot;对于本地地址不使用代理服务器&quot;选项的开关。</p>
 </li>
 </ul>
-<h3 id="代理服务器部分"><a href="#代理服务器部分" class="headerlink" title="代理服务器部分"></a>代理服务器部分</h3><p><img src="/images/1629343344669.png"></p>
+<h3 id="代理服务器部分"><a class="header-anchor" href="#代理服务器部分">#</a>代理服务器部分</h3>
+<p><img src="/images/1629343344669.png" alt=""></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings]</span><br><span class="line">&quot;ProxyEnable&quot;=dword:00000001</span><br><span class="line">&quot;ProxyServer&quot;=&quot;http=127.0.0.1:7890;https=127.0.0.1:7890;ftp=127.0.0.1:7890;socks=127.0.0.1:7890&quot;</span><br><span class="line">&quot;ProxyOverride&quot;=&quot;localhost;127.*;10.*;172.16.*;172.17.*;172.18.*;172.19.*;172.20.*;172.21.*;172.22.*;172.23.*;172.24.*;172.25.*;172.26.*;172.27.*;172.28.*;172.29.*;172.30.*;172.31.*;192.168.*;&lt;local&gt;&quot;</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p>ProxyEnable<br>是否启用代理。</p>
+<li>
+<p>ProxyEnable<br>
+是否启用代理。</p>
 </li>
-<li><p>ProxyServer<br>各协议所使用的代理服务器，用分号分隔。如果不指定具体协议而直接写上服务器与端口号，则表示所有协议使用同一个代理。</p>
+<li>
+<p>ProxyServer<br>
+各协议所使用的代理服务器，用分号分隔。如果不指定具体协议而直接写上服务器与端口号，则表示所有协议使用同一个代理。</p>
 </li>
-<li><p>ProxyOverride<br>禁止使用代理服务器的地址列表，通常指定为本地地址。支持通配符，用分号分隔。它同时也是”对于本地地址不使用代理服务器”选项的开关。</p>
+<li>
+<p>ProxyOverride<br>
+禁止使用代理服务器的地址列表，通常指定为本地地址。支持通配符，用分号分隔。它同时也是&quot;对于本地地址不使用代理服务器&quot;选项的开关。</p>
 </li>
 </ul>
-<p><strong>在IE浏览器中，启动浏览器、开关或关闭代理设置窗口都会将设置同步到<code>DefaultConnectionSettings</code>键值中，读取代理设置时都会以<code>DefaultConnectionSettings</code>中的值为准（缓存代理设置的作用）。</strong><br><strong>而对于非IE浏览器，则以<code>Internet Settings</code>中的设置为准。</strong></p>
-<h2 id="按计算机代理时的注册表位置"><a href="#按计算机代理时的注册表位置" class="headerlink" title="按计算机代理时的注册表位置"></a>按计算机代理时的注册表位置</h2><p>运行命令<code>gpedit.msc</code>打开策略编辑器，依次打开”计算机配置”、”管理模板”、”Windows 组件”、”Internet Explorer”，找到”按计算机(而不是按用户)进行代理”，启用这个选项将会在注册表保存一个值</p>
+<p><strong>在IE浏览器中，启动浏览器、开关或关闭代理设置窗口都会将设置同步到<code>DefaultConnectionSettings</code>键值中，读取代理设置时都会以<code>DefaultConnectionSettings</code>中的值为准（缓存代理设置的作用）。</strong><br>
+<strong>而对于非IE浏览器，则以<code>Internet Settings</code>中的设置为准。</strong></p>
+<h2 id="按计算机代理时的注册表位置"><a class="header-anchor" href="#按计算机代理时的注册表位置">#</a>按计算机代理时的注册表位置</h2>
+<p>运行命令<code>gpedit.msc</code>打开策略编辑器，依次打开&quot;计算机配置&quot;、“管理模板”、“Windows 组件”、“Internet Explorer”，找到&quot;按计算机(而不是按用户)进行代理&quot;，启用这个选项将会在注册表保存一个值</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\Internet Settings]</span><br><span class="line">&quot;ProxySettingsPerUser&quot;=dword:00000000</span><br></pre></td></tr></table></figure>
-<p>值不存在或是非0值，意味着”按用户代理”，否则就是”按计算机代理”。<br>当系统变为”按计算机代理”后，代理设置的注册表根位置将从<code>HKEY_CURRENT_USER</code>变为<code>HKEY_LOCAL_MACHINE</code>。而且必须使用管理员方式运行IE才能成功修改代理设置。<br>**要注意的是，按计算机代理后<code>WinINet</code>不会再读取<code>Internet Settings</code>下的设置了，而是直接读取<code>DefaultConnectionSettings</code>**。</p>
-<h2 id="解密DefaultConnectionSettings"><a href="#解密DefaultConnectionSettings" class="headerlink" title="解密DefaultConnectionSettings"></a>解密DefaultConnectionSettings</h2><p>它是一个未公开的结构体，我们可以在泄露的Windows 2003源码中找到蛛丝马迹，<br>头文件 <a target="_blank" rel="noopener" href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/dll/proxreg.cxx">proxreg.cxx</a> 中的结构体 <a target="_blank" rel="noopener" href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/inc/proxreg.h#L69">INTERNET_PROXY_INFO_EX</a> 就是它了，函数 <a target="_blank" rel="noopener" href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/dll/proxreg.cxx#L889">WriteProxySettings</a> 用于将这个结构体写入注册表，而 <a target="_blank" rel="noopener" href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/dll/proxreg.cxx#L721#L721">ReadProxySettings</a> 将<code>DefaultConnectionSettings</code>读取到结构体中，这就是一个序列化，反序列化的过程。</p>
-<p>开始的4字节表示结构体大小，同时也用于标识结构体版本，XP到Win10为止仅修改过一次，所以目前只有两种可能的值：0x3C和0x46。<br>根据源码中的定义，IE5和IE6都是0x3C，也就是第一版的结构体</p>
+<p>值不存在或是非0值，意味着&quot;按用户代理&quot;，否则就是&quot;按计算机代理&quot;。<br>
+当系统变为&quot;按计算机代理&quot;后，代理设置的注册表根位置将从<code>HKEY_CURRENT_USER</code>变为<code>HKEY_LOCAL_MACHINE</code>。而且必须使用管理员方式运行IE才能成功修改代理设置。<br>
+<strong>要注意的是，按计算机代理后<code>WinINet</code>不会再读取<code>Internet Settings</code>下的设置了，而是直接读取<code>DefaultConnectionSettings</code></strong>。</p>
+<h2 id="解密DefaultConnectionSettings"><a class="header-anchor" href="#解密DefaultConnectionSettings">#</a>解密DefaultConnectionSettings</h2>
+<p>它是一个未公开的结构体，我们可以在泄露的Windows 2003源码中找到蛛丝马迹，<br>
+头文件 <a target="_blank" rel="noopener" href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/dll/proxreg.cxx">proxreg.cxx</a> 中的结构体 <a target="_blank" rel="noopener" href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/inc/proxreg.h#L69">INTERNET_PROXY_INFO_EX</a> 就是它了，函数 <a target="_blank" rel="noopener" href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/dll/proxreg.cxx#L889">WriteProxySettings</a> 用于将这个结构体写入注册表，而 <a target="_blank" rel="noopener" href="https://github.com/9176324/Win2K3/blob/master/NT/inetcore/wininet/dll/proxreg.cxx#L721#L721">ReadProxySettings</a> 将<code>DefaultConnectionSettings</code>读取到结构体中，这就是一个序列化，反序列化的过程。</p>
+<p>开始的4字节表示结构体大小，同时也用于标识结构体版本，XP到Win10为止仅修改过一次，所以目前只有两种可能的值：0x3C和0x46。<br>
+根据源码中的定义，IE5和IE6都是0x3C，也就是第一版的结构体</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define INTERNET_PROXY_INFO_EX_VERSION      60      // 60 := IE 5.x &amp; 6.0 format</span><br></pre></td></tr></table></figure>
-<p>XP系统自带的是IE6，实际查看一下也确实如此<br><img src="/images/1629429506257.png"><br>从Vista的IE7开始，结构体就升级了，变为了0x46。<br>我编写了一个010 Editor的模板，这样看起来比较直观</p>
+<p>XP系统自带的是IE6，实际查看一下也确实如此<br>
+<img src="/images/1629429506257.png" alt=""><br>
+从Vista的IE7开始，结构体就升级了，变为了0x46。<br>
+我编写了一个010 Editor的模板，这样看起来比较直观</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">//------------------------------------------------</span><br><span class="line">//--- 010 Editor v9.0 Binary Template</span><br><span class="line">//</span><br><span class="line">//      File: </span><br><span class="line">//   Authors: </span><br><span class="line">//   Version: </span><br><span class="line">//   Purpose: </span><br><span class="line">//  Category: </span><br><span class="line">// File Mask: </span><br><span class="line">//  ID Bytes: </span><br><span class="line">//   History: </span><br><span class="line">//------------------------------------------------</span><br><span class="line"></span><br><span class="line">enum PROXY_TYPE &#123;</span><br><span class="line">    PROXY_TYPE_DIRECT = 1,</span><br><span class="line">    PROXY_TYPE_PROXY = 2,</span><br><span class="line">    PROXY_TYPE_AUTO_PROXY_URL = 4,</span><br><span class="line">    PROXY_TYPE_AUTO_DETECT = 8</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct INTERNET_PROXY_INFO_EX_1 &#123;</span><br><span class="line">    DWORD dwStructSize &lt;comment=&quot;结构版本&quot;&gt;;;</span><br><span class="line">    DWORD dwCurrentSettingsVersion &lt;comment=&quot;计数器，每次修改会增加&quot;&gt;;</span><br><span class="line">    PROXY_TYPE dwFlags &lt;comment=&quot;代理方式&quot;&gt;;</span><br><span class="line">    DWORD cbProxy &lt;comment=&quot;代理服务器字符串长度&quot;&gt;;</span><br><span class="line">    CHAR szProxy[cbProxy] &lt;comment=&quot;代理服务器地址&quot;&gt;;;</span><br><span class="line">    DWORD cbProxyBypass &lt;comment=&quot;代理忽略列表字符串长度&quot;&gt;;</span><br><span class="line">    CHAR szProxyBypass[cbProxyBypass] &lt;comment=&quot;代理忽略列表&quot;&gt;;</span><br><span class="line">    DWORD cbAutoConfigUrl;</span><br><span class="line">    CHAR szAutoConfigUrl[cbAutoConfigUrl];</span><br><span class="line">    DWORD dwAutoDiscoveryFlags;</span><br><span class="line">    DWORD cbLastKnownGoodAutoConfigUrl;</span><br><span class="line">    CHAR szLastKnownGoodAutoConfigUrl[cbLastKnownGoodAutoConfigUrl];</span><br><span class="line">    FILETIME ftLastKnownDetectTime;</span><br><span class="line">    DWORD dwDetectedInterfaceIpCount;</span><br><span class="line">    DWORD arrDetectedInterfaceIp[dwDetectedInterfaceIpCount];</span><br><span class="line">    DWORD cbAutoconfigSecondaryUrl;</span><br><span class="line">    CHAR szAutoconfigSecondaryUrl[cbAutoconfigSecondaryUrl];</span><br><span class="line">    DWORD dwAutoconfigReloadDelayMins;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct INTERNET_PROXY_INFO_EX_2 &#123;</span><br><span class="line">    INTERNET_PROXY_INFO_EX_1 info1;</span><br><span class="line">    DWORD dwUnknown;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">local DWORD dwVersion = ReadUInt();</span><br><span class="line">if (dwVersion == 0x3C) &#123;</span><br><span class="line">    INTERNET_PROXY_INFO_EX_1 info;</span><br><span class="line">&#125; else &#123;</span><br><span class="line">    INTERNET_PROXY_INFO_EX_2 info;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/1629431873468.png"><br>从头部的4字节看，0x46 - 0x3C &#x3D; 0xA，也就是在其dll内部的结构体多了10字节，但是持久化到注册表后只多了4字节。</p>
+<p><img src="/images/1629431873468.png" alt=""><br>
+从头部的4字节看，0x46 - 0x3C = 0xA，也就是在其dll内部的结构体多了10字节，但是持久化到注册表后只多了4字节。</p>
 <ul>
-<li>dwFlags<br>dwFlags实际上就是常量<code>PROXY_TYPE_DIRECT</code>和其他三个值的组合。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#define PROXY_TYPE_DIRECT                               0x00000001   // direct to net</span><br><span class="line">#define PROXY_TYPE_PROXY                                0x00000002   // via named proxy</span><br><span class="line">#define PROXY_TYPE_AUTO_PROXY_URL                       0x00000004   // autoproxy URL</span><br><span class="line">#define PROXY_TYPE_AUTO_DETECT                          0x00000008   // use autoproxy detection</span><br></pre></td></tr></table></figure></li>
-<li>自动配置URL<br>自动代理的URL有两个，一个主一个次，但是我们在IE设置中只能设置一个主要的，次要的URL是怎么配置进去的呢？这就是通过之前的一篇文章 <a href="/post/Rn9thta4F/">IE自动部署工具包IEAK</a> 中介绍过的INS文件写入进去的<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[URL]</span><br><span class="line">AutoDetect=1</span><br><span class="line">AutoConfig=1</span><br><span class="line">AutoConfigTime=1</span><br><span class="line">AutoConfigURL=http://localhost/test1.pac</span><br><span class="line">AutoConfigJSURL=http://localhost/test2.pac</span><br></pre></td></tr></table></figure>
-其中<code>AutoConfigJSURL</code>就是次选代理URL。但是经过测试发现，次选URL永远用不上，当<code>AutoConfigURL</code>无法访问时，网络会产生直连，而没有寻找次选代理URL。</li>
+<li>dwFlags<br>
+dwFlags实际上就是常量<code>PROXY_TYPE_DIRECT</code>和其他三个值的组合。</li>
 </ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#define PROXY_TYPE_DIRECT                               0x00000001   // direct to net</span><br><span class="line">#define PROXY_TYPE_PROXY                                0x00000002   // via named proxy</span><br><span class="line">#define PROXY_TYPE_AUTO_PROXY_URL                       0x00000004   // autoproxy URL</span><br><span class="line">#define PROXY_TYPE_AUTO_DETECT                          0x00000008   // use autoproxy detection</span><br></pre></td></tr></table></figure>
+<ul>
+<li>自动配置URL<br>
+自动代理的URL有两个，一个主一个次，但是我们在IE设置中只能设置一个主要的，次要的URL是怎么配置进去的呢？这就是通过之前的一篇文章 <a href="/post/Rn9thta4F/">IE自动部署工具包IEAK</a> 中介绍过的INS文件写入进去的</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[URL]</span><br><span class="line">AutoDetect=1</span><br><span class="line">AutoConfig=1</span><br><span class="line">AutoConfigTime=1</span><br><span class="line">AutoConfigURL=http://localhost/test1.pac</span><br><span class="line">AutoConfigJSURL=http://localhost/test2.pac</span><br></pre></td></tr></table></figure>
+<p>其中<code>AutoConfigJSURL</code>就是次选代理URL。但是经过测试发现，次选URL永远用不上，当<code>AutoConfigURL</code>无法访问时，网络会产生直连，而没有寻找次选代理URL。</p>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<ol>
 <li>按用户代理时，<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 以<code>Internet Settings</code>中的值为准。但IE是个例外，IE以<code>DefaultConnectionSettings</code>中的值为准。</li>
 <li>按计算机代理时，<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 以<code>DefaultConnectionSettings</code>中的值为准，在<code>Internet Settings</code>下的设置没有任何效果。</li>
 <li>64位系统下，如果用直接修改注册表的方式改代理，要注意注册表<code>WOW6432Node</code>下的位置也要一起改。</li>
 </ol>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://support.microsoft.com/en-us/topic/how-to-disable-automatic-proxy-caching-in-internet-explorer-92735c9c-8a26-d0d8-7f8a-1b46595cbaba">How to disable automatic proxy caching in Internet Explorer</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://support.microsoft.com/en-us/topic/how-to-disable-automatic-proxy-caching-in-internet-explorer-92735c9c-8a26-d0d8-7f8a-1b46595cbaba">How to disable automatic proxy caching in Internet Explorer</a></p>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/4283027/whats-the-format-of-the-defaultconnectionsettings-value-in-the-windows-registry">https://stackoverflow.com/questions/4283027/whats-the-format-of-the-defaultconnectionsettings-value-in-the-windows-registry</a></p>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1674119/what-key-in-windows-registry-disables-ie-connection-parameter-automatically-det">https://stackoverflow.com/questions/1674119/what-key-in-windows-registry-disables-ie-connection-parameter-automatically-det</a></p>
 
@@ -233,36 +277,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows%E7%BC%96%E7%A8%8B/" title="Windows编程">
-                        #Windows编程
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/WinINet/" title="WinINet">
-                        #WinINet
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/IE/" title="IE">
-                        #IE
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -304,13 +318,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -530,43 +547,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + WinINet%20%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE%E4%B8%8E%E6%B3%A8%E5%86%8C%E8%A1%A8%E4%BD%8D%E7%BD%AE + '&url=' + https%3A%2F%2Fashe27.github.io%2F2021%2F08%2F20%2F18OY8R7kO%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2021/08/20/18OY8R7kO/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

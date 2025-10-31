@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,41 +172,55 @@
           
       </div>
       <div class="markdown-body">
-        <p>UI 元素通常是在主线程（UI线程）上创建和操作的。如果在非UI线程上直接更新 UI，可能会导致多个线程同时访问和修改UI元素，从而引发线程安全问题，例如竞态条件、死锁等。<br>在 Winforms 中，如果在工作线程上直接更新 UI，会引发 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.invalidoperationexception">InvalidOperationException</a> 异常，该异常表示跨线程操作无效。</p>
-<h2 id="Control-CheckForIllegalCrossThreadCalls"><a href="#Control-CheckForIllegalCrossThreadCalls" class="headerlink" title="Control.CheckForIllegalCrossThreadCalls"></a>Control.CheckForIllegalCrossThreadCalls</h2><p>通过将 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.control.checkforillegalcrossthreadcalls">Control.CheckForIllegalCrossThreadCalls</a> 属性设置为<code>false</code>来禁用跨线程调用的检查。</p>
+        <p>UI 元素通常是在主线程（UI线程）上创建和操作的。如果在非UI线程上直接更新 UI，可能会导致多个线程同时访问和修改UI元素，从而引发线程安全问题，例如竞态条件、死锁等。<br>
+在 Winforms 中，如果在工作线程上直接更新 UI，会引发 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.invalidoperationexception">InvalidOperationException</a> 异常，该异常表示跨线程操作无效。</p>
+<h2 id="Control-CheckForIllegalCrossThreadCalls"><a class="header-anchor" href="#Control-CheckForIllegalCrossThreadCalls">#</a>Control.CheckForIllegalCrossThreadCalls</h2>
+<p>通过将 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.control.checkforillegalcrossthreadcalls">Control.CheckForIllegalCrossThreadCalls</a> 属性设置为<code>false</code>来禁用跨线程调用的检查。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CheckForIllegalCrossThreadCalls = <span class="literal">false</span>;</span><br><span class="line">Task.Run(() =&gt; label1.Text = <span class="string">&quot;hello&quot;</span>);</span><br></pre></td></tr></table></figure>
 <p>禁用此检查可能会导致线程安全问题和意外的行为。因此，通常不建议在生产环境中禁用<code>Control.CheckForIllegalCrossThreadCalls</code>检查。除非你知道自己在干什么。</p>
-<h2 id="BackgroundWorker"><a href="#BackgroundWorker" class="headerlink" title="BackgroundWorker"></a>BackgroundWorker</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.componentmodel.backgroundworker">BackgroundWorker</a> 是用于执行后台操作的组件。</p>
+<h2 id="BackgroundWorker"><a class="header-anchor" href="#BackgroundWorker">#</a>BackgroundWorker</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.componentmodel.backgroundworker">BackgroundWorker</a> 是用于执行后台操作的组件。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> BackgroundWorker worker;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Form1</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    InitializeComponent();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建BackgroundWorker实例</span></span><br><span class="line">    worker = <span class="keyword">new</span> BackgroundWorker();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置事件处理程序</span></span><br><span class="line">    worker.DoWork += Worker_DoWork;</span><br><span class="line">    worker.ProgressChanged += Worker_ProgressChanged;</span><br><span class="line">    worker.RunWorkerCompleted += Worker_RunWorkerCompleted;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 启用报告进度和支持取消操作</span></span><br><span class="line">    worker.WorkerReportsProgress = <span class="literal">true</span>;</span><br><span class="line">    worker.WorkerSupportsCancellation = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">buttonStart_Click</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 启动后台操作</span></span><br><span class="line">    worker.RunWorkerAsync();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">buttonCancel_Click</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 取消后台操作</span></span><br><span class="line">    <span class="keyword">if</span> (worker.IsBusy)</span><br><span class="line">    &#123;</span><br><span class="line">        worker.CancelAsync();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Worker_DoWork</span>(<span class="params"><span class="built_in">object</span> sender, DoWorkEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 后台操作代码</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">100</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 检查是否取消操作</span></span><br><span class="line">        <span class="keyword">if</span> (worker.CancellationPending)</span><br><span class="line">        &#123;</span><br><span class="line">            e.Cancel = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 模拟耗时操作</span></span><br><span class="line">        Thread.Sleep(<span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 报告进度</span></span><br><span class="line">        worker.ReportProgress(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 操作完成后，可以将结果存储到e.Result中</span></span><br><span class="line">    e.Result = <span class="string">&quot;操作完成！&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Worker_ProgressChanged</span>(<span class="params"><span class="built_in">object</span> sender, ProgressChangedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 更新UI以显示进度信息</span></span><br><span class="line">    progressBar.Value = e.ProgressPercentage;</span><br><span class="line">    labelProgress.Text = <span class="string">$&quot;进度：<span class="subst">&#123;e.ProgressPercentage&#125;</span>%&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Worker_RunWorkerCompleted</span>(<span class="params"><span class="built_in">object</span> sender, RunWorkerCompletedEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 处理操作完成后的结果</span></span><br><span class="line">    <span class="keyword">if</span> (e.Cancelled)</span><br><span class="line">    &#123;</span><br><span class="line">        labelResult.Text = <span class="string">&quot;操作被取消&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (e.Error != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        labelResult.Text = <span class="string">$&quot;错误：<span class="subst">&#123;e.Error.Message&#125;</span>&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        labelResult.Text = <span class="string">$&quot;结果：<span class="subst">&#123;e.Result&#125;</span>&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>从提供的成员方法来看，似乎很适合带有进度条的场景，比如下载、解压等。<br>BackgroundWorker 是较早的异步编程模型，功能相对有限。它不能很好地处理复杂的异步操作，如任务组合和异常处理等。所以不推荐使用。</p>
-<h2 id="Control-Invoke"><a href="#Control-Invoke" class="headerlink" title="Control.Invoke"></a>Control.Invoke</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.control.invoke">Control.Invoke</a> 方法允许在UI线程上执行代码。可以在工作线程中调用 Control.Invoke 方法，将 UI 更新的代码包装在一个委托中，然后将其传递给 Control.Invoke 来更新UI。</p>
+<p>从提供的成员方法来看，似乎很适合带有进度条的场景，比如下载、解压等。<br>
+BackgroundWorker 是较早的异步编程模型，功能相对有限。它不能很好地处理复杂的异步操作，如任务组合和异常处理等。所以不推荐使用。</p>
+<h2 id="Control-Invoke"><a class="header-anchor" href="#Control-Invoke">#</a>Control.Invoke</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.control.invoke">Control.Invoke</a> 方法允许在UI线程上执行代码。可以在工作线程中调用 Control.Invoke 方法，将 UI 更新的代码包装在一个委托中，然后将其传递给 Control.Invoke 来更新UI。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Task.Run(() =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    label1.Invoke(() =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        Thread.Sleep(<span class="number">1000</span>);</span><br><span class="line">        label1.Text = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    Debug.WriteLine(<span class="string">&quot;Done&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <p>这是一个同步方法，会阻塞调用线程直到委托执行完成。</p>
-<h2 id="Control-BeginInvoke"><a href="#Control-BeginInvoke" class="headerlink" title="Control.BeginInvoke"></a>Control.BeginInvoke</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.control.begininvoke">Control.BeginInvoke</a> 是 Invoke 的异步版本，不会阻塞调用线程。</p>
+<h2 id="Control-BeginInvoke"><a class="header-anchor" href="#Control-BeginInvoke">#</a>Control.BeginInvoke</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.control.begininvoke">Control.BeginInvoke</a> 是 Invoke 的异步版本，不会阻塞调用线程。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Task.Run(() =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    label1.BeginInvoke(() =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        Thread.Sleep(<span class="number">1000</span>);</span><br><span class="line">        label1.Text = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    Debug.WriteLine(<span class="string">&quot;Done&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <p>如果需要等待委托返回可以使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.control.endinvoke">Control.EndInvoke</a> 方法。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Task.Run(() =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> ar = label1.BeginInvoke(() =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        Thread.Sleep(<span class="number">1000</span>);</span><br><span class="line">        label1.Text = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;result&quot;</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">var</span> result = EndInvoke(ar); <span class="comment">// 阻塞当前线程，并得到返回值&quot;result&quot;</span></span><br><span class="line">    Debug.WriteLine(<span class="string">&quot;Done&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h2 id="SynchronizationContext"><a href="#SynchronizationContext" class="headerlink" title="SynchronizationContext"></a>SynchronizationContext</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a> 是一个抽象类，用于提供线程间同步和上下文传递的功能。</p>
+<h2 id="SynchronizationContext"><a class="header-anchor" href="#SynchronizationContext">#</a>SynchronizationContext</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.threading.synchronizationcontext">SynchronizationContext</a> 是一个抽象类，用于提供线程间同步和上下文传递的功能。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建UI同步上下文</span></span><br><span class="line"><span class="keyword">var</span> uiSyncContext = SynchronizationContext.Current;</span><br><span class="line"></span><br><span class="line">Task.Run(() =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="string">&quot;Background thread id: &quot;</span> + Thread.CurrentThread.ManagedThreadId);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 模拟耗时操作</span></span><br><span class="line">    Thread.Sleep(<span class="number">2000</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用UI同步上下文将任务调度到UI线程上执行</span></span><br><span class="line">    uiSyncContext.Send(_ =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;UI thread id: &quot;</span> + Thread.CurrentThread.ManagedThreadId);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 在UI线程上更新UI元素</span></span><br><span class="line">        MessageBox.Show(<span class="string">&quot;Task completed!&quot;</span>);</span><br><span class="line">    &#125;, <span class="literal">null</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <p>注意，<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.threading.synchronizationcontext.send">Send</a> 是同步的，会阻塞调用线程。而 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.threading.synchronizationcontext.post">Post</a> 是异步版本。</p>
-<h2 id="TaskScheduler"><a href="#TaskScheduler" class="headerlink" title="TaskScheduler"></a>TaskScheduler</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.threading.tasks.taskscheduler">TaskScheduler</a> 是一个抽象类，用于定义任务的调度行为。<br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.threading.tasks.taskscheduler.fromcurrentsynchronizationcontext">TaskScheduler.FromCurrentSynchronizationContext</a> 是一个静态方法，它返回与当前同步上下文关联的 TaskScheduler 对象。它可用于在异步操作中将任务调度到当前同步上下文中执行，以确保操作在正确的线程上执行。</p>
+<h2 id="TaskScheduler"><a class="header-anchor" href="#TaskScheduler">#</a>TaskScheduler</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.threading.tasks.taskscheduler">TaskScheduler</a> 是一个抽象类，用于定义任务的调度行为。<br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.threading.tasks.taskscheduler.fromcurrentsynchronizationcontext">TaskScheduler.FromCurrentSynchronizationContext</a> 是一个静态方法，它返回与当前同步上下文关联的 TaskScheduler 对象。它可用于在异步操作中将任务调度到当前同步上下文中执行，以确保操作在正确的线程上执行。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 TaskScheduler.FromCurrentSynchronizationContext 获取与当前同步上下文关联的 TaskScheduler 对象</span></span><br><span class="line">TaskScheduler uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在后台线程上执行异步操作</span></span><br><span class="line"><span class="keyword">await</span> Task.Run(() =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="string">&quot;Background thread id: &quot;</span> + System.Threading.Thread.CurrentThread.ManagedThreadId);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 模拟耗时操作</span></span><br><span class="line">    Task.Delay(<span class="number">2000</span>).Wait();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 TaskScheduler.FromCurrentSynchronizationContext 将任务调度到UI线程上执行</span></span><br><span class="line">    Task.Factory.StartNew(() =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;UI thread id: &quot;</span> + System.Threading.Thread.CurrentThread.ManagedThreadId);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 在UI线程上更新UI元素</span></span><br><span class="line">        MessageBox.Show(<span class="string">&quot;Task completed!&quot;</span>);</span><br><span class="line">    &#125;, System.Threading.CancellationToken.None, TaskCreationOptions.None, uiScheduler);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>以上这些都是在工作线程更新UI的一些常见方式。以下是对每种方案的简要总结：</p>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<p>以上这些都是在工作线程更新UI的一些常见方式。以下是对每种方案的简要总结：</p>
 <ul>
-<li><p><code>Control.CheckForIllegalCrossThreadCalls</code>：这是一种简单的方式。但是，这种方式是不安全的，可能导致UI线程和工作线程之间的竞态条件和其他线程安全问题。因此不推荐使用它。</p>
+<li>
+<p><code>Control.CheckForIllegalCrossThreadCalls</code>：这是一种简单的方式。但是，这种方式是不安全的，可能导致UI线程和工作线程之间的竞态条件和其他线程安全问题。因此不推荐使用它。</p>
 </li>
-<li><p><code>BackgroundWorker</code>：一个已经废弃的组件。功能相对有限，不适用于复杂的异步操作。因此不推荐使用它。</p>
+<li>
+<p><code>BackgroundWorker</code>：一个已经废弃的组件。功能相对有限，不适用于复杂的异步操作。因此不推荐使用它。</p>
 </li>
-<li><p><code>Control.Invoke</code>和<code>Control.BeginInvoke</code>：这是使用<code>Control</code>类提供的方法在工作线程上执行操作并在UI线程上更新UI的传统方式。<code>Invoke</code>是同步的，会阻塞调用线程，而<code>BeginInvoke</code>是异步的，不会阻塞。</p>
+<li>
+<p><code>Control.Invoke</code>和<code>Control.BeginInvoke</code>：这是使用<code>Control</code>类提供的方法在工作线程上执行操作并在UI线程上更新UI的传统方式。<code>Invoke</code>是同步的，会阻塞调用线程，而<code>BeginInvoke</code>是异步的，不会阻塞。</p>
 </li>
-<li><p><code>SynchronizationContext</code>：用于在不同线程之间同步操作。它提供了<code>Send</code>和<code>Post</code>方法来将操作调度到关联的线程上执行。优点是它提供了更灵活的线程同步和调度机制，并且可以用于管理UI线程之外的其他线程。</p>
+<li>
+<p><code>SynchronizationContext</code>：用于在不同线程之间同步操作。它提供了<code>Send</code>和<code>Post</code>方法来将操作调度到关联的线程上执行。优点是它提供了更灵活的线程同步和调度机制，并且可以用于管理UI线程之外的其他线程。</p>
 </li>
-<li><p><code>TaskScheduler</code>：用于调度和管理任务的抽象类。通过使用<code>TaskScheduler.FromCurrentSynchronizationContext</code>方法可以将任务调度到 UI 线程上执行。侧重点是任务调度。</p>
+<li>
+<p><code>TaskScheduler</code>：用于调度和管理任务的抽象类。通过使用<code>TaskScheduler.FromCurrentSynchronizationContext</code>方法可以将任务调度到 UI 线程上执行。侧重点是任务调度。</p>
 </li>
 </ul>
-<p><br>只是更新 UI 控件的话，推荐用<code>Control.Invoke</code>和<code>Control.BeginInvoke</code>。</p>
+<p><br>
+只是更新 UI 控件的话，推荐用<code>Control.Invoke</code>和<code>Control.BeginInvoke</code>。</p>
 
       </div>
       
@@ -214,30 +232,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/WinForms/" title="WinForms">
-                        #WinForms
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -279,13 +273,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -505,43 +502,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Winforms%20%E4%B8%AD%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B%E6%9B%B4%E6%96%B0%E7%95%8C%E9%9D%A2%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F11%2F15%2Fmultithreading-ui%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/11/15/multithreading-ui/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,27 +166,47 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="编译基础模块-qtbase"><a href="#编译基础模块-qtbase" class="headerlink" title="编译基础模块 qtbase"></a>编译基础模块 qtbase</h2><p>Qt 6.5.0 下载：<a target="_blank" rel="noopener" href="https://download.qt.io/archive/qt/6.5/6.5.0/">https://download.qt.io/archive/qt/6.5/6.5.0/</a><br>我只需要最基础的 UI 开发功能（ Core、Gui、Widgets），因此进入 <a target="_blank" rel="noopener" href="https://download.qt.io/archive/qt/6.5/6.5.0/submodules/">submodules</a> 目录，仅下载 <code>qtbase</code> 模块即可，文件名是 <a target="_blank" rel="noopener" href="https://download.qt.io/archive/qt/6.5/6.5.0/submodules/qtbase-everywhere-src-6.5.0.zip">qtbase-everywhere-src-6.5.0.zip</a>。<br>解压后可以查看一下 <code>config_help.txt</code> 文件，有详细的编译命令。<br>然后创建一个 <code>_build</code> 文件夹，这是为了将临时文件都生成在这里，避免污染源码目录。</p>
+        <h2 id="编译基础模块-qtbase"><a class="header-anchor" href="#编译基础模块-qtbase">#</a>编译基础模块 qtbase</h2>
+<p>Qt 6.5.0 下载：<a target="_blank" rel="noopener" href="https://download.qt.io/archive/qt/6.5/6.5.0/">https://download.qt.io/archive/qt/6.5/6.5.0/</a><br>
+我只需要最基础的 UI 开发功能（ Core、Gui、Widgets），因此进入 <a target="_blank" rel="noopener" href="https://download.qt.io/archive/qt/6.5/6.5.0/submodules/">submodules</a> 目录，仅下载 <code>qtbase</code> 模块即可，文件名是 <a target="_blank" rel="noopener" href="https://download.qt.io/archive/qt/6.5/6.5.0/submodules/qtbase-everywhere-src-6.5.0.zip">qtbase-everywhere-src-6.5.0.zip</a>。<br>
+解压后可以查看一下 <code>config_help.txt</code> 文件，有详细的编译命令。<br>
+然后创建一个 <code>_build</code> 文件夹，这是为了将临时文件都生成在这里，避免污染源码目录。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> _build</span><br><span class="line"><span class="built_in">cd</span> _build</span><br></pre></td></tr></table></figure>
 <p>接着根据自身需求配置编译参数，我用的是：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">..\configure.bat -prefix <span class="string">&quot;D:/Qt6/dist&quot;</span> -platform win32-msvc -debug-and-release -shared -nomake examples -nomake tests -opengl dynamic</span><br></pre></td></tr></table></figure>
 <p>配置后依次运行以下命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cmake --build . --parallel</span><br><span class="line">cmake --install . --config Debug</span><br><span class="line">cmake --install . --config Release</span><br></pre></td></tr></table></figure>
 <p>成功后在 <code>D:/Qt6/dist</code> 目录下就有最终的 SDK 了。</p>
-<h2 id="配置-Visual-Studio"><a href="#配置-Visual-Studio" class="headerlink" title="配置 Visual Studio"></a>配置 Visual Studio</h2><p>安装 VS 的开发插件 <a target="_blank" rel="noopener" href="https://download.qt.io/official_releases/vsaddin/2.9.1/">https://download.qt.io/official_releases&#x2F;vsaddin&#x2F;2.9.1&#x2F;</a><br>插件只需要设置一下前面编译好的 Qt 文件夹路径即可。<br>创建一个工程可正常编译运行，但是发现无法编辑 <code>.ui</code> 文件，语言文件 <code>.ts</code> 也无法编辑，这是因为我们仅编译了 <code>qtbase</code> 模块，它不包含开发工具，开发工具在单独一个模块中，需要编译。<br>所以再次进入目录 <a target="_blank" rel="noopener" href="https://download.qt.io/archive/qt/6.5/6.5.0/submodules/">https://download.qt.io/archive/qt/6.5/6.5.0/submodules/</a>，下载 <a target="_blank" rel="noopener" href="https://download.qt.io/archive/qt/6.5/6.5.0/submodules/qttools-everywhere-src-6.5.0.zip">qttools-everywhere-src-6.5.0.zip</a> 文件并解压。<br>然后也和 <code>qtbase</code> 模块一样，创建一个临时目录</p>
+<h2 id="配置-Visual-Studio"><a class="header-anchor" href="#配置-Visual-Studio">#</a>配置 Visual Studio</h2>
+<p>安装 VS 的开发插件 <a target="_blank" rel="noopener" href="https://download.qt.io/official_releases/vsaddin/2.9.1/">https://download.qt.io/official_releases/vsaddin/2.9.1/</a><br>
+插件只需要设置一下前面编译好的 Qt 文件夹路径即可。<br>
+创建一个工程可正常编译运行，但是发现无法编辑 <code>.ui</code> 文件，语言文件 <code>.ts</code> 也无法编辑，这是因为我们仅编译了 <code>qtbase</code> 模块，它不包含开发工具，开发工具在单独一个模块中，需要编译。<br>
+所以再次进入目录 <a target="_blank" rel="noopener" href="https://download.qt.io/archive/qt/6.5/6.5.0/submodules/">https://download.qt.io/archive/qt/6.5/6.5.0/submodules/</a>，下载 <a target="_blank" rel="noopener" href="https://download.qt.io/archive/qt/6.5/6.5.0/submodules/qttools-everywhere-src-6.5.0.zip">qttools-everywhere-src-6.5.0.zip</a> 文件并解压。<br>
+然后也和 <code>qtbase</code> 模块一样，创建一个临时目录</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> _build</span><br><span class="line"><span class="built_in">cd</span> _build</span><br></pre></td></tr></table></figure>
 <p>附加模块的编译方式和 <code>qtbase</code> 不同，它是通过 <code>qtbase</code> 编译生成出的 <code>qt-configure-module.bat</code> 脚本编译的，这也说明了在编译附加模块前必须先编译 <code>qtbase</code>，它是基石。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D:\Qt6\dist\bin\qt-configure-module.bat D:\Qt6\qttools-everywhere-src-6.5.0</span><br></pre></td></tr></table></figure>
 <p>参数是附加模块的源码目录，配置好后接着执行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cmake --build . --parallel</span><br><span class="line">cmake --install . --config Release</span><br></pre></td></tr></table></figure>
 <p>成功后会在 <code>bin</code> 目录下生成出 <code>designer.exe</code> 和 <code>linguist.exe</code> 文件。这样当我们在 VS 中双击 <code>.ui</code> 文件或 <code>.ts</code> 文件时会启动相应的开发工具。</p>
-<h2 id="安装语言文件"><a href="#安装语言文件" class="headerlink" title="安装语言文件"></a>安装语言文件</h2><p>编译生成的Qt助手、Qt设计师、Qt语言家程序界面是英文的，因为缺少翻译文件。官方提供了翻译文件下载<br><a target="_blank" rel="noopener" href="https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_650/qt.qt6.650.win64_msvc2019_64/">https://download.qt.io/online/qtsdkrepository/windows_x86&#x2F;desktop&#x2F;qt6_650&#x2F;qt.qt6.650.win64_msvc2019_64&#x2F;</a></p>
+<h2 id="安装语言文件"><a class="header-anchor" href="#安装语言文件">#</a>安装语言文件</h2>
+<p>编译生成的Qt助手、Qt设计师、Qt语言家程序界面是英文的，因为缺少翻译文件。官方提供了翻译文件下载<br>
+<a target="_blank" rel="noopener" href="https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_650/qt.qt6.650.win64_msvc2019_64/">https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_650/qt.qt6.650.win64_msvc2019_64/</a></p>
 <p>找到名字包含 <code>qttranslations</code> 的压缩包就是了，打开压缩包后将 <code>translations</code> 文件夹解压到 Qt 根目录下即可。再次打开Qt助手等程序就是中文了。</p>
-<h2 id="安装文档"><a href="#安装文档" class="headerlink" title="安装文档"></a>安装文档</h2><p>自己编译的 Qt 是没有文档的，好在官方提供了预编译好的文档，我们只需要直接下载相应的模块文档并解压到 <code>doc</code> 目录下即可。<br>文档下载：<a target="_blank" rel="noopener" href="https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_650_src_doc_examples/qt.qt6.650.doc/">https://download.qt.io/online/qtsdkrepository/windows_x86&#x2F;desktop&#x2F;qt6_650_src_doc_examples&#x2F;qt.qt6.650.doc&#x2F;</a></p>
-<h2 id="大陆地区镜像站点"><a href="#大陆地区镜像站点" class="headerlink" title="大陆地区镜像站点"></a>大陆地区镜像站点</h2><p>当网络不好时，可以从国内的镜像站点下载相关资源</p>
-<p>阿里云：<a target="_blank" rel="noopener" href="https://mirrors.aliyun.com/qt/">https://mirrors.aliyun.com/qt/</a><br>清华大学：<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/qt/">https://mirrors.tuna.tsinghua.edu.cn/qt/</a><br>中国科学技术大学：<a target="_blank" rel="noopener" href="http://mirrors.ustc.edu.cn/qtproject/">http://mirrors.ustc.edu.cn/qtproject/</a><br>中国互联网络信息中心：<a target="_blank" rel="noopener" href="https://mirrors.cnnic.cn/qt/">https://mirrors.cnnic.cn/qt/</a></p>
-<h2 id="在线安装"><a href="#在线安装" class="headerlink" title="在线安装"></a>在线安装</h2><p>还有傻瓜式的在线安装方式：<a target="_blank" rel="noopener" href="http://download.qt.io/official_releases/online_installers/">http://download.qt.io/official_releases&#x2F;online_installers&#x2F;</a><br>在线安装本质就是从上面的站点下载预编译好的文件到本地，目前的<code>6.5.0</code> 版本用的<code>VC 2019</code>编译的，这意味着你的项目所使用的编译器最好和预编译的Qt保持一致。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/tcjiaan/p/16575655.html">https://www.cnblogs.com/tcjiaan/p/16575655.html</a></p>
+<h2 id="安装文档"><a class="header-anchor" href="#安装文档">#</a>安装文档</h2>
+<p>自己编译的 Qt 是没有文档的，好在官方提供了预编译好的文档，我们只需要直接下载相应的模块文档并解压到 <code>doc</code> 目录下即可。<br>
+文档下载：<a target="_blank" rel="noopener" href="https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_650_src_doc_examples/qt.qt6.650.doc/">https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_650_src_doc_examples/qt.qt6.650.doc/</a></p>
+<h2 id="大陆地区镜像站点"><a class="header-anchor" href="#大陆地区镜像站点">#</a>大陆地区镜像站点</h2>
+<p>当网络不好时，可以从国内的镜像站点下载相关资源</p>
+<p>阿里云：<a target="_blank" rel="noopener" href="https://mirrors.aliyun.com/qt/">https://mirrors.aliyun.com/qt/</a><br>
+清华大学：<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/qt/">https://mirrors.tuna.tsinghua.edu.cn/qt/</a><br>
+中国科学技术大学：<a target="_blank" rel="noopener" href="http://mirrors.ustc.edu.cn/qtproject/">http://mirrors.ustc.edu.cn/qtproject/</a><br>
+中国互联网络信息中心：<a target="_blank" rel="noopener" href="https://mirrors.cnnic.cn/qt/">https://mirrors.cnnic.cn/qt/</a></p>
+<h2 id="在线安装"><a class="header-anchor" href="#在线安装">#</a>在线安装</h2>
+<p>还有傻瓜式的在线安装方式：<a target="_blank" rel="noopener" href="http://download.qt.io/official_releases/online_installers/">http://download.qt.io/official_releases/online_installers/</a><br>
+在线安装本质就是从上面的站点下载预编译好的文件到本地，目前的<code>6.5.0</code> 版本用的<code>VC 2019</code>编译的，这意味着你的项目所使用的编译器最好和预编译的Qt保持一致。</p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/tcjiaan/p/16575655.html">https://www.cnblogs.com/tcjiaan/p/16575655.html</a></p>
 
       </div>
       
@@ -194,24 +218,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Qt/" title="Qt">
-                        #Qt
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -253,13 +259,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -479,43 +488,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%BC%96%E8%AF%91%20Qt6 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F05%2F07%2Fbuild-qt6%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/05/07/build-qt6/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

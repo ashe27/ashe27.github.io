@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,29 +166,38 @@
           
       </div>
       <div class="markdown-body">
-        <p>我和很多人一样，刚学着使用<code>async</code>方法时以为是会新开一个线程并执行代码。心想有了这玩意还要<code>Thread</code>、<code>Task</code>干嘛。。。<br>而实时并非如此。<br><br>线程的问题就是会造成 CPU 资源的浪费。</p>
+        <p>我和很多人一样，刚学着使用<code>async</code>方法时以为是会新开一个线程并执行代码。心想有了这玩意还要<code>Thread</code>、<code>Task</code>干嘛。。。<br>
+而实时并非如此。<br>
+<br>
+线程的问题就是会造成 CPU 资源的浪费。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">button1_Click</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    Thread.Sleep(<span class="number">2000</span>); <span class="comment">// 模拟某种耗时的操作。在此期间界面无法响应</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>由于这个方法是在 UI 线程上执行的，所以整个线程被冻结了，导致界面无法响应。在此期间该线程无事可做，这就是资源的浪费。<br><br>如果用异步就不同了：</p>
+<p>由于这个方法是在 UI 线程上执行的，所以整个线程被冻结了，导致界面无法响应。在此期间该线程无事可做，这就是资源的浪费。<br>
+<br>
+如果用异步就不同了：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">async</span> <span class="keyword">void</span> <span class="title">button1_Click</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">await</span> Task.Delay(<span class="number">2000</span>); <span class="comment">// 与 Thread.Sleep 不同的是，await 不会阻塞线程</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当遇到 await 表达式时，它会暂停当前方法的执行，并返回控制权给调用者，使得线程可以执行其他工作，比如响应 UI。<br>一旦可等待对象操作完成，await 表达式就会返回并继续执行后面的代码。<br><br>注意，await 后面的代码可能会与之前的代码运行在不同的线程上，这取决于<code>SynchronizationContext</code>。</p>
+<p>当遇到 await 表达式时，它会暂停当前方法的执行，并返回控制权给调用者，使得线程可以执行其他工作，比如响应 UI。<br>
+一旦可等待对象操作完成，await 表达式就会返回并继续执行后面的代码。<br>
+<br>
+注意，await 后面的代码可能会与之前的代码运行在不同的线程上，这取决于<code>SynchronizationContext</code>。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">async</span> Task <span class="title">TestAync</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 仍然在主线程上</span></span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;TestAync: <span class="subst">&#123;Thread.CurrentThread.ManagedThreadId&#125;</span>&quot;</span>);</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 不使用原始上下文。await 之后的代码可能会被分配到其他线程上执行</span></span><br><span class="line">    <span class="keyword">await</span> Task.Delay(<span class="number">1</span>).ConfigureAwait(<span class="literal">false</span>);</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 用 Sleep 模拟耗时操作，没有冻结 UI 线程，因为此时的线程已经切换到非 UI 线程上了</span></span><br><span class="line">    Thread.Sleep(<span class="number">2000</span>);</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 与开头的线程ID不同了</span></span><br><span class="line">    Debug.WriteLine(<span class="string">$&quot;TestAync: <span class="subst">&#123;Thread.CurrentThread.ManagedThreadId&#125;</span>&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">async</span> <span class="keyword">void</span> <span class="title">button1_Click</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">await</span> TestAync();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>异步模型解决了在此前开发中的两个痛点：</p>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<p>异步模型解决了在此前开发中的两个痛点：</p>
 <ol>
 <li>解决传统的基于回调的异步编程所带来的一系列问题。使得在异步代码中可以使用类似同步代码的方式来编写异步操作，避免了回调地狱。</li>
 <li>更好地利用线程，<code>await</code>关键字可以使应用程序能够处理更多的并发操作，提高了应用程序的并发性能和吞吐量。</li>
 </ol>
 <br/>
-
 <ul>
 <li><code>async</code>方法可以通过返回<code>Task</code>、<code>Task&lt;T&gt;</code> 或 <code>void</code>来标记。返回类型为<code>Task</code> 或 <code>Task&lt;T&gt;</code>的方法可以实现异步操作，并在操作完成时提供结果或状态。返回类型为<code>void</code> 的方法通常用于事件处理程序等不需要提供结果的情况。</li>
 <li><code>async</code>方法不会开启新线程。<code>async</code>方法本质上是一个状态机，它可以在执行过程中暂停和恢复，而不会阻塞调用线程。</li>
 <li><code>await</code>会让出当前线程的 CPU 时间片，以允许其他任务在可用的线程上执行。</li>
 <li><code>await</code>之前的代码和之后的代码可能不在同一个线程上，这取决于上下文和调度器。</li>
 <li>可以使用<code>ConfigureAwait(false)</code>来禁用上下文捕获，以避免不必要的线程切换。这在某些情况下可以提高性能，特别是在不需要 UI 上下文的非 UI 代码中。</li>
-<li>异步方法应该遵循一致的命名约定，以便清楚地表示其异步特性，例如在方法名后添加”Async”后缀。</li>
+<li>异步方法应该遵循一致的命名约定，以便清楚地表示其异步特性，例如在方法名后添加&quot;Async&quot;后缀。</li>
 </ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://blog.stephencleary.com/2012/02/async-and-await.html">Async and Await</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/37419572/">If async-await doesn’t create any additional threads, then how does it make applications responsive?</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://blog.stephencleary.com/2012/02/async-and-await.html">Async and Await</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/37419572/">If async-await doesn’t create any additional threads, then how does it make applications responsive?</a></p>
 
       </div>
       
@@ -196,24 +209,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -255,13 +250,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -481,43 +479,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%BC%82%E6%AD%A5%E4%B8%8D%E6%98%AF%E7%BA%BF%E7%A8%8B + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F11%2F22%2Fasync-not-thread%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/11/22/async-not-thread/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

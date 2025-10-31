@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,50 +172,72 @@
           
       </div>
       <div class="markdown-body">
-        <p><a href="/2025/06/15/202506151">上次</a>在 Ubuntu 16 系统上成功制作了生成 Win32 程序的交叉编译器，这次就可以用它来制作运行在 Windows 上但<code>target=x86_64-linux-gnu</code>的交叉工具链。<br>我的目的是能在 Windows 上编译出 Linux 下的程序。由于跨了三个平台（虽然build和target相同），所以称为加拿大编译（canadian）。</p>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>与上次不同的是，这次的<code>target</code>值是<code>x86_64-linux-gnu</code>，所以需要准备 Linux 内核头文件和 glibc 库。<br>由于我期望的目标系统就是当前编译的宿主机，所以就以当前系统的软件版本为准即可：</p>
+        <p><a href="/2025/06/15/202506151">上次</a>在 Ubuntu 16 系统上成功制作了生成 Win32 程序的交叉编译器，这次就可以用它来制作运行在 Windows 上但<code>target=x86_64-linux-gnu</code>的交叉工具链。<br>
+我的目的是能在 Windows 上编译出 Linux 下的程序。由于跨了三个平台（虽然build和target相同），所以称为加拿大编译（canadian）。</p>
+<h2 id="准备"><a class="header-anchor" href="#准备">#</a>准备</h2>
+<p>与上次不同的是，这次的<code>target</code>值是<code>x86_64-linux-gnu</code>，所以需要准备 Linux 内核头文件和 glibc 库。<br>
+由于我期望的目标系统就是当前编译的宿主机，所以就以当前系统的软件版本为准即可：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># lsb_release -a</span></span><br><span class="line">No LSB modules are available.</span><br><span class="line">Distributor ID: Ubuntu</span><br><span class="line">Description:    Ubuntu 16.04.7 LTS</span><br><span class="line">Release:        16.04</span><br><span class="line">Codename:       xenial</span><br><span class="line"></span><br><span class="line"><span class="comment"># uname -a</span></span><br><span class="line">Linux vm-ubuntu16-amd64 4.15.0-142-generic <span class="comment">#146~16.04.1-Ubuntu SMP Tue Apr 13 09:27:15 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ldd --version</span></span><br><span class="line">ldd (Ubuntu GLIBC 2.23-0ubuntu11.3) 2.23</span><br><span class="line">Copyright (C) 2016 Free Software Foundation, Inc.</span><br><span class="line">This is free software; see the <span class="built_in">source</span> <span class="keyword">for</span> copying conditions.  There is NO</span><br><span class="line">warranty; not even <span class="keyword">for</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span><br><span class="line">Written by Roland McGrath and Ulrich Drepper.</span><br></pre></td></tr></table></figure>
-<p>Binutils 版本选择的是 2.44：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/binutils/">https://mirrors.ustc.edu.cn/gnu/binutils/</a><br>GCC 版本选择的是 15.1.0：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0/">https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0/</a><br>Linux内核版本是 4.15：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/kernel.org/linux/kernel/v4.x/linux-4.15.tar.xz">https://mirrors.ustc.edu.cn/kernel.org/linux/kernel/v4.x/linux-4.15.tar.xz</a><br>glibc版本是 2.23：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/glibc/glibc-2.23.tar.xz">https://mirrors.ustc.edu.cn/gnu/glibc/glibc-2.23.tar.xz</a></p>
-<p><br>安装必要的软件包</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt -y install gawk p7zip-full</span><br></pre></td></tr></table></figure>
+<p>Binutils 版本选择的是 2.44：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/binutils/">https://mirrors.ustc.edu.cn/gnu/binutils/</a><br>
+GCC 版本选择的是 15.1.0：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0/">https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0/</a><br>
+Linux内核版本是 4.15：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/kernel.org/linux/kernel/v4.x/linux-4.15.tar.xz">https://mirrors.ustc.edu.cn/kernel.org/linux/kernel/v4.x/linux-4.15.tar.xz</a><br>
+glibc版本是 2.23：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/glibc/glibc-2.23.tar.xz">https://mirrors.ustc.edu.cn/gnu/glibc/glibc-2.23.tar.xz</a></p>
+<p><br>
+安装必要的软件包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt -y install gawk p7zip-full</span><br></pre></td></tr></table></figure>
 <p>设置必要的环境变量</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将上次制作的交叉工具链加入到 PATH 环境变量中</span></span><br><span class="line"><span class="built_in">export</span> PATH=/opt/x86_64-w64-mingw32-15.1/bin:<span class="variable">$PATH</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> BUILD=x86_64-linux-gnu</span><br><span class="line"><span class="built_in">export</span> HOST=x86_64-w64-mingw32</span><br><span class="line"><span class="built_in">export</span> TARGET=x86_64-linux-gnu</span><br><span class="line"><span class="built_in">export</span> PREFIX=/opt/cross</span><br><span class="line"><span class="built_in">export</span> SYSROOT=<span class="variable">$PREFIX</span>/<span class="variable">$TARGET</span></span><br></pre></td></tr></table></figure>
-<p>另外要注意的是，Ubuntu 16 自带的 GCC 是 5.4.0 版本，而我的交叉编译器是 15.1.0 版本，为了顺利构建，建议保持本机GCC与交叉的GCC版本一致，避免出现一些奇怪的问题。<br>确保<code>gcc</code>和<code>x86_64-linux-gnu-gcc</code>指向同一个版本</p>
+<p>另外要注意的是，Ubuntu 16 自带的 GCC 是 5.4.0 版本，而我的交叉编译器是 15.1.0 版本，为了顺利构建，建议保持本机GCC与交叉的GCC版本一致，避免出现一些奇怪的问题。<br>
+确保<code>gcc</code>和<code>x86_64-linux-gnu-gcc</code>指向同一个版本</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># gcc -v</span></span><br><span class="line">Using built-in specs.</span><br><span class="line">COLLECT_GCC=gcc</span><br><span class="line">COLLECT_LTO_WRAPPER=/usr/local/libexec/gcc/x86_64-linux-gnu/15/lto-wrapper</span><br><span class="line">Target: x86_64-linux-gnu</span><br><span class="line">Configured with: ../configure --program-suffix=-15 --with-gcc-major-version-only --enable-languages=c,c++ --enable-shared --disable-nls --disable-multilib --disable-werror --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu</span><br><span class="line">Thread model: posix</span><br><span class="line">Supported LTO compression algorithms: zlib</span><br><span class="line">gcc version 15.1.0 (GCC)</span><br><span class="line"></span><br><span class="line"><span class="comment"># x86_64-linux-gnu-gcc -v</span></span><br><span class="line">Using built-in specs.</span><br><span class="line">COLLECT_GCC=x86_64-linux-gnu-gcc</span><br><span class="line">COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-linux-gnu/5/lto-wrapper</span><br><span class="line">Target: x86_64-linux-gnu</span><br><span class="line">Configured with: ../src/configure -v --with-pkgversion=<span class="string">&#x27;Ubuntu 5.4.0-6ubuntu1~16.04.12&#x27;</span> --with-bugurl=file:///usr/share/doc/gcc-5/README.Bugs --enable-languages=c,ada,c++,java,go,d,fortran,objc,obj-c++ --prefix=/usr --program-suffix=-5 --enable-shared --enable-linker-build-id --libexecdir=/usr/lib --without-included-gettext --enable-threads=posix --libdir=/usr/lib --enable-nls --with-sysroot=/ --enable-clocale=gnu --enable-libstdcxx-debug --enable-libstdcxx-time=<span class="built_in">yes</span> --with-default-libstdcxx-abi=new --enable-gnu-unique-object --disable-vtable-verify --enable-libmpx --enable-plugin --with-system-zlib --disable-browser-plugin --enable-java-awt=gtk --enable-gtk-cairo --with-java-home=/usr/lib/jvm/java-1.5.0-gcj-5-amd64/jre --enable-java-home --with-jvm-root-dir=/usr/lib/jvm/java-1.5.0-gcj-5-amd64 --with-jvm-jar-dir=/usr/lib/jvm-exports/java-1.5.0-gcj-5-amd64 --with-arch-directory=amd64 --with-ecj-jar=/usr/share/java/eclipse-ecj.jar --enable-objc-gc --enable-multiarch --disable-werror --with-arch-32=i686 --with-abi=m64 --with-multilib-list=m32,m64,mx32 --enable-multilib --with-tune=generic --enable-checking=release --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu</span><br><span class="line">Thread model: posix</span><br><span class="line">gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.12) </span><br></pre></td></tr></table></figure>
-<p>由于我之前的配置不完整，导致<code>gcc</code>和<code>x86_64-linux-gnu-gcc</code>指向了不同版本的 GCC，这会给后面的编译造成麻烦。<br>所以要设置一下</p>
+<p>由于我之前的配置不完整，导致<code>gcc</code>和<code>x86_64-linux-gnu-gcc</code>指向了不同版本的 GCC，这会给后面的编译造成麻烦。<br>
+所以要设置一下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 5</span><br><span class="line">update-alternatives --install /usr/bin/gcc gcc /usr/local/bin/gcc-15 15</span><br><span class="line">update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 5</span><br><span class="line">update-alternatives --install /usr/bin/g++ g++ /usr/local/bin/g++-15 15</span><br><span class="line">update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc x86_64-linux-gnu-gcc /usr/bin/gcc-5 5</span><br><span class="line">update-alternatives --install /usr/bin/x86_64-linux-gnu-gcc x86_64-linux-gnu-gcc /usr/local/bin/gcc-15 15</span><br><span class="line">update-alternatives --install /usr/bin/x86_64-linux-gnu-g++ x86_64-linux-gnu-g++ /usr/bin/g++-5 5</span><br><span class="line">update-alternatives --install /usr/bin/x86_64-linux-gnu-g++ x86_64-linux-gnu-g++ /usr/local/bin/g++-15 15</span><br></pre></td></tr></table></figure>
 <p>再看看上次制作的交叉编译器</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># x86_64-w64-mingw32-gcc -v</span></span><br><span class="line">Using built-in specs.</span><br><span class="line">COLLECT_GCC=x86_64-w64-mingw32-gcc</span><br><span class="line">COLLECT_LTO_WRAPPER=/opt/x86_64-w64-mingw32-15.1/bin/../libexec/gcc/x86_64-w64-mingw32/15.1.0/lto-wrapper</span><br><span class="line">Target: x86_64-w64-mingw32</span><br><span class="line">Configured with: ../configure --prefix=/opt/cross --with-sysroot=/opt/cross/x86_64-w64-mingw32 --enable-languages=c,c++ --enable-threads=win32 --enable-shared --disable-multilib --disable-werror --disable-checking --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-w64-mingw32</span><br><span class="line">Thread model: win32</span><br><span class="line">Supported LTO compression algorithms: zlib</span><br><span class="line">gcc version 15.1.0 (GCC) </span><br></pre></td></tr></table></figure>
 <p>OK了，没问题。</p>
-<h2 id="编译-Binutils"><a href="#编译-Binutils" class="headerlink" title="编译 Binutils"></a>编译 Binutils</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf binutils-2.44.tar.xz</span><br><span class="line"><span class="built_in">cd</span> binutils-2.44/</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=<span class="variable">$PREFIX</span> --disable-nls --disable-multilib --build=<span class="variable">$BUILD</span> --host=<span class="variable">$HOST</span> --target=<span class="variable">$TARGET</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装-Linux-内核头文件"><a href="#安装-Linux-内核头文件" class="headerlink" title="安装 Linux 内核头文件"></a>安装 Linux 内核头文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf linux-4.15.tar.xz </span><br><span class="line"><span class="built_in">cd</span> linux-4.15/</span><br><span class="line">make ARCH=x86_64 headers_install INSTALL_HDR_PATH=<span class="variable">$SYSROOT</span></span><br></pre></td></tr></table></figure>
+<h2 id="编译-Binutils"><a class="header-anchor" href="#编译-Binutils">#</a>编译 Binutils</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf binutils-2.44.tar.xz</span><br><span class="line"><span class="built_in">cd</span> binutils-2.44/</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=<span class="variable">$PREFIX</span> --disable-nls --disable-multilib --build=<span class="variable">$BUILD</span> --host=<span class="variable">$HOST</span> --target=<span class="variable">$TARGET</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
+<h2 id="安装-Linux-内核头文件"><a class="header-anchor" href="#安装-Linux-内核头文件">#</a>安装 Linux 内核头文件</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf linux-4.15.tar.xz </span><br><span class="line"><span class="built_in">cd</span> linux-4.15/</span><br><span class="line">make ARCH=x86_64 headers_install INSTALL_HDR_PATH=<span class="variable">$SYSROOT</span></span><br></pre></td></tr></table></figure>
 <p>头文件会安装到<code>$SYSROOT/include</code>下。</p>
-<h2 id="编译-glibc"><a href="#编译-glibc" class="headerlink" title="编译 glibc"></a>编译 glibc</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf glibc-2.23.tar.xz </span><br><span class="line"><span class="built_in">cd</span> glibc-2.23/</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=<span class="variable">$SYSROOT</span> --with-headers=<span class="variable">$SYSROOT</span>/include --disable-multilib --disable-werror --build=<span class="variable">$BUILD</span> --host=<span class="variable">$TARGET</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<h2 id="编译-glibc"><a class="header-anchor" href="#编译-glibc">#</a>编译 glibc</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf glibc-2.23.tar.xz </span><br><span class="line"><span class="built_in">cd</span> glibc-2.23/</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=<span class="variable">$SYSROOT</span> --with-headers=<span class="variable">$SYSROOT</span>/include --disable-multilib --disable-werror --build=<span class="variable">$BUILD</span> --host=<span class="variable">$TARGET</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
 <p>这里值得一提的是<code>--host=$TARGET</code>，glibc 没有<code>target</code>选项，glibc 的<code>--host</code>等同于 gcc 的<code>--target</code>。</p>
-<p><br>这里在配置<code>--prefix</code>时有个坑，我最初是这样编译安装的：</p>
+<p><br>
+这里在配置<code>--prefix</code>时有个坑，我最初是这样编译安装的：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s <span class="variable">$SYSROOT</span> <span class="variable">$SYSROOT</span>/usr</span><br><span class="line">../configure --prefix=/usr --with-headers=<span class="variable">$SYSROOT</span>/include --disable-multilib --disable-werror --build=<span class="variable">$BUILD</span> --host=<span class="variable">$TARGET</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install DESTDIR=<span class="variable">$SYSROOT</span></span><br></pre></td></tr></table></figure>
-<p>首先创建了<code>$SYSROOT/usr</code>这个目录的软链接，链接到<code>$SYSROOT</code>自身，这样在后面 GCC 编译时会从<code>$SYSROOT/usr/include</code>中搜索头文件（实际是$SYSROOT&#x2F;include）。<br>这样看上去最后安装的路径也应该是对的，可是最后执行 GCC 的<code>make install</code>时会提示<code>libpthread</code>的链接错误，感觉是和 glibc 的<code>--prefix</code>有关系，它会从<code>/usr/lib64</code>等地方去搜索库，而不是<code>$SYSROOT/lib64</code>这里搜索，所以<code>-prefix</code>一定要是<code>$SYSROOT</code>。</p>
-<h2 id="编译-GCC"><a href="#编译-GCC" class="headerlink" title="编译 GCC"></a>编译 GCC</h2><p>关键点来了，前面我们将 glibc 安装到<code>$SYSROOT</code>下了，但是 GCC 在编译时会从<code>$SYSROOT/usr</code>下搜索头文件，所以我们要临时创建<code>usr</code>目录的软链接</p>
+<p>首先创建了<code>$SYSROOT/usr</code>这个目录的软链接，链接到<code>$SYSROOT</code>自身，这样在后面 GCC 编译时会从<code>$SYSROOT/usr/include</code>中搜索头文件（实际是$SYSROOT/include）。<br>
+这样看上去最后安装的路径也应该是对的，可是最后执行 GCC 的<code>make install</code>时会提示<code>libpthread</code>的链接错误，感觉是和 glibc 的<code>--prefix</code>有关系，它会从<code>/usr/lib64</code>等地方去搜索库，而不是<code>$SYSROOT/lib64</code>这里搜索，所以<code>-prefix</code>一定要是<code>$SYSROOT</code>。</p>
+<h2 id="编译-GCC"><a class="header-anchor" href="#编译-GCC">#</a>编译 GCC</h2>
+<p>关键点来了，前面我们将 glibc 安装到<code>$SYSROOT</code>下了，但是 GCC 在编译时会从<code>$SYSROOT/usr</code>下搜索头文件，所以我们要临时创建<code>usr</code>目录的软链接</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s <span class="variable">$SYSROOT</span> <span class="variable">$SYSROOT</span>/usr</span><br></pre></td></tr></table></figure>
-<p>这样当 GCC 访问<code>$SYSROOT/usr/include</code>时，实际访问的就是<code>$SYSROOT/include</code>目录。<br><br>开始编译 GCC</p>
+<p>这样当 GCC 访问<code>$SYSROOT/usr/include</code>时，实际访问的就是<code>$SYSROOT/include</code>目录。<br>
+<br>
+开始编译 GCC</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/gcc-15.1.0/</span><br><span class="line">./contrib/download_prerequisites</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=<span class="variable">$PREFIX</span> --with-sysroot=<span class="variable">$SYSROOT</span> --enable-languages=c,c++ --enable-shared --disable-multilib --disable-werror --disable-checking --build=<span class="variable">$BUILD</span> --host=<span class="variable">$HOST</span> --target=<span class="variable">$TARGET</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
-
-<h2 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除前面为了编译 GCC 而创建的 usr 目录</span></span><br><span class="line"><span class="built_in">rm</span> -rf <span class="variable">$SYSROOT</span>/usr</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打包为 .7z 文件</span></span><br><span class="line">7z a -l cross.7z <span class="variable">$PREFIX</span></span><br></pre></td></tr></table></figure>
+<h2 id="打包"><a class="header-anchor" href="#打包">#</a>打包</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除前面为了编译 GCC 而创建的 usr 目录</span></span><br><span class="line"><span class="built_in">rm</span> -rf <span class="variable">$SYSROOT</span>/usr</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打包为 .7z 文件</span></span><br><span class="line">7z a -l cross.7z <span class="variable">$PREFIX</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li><code>-l</code>：打包软链接指向的实际文件，而不是链接本身。</li>
 </ul>
-<p><br>打包完成后就可以拷贝到 Windows 系统上使用了。</p>
-<h2 id="测试修改"><a href="#测试修改" class="headerlink" title="测试修改"></a>测试修改</h2><p>在 Windows 上编译程序时发生错误</p>
+<p><br>
+打包完成后就可以拷贝到 Windows 系统上使用了。</p>
+<h2 id="测试修改"><a class="header-anchor" href="#测试修改">#</a>测试修改</h2>
+<p>在 Windows 上编译程序时发生错误</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\system32\cmd.exe /C &quot;cd . &amp;&amp; C:\jack\cross-toolchain\Linux-x86_64\bin\x86_64-linux-gnu-g++.exe   CMakeFiles/cmTC_22c52.dir/testCXXCompiler.cxx.o -o cmTC_22c52   &amp;&amp; cd .&quot;</span><br><span class="line">    C:/jack/cross-toolchain/Linux-x86_64/bin/../lib/gcc/x86_64-linux-gnu/15.1.0/../../../../x86_64-linux-gnu/bin/ld.exe: cannot find /opt/cross/x86_64-linux-gnu/lib/libm.so.6 inside C:/jack/cross-toolchain/Linux-x86_64/bin/../x86_64-linux-gnu</span><br><span class="line">    C:/jack/cross-toolchain/Linux-x86_64/bin/../lib/gcc/x86_64-linux-gnu/15.1.0/../../../../x86_64-linux-gnu/bin/ld.exe: cannot find /opt/cross/x86_64-linux-gnu/lib/libmvec_nonshared.a inside C:/jack/cross-toolchain/Linux-x86_64/bin/../x86_64-linux-gnu</span><br><span class="line">    C:/jack/cross-toolchain/Linux-x86_64/bin/../lib/gcc/x86_64-linux-gnu/15.1.0/../../../../x86_64-linux-gnu/bin/ld.exe: cannot find /opt/cross/x86_64-linux-gnu/lib/libmvec.so.1 inside C:/jack/cross-toolchain/Linux-x86_64/bin/../x86_64-linux-gnu</span><br><span class="line">    collect2.exe: error: ld returned 1 exit status</span><br></pre></td></tr></table></figure>
-<p>当链接器链接<code>-lm</code>时，它会找到<code>libm.so</code>这个脚本，读取里面的绝对路径<code>/opt/cross/.../libm.so.6</code>，然后尝试去加载它。因为 Windows 系统上不存在<code>/opt/cross</code>这个目录，所以链接失败。<br>需要手动编辑这些包含了绝对路径的链接器脚本。将里面所有的绝对路径修改为相对路径，即只保留文件名。<br>还好工作量不大，只有3个文件需要修改：</p>
+<p>当链接器链接<code>-lm</code>时，它会找到<code>libm.so</code>这个脚本，读取里面的绝对路径<code>/opt/cross/.../libm.so.6</code>，然后尝试去加载它。因为 Windows 系统上不存在<code>/opt/cross</code>这个目录，所以链接失败。<br>
+需要手动编辑这些包含了绝对路径的链接器脚本。将里面所有的绝对路径修改为相对路径，即只保留文件名。<br>
+还好工作量不大，只有3个文件需要修改：</p>
 <ol>
 <li><code>x86_64-linux-gnu\lib\libc.so</code></li>
 <li><code>x86_64-linux-gnu\lib\libm.so</code></li>
 <li><code>x86_64-linux-gnu\lib\libpthread.so</code></li>
 </ol>
-<p><br>好了，至此大功告成！再次将修改后的工具链打个包，方便日后使用。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我花费了很多业余时间才成功制作出工具链。可能是一个环境变量未设置，可能是一个编译选项没配好，可能是软件版本的差异，都有可能导致最后无法编译成功，而每一次碰壁都可能要从头再来，因为编译过程比较耗时，所以折腾这个工具链投入了大量的时间试错，真的很不容易。</p>
+<p><br>
+好了，至此大功告成！再次将修改后的工具链打个包，方便日后使用。</p>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<p>我花费了很多业余时间才成功制作出工具链。可能是一个环境变量未设置，可能是一个编译选项没配好，可能是软件版本的差异，都有可能导致最后无法编译成功，而每一次碰壁都可能要从头再来，因为编译过程比较耗时，所以折腾这个工具链投入了大量的时间试错，真的很不容易。</p>
 
       </div>
       
@@ -223,30 +249,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-26 17:16:54
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/GCC/" title="GCC">
-                        #GCC
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/" title="交叉编译">
-                        #交叉编译
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -288,13 +290,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -514,43 +519,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%88%B6%E4%BD%9C%20Windows%20%E4%B8%8A%E7%9A%84%20x86_64-linux-gnu%20%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%99%A8 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F07%2F18%2F202507181%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/07/18/202507181/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,17 +172,22 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="配置开发环境"><a href="#配置开发环境" class="headerlink" title="配置开发环境"></a>配置开发环境</h2><ol>
+        <h2 id="配置开发环境"><a class="header-anchor" href="#配置开发环境">#</a>配置开发环境</h2>
+<ol>
 <li>下载安装 Java，这个网上有太多资料，不说了。</li>
-<li>去国内镜像站下载 <a target="_blank" rel="noopener" href="https://gradle.org/">Gradle</a>，比如腾讯的 <a target="_blank" rel="noopener" href="https://mirrors.cloud.tencent.com/gradle/">https://mirrors.cloud.tencent.com/gradle/</a>。解压后将其<code>bin</code>目录加入系统环境变量<code>PATH</code>中。<br>打开控制台输入<code>gradle -v</code>验证一下：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">------------------------------------------------------------</span><br><span class="line">Gradle 8.13-milestone-3</span><br><span class="line">------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">Build time:    2025-01-21 16:46:36 UTC</span><br><span class="line">Revision:      008d02e96f845b2d5a628758831c97d305983d68</span><br><span class="line"></span><br><span class="line">Kotlin:        2.0.21</span><br><span class="line">Groovy:        3.0.22</span><br><span class="line">Ant:           Apache Ant(TM) version 1.10.15 compiled on August 25 2024</span><br><span class="line">Launcher JVM:  22.0.1 (Oracle Corporation 22.0.1+8-16)</span><br><span class="line">Daemon JVM:    C:\Program Files\Java\jdk-22 (no JDK specified, using current Java home)</span><br><span class="line">OS:            Windows 11 10.0 amd64</span><br></pre></td></tr></table></figure></li>
+<li>去国内镜像站下载 <a target="_blank" rel="noopener" href="https://gradle.org">Gradle</a>，比如腾讯的 <a target="_blank" rel="noopener" href="https://mirrors.cloud.tencent.com/gradle/">https://mirrors.cloud.tencent.com/gradle/</a>。解压后将其<code>bin</code>目录加入系统环境变量<code>PATH</code>中。<br>
+打开控制台输入<code>gradle -v</code>验证一下：</li>
 </ol>
-<p><br>注意，<code>gradle -v</code>显示的是<code>Gradle</code>自身用来解析<code>build.gradle.kts</code>的 Kotlin 版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">------------------------------------------------------------</span><br><span class="line">Gradle 8.13-milestone-3</span><br><span class="line">------------------------------------------------------------</span><br><span class="line"></span><br><span class="line">Build <span class="keyword">time</span>:    2025-01-21 16:46:36 UTC</span><br><span class="line">Revision:      008d02e96f845b2d5a628758831c97d305983d68</span><br><span class="line"></span><br><span class="line">Kotlin:        2.0.21</span><br><span class="line">Groovy:        3.0.22</span><br><span class="line">Ant:           Apache Ant(TM) version 1.10.15 compiled on August 25 2024</span><br><span class="line">Launcher JVM:  22.0.1 (Oracle Corporation 22.0.1+8-16)</span><br><span class="line">Daemon JVM:    C:\Program Files\Java\jdk-22 (no JDK specified, using current Java home)</span><br><span class="line">OS:            Windows 11 10.0 amd64</span><br></pre></td></tr></table></figure>
+<p><br>
+注意，<code>gradle -v</code>显示的是<code>Gradle</code>自身用来解析<code>build.gradle.kts</code>的 Kotlin 版本</p>
 <ul>
 <li>这个版本是 Gradle 内置的，用于构建脚本</li>
 <li>主要用于支持 Kotlin DSL（即 .kts 文件）</li>
 </ul>
 <p>因为<code>Gradle</code>会自动下载项目所依赖的 Kotlin，所以不需要自行安装 Kotlin。</p>
-<h2 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h2><p>项目结构：</p>
+<h2 id="新建项目"><a class="header-anchor" href="#新建项目">#</a>新建项目</h2>
+<p>项目结构：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hello/</span><br><span class="line">  ├── build.gradle.kts</span><br><span class="line">  ├── settings.gradle.kts</span><br><span class="line">  └── src/</span><br><span class="line">      └── main/</span><br><span class="line">          └── kotlin/</span><br><span class="line">              └── Main.kt</span><br></pre></td></tr></table></figure>
 <p><code>settings.gradle.kts</code>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rootProject.name = &quot;hello&quot;</span><br></pre></td></tr></table></figure>
@@ -188,7 +197,8 @@
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    println(<span class="string">&quot;Hello, World!&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运行：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gradle run</span><br></pre></td></tr></table></figure>
-<h2 id="构建可执行-jar-包"><a href="#构建可执行-jar-包" class="headerlink" title="构建可执行 jar 包"></a>构建可执行 jar 包</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建</span></span><br><span class="line">gradle build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">java -jar build\libs\hello.jar</span><br></pre></td></tr></table></figure>
+<h2 id="构建可执行-jar-包"><a class="header-anchor" href="#构建可执行-jar-包">#</a>构建可执行 jar 包</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建</span></span><br><span class="line">gradle build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行</span></span><br><span class="line">java -jar build\libs\hello.jar</span><br></pre></td></tr></table></figure>
 <p>会报错：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello.jar中没有主清单属性</span><br></pre></td></tr></table></figure>
 <p>编辑<code>build.gradle.kts</code>文件，追加：</p>
@@ -204,30 +214,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Kotlin/" title="Kotlin">
-                        #Kotlin
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Gradle/" title="Gradle">
-                        #Gradle
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -269,13 +255,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -495,43 +484,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%AC%AC%E4%B8%80%E4%B8%AA%20Kotlin%20%E7%A8%8B%E5%BA%8F + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F01%2F23%2Fkotlin-gradle-hello%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/01/23/kotlin-gradle-hello/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

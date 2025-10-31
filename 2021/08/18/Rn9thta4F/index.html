@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,8 +172,12 @@
           
       </div>
       <div class="markdown-body">
-        <p>Internet Explorer Administration Kit (IEAK)是一个IE的管理工具包，可自定义配置生成一个IE安装包或仅设置的包，一般是给网管人员部署使用的，可以帮助管理员快速统一部署IE。<br>适用于IE11的工具包下载地址：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads">https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads</a></p>
-<h2 id="INS配置文件"><a href="#INS配置文件" class="headerlink" title="INS配置文件"></a>INS配置文件</h2><p>我们用它配置”链接”相关设置<br><img src="/images/1629300058002.png"><br>最终会生成一个安装包，其中有一个INS文件内容大概是这样</p>
+        <p>Internet Explorer Administration Kit (IEAK)是一个IE的管理工具包，可自定义配置生成一个IE安装包或仅设置的包，一般是给网管人员部署使用的，可以帮助管理员快速统一部署IE。<br>
+适用于IE11的工具包下载地址：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads">https://docs.microsoft.com/zh-cn/internet-explorer/ie11-ieak/ieak-information-and-downloads</a></p>
+<h2 id="INS配置文件"><a class="header-anchor" href="#INS配置文件">#</a>INS配置文件</h2>
+<p>我们用它配置&quot;链接&quot;相关设置<br>
+<img src="/images/1629300058002.png" alt=""><br>
+最终会生成一个安装包，其中有一个INS文件内容大概是这样</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[Branding]</span><br><span class="line">CompanyName=Microsoft Corporation</span><br><span class="line">Wizard_Version=11.00.18362.1</span><br><span class="line">Version=11,00,18362,1</span><br><span class="line">Custom_Key=MICROSO</span><br><span class="line">Global=1</span><br><span class="line">IE4 Welcome Msg=1</span><br><span class="line">Platform=2</span><br><span class="line">GUID=&#123;7211FFE6-C149-11D0-AFF0-00AA003758BB&#125;</span><br><span class="line">Type=0</span><br><span class="line">NoClear=1</span><br><span class="line">[URL]</span><br><span class="line">AutoDetect=0</span><br><span class="line">AutoConfig=1</span><br><span class="line">AutoConfigTime=1</span><br><span class="line">AutoConfigURL=http://localhost/ie.ins</span><br><span class="line">AutoConfigJSURL=http://localhost/test1.pac</span><br><span class="line">[Proxy]</span><br><span class="line">HTTP_Proxy_Server=</span><br><span class="line">FTP_Proxy_Server=</span><br><span class="line">Secure_Proxy_Server=</span><br><span class="line">Socks_Proxy_Server=</span><br><span class="line">Use_Same_Proxy=1</span><br><span class="line">Proxy_Enable=0</span><br><span class="line">Proxy_Override=&quot;&lt;local&gt;&quot;</span><br></pre></td></tr></table></figure>
 <p>一个有效的ins文件必须有<code>[Branding]</code>节，我们也可以不用IEAK生成，而是直接从<code>C:\Program Files\Internet Explorer\SIGNUP\install.ins</code>拷贝一份进行手动修改也是可以的。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[Branding]</span><br><span class="line">CompanyName=</span><br><span class="line">Wizard_Version=11.00.19041.1</span><br><span class="line">Version=11,00,19041,1</span><br><span class="line">Custom_Key=MICROSO</span><br><span class="line">Global=1</span><br><span class="line">IE4 Welcome Msg=1</span><br><span class="line">Platform=2</span><br><span class="line">GUID=&#123;7211FFE6-C149-11D0-AFF0-00AA003758BB&#125;</span><br><span class="line">Type=0</span><br><span class="line">NoClear=1</span><br><span class="line">NoDial=0</span><br><span class="line">FavoritesDelete=0</span><br><span class="line">FavoritesOnTop=0</span><br><span class="line">User Agent=</span><br><span class="line">[URL]</span><br><span class="line">FirstHomePage=https://www.google.com</span><br></pre></td></tr></table></figure>
@@ -177,10 +185,15 @@
 <p>运行部署安装包后会在IE目录下生成一个INS文件，并提示注销登录后生效</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Program Files\Internet Explorer\CUSTOM\INSTALL.INS</span><br></pre></td></tr></table></figure>
 <p>注销是为了让设置生效，实际上我们可以使用其他手段立即生效，有两种方法</p>
-<h3 id="重置IE"><a href="#重置IE" class="headerlink" title="重置IE"></a>重置IE</h3><p>配置文件只有在IE初始化时会被访问，我们可以重置IE来让它再次载入配置文件。<br>运行命令<code>RunDll32.exe inetcpl.cpl,ResetIEtoDefaults</code>可以弹出重置对话框，确认重置后IE会依次从以下位置来获取配置</p>
+<h3 id="重置IE"><a class="header-anchor" href="#重置IE">#</a>重置IE</h3>
+<p>配置文件只有在IE初始化时会被访问，我们可以重置IE来让它再次载入配置文件。<br>
+运行命令<code>RunDll32.exe inetcpl.cpl,ResetIEtoDefaults</code>可以弹出重置对话框，确认重置后IE会依次从以下位置来获取配置</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\Program Files\Internet Explorer\Custom\install.ins</span><br><span class="line">C:\Program Files\Internet Explorer\Signup\install.ins</span><br></pre></td></tr></table></figure>
-<h3 id="BrandInternetExplorer"><a href="#BrandInternetExplorer" class="headerlink" title="BrandInternetExplorer"></a>BrandInternetExplorer</h3><p><code>iedkcs32.dll</code>有一个导出函数<code>BrandInternetExplorer</code>可以使得IE下次启动时载入指定的INS配置文件。<br><code>rundll32.exe iedkcs32.dll,BrandInternetExplorer /ins:&quot;D:\test.ins&quot;</code></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpie/8206de0e-2d1e-4a02-977b-b8614c5350d9">INS File Format</a></p>
+<h3 id="BrandInternetExplorer"><a class="header-anchor" href="#BrandInternetExplorer">#</a>BrandInternetExplorer</h3>
+<p><code>iedkcs32.dll</code>有一个导出函数<code>BrandInternetExplorer</code>可以使得IE下次启动时载入指定的INS配置文件。<br>
+<code>rundll32.exe iedkcs32.dll,BrandInternetExplorer /ins:&quot;D:\test.ins&quot;</code></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpie/8206de0e-2d1e-4a02-977b-b8614c5350d9">INS File Format</a></p>
 <p><a target="_blank" rel="noopener" href="https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/">https://4sysops.com/archives/internet-explorer-10-administration-part-4-ieak-10/</a></p>
 
       </div>
@@ -193,30 +206,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/IE/" title="IE">
-                        #IE
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows/" title="Windows">
-                        #Windows
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -258,13 +247,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -484,43 +476,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + IE%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%B7%A5%E5%85%B7%E5%8C%85IEAK + '&url=' + https%3A%2F%2Fashe27.github.io%2F2021%2F08%2F18%2FRn9thta4F%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2021/08/18/Rn9thta4F/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

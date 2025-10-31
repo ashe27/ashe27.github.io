@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,12 +172,20 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h2><p>将证书视为存储库，通过 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore">CertOpenStore</a> 打开，枚举出第一个证书即可。<br>一个例子</p>
+        <h2 id="方式一"><a class="header-anchor" href="#方式一">#</a>方式一</h2>
+<p>将证书视为存储库，通过 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore">CertOpenStore</a> 打开，枚举出第一个证书即可。<br>
+一个例子</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function">T <span class="title">decodeObject</span><span class="params">(DWORD dwEncodingType, <span class="type">const</span> PCERT_EXTENSION pExt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	T pInfo = <span class="literal">nullptr</span>;</span><br><span class="line">	DWORD cbInfo = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span> (!<span class="built_in">CryptDecodeObjectEx</span>(dwEncodingType, pExt-&gt;pszObjId, pExt-&gt;Value.pbData, pExt-&gt;Value.cbData, CRYPT_DECODE_ALLOC_FLAG | CRYPT_DECODE_NOCOPY_FLAG, <span class="literal">nullptr</span>, &amp;pInfo, &amp;cbInfo))</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">	<span class="keyword">return</span> pInfo;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 证书既是存储库</span></span><br><span class="line">HCERTSTORE hCertStore = <span class="built_in">CertOpenStore</span>(CERT_STORE_PROV_FILENAME_A, dwEncodingType, <span class="literal">NULL</span>, CERT_STORE_OPEN_EXISTING_FLAG | CERT_STORE_READONLY_FLAG, <span class="string">&quot;ca.cer&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (hCertStore) &#123;</span><br><span class="line">	<span class="comment">// 取出第一个证书</span></span><br><span class="line">	PCCERT_CONTEXT pCertContext = <span class="built_in">CertEnumCertificatesInStore</span>(hCertStore, <span class="literal">nullptr</span>);</span><br><span class="line">	<span class="keyword">if</span> (pCertContext) &#123;</span><br><span class="line">		<span class="comment">// 遍历扩展信息</span></span><br><span class="line">		<span class="keyword">for</span> (DWORD i = <span class="number">0</span>; i &lt; pCertContext-&gt;pCertInfo-&gt;cExtension; ++i) &#123;</span><br><span class="line">			<span class="type">const</span> PCERT_EXTENSION pExt = pCertContext-&gt;pCertInfo-&gt;rgExtension + i;</span><br><span class="line">			<span class="keyword">if</span> (<span class="built_in">strcmp</span>(pExt-&gt;pszObjId, szOID_KEY_USAGE) == <span class="number">0</span>) &#123;</span><br><span class="line">				<span class="comment">// 密钥用法</span></span><br><span class="line">				<span class="type">const</span> <span class="keyword">auto</span> pInfo = <span class="built_in">decodeObject</span>&lt;PCRYPT_BIT_BLOB&gt;(dwEncodingType, pExt);</span><br><span class="line">				<span class="built_in">LocalFree</span>(pInfo);</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span>(<span class="built_in">strcmp</span>(pExt-&gt;pszObjId, szOID_BASIC_CONSTRAINTS2) == <span class="number">0</span>) &#123;</span><br><span class="line">				<span class="comment">// 基本约束</span></span><br><span class="line">				<span class="type">const</span> <span class="keyword">auto</span> pInfo = <span class="built_in">decodeObject</span>&lt;PCERT_BASIC_CONSTRAINTS2_INFO&gt;(dwEncodingType, pExt);</span><br><span class="line">				<span class="built_in">LocalFree</span>(pInfo);</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">strcmp</span>(pExt-&gt;pszObjId, szOID_ENHANCED_KEY_USAGE) == <span class="number">0</span>) &#123;</span><br><span class="line">				<span class="comment">// 增强型密钥用法</span></span><br><span class="line">				<span class="keyword">auto</span> pInfo = <span class="built_in">decodeObject</span>&lt;PCTL_USAGE&gt;(dwEncodingType, pExt);</span><br><span class="line">				<span class="built_in">LocalFree</span>(pInfo);</span><br><span class="line">			&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">strcmp</span>(pExt-&gt;pszObjId, szOID_SUBJECT_ALT_NAME2) == <span class="number">0</span>) &#123;</span><br><span class="line">				<span class="comment">// 使用者可选名称</span></span><br><span class="line">				<span class="type">const</span> <span class="keyword">auto</span> pInfo = <span class="built_in">decodeObject</span>&lt;PCERT_ALT_NAME_INFO&gt;(dwEncodingType, pExt);</span><br><span class="line">				<span class="built_in">LocalFree</span>(pInfo);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">CertCloseStore</span>(hCertStore, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h2><p>在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/seccrypto/cryptoapi-system-architecture">CryptoAPI</a> 中，一个证书文件用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构描述，所以只要将证书文件转换为 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构即可。<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certcreatecertificatecontext">CertCreateCertificateContext</a> 函数可以做到，它从内存中读取证书数据并转换为 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构。<br>但是要注意，这个函数只接受DER编码格式的证书，而我们常用的一般是PEM格式（以BEGIN开头，END结尾，中间是BASE64编码），所以要进行转换。<br>转换可以用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptstringtobinarya">CryptStringToBinaryA</a> 函数搞定。<br>一个简单的例子</p>
+<h2 id="方式二"><a class="header-anchor" href="#方式二">#</a>方式二</h2>
+<p>在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/seccrypto/cryptoapi-system-architecture">CryptoAPI</a> 中，一个证书文件用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构描述，所以只要将证书文件转换为 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构即可。<br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certcreatecertificatecontext">CertCreateCertificateContext</a> 函数可以做到，它从内存中读取证书数据并转换为 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-cert_context">CERT_CONTEXT</a> 结构。<br>
+但是要注意，这个函数只接受DER编码格式的证书，而我们常用的一般是PEM格式（以BEGIN开头，END结尾，中间是BASE64编码），所以要进行转换。<br>
+转换可以用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptstringtobinarya">CryptStringToBinaryA</a> 函数搞定。<br>
+一个简单的例子</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> DWORD dwEncodingType = X509_ASN_ENCODING;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打开证书</span></span><br><span class="line">HANDLE hFile = <span class="built_in">CreateFileW</span>(<span class="string">L&quot;ca.cer&quot;</span>, GENERIC_READ, FILE_SHARE_READ, <span class="literal">nullptr</span>, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, <span class="literal">nullptr</span>);</span><br><span class="line">LARGE_INTEGER fileSize;</span><br><span class="line"><span class="built_in">GetFileSizeEx</span>(hFile, &amp;fileSize);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取证书内容</span></span><br><span class="line">BYTE* buffer = <span class="keyword">new</span> BYTE[fileSize.QuadPart];</span><br><span class="line">DWORD dwWritten;</span><br><span class="line"><span class="built_in">ReadFile</span>(hFile, buffer, fileSize.QuadPart, &amp;dwWritten, <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// PEM转DER</span></span><br><span class="line">BYTE* bin = <span class="keyword">new</span> BYTE[dwWritten];</span><br><span class="line">DWORD flags;</span><br><span class="line">BOOL ok = <span class="built_in">CryptStringToBinaryA</span>((LPCSTR)buffer, dwWritten, CRYPT_STRING_BASE64HEADER, bin, &amp;dwWritten, <span class="literal">NULL</span>, &amp;flags);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获得证书上下文</span></span><br><span class="line">PCCERT_CONTEXT pCert = <span class="built_in">CertCreateCertificateContext</span>(dwEncodingType, bin, dwWritten);</span><br></pre></td></tr></table></figure>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/dd743310(v=vs.85)">Load a Certificate from a File</a></p>
-<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/34623247/certcreatecertificatecontext-returns-crypt-e-asn1-badtag-8009310b">CertCreateCertificateContext returns CRYPT_E_ASN1_BADTAG &#x2F; 8009310b</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/dd743310(v=vs.85)">Load a Certificate from a File</a></p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/34623247/certcreatecertificatecontext-returns-crypt-e-asn1-badtag-8009310b">CertCreateCertificateContext returns CRYPT_E_ASN1_BADTAG / 8009310b</a></p>
 
       </div>
       
@@ -185,30 +197,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows%E7%BC%96%E7%A8%8B/" title="Windows编程">
-                        #Windows编程
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/CryptoAPI/" title="CryptoAPI">
-                        #CryptoAPI
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -250,13 +238,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -476,43 +467,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E4%BB%8E%E7%A3%81%E7%9B%98%E4%B8%8A%E5%8A%A0%E8%BD%BD%E8%AF%81%E4%B9%A6%E6%96%87%E4%BB%B6 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2021%2F08%2F13%2F6geICBPwL%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2021/08/13/6geICBPwL/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,24 +166,30 @@
           
       </div>
       <div class="markdown-body">
-        <p>在VS中编译Qt项目，总是会在工程目录下创建<code>x64\Debug\qmake\qtvars_x64_Debug.props</code>文件。<br>研究一番后发现，Qt工程会引入属性表文件<code>Qt.props</code>，位置在<code>C:\Users\&#123;用户名&#125;\AppData\Local\QtMsBuild</code>目录下<br>内容如下：</p>
+        <p>在VS中编译Qt项目，总是会在工程目录下创建<code>x64\Debug\qmake\qtvars_x64_Debug.props</code>文件。<br>
+研究一番后发现，Qt工程会引入属性表文件<code>Qt.props</code>，位置在<code>C:\Users\{用户名}\AppData\Local\QtMsBuild</code>目录下<br>
+内容如下：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">  /////////////////////////////////////////////////////////////////////////////////////////////////</span></span><br><span class="line"><span class="comment">  // Import private Qt property definitions</span></span><br><span class="line"><span class="comment">  // --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ImportGroup</span> <span class="attr">Label</span>=<span class="string">&quot;Qt&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;$(MSBuildThisFileDirectory)\qt_private.props&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ImportGroup</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">  /////////////////////////////////////////////////////////////////////////////////////////////////</span></span><br><span class="line"><span class="comment">  // User-defined settings</span></span><br><span class="line"><span class="comment">  // --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Label</span>=<span class="string">&quot;UserMacros&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Placeholder for user macros written by VS Property Manager --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Placeholder for properties written by VS Property Manager --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemDefinitionGroup</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Placeholder for default metadata written by VS Property Manager --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemDefinitionGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Placeholder for items written by VS Property Manager --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>它又导入了<code>qt_private.props</code>文件，其中包含这么一段</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(QtVsProjectSettings)&#x27; == &#x27;true&#x27;&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--// Path to Qt variables property file --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">QtVarsOutputDir</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(QtVarsOutputDir)&#x27; == &#x27;&#x27;&quot;</span></span></span><br><span class="line"><span class="tag">      &gt;</span>$([System.IO.Path]::Combine(&#x27;$(ProjectDir)&#x27;, &#x27;$(IntDir)&#x27;, &#x27;qmake&#x27;))<span class="tag">&lt;/<span class="name">QtVarsOutputDir</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">QtVarsFileName</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(QtVarsFileName)&#x27; == &#x27;&#x27;&quot;</span></span></span><br><span class="line"><span class="tag">      &gt;</span>qtvars_$(Platform.Replace(&#x27; &#x27;,&#x27;_&#x27;))_$(Configuration.Replace(&#x27; &#x27;,&#x27;_&#x27;)).props<span class="tag">&lt;/<span class="name">QtVarsFileName</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">QtVarsFilePath</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(QtVarsFilePath)&#x27; == &#x27;&#x27;&quot;</span></span></span><br><span class="line"><span class="tag">      &gt;</span>$(QtVarsOutputDir)\$(QtVarsFileName)<span class="tag">&lt;/<span class="name">QtVarsFilePath</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--// Path to temp work folder --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">QtVarsWorkDirName</span></span></span><br><span class="line"><span class="tag">      &gt;</span>temp<span class="tag">&lt;/<span class="name">QtVarsWorkDirName</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">QtVarsWorkDir</span></span></span><br><span class="line"><span class="tag">      &gt;</span>$([System.IO.Path]::Combine(&#x27;$(QtVarsOutputDir)&#x27;,&#x27;$(QtVarsWorkDirName)&#x27;))<span class="tag">&lt;/<span class="name">QtVarsWorkDir</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">QtVarsWorkPath</span></span></span><br><span class="line"><span class="tag">      &gt;</span>$(QtVarsWorkDir)\$(QtVarsFileName)<span class="tag">&lt;/<span class="name">QtVarsWorkPath</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">QtVarsIndexPathDesignTime</span></span></span><br><span class="line"><span class="tag">      &gt;</span>$(QtVarsWorkDir)\$(ProjectGuid.Replace(&#x27;&#123;&#x27;,&#x27;&#x27;).Replace(&#x27;&#125;&#x27;,&#x27;&#x27;)).$(ProjectName).designtime.idx<span class="tag">&lt;/<span class="name">QtVarsIndexPathDesignTime</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">QtVarsDesignTime</span> <span class="attr">Condition</span>=<span class="string">&quot;Exists(&#x27;$(QtVarsIndexPathDesignTime)&#x27;)&quot;</span></span></span><br><span class="line"><span class="tag">      &gt;</span>$([System.String]::Copy($([System.IO.File]::ReadAllText(&#x27;$(QtVarsIndexPathDesignTime)&#x27;))).Replace(&#x27;<span class="symbol">&amp;#xD;</span><span class="symbol">&amp;#xA;</span>&#x27;,&#x27;&#x27;))           <span class="tag">&lt;/<span class="name">QtVarsDesignTime</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>其中<code>QtVarsOutputDir</code>就是这个目录的输出位置，这里用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.io.path.combine#system-io-path-combine(system-string-system-string-system-string)">Path.Combine</a> 合并成了最终路径，其中内置宏 <code>$(IntDir)</code> 指向的是<strong>中间目录</strong></p>
-<p><img src="/images/014839.png"></p>
+<p>其中<code>QtVarsOutputDir</code>就是这个目录的输出位置，这里用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.io.path.combine?#system-io-path-combine(system-string-system-string-system-string)">Path.Combine</a> 合并成了最终路径，其中内置宏 <code>$(IntDir)</code> 指向的是<strong>中间目录</strong></p>
+<p><img src="/images/014839.png" alt=""></p>
 <p>也就是说<code>qmake</code>的相关临时文件应该输出到<strong>中间目录</strong>，可是在修改了中间目录后并没有起到效果，相关的临时文件还是输出到<code>x64\Debug\qmake</code>目录下了，猜测在编译工程时的<code>$(IntDir)</code>变量仍然是默认值，修改后的值并没有被采用。</p>
 <p>折腾一番后终于发现了原因所在：顺序问题！当在VS界面中修改中间目录后，在工程文件中会多出这样一段</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(Configuration)|$(Platform)&#x27; == &#x27;Debug|x64&#x27;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">IntDir</span>&gt;</span>_obj\$(Configuration)\<span class="tag">&lt;/<span class="name">IntDir</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>再往上翻一点肯定可以看到这个</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ImportGroup</span> <span class="attr">Label</span>=<span class="string">&quot;PropertySheets&quot;</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(Configuration)|$(Platform)&#x27; == &#x27;Debug|x64&#x27;&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props&quot;</span> <span class="attr">Condition</span>=<span class="string">&quot;exists(&#x27;$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props&#x27;)&quot;</span> <span class="attr">Label</span>=<span class="string">&quot;LocalAppDataPlatform&quot;</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;$(QtMsBuild)\Qt.props&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ImportGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ImportGroup</span> <span class="attr">Label</span>=<span class="string">&quot;PropertySheets&quot;</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(Configuration)|$(Platform)&#x27; == &#x27;Release|x64&#x27;&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props&quot;</span> <span class="attr">Condition</span>=<span class="string">&quot;exists(&#x27;$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props&#x27;)&quot;</span> <span class="attr">Label</span>=<span class="string">&quot;LocalAppDataPlatform&quot;</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;$(QtMsBuild)\Qt.props&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ImportGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong>原因就是在导入Qt.props时，IntDir还未被解析</strong>。<br>所以解决方法有两种：</p>
+<p><strong>原因就是在导入Qt.props时，IntDir还未被解析</strong>。<br>
+所以解决方法有两种：</p>
 <ol>
 <li>在导入<code>Qt.props</code>之前设置<code>QtVarsOutputDir</code>，这样<code>qt_private.props</code>文件中的<code>Condition</code>将会为<code>false</code>。</li>
-<li>将<code>&lt;IntDir&gt;</code>移动至Qt属性表导入之前，或者干脆就放在<code>QtSettings</code>下<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(Configuration)|$(Platform)&#x27; == &#x27;Debug|x64&#x27;&quot;</span> <span class="attr">Label</span>=<span class="string">&quot;QtSettings&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">QtInstall</span>&gt;</span>Qt6<span class="tag">&lt;/<span class="name">QtInstall</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">QtModules</span>&gt;</span>core;gui;widgets<span class="tag">&lt;/<span class="name">QtModules</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">QtBuildConfig</span>&gt;</span>debug<span class="tag">&lt;/<span class="name">QtBuildConfig</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">IntDir</span>&gt;</span>_obj\$(Configuration)\<span class="tag">&lt;/<span class="name">IntDir</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(Configuration)|$(Platform)&#x27; == &#x27;Release|x64&#x27;&quot;</span> <span class="attr">Label</span>=<span class="string">&quot;QtSettings&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">QtInstall</span>&gt;</span>Qt6<span class="tag">&lt;/<span class="name">QtInstall</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">QtModules</span>&gt;</span>core;gui;widgets<span class="tag">&lt;/<span class="name">QtModules</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">QtBuildConfig</span>&gt;</span>release<span class="tag">&lt;/<span class="name">QtBuildConfig</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">IntDir</span>&gt;</span>_obj\$(Configuration)\<span class="tag">&lt;/<span class="name">IntDir</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
-如果<code>Debug</code>和<code>Release</code>的值是相同的话，也可以放在<code>Globals</code>下<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Label</span>=<span class="string">&quot;Globals&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">IntDir</span>&gt;</span>_obj\$(Configuration)\<span class="tag">&lt;/<span class="name">IntDir</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li>将<code>&lt;IntDir&gt;</code>移动至Qt属性表导入之前，或者干脆就放在<code>QtSettings</code>下</li>
 </ol>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://bugreports.qt.io/browse/QTVSADDINBUG-721">QtVarsOutputDir cannot be changed</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(Configuration)|$(Platform)&#x27; == &#x27;Debug|x64&#x27;&quot;</span> <span class="attr">Label</span>=<span class="string">&quot;QtSettings&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">QtInstall</span>&gt;</span>Qt6<span class="tag">&lt;/<span class="name">QtInstall</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">QtModules</span>&gt;</span>core;gui;widgets<span class="tag">&lt;/<span class="name">QtModules</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">QtBuildConfig</span>&gt;</span>debug<span class="tag">&lt;/<span class="name">QtBuildConfig</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">IntDir</span>&gt;</span>_obj\$(Configuration)\<span class="tag">&lt;/<span class="name">IntDir</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(Configuration)|$(Platform)&#x27; == &#x27;Release|x64&#x27;&quot;</span> <span class="attr">Label</span>=<span class="string">&quot;QtSettings&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">QtInstall</span>&gt;</span>Qt6<span class="tag">&lt;/<span class="name">QtInstall</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">QtModules</span>&gt;</span>core;gui;widgets<span class="tag">&lt;/<span class="name">QtModules</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">QtBuildConfig</span>&gt;</span>release<span class="tag">&lt;/<span class="name">QtBuildConfig</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">IntDir</span>&gt;</span>_obj\$(Configuration)\<span class="tag">&lt;/<span class="name">IntDir</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果<code>Debug</code>和<code>Release</code>的值是相同的话，也可以放在<code>Globals</code>下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Label</span>=<span class="string">&quot;Globals&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">IntDir</span>&gt;</span>_obj\$(Configuration)\<span class="tag">&lt;/<span class="name">IntDir</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://bugreports.qt.io/browse/QTVSADDINBUG-721">QtVarsOutputDir cannot be changed</a></p>
 
       </div>
       
@@ -191,24 +201,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Qt/" title="Qt">
-                        #Qt
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -250,13 +242,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -476,43 +471,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%94%B9%E5%8F%98QtVarsOutputDir%E8%BE%93%E5%87%BA%E4%BD%8D%E7%BD%AE + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F06%2F24%2Fchange-QtVarsOutputDir%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/06/24/change-QtVarsOutputDir/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,18 +172,26 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="指定-Qt-路径"><a href="#指定-Qt-路径" class="headerlink" title="指定 Qt 路径"></a>指定 Qt 路径</h2><p>构建时要通过 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html">CMAKE_PREFIX_PATH</a> 指定 Qt 的安装路径，这样应用才能搜索到相关头文件，比如：</p>
+        <h2 id="指定-Qt-路径"><a class="header-anchor" href="#指定-Qt-路径">#</a>指定 Qt 路径</h2>
+<p>构建时要通过 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_PREFIX_PATH.html">CMAKE_PREFIX_PATH</a> 指定 Qt 的安装路径，这样应用才能搜索到相关头文件，比如：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -DCMAKE_PREFIX_PATH=&quot;C:/Qt/Qt5.7.1-vc141-x64&quot;</span><br></pre></td></tr></table></figure>
-
-<h2 id="将-qm-文件添加到-qrc-中"><a href="#将-qm-文件添加到-qrc-中" class="headerlink" title="将 .qm 文件添加到 .qrc 中"></a>将 .qm 文件添加到 .qrc 中</h2><p>在开发国际化应用程序时，我们可以将语言文件（.qm）放在磁盘上，也可以考虑放在资源文件中，这样可以避免文件被误删，或被用户胡搞。<br>资源文件内容可以这样写：</p>
+<h2 id="将-qm-文件添加到-qrc-中"><a class="header-anchor" href="#将-qm-文件添加到-qrc-中">#</a>将 .qm 文件添加到 .qrc 中</h2>
+<p>在开发国际化应用程序时，我们可以将语言文件（.qm）放在磁盘上，也可以考虑放在资源文件中，这样可以避免文件被误删，或被用户胡搞。<br>
+资源文件内容可以这样写：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">RCC</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">qresource</span> <span class="attr">prefix</span>=<span class="string">&quot;/i18n&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">file</span>&gt;</span>zh_CN.qm<span class="tag">&lt;/<span class="name">file</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">file</span>&gt;</span>ja_JP.qm<span class="tag">&lt;/<span class="name">file</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">qresource</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">RCC</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>但这里有个问题，<code>.qm</code>文件是从<code>.ts</code>文件编译后才得到的，那么如何在编译后将其写入<code>.qrc</code>资源文件中呢？<br>这里得先说说 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtlinguist-cmake-qt5-create-translation.html">qt5_create_translation</a> 函数，这个函数会调用<code>lupdate.exe</code>工具并生成<code>.qm</code>文件到构建目录下。<br>那么我们可以单独创建一个<code>i18n.qrc</code>文件作为模板，并复制到构建目录中，让它和<code>.qm</code>文件在同一个位置不就行了吗！</p>
+<p>但这里有个问题，<code>.qm</code>文件是从<code>.ts</code>文件编译后才得到的，那么如何在编译后将其写入<code>.qrc</code>资源文件中呢？<br>
+这里得先说说 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtlinguist-cmake-qt5-create-translation.html">qt5_create_translation</a> 函数，这个函数会调用<code>lupdate.exe</code>工具并生成<code>.qm</code>文件到构建目录下。<br>
+那么我们可以单独创建一个<code>i18n.qrc</code>文件作为模板，并复制到构建目录中，让它和<code>.qm</code>文件在同一个位置不就行了吗！</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 构建 .qm 文件</span></span><br><span class="line"><span class="keyword">file</span>(GLOB TS_FILES <span class="variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/languages/*.ts)</span><br><span class="line">qt5_create_translation(_ <span class="variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/src <span class="variable">$&#123;TS_FILES&#125;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 复制资源文件模板到构建目录下</span></span><br><span class="line"><span class="keyword">set</span>(i18n_qrc <span class="string">&quot;i18n.qrc&quot;</span>)</span><br><span class="line"><span class="keyword">file</span>(COPY <span class="variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/<span class="variable">$&#123;i18n_qrc&#125;</span> DESTINATION <span class="variable">$&#123;CMAKE_CURRENT_BINARY_DIR&#125;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加资源文件</span></span><br><span class="line">qt5_add_resources(RESOURCE_FILES <span class="variable">$&#123;CMAKE_CURRENT_BINARY_DIR&#125;</span>/<span class="variable">$&#123;i18n_qrc&#125;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">target_sources</span>(demo PRIVATE <span class="variable">$&#123;RESOURCE_FILES&#125;</span>)</span><br></pre></td></tr></table></figure>
 <p>完美！</p>
-<h2 id="编辑-ui-文件后如何立即更新"><a href="#编辑-ui-文件后如何立即更新" class="headerlink" title="编辑 .ui 文件后如何立即更新"></a>编辑 .ui 文件后如何立即更新</h2><p>在 CMake 中有一个 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_AUTOUIC.html">CMAKE_AUTOUIC</a> 变量，控制是否自动调用<code>uic.exe</code>来更新<code>ui_*.h</code>文件。<br>但问题在于 CMake 在编辑<code>.ui</code>文件后的第一次运行无法感知到头文件的变化（会显示旧的界面），必须要构建第二次才会 rebuild 相关的源文件，这样才能看到修改后的界面，至于为什么会这样我也不清楚。<br>研究了一番后发现用手动生成 UI 头文件可以解决这个问题，CMake 大概是这样：</p>
+<h2 id="编辑-ui-文件后如何立即更新"><a class="header-anchor" href="#编辑-ui-文件后如何立即更新">#</a>编辑 .ui 文件后如何立即更新</h2>
+<p>在 CMake 中有一个 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_AUTOUIC.html">CMAKE_AUTOUIC</a> 变量，控制是否自动调用<code>uic.exe</code>来更新<code>ui_*.h</code>文件。<br>
+但问题在于 CMake 在编辑<code>.ui</code>文件后的第一次运行无法感知到头文件的变化（会显示旧的界面），必须要构建第二次才会 rebuild 相关的源文件，这样才能看到修改后的界面，至于为什么会这样我也不清楚。<br>
+研究了一番后发现用手动生成 UI 头文件可以解决这个问题，CMake 大概是这样：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 关闭，不要自动 uic</span></span><br><span class="line"><span class="keyword">set</span>(CMAKE_AUTOUIC <span class="keyword">OFF</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">file</span>(GLOB UI_FILES src/*.ui)</span><br><span class="line">qt5_wrap_ui(UI_HEADERS <span class="variable">$&#123;UI_FILES&#125;</span>)</span><br><span class="line"><span class="keyword">target_include_directories</span>(demo PRIVATE $&lt;BUILD_INTERFACE:<span class="variable">$&#123;CMAKE_CURRENT_BINARY_DIR&#125;</span>&gt;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 要将文件添加到源中，这样才会 rebuild</span></span><br><span class="line"><span class="keyword">target_sources</span>(demo PRIVATE <span class="variable">$&#123;UI_HEADERS&#125;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 <p>这里的关键就在 <a target="_blank" rel="noopener" href="https://doc.qt.io/qt-5/qtwidgets-cmake-qt5-wrap-ui.html">qt5_wrap_ui</a> 函数，这是手动生成<code>ui_*.h</code>文件的方法。这种方式生成后可以立即引起 rebuild，这样启动程序后就是最新的界面。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3125327">How to Integrate Qt4 qm files into binary using cmake and QRC?</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3125327">How to Integrate Qt4 qm files into binary using cmake and QRC?</a></p>
 
       </div>
       
@@ -191,30 +203,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Qt/" title="Qt">
-                        #Qt
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/CMake/" title="CMake">
-                        #CMake
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -256,13 +244,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -482,43 +473,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + CMake%20%E6%9E%84%E5%BB%BA%20Qt%20%E5%BA%94%E7%94%A8%E7%9A%84%E8%8B%A5%E5%B9%B2%E9%97%AE%E9%A2%98 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F08%2F01%2Fqt-clion%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/08/01/qt-clion/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

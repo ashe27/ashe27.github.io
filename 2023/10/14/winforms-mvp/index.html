@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -180,27 +184,50 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="MVP的两种实现方式"><a href="#MVP的两种实现方式" class="headerlink" title="MVP的两种实现方式"></a>MVP的两种实现方式</h2><p><code>MVP</code>有两种变体：<code>Passive View</code>和<code>Supervising Controller</code>。两者的主要区别就是<code>View</code>和<code>Model</code>是否直接交流。</p>
-<h3 id="被动视图（Passive-View）"><a href="#被动视图（Passive-View）" class="headerlink" title="被动视图（Passive View）"></a>被动视图（Passive View）</h3><p><code>View</code>和<code>Model</code>不知道彼此。<code>Model</code>的变化要告知<code>Presenter</code>，再由<code>Presenter</code>来改变<code>View</code>。<br>优点是<code>View</code>和<code>Model</code>解耦了。缺点是<code>Presenter</code>会比较重，数据更新需要手动完成，这就意味着放弃了数据绑定功能。<br><img src="/images/Passive-View-with-Tags.webp"></p>
-<h3 id="监督控制器（Supervising-Controller）"><a href="#监督控制器（Supervising-Controller）" class="headerlink" title="监督控制器（Supervising Controller）"></a>监督控制器（Supervising Controller）</h3><p><code>View</code>可以知道<code>Model</code>的存在。让<code>Model</code>通过事件等方式发出数据变化的通知，<code>View</code>订阅<code>Model</code>的变化。<br>这主要是利用了语言或框架的特性让<code>View</code>直接感知<code>Model</code>的变化，而不用经过<code>Presenter</code>，这样可以减少代码量，缺点是<code>View</code>对<code>Model</code>耦合了。<br><img src="/images/Supervising-Controller.webp"></p>
-<h2 id="M、V、P之间的关系"><a href="#M、V、P之间的关系" class="headerlink" title="M、V、P之间的关系"></a>M、V、P之间的关系</h2><p>先看图<br><img src="/images/Pa0iB.png"><br>为 V 定义一个接口，接口中暴露的方法就是为 P 提供的。这么做的目的是为了让 P 不知道 V 的存在，从而让 P 仅依赖接口，这样更容易测试 P。<br>V 和 P 是 1：1 的关系。<br>P 和 M 是 1：N 的关系。</p>
-<h2 id="让-View-独立"><a href="#让-View-独立" class="headerlink" title="让 View 独立"></a>让 View 独立</h2><p>先看一个典型的<code>View</code>和<code>Presenter</code>连接的地方</p>
+        <h2 id="MVP的两种实现方式"><a class="header-anchor" href="#MVP的两种实现方式">#</a>MVP的两种实现方式</h2>
+<p><code>MVP</code>有两种变体：<code>Passive View</code>和<code>Supervising Controller</code>。两者的主要区别就是<code>View</code>和<code>Model</code>是否直接交流。</p>
+<h3 id="被动视图（Passive-View）"><a class="header-anchor" href="#被动视图（Passive-View）">#</a>被动视图（Passive View）</h3>
+<p><code>View</code>和<code>Model</code>不知道彼此。<code>Model</code>的变化要告知<code>Presenter</code>，再由<code>Presenter</code>来改变<code>View</code>。<br>
+优点是<code>View</code>和<code>Model</code>解耦了。缺点是<code>Presenter</code>会比较重，数据更新需要手动完成，这就意味着放弃了数据绑定功能。<br>
+<img src="/images/Passive-View-with-Tags.webp" alt=""></p>
+<h3 id="监督控制器（Supervising-Controller）"><a class="header-anchor" href="#监督控制器（Supervising-Controller）">#</a>监督控制器（Supervising Controller）</h3>
+<p><code>View</code>可以知道<code>Model</code>的存在。让<code>Model</code>通过事件等方式发出数据变化的通知，<code>View</code>订阅<code>Model</code>的变化。<br>
+这主要是利用了语言或框架的特性让<code>View</code>直接感知<code>Model</code>的变化，而不用经过<code>Presenter</code>，这样可以减少代码量，缺点是<code>View</code>对<code>Model</code>耦合了。<br>
+<img src="/images/Supervising-Controller.webp" alt=""></p>
+<h2 id="M、V、P之间的关系"><a class="header-anchor" href="#M、V、P之间的关系">#</a>M、V、P之间的关系</h2>
+<p>先看图<br>
+<img src="/images/Pa0iB.png" alt=""><br>
+为 V 定义一个接口，接口中暴露的方法就是为 P 提供的。这么做的目的是为了让 P 不知道 V 的存在，从而让 P 仅依赖接口，这样更容易测试 P。<br>
+V 和 P 是 1：1 的关系。<br>
+P 和 M 是 1：N 的关系。</p>
+<h2 id="让-View-独立"><a class="header-anchor" href="#让-View-独立">#</a>让 View 独立</h2>
+<p>先看一个典型的<code>View</code>和<code>Presenter</code>连接的地方</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Presenter</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Presenter</span>(<span class="params">IView view</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        _view = view;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">View</span> : <span class="title">IView</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">View</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        _presenter = <span class="keyword">new</span> Presenter(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>当用户触发一个 UI 行为，比如点击鼠标时，如何让<code>Presenter</code>响应呢？基本上就两种方式：</p>
 <ol>
 <li>让<code>View</code>直接调用<code>Presenter</code>中的方法。但这会产生耦合。</li>
 <li><code>View</code>利用事件等机制实现广播，让<code>Presenter</code>去订阅<code>View</code>产生的通知。这样<code>View</code>就是完全独立的。但需要在释放时取消订阅事件，这比直接调用<code>Presenter</code>的方法多了一些步骤。</li>
 </ol>
-<p>普遍共识是采用第二种方式，让<code>View</code>不知道<code>Presenter</code>的存在。但这只是理想情况，现实开发中还有很多复杂性，所以还是得看情况决定用哪种方式。<br><br>但是上面的例子<code>View</code>依然还是知道如何创建<code>Presenter</code>：</p>
+<p>普遍共识是采用第二种方式，让<code>View</code>不知道<code>Presenter</code>的存在。但这只是理想情况，现实开发中还有很多复杂性，所以还是得看情况决定用哪种方式。<br>
+<br>
+但是上面的例子<code>View</code>依然还是知道如何创建<code>Presenter</code>：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">View</span> : <span class="title">IView</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">View</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        _presenter = <span class="keyword">new</span> Presenter(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>此时你有三种选择：</p>
 <ol>
 <li>在类的外部将<code>View</code>和<code>Presenter</code>连接起来（订阅通知）。</li>
-<li>创建一个<code>PresenterFactory</code>工厂类，构造过程交给它。<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mPresenter = PresenterFactory.Create&lt;MyPresenter&gt;();</span><br><span class="line">mPresenter.View = <span class="keyword">this</span>; <span class="comment">// 在 seter 中订阅通知</span></span><br></pre></td></tr></table></figure></li>
-<li>使用 IoC 容器注入（推荐）。<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IHomeView</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IPresenter</span>&lt;<span class="title">TView</span>&gt; &#123;</span><br><span class="line">    TView View &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">HomeView</span> : <span class="title">Form</span>, <span class="title">IHomeView</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IPresenter&lt;IHomeView&gt; presenter;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HomeView</span>(<span class="params">IPresenter&lt;IHomeView&gt; presenter</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.presenter = presenter;</span><br><span class="line">        InitializeComponent();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>创建一个<code>PresenterFactory</code>工厂类，构造过程交给它。</li>
 </ol>
-<p>至此，<code>View</code>仅仅只是知道一个什么都没用的<code>IPresenter</code>接口，从来不会使用它，持有它只是为了保持<code>Presenter</code>的生命周期。<br>最后记住在<code>View</code>关闭时通知<code>Presenter</code>互相解除引用。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://draveness.me/mvx/">浅谈 MVC、MVP 和 MVVM 架构模式</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/2056/what-are-mvp-and-mvc-and-what-is-the-difference">MVP 和 MVC 是什么以及有什么区别？</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/43532525">如何在 WinForms 中使用 MVP 的依赖注入？</a></p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mPresenter = PresenterFactory.Create&lt;MyPresenter&gt;();</span><br><span class="line">mPresenter.View = <span class="keyword">this</span>; <span class="comment">// 在 seter 中订阅通知</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>使用 IoC 容器注入（推荐）。</li>
+</ol>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IHomeView</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IPresenter</span>&lt;<span class="title">TView</span>&gt; &#123;</span><br><span class="line">    TView View &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">HomeView</span> : <span class="title">Form</span>, <span class="title">IHomeView</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> IPresenter&lt;IHomeView&gt; presenter;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">HomeView</span>(<span class="params">IPresenter&lt;IHomeView&gt; presenter</span>)</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.presenter = presenter;</span><br><span class="line">        InitializeComponent();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>至此，<code>View</code>仅仅只是知道一个什么都没用的<code>IPresenter</code>接口，从来不会使用它，持有它只是为了保持<code>Presenter</code>的生命周期。<br>
+最后记住在<code>View</code>关闭时通知<code>Presenter</code>互相解除引用。</p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://draveness.me/mvx/">浅谈 MVC、MVP 和 MVVM 架构模式</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/2056/what-are-mvp-and-mvc-and-what-is-the-difference">MVP 和 MVC 是什么以及有什么区别？</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/43532525">如何在 WinForms 中使用 MVP 的依赖注入？</a></p>
 
       </div>
       
@@ -212,42 +239,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/WinForms/" title="WinForms">
-                        #WinForms
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="设计模式">
-                        #设计模式
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/MVP/" title="MVP">
-                        #MVP
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -289,13 +280,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -515,43 +509,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Winforms%20%E7%A8%8B%E5%BA%8F%E9%87%87%E7%94%A8%20MVP%20%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%BB%E7%BB%93 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F10%2F14%2Fwinforms-mvp%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/10/14/winforms-mvp/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

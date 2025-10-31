@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -169,7 +173,8 @@
       </div>
       <div class="markdown-body">
         <p>部分下载地址已经失效，可以尝试用迅雷下载。</p>
-<h2 id="运行时"><a href="#运行时" class="headerlink" title="运行时"></a>运行时</h2><table>
+<h2 id="运行时"><a class="header-anchor" href="#运行时">#</a>运行时</h2>
+<table>
 <thead>
 <tr>
 <th>版本</th>
@@ -179,7 +184,8 @@
 <th>备注</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>4.8.1</td>
 <td><a target="_blank" rel="noopener" href="https://go.microsoft.com/fwlink/?linkid=2203305">Full</a></td>
 <td><a target="_blank" rel="noopener" href="https://go.microsoft.com/fwlink/?LinkId=2203215">CHS</a></td>
@@ -354,8 +360,10 @@
 <td></td>
 <td></td>
 </tr>
-</tbody></table>
-<h2 id="开发包"><a href="#开发包" class="headerlink" title="开发包"></a>开发包</h2><table>
+</tbody>
+</table>
+<h2 id="开发包"><a class="header-anchor" href="#开发包">#</a>开发包</h2>
+<table>
 <thead>
 <tr>
 <th>版本</th>
@@ -364,7 +372,8 @@
 <th>备注</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>4.8.1</td>
 <td><a target="_blank" rel="noopener" href="https://go.microsoft.com/fwlink/?linkid=2203306">下载</a></td>
 <td><a target="_blank" rel="noopener" href="https://go.microsoft.com/fwlink/?LinkId=2203214">CHS</a></td>
@@ -428,7 +437,7 @@
 <td>4.5.0</td>
 <td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/03097ab1-852b-45d3-abbb-c0bcf640cd6f/4a22b5f5449d1e1182e17c0348b159ad/netfx45_dtp.cab">netfx45_dtp.cab</a>、<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/ccc6eff9c0f4488e8f3bf5d1237684cbb67ff381b9784f9f7f653504a5d74ee2/netfx45_dtp.msi">netfx45_dtp.msi</a></td>
 <td>-</td>
-<td>安装命令：netfx45_dtp.msi EXTUI&#x3D;1</td>
+<td>安装命令：netfx45_dtp.msi EXTUI=1</td>
 </tr>
 <tr>
 <td>4.0.3</td>
@@ -440,7 +449,7 @@
 <td>4.0.0</td>
 <td><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/db247b7cd2a31606711c71b2b8205a48a305537c5e79d85117ed2785c8392256/netfx_dtp.cab">netfx_dtp.cab</a>、<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/0d167e6469622c73eaaf82567d9cef5d8cba3a819abf36e32f1d463891cf7bda/netfx_dtp.msi">netfx_dtp.msi</a></td>
 <td>-</td>
-<td>安装命令：netfx_dtp.msi EXTUI&#x3D;1</td>
+<td>安装命令：netfx_dtp.msi EXTUI=1</td>
 </tr>
 <tr>
 <td>2.0</td>
@@ -454,19 +463,29 @@
 <td></td>
 <td></td>
 </tr>
-</tbody></table>
-<h2 id="关于-NET-Framework-v4-0-开发包"><a href="#关于-NET-Framework-v4-0-开发包" class="headerlink" title="关于 .NET Framework v4.0 开发包"></a>关于 .NET Framework v4.0 开发包</h2><p>v4.0 特殊一些，没有提供单个的开发包安装程序。最后仅在 VS2019 中提供安装选项，而 VS2022 中已经不提供安装选项了。<br>所以我们只需要得知 VS2019 是从哪里下载的即可，利用安装程序的下载功能：</p>
+</tbody>
+</table>
+<h2 id="关于-NET-Framework-v4-0-开发包"><a class="header-anchor" href="#关于-NET-Framework-v4-0-开发包">#</a>关于 .NET Framework v4.0 开发包</h2>
+<p>v4.0 特殊一些，没有提供单个的开发包安装程序。最后仅在 VS2019 中提供安装选项，而 VS2022 中已经不提供安装选项了。<br>
+所以我们只需要得知 VS2019 是从哪里下载的即可，利用安装程序的下载功能：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vs_Professional.exe --layout D:\VSLayout --lang zh-CN --add Microsoft.Net.Component.4.TargetingPack</span><br></pre></td></tr></table></figure>
-<p>控制台窗口中显示了下载地址：<br><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/db247b7cd2a31606711c71b2b8205a48a305537c5e79d85117ed2785c8392256/netfx_dtp.cab">https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/db247b7cd2a31606711c71b2b8205a48a305537c5e79d85117ed2785c8392256/netfx_dtp.cab</a><br><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/0d167e6469622c73eaaf82567d9cef5d8cba3a819abf36e32f1d463891cf7bda/netfx_dtp.msi">https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/0d167e6469622c73eaaf82567d9cef5d8cba3a819abf36e32f1d463891cf7bda/netfx_dtp.msi</a><br>然后通过命令<code>netfx_dtp.msi EXTUI=1</code>安装。</p>
-<h2 id="关于-NET-Framework-v4-5-开发包"><a href="#关于-NET-Framework-v4-5-开发包" class="headerlink" title="关于 .NET Framework v4.5 开发包"></a>关于 .NET Framework v4.5 开发包</h2><p>同 v4.0 一样，没有单独的安装程序，需要从 VS2019 安装程序中抓取连接：</p>
+<p>控制台窗口中显示了下载地址：<br>
+<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/db247b7cd2a31606711c71b2b8205a48a305537c5e79d85117ed2785c8392256/netfx_dtp.cab">https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/db247b7cd2a31606711c71b2b8205a48a305537c5e79d85117ed2785c8392256/netfx_dtp.cab</a><br>
+<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/0d167e6469622c73eaaf82567d9cef5d8cba3a819abf36e32f1d463891cf7bda/netfx_dtp.msi">https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/0d167e6469622c73eaaf82567d9cef5d8cba3a819abf36e32f1d463891cf7bda/netfx_dtp.msi</a><br>
+然后通过命令<code>netfx_dtp.msi EXTUI=1</code>安装。</p>
+<h2 id="关于-NET-Framework-v4-5-开发包"><a class="header-anchor" href="#关于-NET-Framework-v4-5-开发包">#</a>关于 .NET Framework v4.5 开发包</h2>
+<p>同 v4.0 一样，没有单独的安装程序，需要从 VS2019 安装程序中抓取连接：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vs_Professional.exe --layout D:\VSLayout --lang zh-CN --add Microsoft.Net.Component.4.5.TargetingPack</span><br></pre></td></tr></table></figure>
-<p><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/03097ab1-852b-45d3-abbb-c0bcf640cd6f/4a22b5f5449d1e1182e17c0348b159ad/netfx45_dtp.cab">https://download.visualstudio.microsoft.com/download/pr/03097ab1-852b-45d3-abbb-c0bcf640cd6f/4a22b5f5449d1e1182e17c0348b159ad/netfx45_dtp.cab</a><br><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/ccc6eff9c0f4488e8f3bf5d1237684cbb67ff381b9784f9f7f653504a5d74ee2/netfx45_dtp.msi">https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/ccc6eff9c0f4488e8f3bf5d1237684cbb67ff381b9784f9f7f653504a5d74ee2/netfx45_dtp.msi</a></p>
+<p><a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/03097ab1-852b-45d3-abbb-c0bcf640cd6f/4a22b5f5449d1e1182e17c0348b159ad/netfx45_dtp.cab">https://download.visualstudio.microsoft.com/download/pr/03097ab1-852b-45d3-abbb-c0bcf640cd6f/4a22b5f5449d1e1182e17c0348b159ad/netfx45_dtp.cab</a><br>
+<a target="_blank" rel="noopener" href="https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/ccc6eff9c0f4488e8f3bf5d1237684cbb67ff381b9784f9f7f653504a5d74ee2/netfx45_dtp.msi">https://download.visualstudio.microsoft.com/download/pr/aa968ee4-54e7-4773-a9a5-bd09d7ca9924/ccc6eff9c0f4488e8f3bf5d1237684cbb67ff381b9784f9f7f653504a5d74ee2/netfx45_dtp.msi</a></p>
 <p>然后通过命令<code>netfx45_dtp.msi EXTUI=1</code>安装。</p>
-<h2 id="其他安装方法"><a href="#其他安装方法" class="headerlink" title="其他安装方法"></a>其他安装方法</h2><ol>
+<h2 id="其他安装方法"><a class="header-anchor" href="#其他安装方法">#</a>其他安装方法</h2>
+<ol>
 <li>安装低版本的 Visual Studio，其中包含对应版本的的开发包。</li>
 <li>从<code>nuget</code>中提取文件并解压到本地，参考 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/70022194">这篇帖子</a>。</li>
 </ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Dykimy/p/16051670.html">VS2022 安装.NET 3.5&#x2F;.NET 4&#x2F;.NET 4.5&#x2F;.NET 4.5.1目标包的方法</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Dykimy/p/16051670.html">VS2022 安装.NET 3.5/.NET 4/.NET 4.5/.NET 4.5.1目标包的方法</a></p>
 
       </div>
       
@@ -478,30 +497,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/" title="工具软件">
-                        #工具软件
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -543,13 +538,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -769,43 +767,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + .NET%20Framework%20%E5%AE%89%E8%A3%85%E5%8C%85%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F04%2F07%2Fnetfx-installer%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/04/07/netfx-installer/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

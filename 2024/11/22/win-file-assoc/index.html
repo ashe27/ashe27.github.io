@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,32 +166,43 @@
           
       </div>
       <div class="markdown-body">
-        <p>今天碰到一个系统文件关联的问题，经过反复试验后总结的一点经验。<br>从一个文件启动关联应用分为两步：</p>
+        <p>今天碰到一个系统文件关联的问题，经过反复试验后总结的一点经验。<br>
+从一个文件启动关联应用分为两步：</p>
 <ol>
 <li>查找扩展名的 ProgId。</li>
 <li>查找 ProgId 中的命令行并运行。</li>
 </ol>
-<h2 id="查找关联应用的-ProgId"><a href="#查找关联应用的-ProgId" class="headerlink" title="查找关联应用的 ProgId"></a>查找关联应用的 ProgId</h2><p>第1个搜索位置：</p>
+<h2 id="查找关联应用的-ProgId"><a class="header-anchor" href="#查找关联应用的-ProgId">#</a>查找关联应用的 ProgId</h2>
+<p>第1个搜索位置：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\&#123;Ext&#125;\UserChoice\ProgId</span><br></pre></td></tr></table></figure>
 <p>如果用户通过<code>打开方式</code>选择过关联应用，则这个值的权限好像就会是 SYSTEM（未验证），无法用正常手段编辑或删除，这是为了安全考虑，防止程序乱搞用户的关联设置。</p>
-<p><br>第2个搜索位置：</p>
+<p><br>
+第2个搜索位置：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKCR\&#123;Ext&#125;</span><br></pre></td></tr></table></figure>
-<p>默认值就是 ProgId。<br>同时在 HKEY_CURRENT_USER 中存在一个它的符号链接<code>HKCU\SOFTWARE\Classes\&#123;Ext&#125;</code>，访问这里也是一样的。</p>
-<p><br>第3个搜索位置：</p>
+<p>默认值就是 ProgId。<br>
+同时在 HKEY_CURRENT_USER 中存在一个它的符号链接<code>HKCU\SOFTWARE\Classes\{Ext}</code>，访问这里也是一样的。</p>
+<p><br>
+第3个搜索位置：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKLM\SOFTWARE\Classes\&#123;Ext&#125;</span><br></pre></td></tr></table></figure>
 <p>默认值就是 ProgId。</p>
-<h3 id="命令行工具"><a href="#命令行工具" class="headerlink" title="命令行工具"></a>命令行工具</h3><p>CMD 中有一个用于查看、设置 ProgId 的命令工具<code>assoc</code>，在这个工具中将 ProgId 称为 filetype，是一回事。<br>查看 .zip 文件的 ProgId：</p>
+<h3 id="命令行工具"><a class="header-anchor" href="#命令行工具">#</a>命令行工具</h3>
+<p>CMD 中有一个用于查看、设置 ProgId 的命令工具<code>assoc</code>，在这个工具中将 ProgId 称为 filetype，是一回事。<br>
+查看 .zip 文件的 ProgId：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assoc .zip</span><br></pre></td></tr></table></figure>
-<p>但它只会返回 HKEY_LOCAL_MACHINE 注册表中的值，可能与实际不符。<br>同样，设置也是写 HKEY_LOCAL_MACHINE 注册表</p>
+<p>但它只会返回 HKEY_LOCAL_MACHINE 注册表中的值，可能与实际不符。<br>
+同样，设置也是写 HKEY_LOCAL_MACHINE 注册表</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">assoc .zip=Bandizip.zip</span><br></pre></td></tr></table></figure>
 <p>因为 HKCU 优先级高于 HKLM，所以可能并不会生效。</p>
-<h2 id="查找启动命令"><a href="#查找启动命令" class="headerlink" title="查找启动命令"></a>查找启动命令</h2><p>在得到 ProgId 后，依次从以下位置获取启动命令行：</p>
+<h2 id="查找启动命令"><a class="header-anchor" href="#查找启动命令">#</a>查找启动命令</h2>
+<p>在得到 ProgId 后，依次从以下位置获取启动命令行：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 1.</span><br><span class="line">HKCU\SOFTWARE\Classes\Applications\&#123;ProgId&#125;\shell\open\command</span><br><span class="line"></span><br><span class="line">// 2.</span><br><span class="line">// 软链接: HKLM\SOFTWARE\Classes\Applications\&#123;ProgId&#125;\shell\open\command</span><br><span class="line">HKCR\Applications\&#123;ProgId&#125;\shell\open\command</span><br></pre></td></tr></table></figure>
-
-<h3 id="命令行工具-1"><a href="#命令行工具-1" class="headerlink" title="命令行工具"></a>命令行工具</h3><p>CMD 中有个<code>ftype</code>命令可以设置启动命令行：</p>
+<h3 id="命令行工具-2"><a class="header-anchor" href="#命令行工具-2">#</a>命令行工具</h3>
+<p>CMD 中有个<code>ftype</code>命令可以设置启动命令行：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ftype MyProgId=app.exe %1</span><br></pre></td></tr></table></figure>
 <p>它会向<code>HKEY_LOCAL_MACHINE\SOFTWARE\Classes\MyProgId\Shell\Open\Command</code>默认键写入命令行。</p>
-<h2 id="打开方式中推荐应用的顺序"><a href="#打开方式中推荐应用的顺序" class="headerlink" title="打开方式中推荐应用的顺序"></a>打开方式中推荐应用的顺序</h2><p>双击文件后如果没有找到关联的应用去启动它，Windows 则会弹出<code>打开方式</code>的窗口，在这个窗口中会有一个推荐列表。<br>推荐应用列表是一个 ProgId 的集合，每个推荐项用一个英文字母表示，然后由<code>MRUList</code>属性来决定顺序：</p>
+<h2 id="打开方式中推荐应用的顺序"><a class="header-anchor" href="#打开方式中推荐应用的顺序">#</a>打开方式中推荐应用的顺序</h2>
+<p>双击文件后如果没有找到关联的应用去启动它，Windows 则会弹出<code>打开方式</code>的窗口，在这个窗口中会有一个推荐列表。<br>
+推荐应用列表是一个 ProgId 的集合，每个推荐项用一个英文字母表示，然后由<code>MRUList</code>属性来决定顺序：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\&#123;Ext&#125;\OpenWithList]</span><br><span class="line">&quot;a&quot;=&quot;notepad++.exe&quot;</span><br><span class="line">&quot;b&quot;=&quot;AAA&quot;</span><br><span class="line">&quot;c&quot;=&quot;DocBox.exe&quot;</span><br><span class="line">&quot;d&quot;=&quot;dopus.exe&quot;</span><br><span class="line">&quot;MRUList&quot;=&quot;dcba&quot;</span><br></pre></td></tr></table></figure>
 <p>这个推荐列表顺序是<code>dcba</code>，但是因为<code>b</code>的 ProgId 中没有句号<code>.</code>，就不会出现在推荐列表中，这是我测试发现的。所以 ProgId 一般将用程序的文件名。</p>
 
@@ -201,24 +216,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows/" title="Windows">
-                        #Windows
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -239,7 +236,7 @@
     <div class="title">目录</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%85%B3%E8%81%94%E5%BA%94%E7%94%A8%E7%9A%84-ProgId"><span class="toc-text">查找关联应用的 ProgId</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7"><span class="toc-text">命令行工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">查找启动命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7-1"><span class="toc-text">命令行工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F%E4%B8%AD%E6%8E%A8%E8%8D%90%E5%BA%94%E7%94%A8%E7%9A%84%E9%A1%BA%E5%BA%8F"><span class="toc-text">打开方式中推荐应用的顺序</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%85%B3%E8%81%94%E5%BA%94%E7%94%A8%E7%9A%84-ProgId"><span class="toc-text">查找关联应用的 ProgId</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7"><span class="toc-text">命令行工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E5%90%AF%E5%8A%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">查找启动命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%B7%A5%E5%85%B7-2"><span class="toc-text">命令行工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E6%96%B9%E5%BC%8F%E4%B8%AD%E6%8E%A8%E8%8D%90%E5%BA%94%E7%94%A8%E7%9A%84%E9%A1%BA%E5%BA%8F"><span class="toc-text">打开方式中推荐应用的顺序</span></a></li></ol>
       
     </div>
   </div>
@@ -260,13 +257,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -486,43 +486,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Windows%20%E6%96%87%E4%BB%B6%E5%85%B3%E8%81%94%E7%9A%84%E6%B3%A8%E5%86%8C%E8%A1%A8%E8%AE%BE%E7%BD%AE + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F11%2F22%2Fwin-file-assoc%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/11/22/win-file-assoc/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

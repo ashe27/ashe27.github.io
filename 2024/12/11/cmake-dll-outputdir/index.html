@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -165,10 +169,11 @@
         <p>今天踩了一个 CMake 中的小坑，修改共享库输出路径时发现 Windows 和 Linux 下输出位置不一致，我是这么设置的：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set_target_properties</span>(mydll PROPERTIES LIBRARY_OUTPUT_DIRECTORY <span class="string">&quot;lib&quot;</span>)</span><br></pre></td></tr></table></figure>
 <p>这在 Linux 下没问题。但是到 Windows 下就不生效了，试了半天发现在 Windows 下的共享库目标需要设置 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/prop_tgt/RUNTIME_OUTPUT_DIRECTORY.html">RUNTIME_OUTPUT_DIRECTORY</a> 属性才生效，这是反直觉的。</p>
-<p><br>正确方式是将两个属性都设置一下：</p>
+<p><br>
+正确方式是将两个属性都设置一下：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set_target_properties</span>(mydll PROPERTIES</span><br><span class="line">    RUNTIME_OUTPUT_DIRECTORY <span class="string">&quot;lib&quot;</span></span><br><span class="line">    LIBRARY_OUTPUT_DIRECTORY <span class="string">&quot;lib&quot;</span>)</span><br></pre></td></tr></table></figure>
-
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/56514533">How to specify the output directory of a given DLL?</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/56514533">How to specify the output directory of a given DLL?</a></p>
 
       </div>
       
@@ -180,24 +185,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/CMake/" title="CMake">
-                        #CMake
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -239,13 +226,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -465,43 +455,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + CMake%20%E5%9C%A8%20Windows%20%E5%B9%B3%E5%8F%B0%E4%B8%AD%E4%BF%AE%E6%94%B9%E5%85%B1%E4%BA%AB%E5%BA%93%E7%9A%84%E8%BE%93%E5%87%BA%E8%B7%AF%E5%BE%84 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F12%2F11%2Fcmake-dll-outputdir%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/12/11/cmake-dll-outputdir/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

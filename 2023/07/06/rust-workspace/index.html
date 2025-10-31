@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,7 +166,9 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>Rust 语言在项目管理上整了一套自己的名词<code>workspace</code>、<code>package</code>、<code>crate</code>、<code>module</code>。特别是<code>crate</code>，很多刚入门的人搞不清它们之间的关系。<br>如果用过 Visual Studio 开发过项目，那么就可以这么理解：</p>
+        <h2 id="基本概念"><a class="header-anchor" href="#基本概念">#</a>基本概念</h2>
+<p>Rust 语言在项目管理上整了一套自己的名词<code>workspace</code>、<code>package</code>、<code>crate</code>、<code>module</code>。特别是<code>crate</code>，很多刚入门的人搞不清它们之间的关系。<br>
+如果用过 Visual Studio 开发过项目，那么就可以这么理解：</p>
 <table>
 <thead>
 <tr>
@@ -171,7 +177,8 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Solution</td>
 <td>workspace</td>
 <td>管理多个项目</td>
@@ -191,35 +198,50 @@
 <td>module</td>
 <td>组织代码</td>
 </tr>
-</tbody></table>
-<p><br>区别从<code>crate</code>这里开始，在 VS 中，一个<code>Project</code>对应一个可编译的单元（exe、dll、lib），但是在 Rust 中多出了一个<code>crate</code>的概念，它表示一个可编译的单元（exe、dll、lib、rlib），<strong>也就是说在 Rust 中一个项目可以编译出多个文件</strong>。<br>但是有个限制，每个项目（package）可以有多个可执行文件（exe）的<code>crate</code>，但是最多只能有一个<code>lib</code>类型的<code>crate</code>，</p>
-<h2 id="项目的目录结构"><a href="#项目的目录结构" class="headerlink" title="项目的目录结构"></a>项目的目录结构</h2><p>不如直接看看各种可能的目录结构。</p>
-<h3 id="单个可执行文件"><a href="#单个可执行文件" class="headerlink" title="单个可执行文件"></a>单个可执行文件</h3><p>当我们从<code>cargo new</code>命令创建项目（package）后，默认的目录结构是这样：</p>
+</tbody>
+</table>
+<p><br>
+区别从<code>crate</code>这里开始，在 VS 中，一个<code>Project</code>对应一个可编译的单元（exe、dll、lib），但是在 Rust 中多出了一个<code>crate</code>的概念，它表示一个可编译的单元（exe、dll、lib、rlib），<strong>也就是说在 Rust 中一个项目可以编译出多个文件</strong>。<br>
+但是有个限制，每个项目（package）可以有多个可执行文件（exe）的<code>crate</code>，但是最多只能有一个<code>lib</code>类型的<code>crate</code>，</p>
+<h2 id="项目的目录结构"><a class="header-anchor" href="#项目的目录结构">#</a>项目的目录结构</h2>
+<p>不如直接看看各种可能的目录结构。</p>
+<h3 id="单个可执行文件"><a class="header-anchor" href="#单个可执行文件">#</a>单个可执行文件</h3>
+<p>当我们从<code>cargo new</code>命令创建项目（package）后，默认的目录结构是这样：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Cargo.toml</span><br><span class="line">src/</span><br><span class="line">└── main.rs</span><br></pre></td></tr></table></figure>
 <p><code>main.rs</code>就是入口文件，最终生成一个可执行文件。</p>
-<h3 id="单个库文件"><a href="#单个库文件" class="headerlink" title="单个库文件"></a>单个库文件</h3><p>当我们从<code>cargo new --lib</code>命令创建项目（package）后，默认的目录结构是这样：</p>
+<h3 id="单个库文件"><a class="header-anchor" href="#单个库文件">#</a>单个库文件</h3>
+<p>当我们从<code>cargo new --lib</code>命令创建项目（package）后，默认的目录结构是这样：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Cargo.toml</span><br><span class="line">src/</span><br><span class="line">└── lib.rs</span><br></pre></td></tr></table></figure>
 <p>库文件默认是<code>.rlib</code>格式，是 Rust 特有的格式，第三方包就是用这种格式。也可以改为静态库<code>.lib</code>或动态库<code>.dll</code>。</p>
-<h3 id="一个可执行文件和一个库文件"><a href="#一个可执行文件和一个库文件" class="headerlink" title="一个可执行文件和一个库文件"></a>一个可执行文件和一个库文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Cargo.toml</span><br><span class="line">src/</span><br><span class="line">├── main.rs</span><br><span class="line">└── lib.rs</span><br></pre></td></tr></table></figure>
+<h3 id="一个可执行文件和一个库文件"><a class="header-anchor" href="#一个可执行文件和一个库文件">#</a>一个可执行文件和一个库文件</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Cargo.toml</span><br><span class="line">src/</span><br><span class="line">├── main.rs</span><br><span class="line">└── lib.rs</span><br></pre></td></tr></table></figure>
 <p>这样最终会编译出一个<code>.exe</code>文件和一个<code>.rlib</code>文件。</p>
-<h3 id="多个可执行文件"><a href="#多个可执行文件" class="headerlink" title="多个可执行文件"></a>多个可执行文件</h3><p>Rust 规定，在<code>src/bin</code>这个目录下的每个文件都是一个可编译的可执行文件。</p>
+<h3 id="多个可执行文件"><a class="header-anchor" href="#多个可执行文件">#</a>多个可执行文件</h3>
+<p>Rust 规定，在<code>src/bin</code>这个目录下的每个文件都是一个可编译的可执行文件。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Cargo.toml</span><br><span class="line">src/</span><br><span class="line">├── main.rs</span><br><span class="line">└── bin/</span><br><span class="line">    ├── app2.rs</span><br><span class="line">    └── app3.rs</span><br></pre></td></tr></table></figure>
 <p>这样在编译后会生成出：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">target/</span><br><span class="line">└── debug/</span><br><span class="line">    ├── app1.exe</span><br><span class="line">    ├── app2.exe</span><br><span class="line">    └── app3.exe</span><br></pre></td></tr></table></figure>
-<p>第一个<code>app1.exe</code>就是顶层<code>main.rs</code>编译出的文件，默认用包名命名。<br>如果在<code>src/bin</code>目录下用一个和包名同名的文件会如何呢？会编译失败：</p>
+<p>第一个<code>app1.exe</code>就是顶层<code>main.rs</code>编译出的文件，默认用包名命名。<br>
+如果在<code>src/bin</code>目录下用一个和包名同名的文件会如何呢？会编译失败：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Caused by:</span><br><span class="line">  found duplicate binary name app, but all binary targets must have a unique name</span><br></pre></td></tr></table></figure>
-
-<h3 id="多个库文件"><a href="#多个库文件" class="headerlink" title="多个库文件"></a>多个库文件</h3><p>在一个项目（package）中能编译多个库吗？不行，Rust 只会将<code>lib.rs</code>文件作为库编译，没有像<code>src/bin</code>这种特殊的约定。</p>
-<h2 id="workspace"><a href="#workspace" class="headerlink" title="workspace"></a>workspace</h2><p>上面提到，一个项目最多只能有一个库文件，但在实际中，一个项目肯定有很多库文件，那么就不能用一个<code>package</code>来管理项目了，需要使用<code>workspace</code>的概念。<br>就是新建一个根目录加一个<code>Cargo.toml</code>文件即可：</p>
+<h3 id="多个库文件"><a class="header-anchor" href="#多个库文件">#</a>多个库文件</h3>
+<p>在一个项目（package）中能编译多个库吗？不行，Rust 只会将<code>lib.rs</code>文件作为库编译，没有像<code>src/bin</code>这种特殊的约定。</p>
+<h2 id="workspace"><a class="header-anchor" href="#workspace">#</a>workspace</h2>
+<p>上面提到，一个项目最多只能有一个库文件，但在实际中，一个项目肯定有很多库文件，那么就不能用一个<code>package</code>来管理项目了，需要使用<code>workspace</code>的概念。<br>
+就是新建一个根目录加一个<code>Cargo.toml</code>文件即可：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">workspace/</span><br><span class="line">├── Cargo.toml</span><br><span class="line">├── app1/</span><br><span class="line">├── app2/</span><br><span class="line">├── lib1/</span><br><span class="line">└── lib2/</span><br></pre></td></tr></table></figure>
 <p>这样就创建了两个可执行文件，两个库。根目录下创建<code>Cargo.toml</code>文件，内容如下</p>
 <figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[workspace]</span></span><br><span class="line"><span class="attr">members</span> = [</span><br><span class="line">    <span class="string">&quot;app1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;app2&quot;</span>,</span><br><span class="line">    <span class="string">&quot;lib1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;lib2&quot;</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 <p>现在所有项目都会在根目录下生成二进制文件，</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<ul>
 <li><code>package</code>就是<code>项目</code>的概念，可以包含多个可编译的单元（crate）。其中可执行文件可以有任意多个，入口<code>main.rs</code>文件和<code>src/bin</code>目录下的所有文件。但库类型的编译只允许有一个，入口文件是<code>lib.rs</code>。</li>
 <li>项目中如果需要多个库文件时，则要引入<code>workspace</code>的概念，对应 Visual Studio 中的解决方案。</li>
 </ul>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://course.rs/cargo/reference/workspaces.html">工作空间 Workspace</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/64305657">What are packages, crates and modules?</a><br><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Yv41177bz">Rust包和模块系统</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://course.rs/cargo/reference/workspaces.html">工作空间 Workspace</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/64305657">What are packages, crates and modules?</a><br>
+<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Yv41177bz">Rust包和模块系统</a></p>
 
       </div>
       
@@ -231,24 +253,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Rust/" title="Rust">
-                        #Rust
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -290,13 +294,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -516,43 +523,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Rust%20%E9%A1%B9%E7%9B%AE%E6%96%87%E4%BB%B6%E7%BB%84%E7%BB%87%E6%96%B9%E5%BC%8F + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F07%2F06%2Frust-workspace%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/07/06/rust-workspace/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

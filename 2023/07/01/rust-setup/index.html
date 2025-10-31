@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,18 +166,32 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="安装MSVC"><a href="#安装MSVC" class="headerlink" title="安装MSVC"></a>安装MSVC</h2><p>Rust 链接依赖<code>MSVC</code>或者<code>GNU</code>，而在Windows下，自然是选择MSVC了。<br>下载 Visual Studio：<a target="_blank" rel="noopener" href="https://visualstudio.microsoft.com/zh-hans/downloads/">https://visualstudio.microsoft.com/zh-hans/downloads/</a></p>
-<h2 id="安装Rust"><a href="#安装Rust" class="headerlink" title="安装Rust"></a>安装Rust</h2><p>在安装前先修改安装源，因为中国大陆的网络大家都懂的。执行以下CMD命令</p>
+        <h2 id="安装MSVC"><a class="header-anchor" href="#安装MSVC">#</a>安装MSVC</h2>
+<p>Rust 链接依赖<code>MSVC</code>或者<code>GNU</code>，而在Windows下，自然是选择MSVC了。<br>
+下载 Visual Studio：<a target="_blank" rel="noopener" href="https://visualstudio.microsoft.com/zh-hans/downloads/">https://visualstudio.microsoft.com/zh-hans/downloads/</a></p>
+<h2 id="安装Rust"><a class="header-anchor" href="#安装Rust">#</a>安装Rust</h2>
+<p>在安装前先修改安装源，因为中国大陆的网络大家都懂的。执行以下CMD命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">setx RUSTUP_DIST_SERVER <span class="string">&quot;https://rsproxy.cn&quot;</span> /M</span><br><span class="line">setx RUSTUP_UPDATE_ROOT <span class="string">&quot;https://rsproxy.cn/rustup&quot;</span> /M</span><br><span class="line">setx RUSTUP_HOME <span class="string">&quot;D:\Rust\home&quot;</span> /M</span><br><span class="line">setx CARGO_HOME <span class="string">&quot;D:\Rust\cargo&quot;</span> /M</span><br><span class="line">setx PATH <span class="string">&quot;%PATH%%%CARGO_HOME%\bin&quot;</span> /M</span><br></pre></td></tr></table></figure>
-<p>其中<code>RUSTUP_DIST_SERVER</code>和<code>RUSTUP_UPDATE_ROOT</code>是安装源。而<code>RUSTUP_HOME</code>和<code>CARGO_HOME</code>是指定安装目录，这个是可选的，默认会在C盘。<br>接着去 <a target="_blank" rel="noopener" href="https://www.rust-lang.org/tools/install">https://www.rust-lang.org/tools/install</a> 下载安装程序，有32位和64位两种版本选择。<br>32位直连地址：<a target="_blank" rel="noopener" href="https://static.rust-lang.org/rustup/dist/i686-pc-windows-msvc/rustup-init.exe">rustup-init.exe</a><br>64位直连地址：<a target="_blank" rel="noopener" href="https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe">rustup-init.exe</a><br><strong>注意，下载完成后不要双击启动安装程序，否则无法读到前面设置的环境变量，应该通过CMD窗口启动</strong><br>安装过程就是下一步就行了，没什么好介绍的了。<br>安装结束后重开一个CMD窗口（因为环境变量在当前窗口中还未生效）。输入命令行验证一下</p>
+<p>其中<code>RUSTUP_DIST_SERVER</code>和<code>RUSTUP_UPDATE_ROOT</code>是安装源。而<code>RUSTUP_HOME</code>和<code>CARGO_HOME</code>是指定安装目录，这个是可选的，默认会在C盘。<br>
+接着去 <a target="_blank" rel="noopener" href="https://www.rust-lang.org/tools/install">https://www.rust-lang.org/tools/install</a> 下载安装程序，有32位和64位两种版本选择。<br>
+32位直连地址：<a target="_blank" rel="noopener" href="https://static.rust-lang.org/rustup/dist/i686-pc-windows-msvc/rustup-init.exe">rustup-init.exe</a><br>
+64位直连地址：<a target="_blank" rel="noopener" href="https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe">rustup-init.exe</a><br>
+<strong>注意，下载完成后不要双击启动安装程序，否则无法读到前面设置的环境变量，应该通过CMD窗口启动</strong><br>
+安装过程就是下一步就行了，没什么好介绍的了。<br>
+安装结束后重开一个CMD窗口（因为环境变量在当前窗口中还未生效）。输入命令行验证一下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rustc --version</span><br></pre></td></tr></table></figure>
 <p>正确的话会打印Rust版本号。</p>
-<h2 id="修改crates源"><a href="#修改crates源" class="headerlink" title="修改crates源"></a>修改crates源</h2><p><code>crates</code>就是像<code>npm</code>那样的仓库。进入<code>cargo</code>根目录，创建一个没有扩展名，名为<code>config</code>的文件，内容如下</p>
+<h2 id="修改crates源"><a class="header-anchor" href="#修改crates源">#</a>修改crates源</h2>
+<p><code>crates</code>就是像<code>npm</code>那样的仓库。进入<code>cargo</code>根目录，创建一个没有扩展名，名为<code>config</code>的文件，内容如下</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[source.crates-io]</span></span><br><span class="line"><span class="comment"># To use sparse index, change &#x27;rsproxy&#x27; to &#x27;rsproxy-sparse&#x27;</span></span><br><span class="line"><span class="attr">replace-with</span> = <span class="string">&#x27;rsproxy&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="section">[source.rsproxy]</span></span><br><span class="line"><span class="attr">registry</span> = <span class="string">&quot;https://rsproxy.cn/crates.io-index&quot;</span></span><br><span class="line"><span class="section">[source.rsproxy-sparse]</span></span><br><span class="line"><span class="attr">registry</span> = <span class="string">&quot;sparse+https://rsproxy.cn/index/&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="section">[registries.rsproxy]</span></span><br><span class="line"><span class="attr">index</span> = <span class="string">&quot;https://rsproxy.cn/crates.io-index&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="section">[net]</span></span><br><span class="line"><span class="attr">git-fetch-with-cli</span> = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-<h2 id="安装IDE"><a href="#安装IDE" class="headerlink" title="安装IDE"></a>安装IDE</h2><p>IDE可以选择用 <a target="_blank" rel="noopener" href="https://code.visualstudio.com/">Visual Studio Code</a> 或者 <a target="_blank" rel="noopener" href="https://www.jetbrains.com/zh-cn/idea/download/other.html">IntelliJ IDEA</a><br>我选择了更专业的<code>IntelliJ IDEA</code>，接着安装Rust插件：<a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/8182-rust">https://plugins.jetbrains.com/plugin/8182-rust</a></p>
-<h2 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h2><p>万事俱备，可以开始创建第一个工程了，新建一个文件夹，然后用<code>cargo</code>创建工程</p>
+<h2 id="安装IDE"><a class="header-anchor" href="#安装IDE">#</a>安装IDE</h2>
+<p>IDE可以选择用 <a target="_blank" rel="noopener" href="https://code.visualstudio.com">Visual Studio Code</a> 或者 <a target="_blank" rel="noopener" href="https://www.jetbrains.com/zh-cn/idea/download/other.html">IntelliJ IDEA</a><br>
+我选择了更专业的<code>IntelliJ IDEA</code>，接着安装Rust插件：<a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/8182-rust">https://plugins.jetbrains.com/plugin/8182-rust</a></p>
+<h2 id="Hello-World"><a class="header-anchor" href="#Hello-World">#</a>Hello World</h2>
+<p>万事俱备，可以开始创建第一个工程了，新建一个文件夹，然后用<code>cargo</code>创建工程</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo new hello</span><br></pre></td></tr></table></figure>
-<p>接着用<code>IntelliJ IDEA</code>打开刚刚创建的 hello 文件夹，首次运行IDE会自动下载相关的依赖，需要稍等片刻。<br>接着打开<code>main.rs</code>文件，按下<code>Shift + F10</code>启动第一个Rust程序吧！</p>
+<p>接着用<code>IntelliJ IDEA</code>打开刚刚创建的 hello 文件夹，首次运行IDE会自动下载相关的依赖，需要稍等片刻。<br>
+接着打开<code>main.rs</code>文件，按下<code>Shift + F10</code>启动第一个Rust程序吧！</p>
 
       </div>
       
@@ -185,24 +203,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Rust/" title="Rust">
-                        #Rust
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -244,13 +244,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -470,43 +473,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%AE%89%E8%A3%85Rust + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F07%2F01%2Frust-setup%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/07/01/rust-setup/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

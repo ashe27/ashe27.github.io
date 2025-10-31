@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,14 +172,19 @@
           
       </div>
       <div class="markdown-body">
-        <p>今日碰到一个奇怪的问题，<code>RadioButton</code>控件的<code>Click</code>事件在没有鼠标点击时也会触发。<br>网上查了半天后发现和控件拥有焦点有关，当控件以某种方式被激活时会错误地触发<code>Click</code>事件，比如以下情况：</p>
+        <p>今日碰到一个奇怪的问题，<code>RadioButton</code>控件的<code>Click</code>事件在没有鼠标点击时也会触发。<br>
+网上查了半天后发现和控件拥有焦点有关，当控件以某种方式被激活时会错误地触发<code>Click</code>事件，比如以下情况：</p>
 <ol>
 <li><code>TabIndex</code>为0，窗口启动后会激活该控件，此时会触发<code>Click</code>事件。</li>
 <li>通过上下左右建移动到单选按钮上时，此时会触发<code>Click</code>事件。</li>
 </ol>
-<p><br>我碰到的情况和第一种差不多，是某个控件失去焦点后，窗口被激活时又激活了<code>TabIndex</code>为0的单选控件。<br>将<code>TabIndex</code>设置为非0值可以简单的解决问题，但存在瑕疵，比如用方向键移动到控件上时问题依然存在。</p>
+<p><br>
+我碰到的情况和第一种差不多，是某个控件失去焦点后，窗口被激活时又激活了<code>TabIndex</code>为0的单选控件。<br>
+将<code>TabIndex</code>设置为非0值可以简单的解决问题，但存在瑕疵，比如用方向键移动到控件上时问题依然存在。</p>
 <p>好在<code>RadioButton</code>有个<code>MouseClick</code>事件，将单击事件放在这里就行了。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/6751323">How can I prevent a RadioButton from being checked when the Form loads?</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/72114631">RadioButton Click event erroneously fires on startup</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/6751323">How can I prevent a RadioButton from being checked when the Form loads?</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/72114631">RadioButton Click event erroneously fires on startup</a></p>
 
       </div>
       
@@ -187,30 +196,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/WinForms/" title="WinForms">
-                        #WinForms
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -252,13 +237,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -478,43 +466,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + BUG%EF%BC%81RadioButton%20%E4%BC%9A%E8%87%AA%E5%8A%A8%E8%A7%A6%E5%8F%91%20Click%20%E4%BA%8B%E4%BB%B6 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F01%2F09%2Fnet-radiobutton-click%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/01/09/net-radiobutton-click/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

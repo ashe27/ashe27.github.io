@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,20 +166,25 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="for"><a href="#for" class="headerlink" title="for"></a>for</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr1.<span class="property">length</span>; ++i) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(arr1[i]); <span class="comment">// 5, 10, 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h2 id="for"><a class="header-anchor" href="#for">#</a>for</h2>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr1.<span class="property">length</span>; ++i) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(arr1[i]); <span class="comment">// 5, 10, 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>几乎是任何编程语言都有的基本语法，用于遍历数组，中途可通过<code>break</code>中断遍历。</p>
-<h2 id="for…in…"><a href="#for…in…" class="headerlink" title="for…in…"></a>for…in…</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">in</span> arr1) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item); <span class="comment">// 0, 1, 2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="for…in…"><a class="header-anchor" href="#for…in…">#</a>for…in…</h2>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">in</span> arr1) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item); <span class="comment">// 0, 1, 2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>输出的是索引，而不是元素值。它可以用来遍历对象</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = &#123; <span class="attr">a</span>: <span class="number">5</span>, <span class="attr">b</span>: <span class="number">10</span>, <span class="attr">c</span>: <span class="number">20</span> &#125;;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">in</span> arr1) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item);  <span class="comment">// 5, 10, 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>显然，for…in…适用于遍历对象。</p>
-<h2 id="for…of…"><a href="#for…of…" class="headerlink" title="for…of…"></a>for…of…</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> arr1) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item);  <span class="comment">// 5, 10, 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以说是<code>for</code>循环的改进版本，不能用于遍历对象，中途可通过<code>break</code>中断遍历。<br>与下面的写法等效</p>
+<h2 id="for…of…"><a class="header-anchor" href="#for…of…">#</a>for…of…</h2>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> arr1) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item);  <span class="comment">// 5, 10, 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以说是<code>for</code>循环的改进版本，不能用于遍历对象，中途可通过<code>break</code>中断遍历。<br>
+与下面的写法等效</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> index <span class="keyword">of</span> arr1.<span class="title function_">values</span>()) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(index);  <span class="comment">// 5, 10, 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果只想获取索引，可以遍历<code>keys</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> index <span class="keyword">of</span> arr1.<span class="title function_">keys</span>()) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(index);  <span class="comment">// 0, 1, 2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果想同时得到索引和值，可以遍历<code>entries</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> [index, value] <span class="keyword">of</span> arr1.<span class="title function_">entries</span>()) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(index);  <span class="comment">// 0, 1, 2</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(value);  <span class="comment">// 5, 10, 20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="forEach"><a href="#forEach" class="headerlink" title="forEach"></a>forEach</h2><p>数组的成员方法</p>
+<h2 id="forEach"><a class="header-anchor" href="#forEach">#</a>forEach</h2>
+<p>数组的成员方法</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">5</span>, <span class="number">10</span>, <span class="number">20</span>];</span><br><span class="line">arr1.<span class="title function_">forEach</span>(<span class="keyword">function</span> (<span class="params">value, index, arr</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`index = <span class="subst">$&#123;index&#125;</span>, value = <span class="subst">$&#123;value&#125;</span>`</span>);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>);</span><br><span class="line">&#125;, <span class="number">100</span>);</span><br></pre></td></tr></table></figure>
 <p>特点：</p>
 <ol>
@@ -183,7 +192,8 @@
 <li>支持向回调函数传递参数<code>this</code>，前提是不要使用箭头函数作为回调。</li>
 <li>不支持中断。</li>
 </ol>
-<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><p>数组的成员方法</p>
+<h2 id="map"><a class="header-anchor" href="#map">#</a>map</h2>
+<p>数组的成员方法</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">map</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value * <span class="number">2</span>;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// [20, 40, 60]</span></span><br></pre></td></tr></table></figure>
 <p>特点：</p>
 <ol>
@@ -194,7 +204,8 @@
 <li>回调函数返回新元素。</li>
 </ol>
 <p><code>map</code>强调的是<strong>处理每一个元素数据并得到一个新数组</strong>。</p>
-<h2 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">filter</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value &lt; <span class="number">25</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// [10, 20]</span></span><br></pre></td></tr></table></figure>
+<h2 id="filter"><a class="header-anchor" href="#filter">#</a>filter</h2>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">filter</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value &lt; <span class="number">25</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// [10, 20]</span></span><br></pre></td></tr></table></figure>
 <p>特点：</p>
 <ol>
 <li>可以拿到元素、索引、数组自身三个值。</li>
@@ -204,19 +215,26 @@
 <li>回调函数返回<code>bool</code>类型决定是否将当前元素压入新数组。</li>
 </ol>
 <p><code>filter</code>强调的是<strong>筛选出所有符合条件的数据并得到一个新数组</strong>。</p>
-<h2 id="some"><a href="#some" class="headerlink" title="some"></a>some</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">some</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value &lt; <span class="number">25</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="some"><a class="header-anchor" href="#some">#</a>some</h2>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">some</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value &lt; <span class="number">25</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
 <p>与<code>filter</code>类似，但不需要得到新数组，而是只需要知道<strong>数组中是否有任何一条数据满足条件</strong>。</p>
-<h2 id="every"><a href="#every" class="headerlink" title="every"></a>every</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">every</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value &lt; <span class="number">25</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="every"><a class="header-anchor" href="#every">#</a>every</h2>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">every</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value &lt; <span class="number">25</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
 <p>与<code>some</code>类似，不需要得到新数组，只是想知道<strong>数组中的每个元素是否都满足条件</strong>。</p>
-<h2 id="find"><a href="#find" class="headerlink" title="find"></a>find</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">10</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">find</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value == <span class="number">10</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+<h2 id="find"><a class="header-anchor" href="#find">#</a>find</h2>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">10</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">find</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value == <span class="number">10</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
 <p>与<code>some</code>类似，但返回的是<strong>符合条件的第一个元素值</strong>，没有任何元素符合条件则返回<code>undefined</code>。</p>
-<h2 id="findIndex"><a href="#findIndex" class="headerlink" title="findIndex"></a>findIndex</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">10</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">findIndex</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value == <span class="number">10</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
+<h2 id="findIndex"><a class="header-anchor" href="#findIndex">#</a>findIndex</h2>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">10</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">findIndex</span>(<span class="function">(<span class="params">value, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value == <span class="number">10</span>;</span><br><span class="line"> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
 <p>与<code>find</code>类似，但是返回的是索引，没有任何元素符合条件则返回<code>-1</code>。</p>
-<h2 id="reduce"><a href="#reduce" class="headerlink" title="reduce"></a>reduce</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">10</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">reduce</span>(<span class="function">(<span class="params">previousValue, currentValue, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> previousValue + currentValue;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// 70</span></span><br></pre></td></tr></table></figure>
+<h2 id="reduce"><a class="header-anchor" href="#reduce">#</a>reduce</h2>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">10</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">reduce</span>(<span class="function">(<span class="params">previousValue, currentValue, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> previousValue + currentValue;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// 70</span></span><br></pre></td></tr></table></figure>
 <p>从数组第一个元素开始，每次循环将数据的处理结果传递到下一次循环，直到处理完每个元素，最终得到一个值。</p>
-<h2 id="reduceRight"><a href="#reduceRight" class="headerlink" title="reduceRight"></a>reduceRight</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">10</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">reduceRight</span>(<span class="function">(<span class="params">previousValue, currentValue, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> previousValue + currentValue;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// 70</span></span><br></pre></td></tr></table></figure>
+<h2 id="reduceRight"><a class="header-anchor" href="#reduceRight">#</a>reduceRight</h2>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> arr1 = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">10</span>];</span><br><span class="line"><span class="keyword">const</span> tmp = arr1.<span class="title function_">reduceRight</span>(<span class="function">(<span class="params">previousValue, currentValue, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> previousValue + currentValue;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(arr1); <span class="comment">// [10, 20, 30, 10]</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(tmp); <span class="comment">// 70</span></span><br></pre></td></tr></table></figure>
 <p>和<code>reduce</code>一样，不过是从数组末尾开始处理。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<ol>
 <li>遍历对象用<code>for...in...</code>。</li>
 <li>遍历数组用<code>for</code>、<code>for...of...</code>、<code>forEach</code>。</li>
 <li>期望对原数组加工处理并得到一个新数组用<code>map</code>。</li>
@@ -236,24 +254,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/JavaScript/" title="JavaScript">
-                        #JavaScript
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -295,13 +295,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -521,43 +524,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + JS%E9%81%8D%E5%8E%86%E5%AF%B9%E8%B1%A1%E3%80%81%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%80%E4%BA%9B%E6%96%B9%E6%B3%95%E4%B8%8E%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F10%2F12%2FrFKBYYIi6%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/10/12/rFKBYYIi6/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

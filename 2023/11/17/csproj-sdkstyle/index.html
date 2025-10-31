@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,13 +172,17 @@
           
       </div>
       <div class="markdown-body">
-        <p>SDK style 是一种新的项目文件格式。与传统的 .NET Framework 项目文件相比，新的 SDK style 提供了更简洁、可读性更好的语法，同时还引入了更多的灵活性和功能。<br>新风格的 csproj 文件是从 VS2017 版本开始引入和支持的。在 VS2015 和更早的版本，使用的是传统 csproj 文件格式。</p>
-<h2 id="新老工程文件"><a href="#新老工程文件" class="headerlink" title="新老工程文件"></a>新老工程文件</h2><p>先看看老的工程文件是个什么样子。新建一个 .NET Framework 窗体项目：</p>
+        <p>SDK style 是一种新的项目文件格式。与传统的 .NET Framework 项目文件相比，新的 SDK style 提供了更简洁、可读性更好的语法，同时还引入了更多的灵活性和功能。<br>
+新风格的 csproj 文件是从 VS2017 版本开始引入和支持的。在 VS2015 和更早的版本，使用的是传统 csproj 文件格式。</p>
+<h2 id="新老工程文件"><a class="header-anchor" href="#新老工程文件">#</a>新老工程文件</h2>
+<p>先看看老的工程文件是个什么样子。新建一个 .NET Framework 窗体项目：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">ToolsVersion</span>=<span class="string">&quot;15.0&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props&quot;</span> <span class="attr">Condition</span>=<span class="string">&quot;Exists(&#x27;$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props&#x27;)&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Configuration</span> <span class="attr">Condition</span>=<span class="string">&quot; &#x27;$(Configuration)&#x27; == &#x27;&#x27; &quot;</span>&gt;</span>Debug<span class="tag">&lt;/<span class="name">Configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Platform</span> <span class="attr">Condition</span>=<span class="string">&quot; &#x27;$(Platform)&#x27; == &#x27;&#x27; &quot;</span>&gt;</span>AnyCPU<span class="tag">&lt;/<span class="name">Platform</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ProjectGuid</span>&gt;</span>&#123;013DB7AC-1A98-4BB9-8D01-C6CEA6C8AB78&#125;<span class="tag">&lt;/<span class="name">ProjectGuid</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">OutputType</span>&gt;</span>WinExe<span class="tag">&lt;/<span class="name">OutputType</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RootNamespace</span>&gt;</span>WindowsFormsApp1<span class="tag">&lt;/<span class="name">RootNamespace</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">AssemblyName</span>&gt;</span>WindowsFormsApp1<span class="tag">&lt;/<span class="name">AssemblyName</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TargetFrameworkVersion</span>&gt;</span>v4.8.1<span class="tag">&lt;/<span class="name">TargetFrameworkVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">FileAlignment</span>&gt;</span>512<span class="tag">&lt;/<span class="name">FileAlignment</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">AutoGenerateBindingRedirects</span>&gt;</span>true<span class="tag">&lt;/<span class="name">AutoGenerateBindingRedirects</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Deterministic</span>&gt;</span>true<span class="tag">&lt;/<span class="name">Deterministic</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot; &#x27;$(Configuration)|$(Platform)&#x27; == &#x27;Debug|AnyCPU&#x27; &quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PlatformTarget</span>&gt;</span>AnyCPU<span class="tag">&lt;/<span class="name">PlatformTarget</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DebugSymbols</span>&gt;</span>true<span class="tag">&lt;/<span class="name">DebugSymbols</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DebugType</span>&gt;</span>full<span class="tag">&lt;/<span class="name">DebugType</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Optimize</span>&gt;</span>false<span class="tag">&lt;/<span class="name">Optimize</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">OutputPath</span>&gt;</span>bin\Debug\<span class="tag">&lt;/<span class="name">OutputPath</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span>&gt;</span>DEBUG;TRACE<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ErrorReport</span>&gt;</span>prompt<span class="tag">&lt;/<span class="name">ErrorReport</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">WarningLevel</span>&gt;</span>4<span class="tag">&lt;/<span class="name">WarningLevel</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot; &#x27;$(Configuration)|$(Platform)&#x27; == &#x27;Release|AnyCPU&#x27; &quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PlatformTarget</span>&gt;</span>AnyCPU<span class="tag">&lt;/<span class="name">PlatformTarget</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DebugType</span>&gt;</span>pdbonly<span class="tag">&lt;/<span class="name">DebugType</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Optimize</span>&gt;</span>true<span class="tag">&lt;/<span class="name">Optimize</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">OutputPath</span>&gt;</span>bin\Release\<span class="tag">&lt;/<span class="name">OutputPath</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">DefineConstants</span>&gt;</span>TRACE<span class="tag">&lt;/<span class="name">DefineConstants</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ErrorReport</span>&gt;</span>prompt<span class="tag">&lt;/<span class="name">ErrorReport</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">WarningLevel</span>&gt;</span>4<span class="tag">&lt;/<span class="name">WarningLevel</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Reference</span> <span class="attr">Include</span>=<span class="string">&quot;System&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Reference</span> <span class="attr">Include</span>=<span class="string">&quot;System.Core&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Reference</span> <span class="attr">Include</span>=<span class="string">&quot;System.Xml.Linq&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Reference</span> <span class="attr">Include</span>=<span class="string">&quot;System.Data.DataSetExtensions&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Reference</span> <span class="attr">Include</span>=<span class="string">&quot;Microsoft.CSharp&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Reference</span> <span class="attr">Include</span>=<span class="string">&quot;System.Data&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Reference</span> <span class="attr">Include</span>=<span class="string">&quot;System.Deployment&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Reference</span> <span class="attr">Include</span>=<span class="string">&quot;System.Drawing&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Reference</span> <span class="attr">Include</span>=<span class="string">&quot;System.Net.Http&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Reference</span> <span class="attr">Include</span>=<span class="string">&quot;System.Windows.Forms&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Reference</span> <span class="attr">Include</span>=<span class="string">&quot;System.Xml&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Compile</span> <span class="attr">Include</span>=<span class="string">&quot;Form1.cs&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">SubType</span>&gt;</span>Form<span class="tag">&lt;/<span class="name">SubType</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Compile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Compile</span> <span class="attr">Include</span>=<span class="string">&quot;Form1.Designer.cs&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">DependentUpon</span>&gt;</span>Form1.cs<span class="tag">&lt;/<span class="name">DependentUpon</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Compile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Compile</span> <span class="attr">Include</span>=<span class="string">&quot;Program.cs&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Compile</span> <span class="attr">Include</span>=<span class="string">&quot;Properties\AssemblyInfo.cs&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">EmbeddedResource</span> <span class="attr">Include</span>=<span class="string">&quot;Properties\Resources.resx&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">Generator</span>&gt;</span>ResXFileCodeGenerator<span class="tag">&lt;/<span class="name">Generator</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">LastGenOutput</span>&gt;</span>Resources.Designer.cs<span class="tag">&lt;/<span class="name">LastGenOutput</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">SubType</span>&gt;</span>Designer<span class="tag">&lt;/<span class="name">SubType</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">EmbeddedResource</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Compile</span> <span class="attr">Include</span>=<span class="string">&quot;Properties\Resources.Designer.cs&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">AutoGen</span>&gt;</span>True<span class="tag">&lt;/<span class="name">AutoGen</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">DependentUpon</span>&gt;</span>Resources.resx<span class="tag">&lt;/<span class="name">DependentUpon</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Compile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">None</span> <span class="attr">Include</span>=<span class="string">&quot;Properties\Settings.settings&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">Generator</span>&gt;</span>SettingsSingleFileGenerator<span class="tag">&lt;/<span class="name">Generator</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">LastGenOutput</span>&gt;</span>Settings.Designer.cs<span class="tag">&lt;/<span class="name">LastGenOutput</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">None</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Compile</span> <span class="attr">Include</span>=<span class="string">&quot;Properties\Settings.Designer.cs&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">AutoGen</span>&gt;</span>True<span class="tag">&lt;/<span class="name">AutoGen</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">DependentUpon</span>&gt;</span>Settings.settings<span class="tag">&lt;/<span class="name">DependentUpon</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">DesignTimeSharedInput</span>&gt;</span>True<span class="tag">&lt;/<span class="name">DesignTimeSharedInput</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Compile</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">None</span> <span class="attr">Include</span>=<span class="string">&quot;App.config&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;$(MSBuildToolsPath)\Microsoft.CSharp.targets&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>再看看新的工程文件：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">OutputType</span>&gt;</span>WinExe<span class="tag">&lt;/<span class="name">OutputType</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TargetFramework</span>&gt;</span>net7.0-windows<span class="tag">&lt;/<span class="name">TargetFramework</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>高下立判，新风格的工程文件精简多了！</p>
-<h2 id="常用设置"><a href="#常用设置" class="headerlink" title="常用设置"></a>常用设置</h2><h3 id="OutputType"><a href="#OutputType" class="headerlink" title="OutputType"></a>OutputType</h3><p>用于指定项目输出的文件类型。支持以下值：</p>
+<h2 id="常用设置"><a class="header-anchor" href="#常用设置">#</a>常用设置</h2>
+<h3 id="OutputType"><a class="header-anchor" href="#OutputType">#</a>OutputType</h3>
+<p>用于指定项目输出的文件类型。支持以下值：</p>
 <table>
 <thead>
 <tr>
@@ -182,7 +190,8 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Library</td>
 <td>DLL 动态库</td>
 </tr>
@@ -194,33 +203,51 @@
 <td>WinExe</td>
 <td>窗口程序</td>
 </tr>
-</tbody></table>
-<h3 id="TargetFramework"><a href="#TargetFramework" class="headerlink" title="TargetFramework"></a>TargetFramework</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props#targetframework">TargetFramework</a> 用于指定项目的目标框架。它表示项目所针对的特定台或运行时环境。</p>
+</tbody>
+</table>
+<h3 id="TargetFramework"><a class="header-anchor" href="#TargetFramework">#</a>TargetFramework</h3>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props#targetframework">TargetFramework</a> 用于指定项目的目标框架。它表示项目所针对的特定台或运行时环境。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">TargetFramework</span>&gt;</span>net48<span class="tag">&lt;/<span class="name">TargetFramework</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>支持的值看这里：<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/standard/frameworks#supported-target-frameworks">支持的目标框架</a>。<br>但是一般来说我们不应该指定这个值，而应该用复数版本的参数<code>TargetFrameworks</code>。</p>
-<h3 id="TargetFrameworks"><a href="#TargetFrameworks" class="headerlink" title="TargetFrameworks"></a>TargetFrameworks</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props#targetframeworks">TargetFrameworks</a> 允许针对多个不同的目标框架进行构建，每个目标框架通过分号进行分隔：</p>
+<p>支持的值看这里：<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/standard/frameworks#supported-target-frameworks">支持的目标框架</a>。<br>
+但是一般来说我们不应该指定这个值，而应该用复数版本的参数<code>TargetFrameworks</code>。</p>
+<h3 id="TargetFrameworks"><a class="header-anchor" href="#TargetFrameworks">#</a>TargetFrameworks</h3>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props#targetframeworks">TargetFrameworks</a> 允许针对多个不同的目标框架进行构建，每个目标框架通过分号进行分隔：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">TargetFrameworks</span>&gt;</span>netcoreapp3.1;net462<span class="tag">&lt;/<span class="name">TargetFrameworks</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>这是必填的参数，指示工程使用哪些框架编译。</p>
-<h3 id="AppendTargetFrameworkToOutputPath"><a href="#AppendTargetFrameworkToOutputPath" class="headerlink" title="AppendTargetFrameworkToOutputPath"></a>AppendTargetFrameworkToOutputPath</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props#appendtargetframeworktooutputpath">AppendTargetFrameworkToOutputPath</a> 属性决定了输出路径中是否追加<code>TargetFramework</code>的值，默认为<code>true</code>。</p>
-<h3 id="PlatformTarget"><a href="#PlatformTarget" class="headerlink" title="PlatformTarget"></a>PlatformTarget</h3><p><code>PlatformTarget</code> 用于指定项目的目标平台。它决定了编译后的文件的实际架构。<br>可能的值：<code>AnyCPU</code>、<code>x86</code>、<code>x64</code>、<code>arm</code>、<code>arm64</code>。<br>来自 <a target="_blank" rel="noopener" href="https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.RuntimeIdentifierInference.targets">Microsoft.NET.RuntimeIdentifierInference.targets</a> 文件中的片段：</p>
+<h3 id="AppendTargetFrameworkToOutputPath"><a class="header-anchor" href="#AppendTargetFrameworkToOutputPath">#</a>AppendTargetFrameworkToOutputPath</h3>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props#appendtargetframeworktooutputpath">AppendTargetFrameworkToOutputPath</a> 属性决定了输出路径中是否追加<code>TargetFramework</code>的值，默认为<code>true</code>。</p>
+<h3 id="PlatformTarget"><a class="header-anchor" href="#PlatformTarget">#</a>PlatformTarget</h3>
+<p><code>PlatformTarget</code> 用于指定项目的目标平台。它决定了编译后的文件的实际架构。<br>
+可能的值：<code>AnyCPU</code>、<code>x86</code>、<code>x64</code>、<code>arm</code>、<code>arm64</code>。<br>
+来自 <a target="_blank" rel="noopener" href="https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.RuntimeIdentifierInference.targets">Microsoft.NET.RuntimeIdentifierInference.targets</a> 文件中的片段：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Determine PlatformTarget (if not already set) from runtime identifier. --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Choose</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">When</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(PlatformTarget)&#x27; != &#x27;&#x27; or &#x27;$(RuntimeIdentifier)&#x27; == &#x27;&#x27;&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">When</span> <span class="attr">Condition</span>=<span class="string">&quot;$(RuntimeIdentifier.EndsWith(&#x27;-x86&#x27;)) or $(RuntimeIdentifier.Contains(&#x27;-x86-&#x27;))&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PlatformTarget</span>&gt;</span>x86<span class="tag">&lt;/<span class="name">PlatformTarget</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">When</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">When</span> <span class="attr">Condition</span>=<span class="string">&quot;$(RuntimeIdentifier.EndsWith(&#x27;-x64&#x27;)) or $(RuntimeIdentifier.Contains(&#x27;-x64-&#x27;))&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PlatformTarget</span>&gt;</span>x64<span class="tag">&lt;/<span class="name">PlatformTarget</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">When</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">When</span> <span class="attr">Condition</span>=<span class="string">&quot;$(RuntimeIdentifier.EndsWith(&#x27;-arm&#x27;)) or $(RuntimeIdentifier.Contains(&#x27;-arm-&#x27;))&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PlatformTarget</span>&gt;</span>arm<span class="tag">&lt;/<span class="name">PlatformTarget</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">When</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">When</span> <span class="attr">Condition</span>=<span class="string">&quot;$(RuntimeIdentifier.EndsWith(&#x27;-arm64&#x27;)) or $(RuntimeIdentifier.Contains(&#x27;-arm64-&#x27;))&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PlatformTarget</span>&gt;</span>arm64<span class="tag">&lt;/<span class="name">PlatformTarget</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">When</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">Otherwise</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">PlatformTarget</span>&gt;</span>AnyCPU<span class="tag">&lt;/<span class="name">PlatformTarget</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Otherwise</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Choose</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>所以<code>PlatformTarget</code>不需要手动设置。</p>
-<h3 id="ImplicitUsings"><a href="#ImplicitUsings" class="headerlink" title="ImplicitUsings"></a>ImplicitUsings</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props#implicitusings">ImplicitUsings</a> 用于指定在项目代码中隐式引用的命名空间（using）。可以在项目中省略对特定命名空间的显式引用，从而简化代码。</p>
+<h3 id="ImplicitUsings"><a class="header-anchor" href="#ImplicitUsings">#</a>ImplicitUsings</h3>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props#implicitusings">ImplicitUsings</a> 用于指定在项目代码中隐式引用的命名空间（using）。可以在项目中省略对特定命名空间的显式引用，从而简化代码。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ImplicitUsings</span>&gt;</span>enable<span class="tag">&lt;/<span class="name">ImplicitUsings</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="UseWindowsForms"><a href="#UseWindowsForms" class="headerlink" title="UseWindowsForms"></a>UseWindowsForms</h3><p>当 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props-desktop#usewindowsforms">UseWindowsForms</a> 属性设置为 true 时，项目将引用并使用 Windows Forms 库，以便开发 Windows Forms 应用程序。</p>
+<h3 id="UseWindowsForms"><a class="header-anchor" href="#UseWindowsForms">#</a>UseWindowsForms</h3>
+<p>当 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props-desktop#usewindowsforms">UseWindowsForms</a> 属性设置为 true 时，项目将引用并使用 Windows Forms 库，以便开发 Windows Forms 应用程序。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">UseWindowsForms</span>&gt;</span>true<span class="tag">&lt;/<span class="name">UseWindowsForms</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="UseWPF"><a href="#UseWPF" class="headerlink" title="UseWPF"></a>UseWPF</h3><p>当 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props-desktop#usewpf">UseWPF</a> 属性设置为 true 时，项目将引用并使用 WPF 库，以便开发 WPF 程序。</p>
+<h3 id="UseWPF"><a class="header-anchor" href="#UseWPF">#</a>UseWPF</h3>
+<p>当 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props-desktop#usewpf">UseWPF</a> 属性设置为 true 时，项目将引用并使用 WPF 库，以便开发 WPF 程序。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">UseWPF</span>&gt;</span>true<span class="tag">&lt;/<span class="name">UseWPF</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="RuntimeIdentifier"><a href="#RuntimeIdentifier" class="headerlink" title="RuntimeIdentifier"></a>RuntimeIdentifier</h3><p>RID 是运行时标识符的缩写。 RID 值用于标识应用程序运行所在的目标平台。.NET 包使用它们来表示 NuGet 包中特定于平台的资产。<br>在编译时它会根据<code>PlatformTarget</code>属性自动设置，不需要手动设置。</p>
-<h3 id="AppendRuntimeIdentifierToOutputPath"><a href="#AppendRuntimeIdentifierToOutputPath" class="headerlink" title="AppendRuntimeIdentifierToOutputPath"></a>AppendRuntimeIdentifierToOutputPath</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props#appendruntimeidentifiertooutputpath">AppendRuntimeIdentifierToOutputPath</a> 属性决定了输出路径中是否追加<code>RuntimeIdentifier</code>的值，默认为<code>true</code>。</p>
-<h3 id="Nullable"><a href="#Nullable" class="headerlink" title="Nullable"></a>Nullable</h3><p>是否启用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/csharp/language-reference/builtin-types/nullable-value-types">可空类型</a> 特性。</p>
+<h3 id="RuntimeIdentifier"><a class="header-anchor" href="#RuntimeIdentifier">#</a>RuntimeIdentifier</h3>
+<p>RID 是运行时标识符的缩写。 RID 值用于标识应用程序运行所在的目标平台。.NET 包使用它们来表示 NuGet 包中特定于平台的资产。<br>
+在编译时它会根据<code>PlatformTarget</code>属性自动设置，不需要手动设置。</p>
+<h3 id="AppendRuntimeIdentifierToOutputPath"><a class="header-anchor" href="#AppendRuntimeIdentifierToOutputPath">#</a>AppendRuntimeIdentifierToOutputPath</h3>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/msbuild-props#appendruntimeidentifiertooutputpath">AppendRuntimeIdentifierToOutputPath</a> 属性决定了输出路径中是否追加<code>RuntimeIdentifier</code>的值，默认为<code>true</code>。</p>
+<h3 id="Nullable"><a class="header-anchor" href="#Nullable">#</a>Nullable</h3>
+<p>是否启用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/csharp/language-reference/builtin-types/nullable-value-types">可空类型</a> 特性。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Nullable</span>&gt;</span>enable<span class="tag">&lt;/<span class="name">Nullable</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>打开 Nullable 设置可以提高代码的可读性、减少潜在的空引用异常，并帮助你编写更健壮和高质量的代码。</p>
-<h3 id="LangVersion"><a href="#LangVersion" class="headerlink" title="LangVersion"></a>LangVersion</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/csharp/language-reference/configure-language-version">LangVersion</a> 用于设置使用 C# 语言的版本。不设置时会有 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/csharp/language-reference/configure-language-version#defaults">默认值</a>。<br>原则上版本越高越好，毕竟使用新特性会使开发效率提高。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/visualstudio/msbuild/common-msbuild-project-properties">常用的 MSBuild 项目属性</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/overview">.NET 项目 SDK</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/rid-catalog">.NET RID 目录</a><br><a target="_blank" rel="noopener" href="https://doughnuts.dev/platform-vs-platformtarget/">Platform vs. PlatformTarget In Any .NET Build</a></p>
+<h3 id="LangVersion"><a class="header-anchor" href="#LangVersion">#</a>LangVersion</h3>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/csharp/language-reference/configure-language-version">LangVersion</a> 用于设置使用 C# 语言的版本。不设置时会有 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/csharp/language-reference/configure-language-version#defaults">默认值</a>。<br>
+原则上版本越高越好，毕竟使用新特性会使开发效率提高。</p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/visualstudio/msbuild/common-msbuild-project-properties">常用的 MSBuild 项目属性</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/overview">.NET 项目 SDK</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/rid-catalog">.NET RID 目录</a><br>
+<a target="_blank" rel="noopener" href="https://doughnuts.dev/platform-vs-platformtarget/">Platform vs. PlatformTarget In Any .NET Build</a></p>
 
       </div>
       
@@ -232,30 +259,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/MSBuild/" title="MSBuild">
-                        #MSBuild
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -297,13 +300,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -523,43 +529,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + SDK%20style%20%E5%B7%A5%E7%A8%8B%E6%96%87%E4%BB%B6%E4%BB%8B%E7%BB%8D + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F11%2F17%2Fcsproj-sdkstyle%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/11/17/csproj-sdkstyle/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,35 +172,44 @@
           
       </div>
       <div class="markdown-body">
-        <p>折腾开发板的过程中反复烧录镜像，每次烧录镜像后安装过的软件、配置都丢失了，又得重新搞。<br>于是想在官方镜像上配置好，重新打包根文件镜像，以后再刷写镜像后就省事多了。</p>
-<h2 id="下载镜像"><a href="#下载镜像" class="headerlink" title="下载镜像"></a>下载镜像</h2><p>下载页面：<a target="_blank" rel="noopener" href="https://www.t-firefly.com/doc/download/4.html">https://www.t-firefly.com/doc/download/4.html</a></p>
+        <p>折腾开发板的过程中反复烧录镜像，每次烧录镜像后安装过的软件、配置都丢失了，又得重新搞。<br>
+于是想在官方镜像上配置好，重新打包根文件镜像，以后再刷写镜像后就省事多了。</p>
+<h2 id="下载镜像"><a class="header-anchor" href="#下载镜像">#</a>下载镜像</h2>
+<p>下载页面：<a target="_blank" rel="noopener" href="https://www.t-firefly.com/doc/download/4.html">https://www.t-firefly.com/doc/download/4.html</a></p>
 <p>选择“Ubuntu 根文件系统（32位）”，我这里用的 Ubuntu16，直链地址：<a target="_blank" rel="noopener" href="https://download.t-firefly.com/product/Board/RK3288/Rootfs/Linux%20Rootfs/Ubuntu%20Rootfs/rk3288_ubuntu_16.04_armhf_20200403142221.img.7z">rk3288_ubuntu_16.04_armhf_20200403142221.img.7z</a></p>
 <p>解压后得到文件<code>FIREFLY-RK3288-UBUNTU16.04-GPT-20200326-1507.img</code>，MD5是<code>1B69032F910C8B1DF68ABA46C9393AA7</code>。</p>
-<h2 id="重新打包"><a href="#重新打包" class="headerlink" title="重新打包"></a>重新打包</h2><p>整个过程要在 Linux 系统中操作，最好也在相同的系统中操作，我用的 Ubuntu16 x86_64 的虚拟机。</p>
-<h3 id="增加镜像容量"><a href="#增加镜像容量" class="headerlink" title="增加镜像容量"></a>增加镜像容量</h3><p>因为官方的镜像已经压缩过了，直接用的话无法更新软件等操作，因为磁盘已满。</p>
+<h2 id="重新打包"><a class="header-anchor" href="#重新打包">#</a>重新打包</h2>
+<p>整个过程要在 Linux 系统中操作，最好也在相同的系统中操作，我用的 Ubuntu16 x86_64 的虚拟机。</p>
+<h3 id="增加镜像容量"><a class="header-anchor" href="#增加镜像容量">#</a>增加镜像容量</h3>
+<p>因为官方的镜像已经压缩过了，直接用的话无法更新软件等操作，因为磁盘已满。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">apt install -y qemu-utils</span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加镜像文件大小</span></span><br><span class="line">qemu-img resize rk3288_ubuntu_rootfs.img +500M</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调整文件系统大小以填充增加的 500 MB 空间</span></span><br><span class="line">resize2fs -f rk3288_ubuntu_rootfs.img</span><br></pre></td></tr></table></figure>
 <p>我这里只+500M，更新软件够用了，如果要装新软件可以适量加大些。</p>
-<h3 id="挂载镜像"><a href="#挂载镜像" class="headerlink" title="挂载镜像"></a>挂载镜像</h3><p>写一个挂载、卸载用的脚本，方便日后使用，抄网上的，改了一下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">mnt</span></span>() &#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;MOUNTING&quot;</span></span><br><span class="line">    <span class="comment"># 确保挂载目录以 &#x27;/&#x27; 结尾</span></span><br><span class="line">    <span class="built_in">local</span> mount_dir=<span class="variable">$&#123;2%/&#125;</span>/</span><br><span class="line">    <span class="comment"># 检查挂载目录是否存在，如果不存在则创建</span></span><br><span class="line">    <span class="keyword">if</span> [ ! -d <span class="string">&quot;<span class="variable">$mount_dir</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        sudo <span class="built_in">mkdir</span> -p <span class="variable">$mount_dir</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="comment"># 检查是否提供了镜像文件路径</span></span><br><span class="line">    <span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$3</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="comment"># 挂载镜像文件到指定目录</span></span><br><span class="line">        sudo mount -o loop <span class="variable">$3</span> <span class="variable">$mount_dir</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="comment"># 挂载其他必要的文件系统</span></span><br><span class="line">    sudo mount -t proc /proc <span class="variable">$&#123;mount_dir&#125;</span>proc</span><br><span class="line">    sudo mount -t sysfs /sys <span class="variable">$&#123;mount_dir&#125;</span>sys</span><br><span class="line">    sudo mount -o <span class="built_in">bind</span> /dev <span class="variable">$&#123;mount_dir&#125;</span>dev</span><br><span class="line">    sudo mount -o <span class="built_in">bind</span> /dev/pts <span class="variable">$&#123;mount_dir&#125;</span>dev/pts		</span><br><span class="line">    sudo <span class="built_in">chroot</span> <span class="variable">$&#123;mount_dir&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">umnt</span></span>() &#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;UNMOUNTING&quot;</span></span><br><span class="line">    <span class="comment"># 确保挂载目录以 &#x27;/&#x27; 结尾</span></span><br><span class="line">    <span class="built_in">local</span> mount_dir=<span class="variable">$&#123;2%/&#125;</span>/</span><br><span class="line">    <span class="comment"># 首先卸载其他挂载的文件系统</span></span><br><span class="line">    sudo umount <span class="variable">$&#123;mount_dir&#125;</span>dev/pts</span><br><span class="line">    sudo umount <span class="variable">$&#123;mount_dir&#125;</span>dev</span><br><span class="line">    sudo umount <span class="variable">$&#123;mount_dir&#125;</span>sys</span><br><span class="line">    sudo umount <span class="variable">$&#123;mount_dir&#125;</span>proc</span><br><span class="line">    <span class="comment"># 检查是否有镜像文件路径参数，如果有，则卸载镜像文件</span></span><br><span class="line">    <span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$3</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        sudo umount <span class="variable">$mount_dir</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$1</span>&quot;</span> == <span class="string">&quot;-m&quot;</span> ] &amp;&amp; [ -n <span class="string">&quot;<span class="variable">$2</span>&quot;</span> ] ;</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    mnt <span class="variable">$1</span> <span class="variable">$2</span> <span class="variable">$3</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="string">&quot;<span class="variable">$1</span>&quot;</span> == <span class="string">&quot;-u&quot;</span> ] &amp;&amp; [ -n <span class="string">&quot;<span class="variable">$2</span>&quot;</span> ];</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    umnt <span class="variable">$1</span> <span class="variable">$2</span> <span class="variable">$3</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Either 1&#x27;st, 2&#x27;nd or both parameters were missing&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;1&#x27;st parameter can be one of these: -m(mount) OR -u(umount)&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;2&#x27;nd parameter is the full path of rootfs directory&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;3&#x27;rd parameter (optional) is the path to the image file&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;For example: ./ch-mount -m /mnt/rootfs/ /path/to/image.img&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> 1st parameter : <span class="variable">$&#123;1&#125;</span></span><br><span class="line">    <span class="built_in">echo</span> 2nd parameter : <span class="variable">$&#123;2&#125;</span></span><br><span class="line">    <span class="built_in">echo</span> 3rd parameter : <span class="variable">$&#123;3&#125;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<h3 id="挂载镜像"><a class="header-anchor" href="#挂载镜像">#</a>挂载镜像</h3>
+<p>写一个挂载、卸载用的脚本，方便日后使用，抄网上的，改了一下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">mnt</span></span>() &#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;MOUNTING&quot;</span></span><br><span class="line">    <span class="comment"># 确保挂载目录以 &#x27;/&#x27; 结尾</span></span><br><span class="line">    <span class="built_in">local</span> mount_dir=<span class="variable">$&#123;2%/&#125;</span>/</span><br><span class="line">    <span class="comment"># 检查挂载目录是否存在，如果不存在则创建</span></span><br><span class="line">    <span class="keyword">if</span> [ ! -d <span class="string">&quot;<span class="variable">$mount_dir</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p <span class="variable">$mount_dir</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="comment"># 检查是否提供了镜像文件路径</span></span><br><span class="line">    <span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$3</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="comment"># 挂载镜像文件到指定目录</span></span><br><span class="line">        <span class="built_in">sudo</span> mount -o loop <span class="variable">$3</span> <span class="variable">$mount_dir</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="comment"># 挂载其他必要的文件系统</span></span><br><span class="line">    <span class="built_in">sudo</span> mount -t proc /proc <span class="variable">$&#123;mount_dir&#125;</span>proc</span><br><span class="line">    <span class="built_in">sudo</span> mount -t sysfs /sys <span class="variable">$&#123;mount_dir&#125;</span>sys</span><br><span class="line">    <span class="built_in">sudo</span> mount -o <span class="built_in">bind</span> /dev <span class="variable">$&#123;mount_dir&#125;</span>dev</span><br><span class="line">    <span class="built_in">sudo</span> mount -o <span class="built_in">bind</span> /dev/pts <span class="variable">$&#123;mount_dir&#125;</span>dev/pts		</span><br><span class="line">    <span class="built_in">sudo</span> <span class="built_in">chroot</span> <span class="variable">$&#123;mount_dir&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">umnt</span></span>() &#123;</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;UNMOUNTING&quot;</span></span><br><span class="line">    <span class="comment"># 确保挂载目录以 &#x27;/&#x27; 结尾</span></span><br><span class="line">    <span class="built_in">local</span> mount_dir=<span class="variable">$&#123;2%/&#125;</span>/</span><br><span class="line">    <span class="comment"># 首先卸载其他挂载的文件系统</span></span><br><span class="line">    <span class="built_in">sudo</span> umount <span class="variable">$&#123;mount_dir&#125;</span>dev/pts</span><br><span class="line">    <span class="built_in">sudo</span> umount <span class="variable">$&#123;mount_dir&#125;</span>dev</span><br><span class="line">    <span class="built_in">sudo</span> umount <span class="variable">$&#123;mount_dir&#125;</span>sys</span><br><span class="line">    <span class="built_in">sudo</span> umount <span class="variable">$&#123;mount_dir&#125;</span>proc</span><br><span class="line">    <span class="comment"># 检查是否有镜像文件路径参数，如果有，则卸载镜像文件</span></span><br><span class="line">    <span class="keyword">if</span> [ -n <span class="string">&quot;<span class="variable">$3</span>&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">sudo</span> umount <span class="variable">$mount_dir</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="string">&quot;<span class="variable">$1</span>&quot;</span> == <span class="string">&quot;-m&quot;</span> ] &amp;&amp; [ -n <span class="string">&quot;<span class="variable">$2</span>&quot;</span> ] ;</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    mnt <span class="variable">$1</span> <span class="variable">$2</span> <span class="variable">$3</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="string">&quot;<span class="variable">$1</span>&quot;</span> == <span class="string">&quot;-u&quot;</span> ] &amp;&amp; [ -n <span class="string">&quot;<span class="variable">$2</span>&quot;</span> ];</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    umnt <span class="variable">$1</span> <span class="variable">$2</span> <span class="variable">$3</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Either 1&#x27;st, 2&#x27;nd or both parameters were missing&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;1&#x27;st parameter can be one of these: -m(mount) OR -u(umount)&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;2&#x27;nd parameter is the full path of rootfs directory&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;3&#x27;rd parameter (optional) is the path to the image file&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;For example: ./ch-mount -m /mnt/rootfs/ /path/to/image.img&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="built_in">echo</span> 1st parameter : <span class="variable">$&#123;1&#125;</span></span><br><span class="line">    <span class="built_in">echo</span> 2nd parameter : <span class="variable">$&#123;2&#125;</span></span><br><span class="line">    <span class="built_in">echo</span> 3rd parameter : <span class="variable">$&#123;3&#125;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
 <p>命名为<code>ch-mount.sh</code>。然后挂载镜像：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./ch-mount.sh -m /mnt/rootfs/ rk3288_ubuntu_rootfs.img</span><br></pre></td></tr></table></figure>
 <p>此时就进入了根文件系统。</p>
-<h3 id="替换软件源"><a href="#替换软件源" class="headerlink" title="替换软件源"></a>替换软件源</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+<h3 id="替换软件源"><a class="header-anchor" href="#替换软件源">#</a>替换软件源</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
 <p>我选择了清华源，替换文件内容如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释</span><br><span class="line">deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial main restricted universe multiverse</span><br><span class="line"># deb-src http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial main restricted universe multiverse</span><br><span class="line">deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-updates main restricted universe multiverse</span><br><span class="line"># deb-src http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-updates main restricted universe multiverse</span><br><span class="line">deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-backports main restricted universe multiverse</span><br><span class="line"># deb-src http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-backports main restricted universe multiverse</span><br><span class="line"></span><br><span class="line"># 以下安全更新软件源包含了官方源与镜像站配置，如有需要可自行修改注释切换</span><br><span class="line">deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-security main restricted universe multiverse</span><br><span class="line"># deb-src http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-security main restricted universe multiverse</span><br><span class="line"></span><br><span class="line"># 预发布软件源，不建议启用</span><br><span class="line"># deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-proposed main restricted universe multiverse</span><br><span class="line"># # deb-src http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/ xenial-proposed main restricted universe multiverse</span><br></pre></td></tr></table></figure>
-
-<h3 id="生成本地化数据"><a href="#生成本地化数据" class="headerlink" title="生成本地化数据"></a>生成本地化数据</h3><p>Firefly官方镜像没有安装<code>en_US.UTF-8</code>，更新软件可能会报错。</p>
+<h3 id="生成本地化数据"><a class="header-anchor" href="#生成本地化数据">#</a>生成本地化数据</h3>
+<p>Firefly官方镜像没有安装<code>en_US.UTF-8</code>，更新软件可能会报错。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">locale-gen en_US.UTF-8</span><br><span class="line">locale-gen zh_CN.UTF-8</span><br></pre></td></tr></table></figure>
-
-<h3 id="设置时区"><a href="#设置时区" class="headerlink" title="设置时区"></a>设置时区</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg-reconfigure tzdata</span><br></pre></td></tr></table></figure>
+<h3 id="设置时区"><a class="header-anchor" href="#设置时区">#</a>设置时区</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dpkg-reconfigure tzdata</span><br></pre></td></tr></table></figure>
 <p>这是用 UI 方式设置的。</p>
-<h3 id="升级软件"><a href="#升级软件" class="headerlink" title="升级软件"></a>升级软件</h3><p>保持软件最新。</p>
+<h3 id="升级软件"><a class="header-anchor" href="#升级软件">#</a>升级软件</h3>
+<p>保持软件最新。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt upgrade -y</span><br></pre></td></tr></table></figure>
 <p><strong>更新完后可以再安装自己所需的软件。</strong></p>
-<p><br>最后出现一个错误，尝试配置 blueman 包时，因为它尝试与系统消息总线（D-Bus）交互，而在 chroot 环境中，D-Bus 服务通常是不可用的。这是因为 chroot 环境缺少运行完整系统服务的环境，特别是像 D-Bus 这样的系统级服务。</p>
+<p><br>
+最后出现一个错误，尝试配置 blueman 包时，因为它尝试与系统消息总线（D-Bus）交互，而在 chroot 环境中，D-Bus 服务通常是不可用的。这是因为 chroot 环境缺少运行完整系统服务的环境，特别是像 D-Bus 这样的系统级服务。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ apt upgrade -y</span><br><span class="line">Reading package lists... Done</span><br><span class="line">Building dependency tree       </span><br><span class="line">Reading state information... Done</span><br><span class="line">Calculating upgrade... Done</span><br><span class="line">0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.</span><br><span class="line">1 not fully installed or removed.</span><br><span class="line">After this operation, 0 B of additional disk space will be used.</span><br><span class="line">Setting up blueman (2.0.4-1ubuntu2.1) ...</span><br><span class="line">Running <span class="keyword">in</span> <span class="built_in">chroot</span>, ignoring request.</span><br><span class="line"> * Reloading system message bus config...                                                                                                              Failed to open connection to <span class="string">&quot;system&quot;</span> message bus: Failed to connect to socket /var/run/dbus/system_bus_socket: No such file or directory</span><br><span class="line">invoke-rc.d: initscript dbus, action <span class="string">&quot;reload&quot;</span> failed.</span><br><span class="line">dpkg: error processing package blueman (--configure):</span><br><span class="line"> subprocess installed post-installation script returned error <span class="built_in">exit</span> status 1</span><br><span class="line">Errors were encountered <span class="keyword">while</span> processing:</span><br><span class="line"> blueman</span><br><span class="line">E: Sub-process /usr/bin/dpkg returned an error code (1)</span><br></pre></td></tr></table></figure>
 <p>不用管它了。</p>
-<h3 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 卸载镜像</span></span><br><span class="line">./ch-mount.sh -u /mnt/rootfs/ rk3288_ubuntu_rootfs.img</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找并尝试修复文件系统中的任何错误</span></span><br><span class="line">e2fsck -f rk3288_ubuntu_rootfs.img</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将文件系统最小化</span></span><br><span class="line">resize2fs -M rk3288_ubuntu_rootfs.img</span><br></pre></td></tr></table></figure>
+<h3 id="打包"><a class="header-anchor" href="#打包">#</a>打包</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 卸载镜像</span></span><br><span class="line">./ch-mount.sh -u /mnt/rootfs/ rk3288_ubuntu_rootfs.img</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找并尝试修复文件系统中的任何错误</span></span><br><span class="line">e2fsck -f rk3288_ubuntu_rootfs.img</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将文件系统最小化</span></span><br><span class="line">resize2fs -M rk3288_ubuntu_rootfs.img</span><br></pre></td></tr></table></figure>
       </div>
       
         <div class="prev-or-next">
@@ -207,30 +220,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Firefly/" title="Firefly">
-                        #Firefly
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/RK3288/" title="RK3288">
-                        #RK3288
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -272,13 +261,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -498,43 +490,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E9%87%8D%E6%96%B0%E6%89%93%E5%8C%85%20Firefly-RK3288%20rootfs%20%E9%95%9C%E5%83%8F + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F03%2F22%2Ffirefly-rk3288-repack-rootfs%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/03/22/firefly-rk3288-repack-rootfs/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

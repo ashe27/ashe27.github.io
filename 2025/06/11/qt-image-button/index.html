@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -163,24 +167,37 @@
       </div>
       <div class="markdown-body">
         <p>用图片作为按钮是很常见的事，听上去是意见再简单不过的事，但是在 Qt 中使用有些需要注意的地方。</p>
-<h2 id="拉伸图片"><a href="#拉伸图片" class="headerlink" title="拉伸图片"></a>拉伸图片</h2><p>图片尺寸和按钮尺寸一致，这是最理想的情况</p>
+<h2 id="拉伸图片"><a class="header-anchor" href="#拉伸图片">#</a>拉伸图片</h2>
+<p>图片尺寸和按钮尺寸一致，这是最理想的情况</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#button1</span> &#123;</span><br><span class="line">    <span class="attribute">border</span>: none;</span><br><span class="line">    <span class="attribute">min-width</span>: <span class="number">73px</span>;</span><br><span class="line">    <span class="attribute">max-width</span>: <span class="number">73px</span>;</span><br><span class="line">    <span class="attribute">min-height</span>: <span class="number">73px</span>;</span><br><span class="line">    <span class="attribute">max-height</span>: <span class="number">73px</span>;</span><br><span class="line">    <span class="attribute">background</span>: red <span class="built_in">url</span>(<span class="string">&quot;:/test.png&quot;</span>) no-repeat;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/qt-image-button/01.webp"><br>如图所示，按钮的红色背景没有显示，图片完美覆盖了按钮。<br>如果按钮大于图片时就会露出按钮的背景色。</p>
+<p><img src="/images/qt-image-button/01.webp" alt=""><br>
+如图所示，按钮的红色背景没有显示，图片完美覆盖了按钮。<br>
+如果按钮大于图片时就会露出按钮的背景色。</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#button1</span> &#123;</span><br><span class="line">    <span class="attribute">border</span>: none;</span><br><span class="line">    <span class="attribute">min-width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">max-width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">min-height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">max-height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">background</span>: red <span class="built_in">url</span>(<span class="string">&quot;:/test.png&quot;</span>) no-repeat center;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/qt-image-button/02.webp"><br>聪明的你可能会想到将按钮背景色设置为透明，这样看上去图片似乎正好是按钮的大小，这样视觉上是糊弄过去了，但是在用户点击图片四周空白时会触发按钮的事件，所以这种方式并不完美。</p>
+<p><img src="/images/qt-image-button/02.webp" alt=""><br>
+聪明的你可能会想到将按钮背景色设置为透明，这样看上去图片似乎正好是按钮的大小，这样视觉上是糊弄过去了，但是在用户点击图片四周空白时会触发按钮的事件，所以这种方式并不完美。</p>
 <p>在 CSS 中有<code>background-size</code>可以拉伸图片，<strong>但遗憾的是QSS不支持设置<code>background-size</code>属性。</strong></p>
-<p><br>好消息是，我们可以用 <a target="_blank" rel="noopener" href="https://doc.qt.io/archives/qt-5.15/stylesheet-reference.html#border-image">border-image</a> 来拉伸图片以便填充整个控件</p>
+<p><br>
+好消息是，我们可以用 <a target="_blank" rel="noopener" href="https://doc.qt.io/archives/qt-5.15/stylesheet-reference.html#border-image">border-image</a> 来拉伸图片以便填充整个控件</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-id">#button1</span> &#123;</span><br><span class="line">    <span class="attribute">min-width</span>: <span class="number">200px</span>;</span><br><span class="line">    <span class="attribute">max-width</span>: <span class="number">200px</span>;</span><br><span class="line">    <span class="attribute">min-height</span>: <span class="number">200px</span>;</span><br><span class="line">    <span class="attribute">max-height</span>: <span class="number">200px</span>;</span><br><span class="line">    <span class="attribute">border-image</span>: <span class="built_in">url</span>(<span class="string">&quot;:/test.png&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/qt-image-button/03.webp"></p>
-<h2 id="禁用的按钮"><a href="#禁用的按钮" class="headerlink" title="禁用的按钮"></a>禁用的按钮</h2><p>用图片做按钮还面临着一个问题：按钮禁用后外观不会变化，看不到灰色。<br>标准解决方法是做两张按钮，然后通过伪类<code>:disabled</code>实现图片切换</p>
+<p><img src="/images/qt-image-button/03.webp" alt=""></p>
+<h2 id="禁用的按钮"><a class="header-anchor" href="#禁用的按钮">#</a>禁用的按钮</h2>
+<p>用图片做按钮还面临着一个问题：按钮禁用后外观不会变化，看不到灰色。<br>
+标准解决方法是做两张按钮，然后通过伪类<code>:disabled</code>实现图片切换</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">QPushButton &#123;</span><br><span class="line">    <span class="attribute">border-image</span>: <span class="built_in">url</span>(<span class="string">:/images/button_normal.png</span>);</span><br><span class="line">&#125;</span><br><span class="line">QPushButton<span class="selector-pseudo">:disabled</span> &#123;</span><br><span class="line">    <span class="attribute">border-image</span>: <span class="built_in">url</span>(<span class="string">:/images/button_disabled.png</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但是，有时候因为各种原因只能用一张图片，比如图片是网路上找的，没有其他状态的图片。又或者按钮有多种状态，每种状态都要做一张灰色图也太费劲了。<br>那么如何解决这个问题呢？<br>答案是用<code>icon</code>属性来设置图片：</p>
+<p>但是，有时候因为各种原因只能用一张图片，比如图片是网路上找的，没有其他状态的图片。又或者按钮有多种状态，每种状态都要做一张灰色图也太费劲了。<br>
+那么如何解决这个问题呢？<br>
+答案是用<code>icon</code>属性来设置图片：</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">QPushButton &#123;</span><br><span class="line">    <span class="attribute">background-color</span>: red;</span><br><span class="line">    <span class="attribute">border</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#button1</span> &#123;</span><br><span class="line">    <span class="attribute">min-width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">max-width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">min-height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">max-height</span>: <span class="number">100px</span>;</span><br><span class="line">    qproperty-<span class="attribute">icon</span>: <span class="built_in">url</span>(<span class="string">&quot;:/test.png&quot;</span>);</span><br><span class="line">    qproperty-iconSize: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#button2</span> &#123;</span><br><span class="line">    <span class="attribute">min-width</span>: <span class="number">30px</span>;</span><br><span class="line">    <span class="attribute">max-width</span>: <span class="number">30px</span>;</span><br><span class="line">    <span class="attribute">min-height</span>: <span class="number">30px</span>;</span><br><span class="line">    <span class="attribute">max-height</span>: <span class="number">30px</span>;</span><br><span class="line">    qproperty-<span class="attribute">icon</span>: <span class="built_in">url</span>(<span class="string">&quot;:/test.png&quot;</span>);</span><br><span class="line">    qproperty-iconSize: <span class="number">30px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="/images/qt-image-button/04.webp"><br>从图中可以看出，<strong>通过<code>icon</code>属性设置的图片可以缩小，但是无法放大</strong>。</p>
-<p><br>最后请求 AI 帮助，给出了用自绘的方案，从 <a target="_blank" rel="noopener" href="https://doc.qt.io/archives/qt-5.7/qpushbutton.html">QPushButton</a> 继承，并自己实现 <a target="_blank" rel="noopener" href="https://doc.qt.io/archives/qt-5.7/qabstractbutton.html#paintEvent">PaintEvent</a> 方法：</p>
+<p><img src="/images/qt-image-button/04.webp" alt=""><br>
+从图中可以看出，<strong>通过<code>icon</code>属性设置的图片可以缩小，但是无法放大</strong>。</p>
+<p><br>
+最后请求 AI 帮助，给出了用自绘的方案，从 <a target="_blank" rel="noopener" href="https://doc.qt.io/archives/qt-5.7/qpushbutton.html">QPushButton</a> 继承，并自己实现 <a target="_blank" rel="noopener" href="https://doc.qt.io/archives/qt-5.7/qabstractbutton.html#paintEvent">PaintEvent</a> 方法：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">ImageButton::paintEvent</span><span class="params">(QPaintEvent *event)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">Q_UNUSED</span>(event);</span><br><span class="line"></span><br><span class="line">    <span class="function">QStylePainter <span class="title">painter</span><span class="params">(<span class="keyword">this</span>)</span></span>;</span><br><span class="line">    QStyleOptionButton option;</span><br><span class="line">    <span class="built_in">initStyleOption</span>(&amp;option); <span class="comment">// 初始化 option，获取所有样式信息</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 先绘制按钮的面板（背景和边框），这一步会完全遵循 QSS 的设置</span></span><br><span class="line">    painter.<span class="built_in">drawPrimitive</span>(QStyle::PE_PanelButtonCommand, option);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// --- 接下来的逻辑负责在背景之上绘制内容（图标和文字）---</span></span><br><span class="line"></span><br><span class="line">    QIcon currentIcon = <span class="built_in">icon</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果有图标，就绘制图标</span></span><br><span class="line">    <span class="keyword">if</span> (!currentIcon.<span class="built_in">isNull</span>()) &#123;</span><br><span class="line">        <span class="comment">// 获取用户设置的 iconSize</span></span><br><span class="line">        <span class="type">const</span> QSize currentIconSize = <span class="built_in">iconSize</span>();</span><br><span class="line">        <span class="comment">// 根据按钮状态和指定的 iconSize 获取对应的 pixmap</span></span><br><span class="line">        QIcon::Mode iconMode = <span class="built_in">isEnabled</span>() ? QIcon::Normal : QIcon::Disabled;</span><br><span class="line">        QPixmap pixmap = currentIcon.<span class="built_in">pixmap</span>(currentIconSize, iconMode);</span><br><span class="line">        <span class="comment">// 计算图标应该被绘制在哪个矩形区域内，以使其在按钮中居中</span></span><br><span class="line">        QRect iconRect = QStyle::<span class="built_in">alignedRect</span>(</span><br><span class="line">            Qt::LeftToRight,</span><br><span class="line">            Qt::AlignCenter,</span><br><span class="line">            currentIconSize,</span><br><span class="line">            <span class="keyword">this</span>-&gt;<span class="built_in">rect</span>()</span><br><span class="line">            );</span><br><span class="line">        <span class="comment">// 将 pixmap 绘制到计算出的居中矩形中</span></span><br><span class="line">        painter.<span class="built_in">drawPixmap</span>(iconRect, pixmap);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 最后，绘制按钮的文本</span></span><br><span class="line">    <span class="comment">// 从 option.state 中过滤出文本对齐标志 (兼容 Qt 5.7)</span></span><br><span class="line">    <span class="type">int</span> alignment = option.state &amp; Qt::AlignAbsolute;</span><br><span class="line">    <span class="comment">// 为了防止文本和图标重叠，我们不再使用 option.rect，而是使用整个按钮的 rect()</span></span><br><span class="line">    <span class="comment">// 更复杂的布局需要更精细的计算，但对于居中对齐，这样是可行的。</span></span><br><span class="line">    painter.<span class="built_in">drawText</span>(<span class="keyword">this</span>-&gt;<span class="built_in">rect</span>(), alignment, option.text);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这回可以放大了，完美了<br><img src="/images/qt-image-button/05.webp"></p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://doc.qt.io/archives/qt-5.15/stylesheet-reference.html#list-of-stylable-widgets">Qt Style Sheets Reference</a></p>
+<p>这回可以放大了，完美了<br>
+<img src="/images/qt-image-button/05.webp" alt=""></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://doc.qt.io/archives/qt-5.15/stylesheet-reference.html#list-of-stylable-widgets">Qt Style Sheets Reference</a></p>
 
       </div>
       
@@ -192,24 +209,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Qt/" title="Qt">
-                        #Qt
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -251,13 +250,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -477,43 +479,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Qt%20%E5%88%B6%E4%BD%9C%E5%9B%BE%E7%89%87%E6%8C%89%E9%92%AE%E7%9A%84%E4%BA%9B%E4%BA%8B + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F06%2F11%2Fqt-image-button%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/06/11/qt-image-button/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

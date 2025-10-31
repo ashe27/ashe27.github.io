@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -174,43 +178,58 @@
           
       </div>
       <div class="markdown-body">
-        <p>最近在逆向星际争霸，偶尔有时候启动游戏时会弹出需要CD-ROM的错误，但是我下载的就是破解版，于是上网找到了破解方法：<br><a target="_blank" rel="noopener" href="http://www.mytju.com/classcode/news_readNews.asp?newsID=257">星际母巢之战1.08b光盘版免CD方法</a><br><a target="_blank" rel="noopener" href="https://www.pediy.com/kssd/pediy04/kanxue180.htm">改一个字节破解星际争霸母巢之战1.08b的光盘保护</a></p>
-<p>调试看了一下<code>storm.dll</code>文件的<code>1501867A</code>处已经是<code>jmp</code>了，应该没问题才对。<br>然后看到原文章说要添加注册表路径，原话是这么说的：<strong>注册表中的CD盘付改成你的安装盘</strong>。<br>于是我改了注册表</p>
+        <p>最近在逆向星际争霸，偶尔有时候启动游戏时会弹出需要CD-ROM的错误，但是我下载的就是破解版，于是上网找到了破解方法：<br>
+<a target="_blank" rel="noopener" href="http://www.mytju.com/classcode/news_readNews.asp?newsID=257">星际母巢之战1.08b光盘版免CD方法</a><br>
+<a target="_blank" rel="noopener" href="https://www.pediy.com/kssd/pediy04/kanxue180.htm">改一个字节破解星际争霸母巢之战1.08b的光盘保护</a></p>
+<p>调试看了一下<code>storm.dll</code>文件的<code>1501867A</code>处已经是<code>jmp</code>了，应该没问题才对。<br>
+然后看到原文章说要添加注册表路径，原话是这么说的：<strong>注册表中的CD盘付改成你的安装盘</strong>。<br>
+于是我改了注册表</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Blizzard Entertainment\Starcraft]</span><br><span class="line">&quot;StarCD&quot;=&quot;C:\\&quot;</span><br></pre></td></tr></table></figure>
-<p>测试发现没用。<br>然后不得不自行调试，设置断点<code>GetDriveTypeA</code>，来到这里</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">sub_468BD0</span><span class="params">(<span class="type">int</span> a1, <span class="type">int</span> a2)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> v4; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">char</span> *v5; <span class="comment">// ebp</span></span><br><span class="line">  DWORD LogicalDriveStringsA; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">char</span> v7; <span class="comment">// al</span></span><br><span class="line">  CHAR *v8; <span class="comment">// edi</span></span><br><span class="line">  <span class="type">char</span> v9; <span class="comment">// al</span></span><br><span class="line">  <span class="type">const</span> CHAR *v10; <span class="comment">// esi</span></span><br><span class="line">  <span class="type">int</span> v11; <span class="comment">// ecx</span></span><br><span class="line">  <span class="type">int</span> v12; <span class="comment">// [esp+78h] [ebp-21Ch] BYREF</span></span><br><span class="line">  <span class="type">int</span> v13; <span class="comment">// [esp+7Ch] [ebp-218h] BYREF</span></span><br><span class="line">  <span class="type">int</span> v14; <span class="comment">// [esp+80h] [ebp-214h] BYREF</span></span><br><span class="line">  <span class="type">int</span> v15; <span class="comment">// [esp+84h] [ebp-210h]</span></span><br><span class="line">  <span class="type">int</span> v16; <span class="comment">// [esp+88h] [ebp-20Ch] BYREF</span></span><br><span class="line">  CHAR v17[<span class="number">260</span>]; <span class="comment">// [esp+8Ch] [ebp-208h] BYREF</span></span><br><span class="line">  CHAR Buffer[<span class="number">260</span>]; <span class="comment">// [esp+190h] [ebp-104h] BYREF</span></span><br><span class="line"></span><br><span class="line">  v15 = a1;</span><br><span class="line">  <span class="keyword">if</span> ( dword_655ECC )</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( Storm_422(aStarcraft, aStarcd, <span class="number">0</span>, v17, <span class="number">260</span>) )</span><br><span class="line">    &#123;</span><br><span class="line">      Storm_503(v17, aInstallExe, <span class="number">260</span>);</span><br><span class="line">      v4 = Storm_266(v17, <span class="number">1000</span>, <span class="number">3</span>, &amp;v12);</span><br><span class="line">      <span class="keyword">if</span> ( !v4 )</span><br><span class="line">        <span class="keyword">goto</span> LABEL_9;</span><br><span class="line">      <span class="keyword">if</span> ( a2 )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> ( !Storm_268(v12, a2, <span class="number">0</span>, &amp;v16) )</span><br><span class="line">        &#123;</span><br><span class="line">          Storm_252(v12);</span><br><span class="line">          v4 = <span class="number">0</span>;</span><br><span class="line">LABEL_9:</span><br><span class="line">          <span class="keyword">if</span> ( v4 )</span><br><span class="line">            <span class="keyword">goto</span> LABEL_27;</span><br><span class="line">          <span class="keyword">goto</span> LABEL_10;</span><br><span class="line">        &#125;</span><br><span class="line">        Storm_253(v16);</span><br><span class="line">      &#125;</span><br><span class="line">      v4 = v12;</span><br><span class="line">      <span class="keyword">goto</span> LABEL_9;</span><br><span class="line">    &#125;</span><br><span class="line">LABEL_10:</span><br><span class="line">    v5 = aInstallExe;</span><br><span class="line">    LogicalDriveStringsA = GetLogicalDriveStringsA(<span class="number">0x104</span>u, Buffer);</span><br><span class="line">    <span class="keyword">if</span> ( LogicalDriveStringsA &amp;&amp; LogicalDriveStringsA &lt;= <span class="number">0x104</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( aInstallExe[<span class="number">0</span>] == <span class="number">92</span> )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">do</span></span><br><span class="line">          v7 = *++v5;</span><br><span class="line">        <span class="keyword">while</span> ( v7 == <span class="number">92</span> );</span><br><span class="line">      &#125;</span><br><span class="line">      v8 = Buffer;</span><br><span class="line">      <span class="keyword">if</span> ( Buffer[<span class="number">0</span>] )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">        &#123;</span><br><span class="line">          v9 = *v8;</span><br><span class="line">          v10 = v8++;</span><br><span class="line">          <span class="keyword">if</span> ( v9 )</span><br><span class="line">            v8 += <span class="built_in">strlen</span>(v8) + <span class="number">1</span>;</span><br><span class="line">          <span class="keyword">if</span> ( GetDriveTypeA(v10) == <span class="number">5</span> )</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">LABEL_25:</span><br><span class="line">          <span class="keyword">if</span> ( !*v8 )</span><br><span class="line">            <span class="keyword">goto</span> LABEL_26;</span><br><span class="line">        &#125;</span><br><span class="line">        Storm_501(v17, v10, <span class="number">260</span>);</span><br><span class="line">        Storm_503(v17, v5, <span class="number">260</span>);</span><br><span class="line">        v4 = Storm_266(v17, <span class="number">1000</span>, <span class="number">3</span>, &amp;v13);</span><br><span class="line">        <span class="keyword">if</span> ( v4 )</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="keyword">if</span> ( !a2 )</span><br><span class="line">            <span class="keyword">goto</span> LABEL_23;</span><br><span class="line">          <span class="keyword">if</span> ( Storm_268(v13, a2, <span class="number">0</span>, &amp;v14) )</span><br><span class="line">          &#123;</span><br><span class="line">            Storm_253(v14);</span><br><span class="line">LABEL_23:</span><br><span class="line">            v4 = v13;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">          &#123;</span><br><span class="line">            Storm_252(v13);</span><br><span class="line">            v4 = <span class="number">0</span>;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> ( v4 )</span><br><span class="line">          <span class="keyword">goto</span> LABEL_27;</span><br><span class="line">        <span class="keyword">goto</span> LABEL_25;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">LABEL_26:</span><br><span class="line">    v4 = <span class="number">0</span>;</span><br><span class="line">LABEL_27:</span><br><span class="line">    dword_655ECC = v4;</span><br><span class="line">    <span class="keyword">if</span> ( v4 )</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> ( !v15 )</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> ( !sub_4DE460() )                        <span class="comment">// 没有CD的错误</span></span><br><span class="line">    &#123;</span><br><span class="line">      LOBYTE(v11) = <span class="number">0</span>;</span><br><span class="line">      sub_4DE920(v11);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如今日子好了，直接扔给 AI 分析：<br>这个函数 <code>sub_468BD0</code> 是一个<strong>“游戏资源定位器”</strong>，它的核心功能是<strong>查找并打开游戏所需的核心数据文件（很可能是 StarCraft 的 CD-ROM）</strong>。<br>它实现了一个非常健壮的搜索逻辑，包括<strong>缓存</strong>、<strong>注册表检查</strong>和<strong>蛮力搜索</strong>。</p>
+<p>测试发现没用。<br>
+然后不得不自行调试，设置断点<code>GetDriveTypeA</code>，来到这里</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __fastcall <span class="title function_">sub_468BD0</span><span class="params">(<span class="type">int</span> a1, <span class="type">int</span> a2)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> v4; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">char</span> *v5; <span class="comment">// ebp</span></span><br><span class="line">  DWORD LogicalDriveStringsA; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">char</span> v7; <span class="comment">// al</span></span><br><span class="line">  CHAR *v8; <span class="comment">// edi</span></span><br><span class="line">  <span class="type">char</span> v9; <span class="comment">// al</span></span><br><span class="line">  <span class="type">const</span> CHAR *v10; <span class="comment">// esi</span></span><br><span class="line">  <span class="type">int</span> v11; <span class="comment">// ecx</span></span><br><span class="line">  <span class="type">int</span> v12; <span class="comment">// [esp+78h] [ebp-21Ch] BYREF</span></span><br><span class="line">  <span class="type">int</span> v13; <span class="comment">// [esp+7Ch] [ebp-218h] BYREF</span></span><br><span class="line">  <span class="type">int</span> v14; <span class="comment">// [esp+80h] [ebp-214h] BYREF</span></span><br><span class="line">  <span class="type">int</span> v15; <span class="comment">// [esp+84h] [ebp-210h]</span></span><br><span class="line">  <span class="type">int</span> v16; <span class="comment">// [esp+88h] [ebp-20Ch] BYREF</span></span><br><span class="line">  CHAR v17[<span class="number">260</span>]; <span class="comment">// [esp+8Ch] [ebp-208h] BYREF</span></span><br><span class="line">  CHAR Buffer[<span class="number">260</span>]; <span class="comment">// [esp+190h] [ebp-104h] BYREF</span></span><br><span class="line"></span><br><span class="line">  v15 = a1;</span><br><span class="line">  <span class="keyword">if</span> ( dword_655ECC )</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( Storm_422(aStarcraft, aStarcd, <span class="number">0</span>, v17, <span class="number">260</span>) )</span><br><span class="line">    &#123;</span><br><span class="line">      Storm_503(v17, aInstallExe, <span class="number">260</span>);</span><br><span class="line">      v4 = Storm_266(v17, <span class="number">1000</span>, <span class="number">3</span>, &amp;v12);</span><br><span class="line">      <span class="keyword">if</span> ( !v4 )</span><br><span class="line">        <span class="keyword">goto</span> LABEL_9;</span><br><span class="line">      <span class="keyword">if</span> ( a2 )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">if</span> ( !Storm_268(v12, a2, <span class="number">0</span>, &amp;v16) )</span><br><span class="line">        &#123;</span><br><span class="line">          Storm_252(v12);</span><br><span class="line">          v4 = <span class="number">0</span>;</span><br><span class="line">LABEL_9:</span><br><span class="line">          <span class="keyword">if</span> ( v4 )</span><br><span class="line">            <span class="keyword">goto</span> LABEL_27;</span><br><span class="line">          <span class="keyword">goto</span> LABEL_10;</span><br><span class="line">        &#125;</span><br><span class="line">        Storm_253(v16);</span><br><span class="line">      &#125;</span><br><span class="line">      v4 = v12;</span><br><span class="line">      <span class="keyword">goto</span> LABEL_9;</span><br><span class="line">    &#125;</span><br><span class="line">LABEL_10:</span><br><span class="line">    v5 = aInstallExe;</span><br><span class="line">    LogicalDriveStringsA = GetLogicalDriveStringsA(<span class="number">0x104u</span>, Buffer);</span><br><span class="line">    <span class="keyword">if</span> ( LogicalDriveStringsA &amp;&amp; LogicalDriveStringsA &lt;= <span class="number">0x104</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( aInstallExe[<span class="number">0</span>] == <span class="number">92</span> )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">do</span></span><br><span class="line">          v7 = *++v5;</span><br><span class="line">        <span class="keyword">while</span> ( v7 == <span class="number">92</span> );</span><br><span class="line">      &#125;</span><br><span class="line">      v8 = Buffer;</span><br><span class="line">      <span class="keyword">if</span> ( Buffer[<span class="number">0</span>] )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">        &#123;</span><br><span class="line">          v9 = *v8;</span><br><span class="line">          v10 = v8++;</span><br><span class="line">          <span class="keyword">if</span> ( v9 )</span><br><span class="line">            v8 += <span class="built_in">strlen</span>(v8) + <span class="number">1</span>;</span><br><span class="line">          <span class="keyword">if</span> ( GetDriveTypeA(v10) == <span class="number">5</span> )</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">LABEL_25:</span><br><span class="line">          <span class="keyword">if</span> ( !*v8 )</span><br><span class="line">            <span class="keyword">goto</span> LABEL_26;</span><br><span class="line">        &#125;</span><br><span class="line">        Storm_501(v17, v10, <span class="number">260</span>);</span><br><span class="line">        Storm_503(v17, v5, <span class="number">260</span>);</span><br><span class="line">        v4 = Storm_266(v17, <span class="number">1000</span>, <span class="number">3</span>, &amp;v13);</span><br><span class="line">        <span class="keyword">if</span> ( v4 )</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="keyword">if</span> ( !a2 )</span><br><span class="line">            <span class="keyword">goto</span> LABEL_23;</span><br><span class="line">          <span class="keyword">if</span> ( Storm_268(v13, a2, <span class="number">0</span>, &amp;v14) )</span><br><span class="line">          &#123;</span><br><span class="line">            Storm_253(v14);</span><br><span class="line">LABEL_23:</span><br><span class="line">            v4 = v13;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">          &#123;</span><br><span class="line">            Storm_252(v13);</span><br><span class="line">            v4 = <span class="number">0</span>;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> ( v4 )</span><br><span class="line">          <span class="keyword">goto</span> LABEL_27;</span><br><span class="line">        <span class="keyword">goto</span> LABEL_25;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">LABEL_26:</span><br><span class="line">    v4 = <span class="number">0</span>;</span><br><span class="line">LABEL_27:</span><br><span class="line">    dword_655ECC = v4;</span><br><span class="line">    <span class="keyword">if</span> ( v4 )</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> ( !v15 )</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> ( !sub_4DE460() )                        <span class="comment">// 没有CD的错误</span></span><br><span class="line">    &#123;</span><br><span class="line">      LOBYTE(v11) = <span class="number">0</span>;</span><br><span class="line">      sub_4DE920(v11);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如今日子好了，直接扔给 AI 分析：<br>
+这个函数 <code>sub_468BD0</code> 是一个**“游戏资源定位器”<strong>，它的核心功能是</strong>查找并打开游戏所需的核心数据文件（很可能是 StarCraft 的 CD-ROM）<strong>。<br>
+它实现了一个非常健壮的搜索逻辑，包括</strong>缓存**、<strong>注册表检查</strong>和<strong>蛮力搜索</strong>。</p>
 <hr>
-<h3 id="详细逻辑分解"><a href="#详细逻辑分解" class="headerlink" title="详细逻辑分解"></a>详细逻辑分解</h3><p>这个函数的工作流程可以分为三个主要阶段：</p>
-<h3 id="1-检查缓存"><a href="#1-检查缓存" class="headerlink" title="1. 检查缓存"></a>1. 检查缓存</h3><ul>
+<h3 id="详细逻辑分解"><a class="header-anchor" href="#详细逻辑分解">#</a>详细逻辑分解</h3>
+<p>这个函数的工作流程可以分为三个主要阶段：</p>
+<h3 id="1-检查缓存"><a class="header-anchor" href="#1-检查缓存">#</a>1. 检查缓存</h3>
+<ul>
 <li><code>if ( dword_655ECC ) return 1;</code></li>
-<li>函数首先检查一个<strong>全局变量 <code>dword_655ECC</code><strong>。这个变量显然是用来</strong>缓存</strong>上一次的搜索结果的（很可能存储了找到的文件的句柄）。</li>
+<li>函数首先检查一个<strong>全局变量 <code>dword_655ECC</code></strong>。这个变量显然是用来<strong>缓存</strong>上一次的搜索结果的（很可能存储了找到的文件的句柄）。</li>
 <li>如果这个值非零（表示“之前已经找到了”），函数会立即返回 <code>1</code>（成功），跳过所有搜索。</li>
 </ul>
 <hr>
-<h3 id="2-搜索尝试（在一个-while-1-循环中）"><a href="#2-搜索尝试（在一个-while-1-循环中）" class="headerlink" title="2. 搜索尝试（在一个 while(1) 循环中）"></a>2. 搜索尝试（在一个 <code>while(1)</code> 循环中）</h3><p>如果缓存为空，它会进入一个无限循环来尝试定位文件。</p>
-<h4 id="尝试-A：注册表-已知路径"><a href="#尝试-A：注册表-已知路径" class="headerlink" title="尝试 A：注册表&#x2F;已知路径"></a>尝试 A：注册表&#x2F;已知路径</h4><ul>
+<h3 id="2-搜索尝试（在一个-while-1-循环中）"><a class="header-anchor" href="#2-搜索尝试（在一个-while-1-循环中）">#</a>2. 搜索尝试（在一个 <code>while(1)</code> 循环中）</h3>
+<p>如果缓存为空，它会进入一个无限循环来尝试定位文件。</p>
+<h4 id="尝试-A：注册表-已知路径"><a class="header-anchor" href="#尝试-A：注册表-已知路径">#</a>尝试 A：注册表/已知路径</h4>
+<ul>
 <li><code>if ( Storm_422(aStarcraft, aStarcd, 0, v17, 260) )</code></li>
 <li>它首先调用 <code>Storm_422</code>。这个函数很可能<strong>查询 Windows 注册表</strong>，查找 StarCraft 的“安装路径”或“CD 路径”。</li>
-<li>如果找到了路径（例如 “D:&quot;）：<ol>
-<li><code>Storm_503(v17, aInstallExe, 260);</code>：它将 <code>aInstallExe</code>（”Install.exe”）附加到路径上，<code>v17</code> 现在是 “D:\Install.exe”。</li>
+<li>如果找到了路径（例如 &quot;D:&quot;）：
+<ol>
+<li><code>Storm_503(v17, aInstallExe, 260);</code>：它将 <code>aInstallExe</code>（“Install.exe”）附加到路径上，<code>v17</code> 现在是 “D:\Install.exe”。</li>
 <li><code>v4 = Storm_266(v17, ... &amp;v12);</code>：它尝试将这个 “Install.exe” <strong>作为数据档案打开</strong>（<code>Storm_266</code> 可能是 <code>SFileOpenArchive</code>）。</li>
-<li><code>if ( a2 ) &#123; ... Storm_268(...) &#125;</code>：如果参数 <code>a2</code>（一个文件名）被提供了，它会进一步尝试在这个档案中<strong>打开那个特定的文件</strong>（<code>Storm_268</code> 可能是 <code>SFileOpenFileEx</code>）。</li>
+<li><code>if ( a2 ) { ... Storm_268(...) }</code>：如果参数 <code>a2</code>（一个文件名）被提供了，它会进一步尝试在这个档案中<strong>打开那个特定的文件</strong>（<code>Storm_268</code> 可能是 <code>SFileOpenFileEx</code>）。</li>
 <li>如果全部成功，它会跳转到 <code>LABEL_27</code>。</li>
 </ol>
 </li>
 </ul>
-<h4 id="尝试-B：蛮力搜索-CD-ROM-驱动器"><a href="#尝试-B：蛮力搜索-CD-ROM-驱动器" class="headerlink" title="尝试 B：蛮力搜索 CD-ROM 驱动器"></a>尝试 B：蛮力搜索 CD-ROM 驱动器</h4><ul>
+<h4 id="尝试-B：蛮力搜索-CD-ROM-驱动器"><a class="header-anchor" href="#尝试-B：蛮力搜索-CD-ROM-驱动器">#</a>尝试 B：蛮力搜索 CD-ROM 驱动器</h4>
+<ul>
 <li>如果 <code>Storm_422</code>（注册表检查）失败了，代码会跳转到 <code>LABEL_10</code>。</li>
-<li><code>LogicalDriveStringsA = GetLogicalDriveStringsA(...)</code>：它调用 Windows API 来获取一个包含<strong>所有驱动器号</strong>（”C:&quot;、”D:&quot;、”E:&quot;…）的列表。</li>
-<li><code>while ( 1 ) &#123; ... &#125;</code>：它开始遍历这个驱动器列表。</li>
-<li><code>if ( GetDriveTypeA(v10) == 5 )</code><ul>
+<li><code>LogicalDriveStringsA = GetLogicalDriveStringsA(...)</code>：它调用 Windows API 来获取一个包含<strong>所有驱动器号</strong>（&quot;C:&quot;、&quot;D:&quot;、&quot;E:&quot;…）的列表。</li>
+<li><code>while ( 1 ) { ... }</code>：它开始遍历这个驱动器列表。</li>
+<li><code>if ( GetDriveTypeA(v10) == 5 )</code>
+<ul>
 <li><strong>这是此函数的关键</strong>。它调用 <code>GetDriveTypeA</code> 检查当前驱动器是否为 <code>DRIVE_CDROM</code> (类型 5)。</li>
-<li><strong>它会跳过所有硬盘、U盘等，只检查 CD&#x2F;DVD 驱动器</strong>。</li>
+<li><strong>它会跳过所有硬盘、U盘等，只检查 CD/DVD 驱动器</strong>。</li>
 </ul>
 </li>
-<li>如果找到了一个 CD-ROM 驱动器（例如 “E:&quot;）：<ol>
-<li><code>Storm_501(v17, v10, 260);</code>：将 “E:&quot; 复制到路径缓冲区。</li>
+<li>如果找到了一个 CD-ROM 驱动器（例如 &quot;E:&quot;）：
+<ol>
+<li><code>Storm_501(v17, v10, 260);</code>：将 &quot;E:&quot; 复制到路径缓冲区。</li>
 <li><code>Storm_503(v17, v5, 260);</code>：将 “Install.exe” 附加到路径上，<code>v17</code> 现在是 “E:\Install.exe”。</li>
 <li>它会<strong>重复“尝试 A”中的第 2、3 步</strong>：尝试打开 “E:\Install.exe” 并（可选地）在其中查找文件 <code>a2</code>。</li>
 <li>如果成功，跳转到 <code>LABEL_27</code>。</li>
@@ -219,20 +238,25 @@
 </li>
 </ul>
 <hr>
-<h3 id="3-处理结果（成功或失败）"><a href="#3-处理结果（成功或失败）" class="headerlink" title="3. 处理结果（成功或失败）"></a>3. 处理结果（成功或失败）</h3><ul>
-<li><code>LABEL_27: dword_655ECC = v4;</code><ul>
+<h3 id="3-处理结果（成功或失败）"><a class="header-anchor" href="#3-处理结果（成功或失败）">#</a>3. 处理结果（成功或失败）</h3>
+<ul>
+<li><code>LABEL_27: dword_655ECC = v4;</code>
+<ul>
 <li>如果搜索成功，<code>v4</code> 会包含一个有效的文件句柄。这个句柄被<strong>保存到全局缓存 <code>dword_655ECC</code></strong> 中，供下次调用时使用。</li>
 </ul>
 </li>
-<li><code>if ( v4 ) return 1;</code><ul>
+<li><code>if ( v4 ) return 1;</code>
+<ul>
 <li>如果 <code>v4</code> 有效，函数返回 <code>1</code>（成功）。</li>
 </ul>
 </li>
-<li><code>if ( !v15 ) return 0;</code><ul>
+<li><code>if ( !v15 ) return 0;</code>
+<ul>
 <li>如果搜索失败（<code>v4</code> 为 0）并且 <code>v15</code>（即 <code>a1</code>）为 <code>0</code>（这可能是一个“静默模式”标志），函数直接返回 <code>0</code>（失败）。</li>
 </ul>
 </li>
-<li><code>if ( !sub_4DE460() ) &#123; ... &#125;</code><ul>
+<li><code>if ( !sub_4DE460() ) { ... }</code>
+<ul>
 <li>如果搜索失败且 <code>a1</code> 不为 <code>0</code>（“UI 模式”），它会调用 <code>sub_4DE460</code> 和 <code>sub_4DE920</code>。</li>
 <li>这<strong>几乎可以肯定是弹出一个对话框</strong>，告诉用户：“<strong>请插入 StarCraft CD-ROM</strong>”。</li>
 <li>用户点击“重试”后，<code>while(1)</code> 循环会<strong>重新开始</strong>，再次执行整个搜索过程。</li>
@@ -252,36 +276,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-10-28 21:46:00
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E9%80%86%E5%90%91/" title="逆向">
-                        #逆向
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E6%B8%B8%E6%88%8F/" title="游戏">
-                        #游戏
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E6%98%9F%E9%99%85%E4%BA%89%E9%9C%B8/" title="星际争霸">
-                        #星际争霸
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -318,13 +312,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -544,43 +541,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%98%9F%E9%99%85%E6%AF%8D%E5%B7%A2%E4%B9%8B%E6%88%981.08b%E5%85%89%E7%9B%98%E7%89%88%E5%85%8DCD%E6%96%B9%E6%B3%95%E7%9A%84%E8%A1%A5%E5%85%85 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F10%2F28%2Fstarcraft-cdrom%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/10/28/starcraft-cdrom/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

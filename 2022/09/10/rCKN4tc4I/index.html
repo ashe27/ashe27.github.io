@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,31 +166,57 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>机场通常会提供一个通用的配置，对于普通的用户来说一般没什么问题，但如果有特别的需求还是需要自己DIY，甚至彻底抛弃机场的配置，完全自主配置。</p>
-<p>一般有以下几种解决方案：<br>1、<a target="_blank" rel="noopener" href="https://surgio.js.org/">surgio</a><br>在本机上使用，一个依赖 nodejs 的工具，在本机操作，根据模板生成出规则文件，自己再将规则文件上传至云服务器。需要懂一点 JavaScript 编程，文档还算写的比较详细。</p>
-<p>2、<a target="_blank" rel="noopener" href="https://github.com/tindy2013/subconverter">subconverter</a><br>部署在服务器上，通过特定的URL订阅，在服务器上完成转换工作，完全靠配置文件，不需要懂编程，但是文档几乎是三言两语，很多配置细节不清不楚。</p>
-<p>3、<a target="_blank" rel="noopener" href="https://docs.cfw.lbyczf.com/contents/parser.html">Parsers</a><br>Clash 自带的配置文件预处理功能，可惜的是它只在本机工作，当你有多个客户端需要设置时就不用考虑这个方案了。</p>
-<p>4、Proxy Providers &amp; Rule Providers<br>Clash 提供了 <a target="_blank" rel="noopener" href="https://github.com/Dreamacro/clash/wiki/configuration#proxy-providers">Proxy Providers</a> 和 <a target="_blank" rel="noopener" href="https://github.com/Dreamacro/clash/wiki/Clash-Premium-Features#rule-providers">Rule Providers</a> 功能。<br>看名字也能知道，一个提供代理服务器信息，一个提供规则信息。有了它俩就很容易配置自己的规则文件，也是本文采用的方案。</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>本文采用 Clash 内置的<code>Proxy Providers</code>和<code>Rule Providers</code>功能来配置，先直接看一个简单的配置文件</p>
+        <h2 id="需求"><a class="header-anchor" href="#需求">#</a>需求</h2>
+<p>机场通常会提供一个通用的配置，对于普通的用户来说一般没什么问题，但如果有特别的需求还是需要自己DIY，甚至彻底抛弃机场的配置，完全自主配置。</p>
+<p>一般有以下几种解决方案：<br>
+1、<a target="_blank" rel="noopener" href="https://surgio.js.org">surgio</a><br>
+在本机上使用，一个依赖 nodejs 的工具，在本机操作，根据模板生成出规则文件，自己再将规则文件上传至云服务器。需要懂一点 JavaScript 编程，文档还算写的比较详细。</p>
+<p>2、<a target="_blank" rel="noopener" href="https://github.com/tindy2013/subconverter">subconverter</a><br>
+部署在服务器上，通过特定的URL订阅，在服务器上完成转换工作，完全靠配置文件，不需要懂编程，但是文档几乎是三言两语，很多配置细节不清不楚。</p>
+<p>3、<a target="_blank" rel="noopener" href="https://docs.cfw.lbyczf.com/contents/parser.html">Parsers</a><br>
+Clash 自带的配置文件预处理功能，可惜的是它只在本机工作，当你有多个客户端需要设置时就不用考虑这个方案了。</p>
+<p>4、Proxy Providers &amp; Rule Providers<br>
+Clash 提供了 <a target="_blank" rel="noopener" href="https://github.com/Dreamacro/clash/wiki/configuration#proxy-providers">Proxy Providers</a> 和 <a target="_blank" rel="noopener" href="https://github.com/Dreamacro/clash/wiki/Clash-Premium-Features#rule-providers">Rule Providers</a> 功能。<br>
+看名字也能知道，一个提供代理服务器信息，一个提供规则信息。有了它俩就很容易配置自己的规则文件，也是本文采用的方案。</p>
+<h2 id="解决方案"><a class="header-anchor" href="#解决方案">#</a>解决方案</h2>
+<p>本文采用 Clash 内置的<code>Proxy Providers</code>和<code>Rule Providers</code>功能来配置，先直接看一个简单的配置文件</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">port:</span> <span class="number">7890</span></span><br><span class="line"><span class="attr">socks-port:</span> <span class="number">7891</span></span><br><span class="line"><span class="attr">redir-port:</span> <span class="number">7892</span></span><br><span class="line"><span class="attr">allow-lan:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">mode:</span> <span class="string">rule</span></span><br><span class="line"><span class="attr">log-level:</span> <span class="string">silent</span></span><br><span class="line"><span class="attr">external-controller:</span> <span class="number">0.0</span><span class="number">.0</span><span class="number">.0</span><span class="string">:9090</span></span><br><span class="line"><span class="attr">secret:</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">proxy-groups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Auto</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">url-test</span></span><br><span class="line">    <span class="attr">use:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">mysub</span></span><br><span class="line"></span><br><span class="line"><span class="attr">proxy-providers:</span></span><br><span class="line">  <span class="attr">mysub:</span> <span class="string">--</span> <span class="string">名字随便取，proxy-groups中会用到</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">./profiles/mysub.yml</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">https://xxx.com/clash</span> <span class="string">--</span> <span class="string">机场订阅链接</span></span><br><span class="line">    <span class="attr">health-check:</span></span><br><span class="line">      <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">interval:</span> <span class="number">600</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">http://www.gstatic.com/generate_204</span></span><br><span class="line"></span><br><span class="line"><span class="attr">rule-providers:</span></span><br><span class="line">  <span class="attr">Custom:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">behavior:</span> <span class="string">domain</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">http://xxx.com/custom.txt</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">./ruleset/custom.txt</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">Proxy:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">behavior:</span> <span class="string">domain</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">&quot;https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt&quot;</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">./ruleset/proxy.txt</span></span><br><span class="line"></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">RULE-SET,Custom,Auto</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">RULE-SET,Proxy,Auto</span></span><br></pre></td></tr></table></figure>
 <p>这个配置文件相比原来老的方式，它没有了<code>proxies</code>字段，改由<code>proxy-providers</code>来提供代理服务器信息。</p>
-<h3 id="代理服务器供应者"><a href="#代理服务器供应者" class="headerlink" title="代理服务器供应者"></a>代理服务器供应者</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">proxy-providers:</span></span><br><span class="line">  <span class="attr">mysub:</span>                         <span class="string">--</span> <span class="string">名字随便取，proxy-groups中会用到</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">./profiles/mysub.yml</span>   <span class="string">--</span> <span class="string">本地路径</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">https://xxx.com/clash</span>   <span class="string">--</span> <span class="string">机场订阅链接</span></span><br><span class="line">    <span class="attr">filter:</span> <span class="string">&#x27;HK|港&#x27;</span>              <span class="string">--</span> <span class="string">筛选出香港的节点</span></span><br><span class="line">    <span class="attr">health-check:</span></span><br><span class="line">      <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">interval:</span> <span class="number">600</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">http://www.gstatic.com/generate_204</span></span><br></pre></td></tr></table></figure>
+<h3 id="代理服务器供应者"><a class="header-anchor" href="#代理服务器供应者">#</a>代理服务器供应者</h3>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">proxy-providers:</span></span><br><span class="line">  <span class="attr">mysub:</span>                         <span class="string">--</span> <span class="string">名字随便取，proxy-groups中会用到</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">http</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">./profiles/mysub.yml</span>   <span class="string">--</span> <span class="string">本地路径</span></span><br><span class="line">    <span class="attr">url:</span> <span class="string">https://xxx.com/clash</span>   <span class="string">--</span> <span class="string">机场订阅链接</span></span><br><span class="line">    <span class="attr">filter:</span> <span class="string">&#x27;HK|港&#x27;</span>              <span class="string">--</span> <span class="string">筛选出香港的节点</span></span><br><span class="line">    <span class="attr">health-check:</span></span><br><span class="line">      <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">      <span class="attr">interval:</span> <span class="number">600</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">http://www.gstatic.com/generate_204</span></span><br></pre></td></tr></table></figure>
 <p>此配置文件中定义了一个名为<code>mysub</code>的供应者，字段<code>type</code>表示用<code>http</code>方式获取，<code>url</code>表示机场的订阅地址，<code>filter</code>意味着筛选出名称中带有指定字符的节点。</p>
-<p><code>health-check</code>表示启用自动测速，<code>interval</code>表示测速周期，单位为秒。<code>url</code>表示测速地址。<br>clash 会将机场的配置文件下载至<code>path</code>所指示的位置。</p>
-<h3 id="自己的分组"><a href="#自己的分组" class="headerlink" title="自己的分组"></a>自己的分组</h3><p>这个和以前没什么变化，只是改用<code>use</code>来指定一个供应者</p>
+<p><code>health-check</code>表示启用自动测速，<code>interval</code>表示测速周期，单位为秒。<code>url</code>表示测速地址。<br>
+clash 会将机场的配置文件下载至<code>path</code>所指示的位置。</p>
+<h3 id="自己的分组"><a class="header-anchor" href="#自己的分组">#</a>自己的分组</h3>
+<p>这个和以前没什么变化，只是改用<code>use</code>来指定一个供应者</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">proxy-groups:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Auto</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">url-test</span></span><br><span class="line">    <span class="attr">use:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">mysub</span></span><br></pre></td></tr></table></figure>
 <p>这里定义了一个名为<code>Auto</code>的分组，<code>type</code>为<code>url-test</code>意味着可以定期测速节点并切换至最快的节点。<code>use</code>指示使用哪个供应者提供的服务器节点，名字要和前面对应上。</p>
-<h3 id="配置规则供应者"><a href="#配置规则供应者" class="headerlink" title="配置规则供应者"></a>配置规则供应者</h3><p><code>rule-providers</code>和<code>proxy-providers</code>的写法非常相似，<code>type</code>、<code>url</code>、<code>path</code>相信你也知道是做什么的了。主要说下<code>behavior</code>，它的值决定了规则文件是采用何种语法解析，一共有3种</p>
+<h3 id="配置规则供应者"><a class="header-anchor" href="#配置规则供应者">#</a>配置规则供应者</h3>
+<p><code>rule-providers</code>和<code>proxy-providers</code>的写法非常相似，<code>type</code>、<code>url</code>、<code>path</code>相信你也知道是做什么的了。主要说下<code>behavior</code>，它的值决定了规则文件是采用何种语法解析，一共有3种</p>
 <ul>
-<li>classical<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">payload:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;.blogger.com&#x27;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;*.*.microsoft.com&#x27;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;books.itunes.apple.com&#x27;</span></span><br></pre></td></tr></table></figure></li>
-<li>ipcidr<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">payload:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;192.168.1.0/24&#x27;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;10.0.0.0.1/32&#x27;</span></span><br></pre></td></tr></table></figure></li>
-<li>classical<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">payload:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,google.com</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,google</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN,ad.com</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">SRC-IP-CIDR,192.168.1.201/32</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,127.0.0.0/8</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">GEOIP,CN</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DST-PORT,80</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">SRC-PORT,7777</span></span><br><span class="line">  <span class="comment"># MATCH is not necessary here</span></span><br></pre></td></tr></table></figure>
-由于规则也外置了，所以不需要像以前那样在配置文件中硬编码规则，比如<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,google.com,Auto</span></span><br></pre></td></tr></table></figure>
-而应该用<code>RULE-SET</code>指示一个规则供应者<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">RULE-SET,Custom,Auto</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">RULE-SET,Proxy,Auto</span></span><br></pre></td></tr></table></figure>
-这里使用了开源的规则列表 <a target="_blank" rel="noopener" href="https://github.com/Loyalsoldier/clash-rules">clash-rules</a>。</li>
+<li>classical</li>
 </ul>
-<h3 id="部署配置文件"><a href="#部署配置文件" class="headerlink" title="部署配置文件"></a>部署配置文件</h3><p>有服务器的可以放服务器，没有的可以考虑放在 github 这样的托管平台，不过要注意保护隐私，避免配置文件泄漏。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://blog.hifool.cn/posts/f42b65b0/">clash更新订阅时保留自己的规则</a><br><a target="_blank" rel="noopener" href="https://www.920.im/clash-rule-providers-configuration/">Clash配置rule-providers实现自由搭配及自动更新规则功能</a><br><a target="_blank" rel="noopener" href="https://docs.cfw.lbyczf.com/">Clash for Windows 中文手册</a><br><a target="_blank" rel="noopener" href="https://github.com/Loyalsoldier/clash-rules">clash-rules</a></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">payload:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;.blogger.com&#x27;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;*.*.microsoft.com&#x27;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;books.itunes.apple.com&#x27;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>ipcidr</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">payload:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;192.168.1.0/24&#x27;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&#x27;10.0.0.0.1/32&#x27;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>classical</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">payload:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,google.com</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-KEYWORD,google</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN,ad.com</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">SRC-IP-CIDR,192.168.1.201/32</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">IP-CIDR,127.0.0.0/8</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">GEOIP,CN</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DST-PORT,80</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">SRC-PORT,7777</span></span><br><span class="line">  <span class="comment"># MATCH is not necessary here</span></span><br></pre></td></tr></table></figure>
+<p>由于规则也外置了，所以不需要像以前那样在配置文件中硬编码规则，比如</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">DOMAIN-SUFFIX,google.com,Auto</span></span><br></pre></td></tr></table></figure>
+<p>而应该用<code>RULE-SET</code>指示一个规则供应者</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">RULE-SET,Custom,Auto</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">RULE-SET,Proxy,Auto</span></span><br></pre></td></tr></table></figure>
+<p>这里使用了开源的规则列表 <a target="_blank" rel="noopener" href="https://github.com/Loyalsoldier/clash-rules">clash-rules</a>。</p>
+<h3 id="部署配置文件"><a class="header-anchor" href="#部署配置文件">#</a>部署配置文件</h3>
+<p>有服务器的可以放服务器，没有的可以考虑放在 github 这样的托管平台，不过要注意保护隐私，避免配置文件泄漏。</p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://blog.hifool.cn/posts/f42b65b0/">clash更新订阅时保留自己的规则</a><br>
+<a target="_blank" rel="noopener" href="https://www.920.im/clash-rule-providers-configuration/">Clash配置rule-providers实现自由搭配及自动更新规则功能</a><br>
+<a target="_blank" rel="noopener" href="https://docs.cfw.lbyczf.com">Clash for Windows 中文手册</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/Loyalsoldier/clash-rules">clash-rules</a></p>
 
       </div>
       
@@ -198,24 +228,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Clash/" title="Clash">
-                        #Clash
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -257,13 +269,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -483,43 +498,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Clash%20%E5%AE%8C%E5%85%A8%E8%A6%86%E7%9B%96%E6%9C%BA%E5%9C%BA%E7%9A%84%E5%88%86%E7%BB%84%E5%8F%8A%E8%A7%84%E5%88%99 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F09%2F10%2FrCKN4tc4I%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/09/10/rCKN4tc4I/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

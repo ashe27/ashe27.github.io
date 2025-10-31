@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,24 +166,42 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="封送数据会产生副本"><a href="#封送数据会产生副本" class="headerlink" title="封送数据会产生副本"></a>封送数据会产生副本</h2><p>最近踩了一个坑，场景是C#调用非托管DLL函数，这个函数是异步的，参数是一个结构体指针，函数需要长期持有这个指针，因为函数在运行期间会对结构进行读写，同时调用方也会对这个结构进行读写。<br>那么问题来了，在C#中，与非托管DLL交互的标准做法是通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.runtime.interopservices.marshal.ptrtostructure">Marshal.PtrToStructure</a> 和 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.runtime.interopservices.marshal.structuretoptr">Marshal.StructureToPtr</a> 方法进行封送，<strong>但是需要注意，这两个方法的本质是将结数据创建一个副本，也就是托管内存区域一个结构，非托管内存区域一个结构，两者互不干扰。</strong><br>对于我的需求，这种方法行不通，因为在函数异步执行期间，在调用方对结构的修改反映不到非托管内存，反之亦然，这样两边的数据就是不同步的。<br>于是我想是否有办法能获得托管对象的指针地址并且保证其不被GC移动。</p>
-<h2 id="用-GCHandle-固定对象"><a href="#用-GCHandle-固定对象" class="headerlink" title="用 GCHandle 固定对象"></a>用 GCHandle 固定对象</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.runtime.interopservices.gchandle.alloc">GCHandle.Alloc</a> 是一个用于将托管对象的引用固定在内存中的方法。在.NET环境中，托管对象的内存管理是由垃圾回收器自动处理的。当托管对象不再被引用时，垃圾回收器会自动回收其内存。但是，在某些情况下，需要将对象的引用固定在内存中，以确保对象的内存不会被回收，例如：</p>
+        <h2 id="封送数据会产生副本"><a class="header-anchor" href="#封送数据会产生副本">#</a>封送数据会产生副本</h2>
+<p>最近踩了一个坑，场景是C#调用非托管DLL函数，这个函数是异步的，参数是一个结构体指针，函数需要长期持有这个指针，因为函数在运行期间会对结构进行读写，同时调用方也会对这个结构进行读写。<br>
+那么问题来了，在C#中，与非托管DLL交互的标准做法是通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.runtime.interopservices.marshal.ptrtostructure">Marshal.PtrToStructure</a> 和 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.runtime.interopservices.marshal.structuretoptr">Marshal.StructureToPtr</a> 方法进行封送，<strong>但是需要注意，这两个方法的本质是将结数据创建一个副本，也就是托管内存区域一个结构，非托管内存区域一个结构，两者互不干扰。</strong><br>
+对于我的需求，这种方法行不通，因为在函数异步执行期间，在调用方对结构的修改反映不到非托管内存，反之亦然，这样两边的数据就是不同步的。<br>
+于是我想是否有办法能获得托管对象的指针地址并且保证其不被GC移动。</p>
+<h2 id="用-GCHandle-固定对象"><a class="header-anchor" href="#用-GCHandle-固定对象">#</a>用 GCHandle 固定对象</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.runtime.interopservices.gchandle.alloc">GCHandle.Alloc</a> 是一个用于将托管对象的引用固定在内存中的方法。在.NET环境中，托管对象的内存管理是由垃圾回收器自动处理的。当托管对象不再被引用时，垃圾回收器会自动回收其内存。但是，在某些情况下，需要将对象的引用固定在内存中，以确保对象的内存不会被回收，例如：</p>
 <ol>
 <li>将托管对象的引用传递给非托管代码。</li>
 <li>在使用指针操作时需要固定对象的引用。</li>
 </ol>
 <p>在这些情况下，可以使用 GCHandle.Alloc 方法将对象的引用固定在内存中，以确保对象的内存不会被移动。</p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Runtime.InteropServices;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> MyStruct</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> x;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">unsafe</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 创建一个结构体对象</span></span><br><span class="line">        MyStruct myStruct = <span class="keyword">new</span> MyStruct();</span><br><span class="line">        myStruct.x = <span class="number">10</span>;</span><br><span class="line">        myStruct.y = <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 固定结构体引用</span></span><br><span class="line">        GCHandle handle = GCHandle.Alloc(myStruct, GCHandleType.Pinned);</span><br><span class="line">        IntPtr ptr = handle.AddrOfPinnedObject();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 在指针上执行操作</span></span><br><span class="line">        <span class="built_in">int</span>* p = (<span class="built_in">int</span>*)ptr.ToPointer();</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;x = &#123;0&#125;, y = &#123;1&#125;&quot;</span>, p[<span class="number">0</span>], p[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 释放结构体引用</span></span><br><span class="line">        handle.Free();</span><br><span class="line"></span><br><span class="line">        Console.ReadLine();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>我的想法是，将这个托管结构体固定住，然后将指针传递给DLL，问题不就解决了吗？事实证明我天真了，因为它只支持所谓的 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/dotnet/framework/interop/blittable-and-non-blittable-types">Blittable</a> 类型。<br>对于不支持的类型会报错：<code>Object contains non-primitive or non-blittable data</code>。<br>使用<code>GCHandle.Alloc</code>方法时，只有包含基元类型或可以直接复制到本机结构中的托管类型的实例才能被转换为<code>GCHandle</code>。<br>意味着不可以使用数组（引用类型）</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Runtime.InteropServices;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> MyStruct</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> x;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">unsafe</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] <span class="keyword">args</span></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 创建一个结构体对象</span></span><br><span class="line">        MyStruct myStruct = <span class="keyword">new</span> MyStruct();</span><br><span class="line">        myStruct.x = <span class="number">10</span>;</span><br><span class="line">        myStruct.y = <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 固定结构体引用</span></span><br><span class="line">        GCHandle handle = GCHandle.Alloc(myStruct, GCHandleType.Pinned);</span><br><span class="line">        IntPtr ptr = handle.AddrOfPinnedObject();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 在指针上执行操作</span></span><br><span class="line">        <span class="built_in">int</span>* p = (<span class="built_in">int</span>*)ptr.ToPointer();</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;x = &#123;0&#125;, y = &#123;1&#125;&quot;</span>, p[<span class="number">0</span>], p[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 释放结构体引用</span></span><br><span class="line">        handle.Free();</span><br><span class="line"></span><br><span class="line">        Console.ReadLine();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我的想法是，将这个托管结构体固定住，然后将指针传递给DLL，问题不就解决了吗？事实证明我天真了，因为它只支持所谓的 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/dotnet/framework/interop/blittable-and-non-blittable-types">Blittable</a> 类型。<br>
+对于不支持的类型会报错：<code>Object contains non-primitive or non-blittable data</code>。<br>
+使用<code>GCHandle.Alloc</code>方法时，只有包含基元类型或可以直接复制到本机结构中的托管类型的实例才能被转换为<code>GCHandle</code>。<br>
+意味着不可以使用数组（引用类型）</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> MyData</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> MyStruct</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> MyData[] data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myStruct = <span class="keyword">new</span> MyClass();</span><br><span class="line">GCHandle handle = GCHandle.Alloc(myStruct, GCHandleType.Pinned); <span class="comment">// System.ArgumentException: Object 包含非基元或非直接复制到本机结构中的数据。</span></span><br></pre></td></tr></table></figure>
 <p>但在实际开发中，我们的数据结构肯定是带有数组的，所以这个方法行不通。</p>
-<h2 id="用-fixed-固定对象"><a href="#用-fixed-固定对象" class="headerlink" title="用 fixed 固定对象"></a>用 fixed 固定对象</h2><p><code>fixed</code>关键字用于将一个变量固定在内存中，以便在指针操作期间避免垃圾回收器的干扰。<code>fixed</code>只能用于值类型的变量。</p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Runtime.InteropServices;</span><br><span class="line"></span><br><span class="line">[<span class="meta">StructLayout(LayoutKind.Sequential)</span>]</span><br><span class="line"><span class="keyword">struct</span> MyStruct</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> x;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">unsafe</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MyStruct myStruct = <span class="keyword">new</span> MyStruct();</span><br><span class="line">        myStruct.x = <span class="number">10</span>;</span><br><span class="line">        myStruct.y = <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">fixed</span> (MyStruct* pMyStruct = &amp;myStruct)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 在指针上执行操作</span></span><br><span class="line">            Console.WriteLine(<span class="string">&quot;x = &#123;0&#125;, y = &#123;1&#125;&quot;</span>, pMyStruct-&gt;x, pMyStruct-&gt;y);</span><br><span class="line">            pMyStruct-&gt;x = <span class="number">30</span>;</span><br><span class="line">            pMyStruct-&gt;y = <span class="number">40</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Console.WriteLine(<span class="string">&quot;x = &#123;0&#125;, y = &#123;1&#125;&quot;</span>, myStruct.x, myStruct.y);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但是这个方法只保证在<code>fixed</code>区域内内存不会被GC移动，所以对于我的问题，需要将DLL接口函数改为同步模式，阻塞函数防止其离开<code>fixed</code>区域。<br>当我开始尝试时，又报错了：<code>error CS1663: 固定大小的缓冲区类型必须为下列类型之一: bool、byte、short、int、long、char、sbyte、ushort、uint、ulong、float 或 double</code>。<br>因为数组也只能是基础数据类型，比如这样的结构体就编译不了</p>
+<h2 id="用-fixed-固定对象"><a class="header-anchor" href="#用-fixed-固定对象">#</a>用 fixed 固定对象</h2>
+<p><code>fixed</code>关键字用于将一个变量固定在内存中，以便在指针操作期间避免垃圾回收器的干扰。<code>fixed</code>只能用于值类型的变量。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Runtime.InteropServices;</span><br><span class="line"></span><br><span class="line">[<span class="meta">StructLayout(LayoutKind.Sequential)</span>]</span><br><span class="line"><span class="keyword">struct</span> MyStruct</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> x;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">unsafe</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] <span class="keyword">args</span></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MyStruct myStruct = <span class="keyword">new</span> MyStruct();</span><br><span class="line">        myStruct.x = <span class="number">10</span>;</span><br><span class="line">        myStruct.y = <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">fixed</span> (MyStruct* pMyStruct = &amp;myStruct)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// 在指针上执行操作</span></span><br><span class="line">            Console.WriteLine(<span class="string">&quot;x = &#123;0&#125;, y = &#123;1&#125;&quot;</span>, pMyStruct-&gt;x, pMyStruct-&gt;y);</span><br><span class="line">            pMyStruct-&gt;x = <span class="number">30</span>;</span><br><span class="line">            pMyStruct-&gt;y = <span class="number">40</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Console.WriteLine(<span class="string">&quot;x = &#123;0&#125;, y = &#123;1&#125;&quot;</span>, myStruct.x, myStruct.y);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这个方法只保证在<code>fixed</code>区域内内存不会被GC移动，所以对于我的问题，需要将DLL接口函数改为同步模式，阻塞函数防止其离开<code>fixed</code>区域。<br>
+当我开始尝试时，又报错了：<code>error CS1663: 固定大小的缓冲区类型必须为下列类型之一: bool、byte、short、int、long、char、sbyte、ushort、uint、ulong、float 或 double</code>。<br>
+因为数组也只能是基础数据类型，比如这样的结构体就编译不了</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsafe</span> <span class="keyword">struct</span> MyData</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">unsafe</span> <span class="keyword">struct</span> MyStruct</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">fixed</span> MyData data[<span class="number">8</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>所以此方案也无法解决我的问题。</p>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>C#的<code>P/Invoke</code>技术虽然已经很好用了，但仍然还是有一些局限性。就我遇到的问题可以看出来，理想情况下，数据最好是单向流动的。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1850488">Pinning an updateble struct before passing to unmanaged code?</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3630043">Will struct modifications in C# affect unmanaged memory?</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/7956355">Can C# structs coming from the unmanaged world be “live”-updating?</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18839085">Why can fixed size buffers only be of primitive types?</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/36564436">Workaround on declaring a unsafe fixed custom struct array?</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/framework/interop/blittable-and-non-blittable-types">Blittable and Non-Blittable Types</a></p>
+<h2 id="结论"><a class="header-anchor" href="#结论">#</a>结论</h2>
+<p>C#的<code>P/Invoke</code>技术虽然已经很好用了，但仍然还是有一些局限性。就我遇到的问题可以看出来，理想情况下，数据最好是单向流动的。</p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1850488">Pinning an updateble struct before passing to unmanaged code?</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/3630043">Will struct modifications in C# affect unmanaged memory?</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/7956355">Can C# structs coming from the unmanaged world be “live”-updating?</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18839085">Why can fixed size buffers only be of primitive types?</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/36564436">Workaround on declaring a unsafe fixed custom struct array?</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/framework/interop/blittable-and-non-blittable-types">Blittable and Non-Blittable Types</a></p>
 
       </div>
       
@@ -191,24 +213,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -250,13 +254,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -476,43 +483,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + C%23%20%E5%9B%BA%E5%AE%9A%E5%AF%B9%E8%B1%A1%E6%8E%A2%E7%B4%A2 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F06%2F28%2Fgchandle-fixed%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/06/28/gchandle-fixed/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -163,34 +167,47 @@
       </div>
       <div class="markdown-body">
         <p>此文基于 Nim 2.2.0 版本编写，不排除某些细节在未来的版本中发生变化。</p>
-<h2 id="调用约定"><a href="#调用约定" class="headerlink" title="调用约定"></a>调用约定</h2><p>导出函数默认使用<code>cdecl</code>约定。</p>
+<h2 id="调用约定"><a class="header-anchor" href="#调用约定">#</a>调用约定</h2>
+<p>导出函数默认使用<code>cdecl</code>约定。</p>
 <figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">proc</span> <span class="type">Add</span>(arg1: <span class="type">cint</span>, arg2: <span class="type">cint</span>): <span class="type">cint</span> <span class="meta">&#123;.exportc, dynlib&#125; =</span></span><br><span class="line"><span class="meta">  return arg1 + arg2</span></span><br><span class="line"><span class="meta">  </span></span><br><span class="line"><span class="meta"># 生成的 C 代码</span></span><br><span class="line"><span class="meta"># N_LIB_EXPORT N_CDECL(int, Add)(int arg1_p0, int arg2_p1);</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="NimMain、NimDestroyGlobals-函数"><a href="#NimMain、NimDestroyGlobals-函数" class="headerlink" title="NimMain、NimDestroyGlobals 函数"></a>NimMain、NimDestroyGlobals 函数</h2><p>Nim 编译的 DLL 文件会强制导出<code>NimMain</code>和<code>NimDestroyGlobals</code>函数。</p>
-<p><br><code>NimMain</code>的作用是什么？看看生成的C代码：</p>
+<h2 id="NimMain、NimDestroyGlobals-函数"><a class="header-anchor" href="#NimMain、NimDestroyGlobals-函数">#</a>NimMain、NimDestroyGlobals 函数</h2>
+<p>Nim 编译的 DLL 文件会强制导出<code>NimMain</code>和<code>NimDestroyGlobals</code>函数。</p>
+<p><br>
+<code>NimMain</code>的作用是什么？看看生成的C代码：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">N_LIB_PRIVATE <span class="title function_">N_CDECL</span><span class="params">(<span class="type">void</span>, NimMainInner)</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    NimMainModule();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">N_LIB_EXPORT <span class="title function_">N_CDECL</span><span class="params">(<span class="type">void</span>, NimMain)</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line"><span class="meta">#<span class="keyword">if</span> 0</span></span><br><span class="line">    <span class="type">void</span> (*<span class="keyword">volatile</span> inner)(<span class="type">void</span>);</span><br><span class="line">    PreMain();</span><br><span class="line">    inner = NimMainInner;</span><br><span class="line">    (*inner)();</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">    PreMain();</span><br><span class="line">    NimMainInner();</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">BOOL WINAPI <span class="title function_">DllMain</span><span class="params">(HINSTANCE hinstDLL, DWORD fwdreason, </span></span><br><span class="line"><span class="params">                    LPVOID lpvReserved)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (fwdreason == DLL_PROCESS_ATTACH) &#123;</span><br><span class="line">    NimMain();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">N_LIB_PRIVATE <span class="title function_">N_NIMCALL</span><span class="params">(<span class="type">void</span>, NimMainModule)</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">&#123;</span><br><span class="line">    tyObject_MyTypecolonObjectType___hPGAy5oGaUa5w9ctac4yDNg* T1_;</span><br><span class="line">    nimfr_(<span class="string">&quot;mylib&quot;</span>, <span class="string">&quot;C:\\apps\\mylib.nim&quot;</span>);</span><br><span class="line">    nimln_(<span class="number">9</span>);    T1_ = NIM_NIL;</span><br><span class="line">    T1_ = (tyObject_MyTypecolonObjectType___hPGAy5oGaUa5w9ctac4yDNg*) nimNewObjUninit(<span class="keyword">sizeof</span>(tyObject_MyTypecolonObjectType___hPGAy5oGaUa5w9ctac4yDNg), NIM_ALIGNOF(tyObject_MyTypecolonObjectType___hPGAy5oGaUa5w9ctac4yDNg));</span><br><span class="line">    (*T1_).field = ((NI)<span class="number">88</span>);</span><br><span class="line">    globalVarRefObj__mylib_u7 = T1_;</span><br><span class="line">    nimln_(<span class="number">13</span>);    echoBinSafe(TM__wfpdBMSRfuTGK9aKTtj9beBg_2, <span class="number">1</span>);</span><br><span class="line">    nimTestErrorFlag();</span><br><span class="line">    popFrame();</span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
 <p>挺明显的，DLL 被加载时会依次调用：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DllMain &gt; NimMain &gt; NimMainInner &gt; NimMainModule</span><br></pre></td></tr></table></figure>
-<p>可以看出<code>NimMain</code>用于初始化动态库资源。<br>其中<code>NimMainModule</code>是顶级语句执行的地方，这里会初始化全局变量，执行顶级语句。<br>可以在编译时用<code>--nimMainPrefix</code>选项为<code>NimMain</code>函数添加前缀名称，比如<code>--nimMainPrefix:My</code>会将导出名称变为<code>MyNimMain</code>。</p>
-<p><br><code>--noMain</code>编译选项用于禁止生成<code>DllMain</code>方法。使用此选项后就需要手动调用<code>NimMain</code>来初始化动态库。<br>根据 Windows 上 DLL 开发经验来看，DllMain 存在死锁的风险。除非初始化足够简单，否则推荐手动调用<code>NimMain</code>方法，此时就需要用到<code>--noMain</code>编译选项。</p>
-<p><br><code>NimDestroyGlobals</code>则用于在卸载 DLL 前释放资源。Nim 不会主动去调用它，需要你手动调用。</p>
+<p>可以看出<code>NimMain</code>用于初始化动态库资源。<br>
+其中<code>NimMainModule</code>是顶级语句执行的地方，这里会初始化全局变量，执行顶级语句。<br>
+可以在编译时用<code>--nimMainPrefix</code>选项为<code>NimMain</code>函数添加前缀名称，比如<code>--nimMainPrefix:My</code>会将导出名称变为<code>MyNimMain</code>。</p>
+<p><br>
+<code>--noMain</code>编译选项用于禁止生成<code>DllMain</code>方法。使用此选项后就需要手动调用<code>NimMain</code>来初始化动态库。<br>
+根据 Windows 上 DLL 开发经验来看，DllMain 存在死锁的风险。除非初始化足够简单，否则推荐手动调用<code>NimMain</code>方法，此时就需要用到<code>--noMain</code>编译选项。</p>
+<p><br>
+<code>NimDestroyGlobals</code>则用于在卸载 DLL 前释放资源。Nim 不会主动去调用它，需要你手动调用。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">N_LIB_EXPORT <span class="title function_">N_CDECL</span><span class="params">(<span class="type">void</span>, NimDestroyGlobals)</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    eqdestroy___mylib_u17(globalVarRefObj__mylib_u7);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>NimDestroyGlobals</code>也是同理。希望以后的版本中能不要强制导出该函数，而是给开发者自行在内部调用的机会。</p>
-<h3 id="内部手动调用-NimMain"><a href="#内部手动调用-NimMain" class="headerlink" title="内部手动调用 NimMain"></a>内部手动调用 NimMain</h3><p>通常开发 DLL 时都会导出自己的 Init、Uninit 方法，我们可能不希望用户去调用 Nim 开头的方法，但我们又需要在内部调用它来初始化 GC 实例。<br>可以通过非常规手段，因为 Nim 最终生成的是 C，所以可以在 Nim 中插入 C 代码来调用：</p>
+<h3 id="内部手动调用-NimMain"><a class="header-anchor" href="#内部手动调用-NimMain">#</a>内部手动调用 NimMain</h3>
+<p>通常开发 DLL 时都会导出自己的 Init、Uninit 方法，我们可能不希望用户去调用 Nim 开头的方法，但我们又需要在内部调用它来初始化 GC 实例。<br>
+可以通过非常规手段，因为 Nim 最终生成的是 C，所以可以在 Nim 中插入 C 代码来调用：</p>
 <figure class="highlight nim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#123;.emit: &quot;&quot;&quot;</span></span><br><span class="line"><span class="meta"># 提前声明</span></span><br><span class="line"><span class="meta">N_LIB_EXPORT N_CDECL(void, NimMain)(void);</span></span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta"># 中转函数</span></span><br><span class="line"><span class="meta">static void CallNimMain() &#123; NimMain(); &#125;</span></span><br><span class="line"><span class="meta">&quot;&quot;&quot;.&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">proc</span> <span class="type">CallNimMain</span>() <span class="meta">&#123;.importc, cdecl.&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">proc</span> <span class="type">MyInit</span>() =</span><br><span class="line">  <span class="type">CallNimMain</span>()</span><br><span class="line">  echo <span class="string">&quot;Hello from our dynamic library!&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="useNimRtl"><a href="#useNimRtl" class="headerlink" title="useNimRtl"></a>useNimRtl</h2><p>Nim 是有 GC 的语言，默认情况下每个模块都有自己的 GC 实例。但如果项目中包含多个 Nim 开发的模块，且互相之间会传递引用数据类型或异常，那么必须为所有模块指定一个公共的 GC 实例。<br>这可以通过<code>nimrtl.dll</code>来实现，进入 Nim 安装目录，编译<code>nimrtl.nim</code>：</p>
+<h2 id="useNimRtl"><a class="header-anchor" href="#useNimRtl">#</a>useNimRtl</h2>
+<p>Nim 是有 GC 的语言，默认情况下每个模块都有自己的 GC 实例。但如果项目中包含多个 Nim 开发的模块，且互相之间会传递引用数据类型或异常，那么必须为所有模块指定一个公共的 GC 实例。<br>
+这可以通过<code>nimrtl.dll</code>来实现，进入 Nim 安装目录，编译<code>nimrtl.nim</code>：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nim c -d:release lib/nimrtl.nim</span><br></pre></td></tr></table></figure>
 <p>接着在所有模块编译时加上<code>-d:useNimRtl</code>选项，这告诉 Nim 生成的 C 代码中关于资源管理的方法都调用<code>nimrtl.dll</code>中的方法，而不是自己实现。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 未使用 -d:useNimRtl 时</span></span><br><span class="line">N_LIB_PRIVATE <span class="title function_">N_NOCONV</span><span class="params">(<span class="type">void</span>, deallocShared)</span><span class="params">(<span class="type">void</span>* p_p0)</span>;</span><br><span class="line"><span class="type">static</span> <span class="title function_">N_INLINE</span><span class="params">(NIM_BOOL*, nimErrorFlag)</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line">N_LIB_PRIVATE <span class="title function_">N_NIMCALL</span><span class="params">(<span class="type">void</span>, nimTestErrorFlag)</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"><span class="type">static</span> <span class="title function_">N_INLINE</span><span class="params">(<span class="type">void</span>, nimFrame)</span><span class="params">(TFrame* s_p0)</span>;</span><br><span class="line"><span class="type">static</span> <span class="title function_">N_INLINE</span><span class="params">(<span class="type">void</span>, popFrame)</span><span class="params">(<span class="type">void</span>)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 -d:useNimRtl 后，相关方法都是从外部引用的</span></span><br><span class="line"><span class="keyword">extern</span> tyProc__y9ajMVPY4VS41rTmWR9avTRA deallocShared;</span><br><span class="line"><span class="keyword">extern</span> tyProc__Gs82igvKkcgSIofZEvpV9cw nimErrorFlag;</span><br><span class="line"><span class="keyword">extern</span> tyProc__ln4kdL5W9bbX4a1xl8nnVXQ nimTestErrorFlag;</span><br><span class="line"><span class="keyword">extern</span> tyProc__ijRNnOwJxOTZNE1aedFnKQ nimFrame;</span><br><span class="line"><span class="keyword">extern</span> tyProc__ln4kdL5W9bbX4a1xl8nnVXQ popFrame;</span><br></pre></td></tr></table></figure>
 <p>当然，如果模块之间使用的是 C ABI，那么就不需要引入<code>nimrtl</code>。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<ul>
 <li>动态库强制导出<code>NimMain</code>和<code>NimDestroyGlobals</code>函数，用于初始化 GC 和释放资源。</li>
 <li><code>--noMain</code>编译选项禁止生成<code>DllMain</code>方法，这样就能禁止 Nim 自动执行<code>NimMain</code>函数。</li>
 <li><code>--nimMainPrefix</code>编译选项为<code>NimMain</code>函数名称添加前缀。</li>
 <li>当项目中包含多个 Nim 模块时且存在类型依赖时，建议使用<code>-d:useNimRtl</code>编译选项来使用<code>nimrtl.dll</code>中的 GC 实例。</li>
 </ul>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://peterme.net/dynamic-libraries-in-nim.html">Dynamic libraries in Nim</a><br><a target="_blank" rel="noopener" href="https://nim-lang.org/docs/nimc.html#dll-generation">DLL generation</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://peterme.net/dynamic-libraries-in-nim.html">Dynamic libraries in Nim</a><br>
+<a target="_blank" rel="noopener" href="https://nim-lang.org/docs/nimc.html#dll-generation">DLL generation</a></p>
 
       </div>
       
@@ -202,24 +219,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Nim/" title="Nim">
-                        #Nim
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -261,13 +260,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -487,43 +489,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Nim%20%E5%BC%80%E5%8F%91%20DLL%20%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F11%2F23%2Fnim-dll%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/11/23/nim-dll/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

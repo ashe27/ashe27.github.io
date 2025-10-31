@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,16 +166,37 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="桌面窗口层次关系"><a href="#桌面窗口层次关系" class="headerlink" title="桌面窗口层次关系"></a>桌面窗口层次关系</h2><p>桌面窗口层次是这样的<br><img src="/images/1632581286029.png"></p>
-<h2 id="检查系统是否开启了Aero"><a href="#检查系统是否开启了Aero" class="headerlink" title="检查系统是否开启了Aero"></a>检查系统是否开启了Aero</h2><p>动态壁纸技术需要系统开启Aero才行，原因下面会讲到。<br>检测系统是否开启了Aero可以使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmiscompositionenabled">DwmIsCompositionEnabled</a> 函数。<br>只有在Win7及以前的系统上需要检测，Win8后这个函数总是返回 TRUE。</p>
-<h2 id="未公开的消息"><a href="#未公开的消息" class="headerlink" title="未公开的消息"></a>未公开的消息</h2><p>桌面窗口内部有一个神秘的消息：<code>WM_USER + 300</code>，数值为<code>0x52C</code>。<br>它收到这个消息后就会在其上创建两个窗口，并将图标层移动上去，然后窗口层次就变成这样了<br><img src="/images/1632583220300.png"><br>如果系统没有开启Aero，它收到消息后就不会创建这两个窗口，也就无法实现动态壁纸了，这就是系统必须开启Aero的原因。</p>
-<h2 id="创建壁纸窗口"><a href="#创建壁纸窗口" class="headerlink" title="创建壁纸窗口"></a>创建壁纸窗口</h2><p>最后一步就是创建一个Win32窗口了，然后将其父窗口设置为上面提到的Worker窗口（靠下面的那一个）。</p>
+        <h2 id="桌面窗口层次关系"><a class="header-anchor" href="#桌面窗口层次关系">#</a>桌面窗口层次关系</h2>
+<p>桌面窗口层次是这样的<br>
+<img src="/images/1632581286029.png" alt=""></p>
+<h2 id="检查系统是否开启了Aero"><a class="header-anchor" href="#检查系统是否开启了Aero">#</a>检查系统是否开启了Aero</h2>
+<p>动态壁纸技术需要系统开启Aero才行，原因下面会讲到。<br>
+检测系统是否开启了Aero可以使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmiscompositionenabled">DwmIsCompositionEnabled</a> 函数。<br>
+只有在Win7及以前的系统上需要检测，Win8后这个函数总是返回 TRUE。</p>
+<h2 id="未公开的消息"><a class="header-anchor" href="#未公开的消息">#</a>未公开的消息</h2>
+<p>桌面窗口内部有一个神秘的消息：<code>WM_USER + 300</code>，数值为<code>0x52C</code>。<br>
+它收到这个消息后就会在其上创建两个窗口，并将图标层移动上去，然后窗口层次就变成这样了<br>
+<img src="/images/1632583220300.png" alt=""><br>
+如果系统没有开启Aero，它收到消息后就不会创建这两个窗口，也就无法实现动态壁纸了，这就是系统必须开启Aero的原因。</p>
+<h2 id="创建壁纸窗口"><a class="header-anchor" href="#创建壁纸窗口">#</a>创建壁纸窗口</h2>
+<p>最后一步就是创建一个Win32窗口了，然后将其父窗口设置为上面提到的Worker窗口（靠下面的那一个）。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HWND <span class="title">createWindow</span><span class="params">(HWND hParent)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// 获取父窗口尺寸</span></span><br><span class="line">	RECT rect;</span><br><span class="line">	<span class="built_in">GetWindowRect</span>(hParent, &amp;rect);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 创建动态壁纸窗口并挂到&quot;Worker&quot;窗口下</span></span><br><span class="line">	HWND hWnd = <span class="built_in">CreateWindowExW</span>(<span class="number">0</span>, CLASSNAME, <span class="string">L&quot;DynamicWallpaper&quot;</span>, WS_CHILDWINDOW, <span class="number">0</span>, <span class="number">0</span>, rect.right, rect.bottom, hParent, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br><span class="line">	<span class="built_in">ShowWindow</span>(hWnd, SW_SHOWNOACTIVATE);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> hWnd;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>还有个细节要注意，当动态壁纸窗口销毁时需要将父窗口刷新一下，因为父窗口的扩展样式用到了<code>WS_EX_TRANSPARENT</code>，这是一个透明窗口，如果不刷新的话，动态壁纸窗口的残影会一直留在桌面上。<br>最简单的刷新办法是隐藏它，我们在窗口消息过程中处理即可</p>
+<p>还有个细节要注意，当动态壁纸窗口销毁时需要将父窗口刷新一下，因为父窗口的扩展样式用到了<code>WS_EX_TRANSPARENT</code>，这是一个透明窗口，如果不刷新的话，动态壁纸窗口的残影会一直留在桌面上。<br>
+最简单的刷新办法是隐藏它，我们在窗口消息过程中处理即可</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LRESULT CALLBACK <span class="title">WindowProc</span><span class="params">(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lparam)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">switch</span> (uMsg) &#123;</span><br><span class="line">	<span class="keyword">case</span> WM_CREATE:</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// 上次隐藏了，这次再显示出来</span></span><br><span class="line">		HWND hParent = <span class="built_in">GetParent</span>(hWnd);</span><br><span class="line">		<span class="built_in">ShowWindow</span>(hParent, SW_SHOWNOACTIVATE);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> WM_CLOSE:</span><br><span class="line">		<span class="built_in">DestroyWindow</span>(hWnd);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> WM_DESTROY:</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="comment">// 隐藏父窗口，避免残影</span></span><br><span class="line">		HWND hParent = <span class="built_in">GetParent</span>(hWnd);</span><br><span class="line">		<span class="built_in">ShowWindow</span>(hParent, SW_HIDE);</span><br><span class="line">		<span class="built_in">PostQuitMessage</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">DefWindowProc</span>(hWnd, uMsg, wParam, lparam);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>剩下的就是在窗口上播放一个短视频了。还有的人甚至在上面放置浏览器，这不是一个好注意，浏览器太占用内存资源，会比较卡。<br>至此，一个简单的动态壁纸功能就实现了。</p>
-<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>如果要使软件更加完美，还需要考虑以下问题<br>1、当桌面窗口大小变化时（修改分辨率），壁纸也要跟着变化。<br>2、用户执行全屏程序时，应停止播放动态壁纸以便节省系统资源。<br>3、交互功能，一般不用实现交互功能，如果要做，可以考虑HOOK、消息钩子的手段。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/37877070">如何实现一个 windows 桌面动态壁纸</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/45204045">自定义·自制HTML壁纸</a><br><a target="_blank" rel="noopener" href="https://www.codeproject.com/Articles/856020/Draw-Behind-Desktop-Icons-in-Windows-plus">Draw Behind Desktop Icons in Windows 8+</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/56132584/draw-on-windows-10-wallpaper-in-c">Draw on Windows 10 wallpaper in C++</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1683791/drawing-on-the-desktop-background-as-wallpaper-replacement-windows-c">Drawing on the desktop background as wallpaper replacement (Windows&#x2F;C#)</a></p>
+<p>剩下的就是在窗口上播放一个短视频了。还有的人甚至在上面放置浏览器，这不是一个好注意，浏览器太占用内存资源，会比较卡。<br>
+至此，一个简单的动态壁纸功能就实现了。</p>
+<h2 id="思考"><a class="header-anchor" href="#思考">#</a>思考</h2>
+<p>如果要使软件更加完美，还需要考虑以下问题<br>
+1、当桌面窗口大小变化时（修改分辨率），壁纸也要跟着变化。<br>
+2、用户执行全屏程序时，应停止播放动态壁纸以便节省系统资源。<br>
+3、交互功能，一般不用实现交互功能，如果要做，可以考虑HOOK、消息钩子的手段。</p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/37877070">如何实现一个 windows 桌面动态壁纸</a><br>
+<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/45204045">自定义·自制HTML壁纸</a><br>
+<a target="_blank" rel="noopener" href="https://www.codeproject.com/Articles/856020/Draw-Behind-Desktop-Icons-in-Windows-plus">Draw Behind Desktop Icons in Windows 8+</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/56132584/draw-on-windows-10-wallpaper-in-c">Draw on Windows 10 wallpaper in C++</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1683791/drawing-on-the-desktop-background-as-wallpaper-replacement-windows-c">Drawing on the desktop background as wallpaper replacement (Windows/C#)</a></p>
 
       </div>
       
@@ -183,24 +208,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows%E7%BC%96%E7%A8%8B/" title="Windows编程">
-                        #Windows编程
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -242,13 +249,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -468,43 +478,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%8A%A8%E6%80%81%E5%A3%81%E7%BA%B8%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2021%2F09%2F25%2FRMrCXIzEz%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2021/09/25/RMrCXIzEz/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

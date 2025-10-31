@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,36 +166,68 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="下载-ja-netfilter"><a href="#下载-ja-netfilter" class="headerlink" title="下载 ja-netfilter"></a>下载 ja-netfilter</h2><p>下载地址：<a target="_blank" rel="noopener" href="https://gitee.com/ja-netfilter/ja-netfilter/releases">https://gitee.com/ja-netfilter/ja-netfilter/releases</a></p>
-<p>作者对此项目的介绍：<a target="_blank" rel="noopener" href="https://zhile.io/2021/11/29/ja-netfilter-javaagent-lib.html">介绍一个”牛逼闪闪”开源库：ja-netfilter</a><br>一句话总结就是它可以根据用户的定义的规则来阻止IDE访问网络等。在这里就是阻止IDE在线验证。</p>
-<h2 id="配置-ja-netfilter"><a href="#配置-ja-netfilter" class="headerlink" title="配置 ja-netfilter"></a>配置 ja-netfilter</h2><p>默认是没有任何规则的，需要自己手动添加。</p>
+        <h2 id="下载-ja-netfilter"><a class="header-anchor" href="#下载-ja-netfilter">#</a>下载 ja-netfilter</h2>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://gitee.com/ja-netfilter/ja-netfilter/releases">https://gitee.com/ja-netfilter/ja-netfilter/releases</a></p>
+<p>作者对此项目的介绍：<a target="_blank" rel="noopener" href="https://zhile.io/2021/11/29/ja-netfilter-javaagent-lib.html">介绍一个”牛逼闪闪”开源库：ja-netfilter</a><br>
+一句话总结就是它可以根据用户的定义的规则来阻止IDE访问网络等。在这里就是阻止IDE在线验证。</p>
+<h2 id="配置-ja-netfilter"><a class="header-anchor" href="#配置-ja-netfilter">#</a>配置 ja-netfilter</h2>
+<p>默认是没有任何规则的，需要自己手动添加。</p>
 <ol>
-<li>编辑<code>ja-netfilter\config\dns.conf</code>，将内容替换为<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[DNS]</span><br><span class="line">EQUAL,jetbrains.com</span><br></pre></td></tr></table></figure></li>
-<li>编辑<code>ja-netfilter\config\url.conf</code>，将内容替换为<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[URL]</span><br><span class="line">PREFIX,https://account.jetbrains.com/lservice/rpc/validateKey.action</span><br><span class="line">PREFIX,https://account.jetbrains.com.cn/lservice/rpc/validateKey.action</span><br></pre></td></tr></table></figure></li>
-<li>编辑<code>idea.vmoptions</code>文件，在安装目录下<code>C:\Program Files\JetBrains\IntelliJ IDEA 2022.2.2\bin\idea64.exe.vmoptions</code><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-javaagent:E:/ja-netfilter/ja-netfilter.jar</span><br><span class="line">--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED</span><br><span class="line">--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED</span><br></pre></td></tr></table></figure>
-将其中<code>-javaagent</code>替换为<code>ja-netfilter.jar</code>的本地路径即可。<br>至此，就阻断了网络验证功能。但我们还需要一个可用的激活码才能离线激活</li>
+<li>编辑<code>ja-netfilter\config\dns.conf</code>，将内容替换为</li>
 </ol>
-<h2 id="制作全家桶激活码"><a href="#制作全家桶激活码" class="headerlink" title="制作全家桶激活码"></a>制作全家桶激活码</h2><p>下载 <a target="_blank" rel="noopener" href="https://wwc.lanzoul.com/i5ffi0e76ypc">IDEAKeyGen</a>，长这样子：</p>
-<p><img src="https://pic.rmb.bdstatic.com/bjh/7a6fe404a7458ce54fe5382dd1955085.png"></p>
-<p>KeyGen 中的内容是可以编辑的，主要看<code>products</code>字段，是个数组，每个元素都表示一个产品的注册信息，<code>code</code>表示产品代码，<br>点击”生成授权”即可产生两个文件，<code>key.txt</code>和<code>power.conf</code>。<br>将<code>power.conf</code>文件覆盖到<code>ja-netfilter\config\power.conf</code>文件，然后用<code>key.txt</code>文件中的激活码激活软件即可。</p>
-<p><br>需要知道产品代号才能生成激活码。产品代码可以从这个文件中获取：<a target="_blank" rel="noopener" href="https://data.services.jetbrains.com/products">https://data.services.jetbrains.com/products</a>，其中<code>code</code>、<code>salesCode</code>都是产品代码。<br>这个文件很大，可以过滤掉无关的数据访问：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[DNS]</span><br><span class="line">EQUAL,jetbrains.com</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>编辑<code>ja-netfilter\config\url.conf</code>，将内容替换为</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[URL]</span><br><span class="line">PREFIX,https://account.jetbrains.com/lservice/rpc/validateKey.action</span><br><span class="line">PREFIX,https://account.jetbrains.com.cn/lservice/rpc/validateKey.action</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>编辑<code>idea.vmoptions</code>文件，在安装目录下<code>C:\Program Files\JetBrains\IntelliJ IDEA 2022.2.2\bin\idea64.exe.vmoptions</code></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-javaagent:E:/ja-netfilter/ja-netfilter.jar</span><br><span class="line">--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED</span><br><span class="line">--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED</span><br></pre></td></tr></table></figure>
+<p>将其中<code>-javaagent</code>替换为<code>ja-netfilter.jar</code>的本地路径即可。<br>
+至此，就阻断了网络验证功能。但我们还需要一个可用的激活码才能离线激活</p>
+<h2 id="制作全家桶激活码"><a class="header-anchor" href="#制作全家桶激活码">#</a>制作全家桶激活码</h2>
+<p>下载 <a target="_blank" rel="noopener" href="https://wwc.lanzoul.com/i5ffi0e76ypc">IDEAKeyGen</a>，长这样子：</p>
+<p><img src="https://pic.rmb.bdstatic.com/bjh/7a6fe404a7458ce54fe5382dd1955085.png" alt=""></p>
+<p>KeyGen 中的内容是可以编辑的，主要看<code>products</code>字段，是个数组，每个元素都表示一个产品的注册信息，<code>code</code>表示产品代码，<br>
+点击&quot;生成授权&quot;即可产生两个文件，<code>key.txt</code>和<code>power.conf</code>。<br>
+将<code>power.conf</code>文件覆盖到<code>ja-netfilter\config\power.conf</code>文件，然后用<code>key.txt</code>文件中的激活码激活软件即可。</p>
+<p><br>
+需要知道产品代号才能生成激活码。产品代码可以从这个文件中获取：<a target="_blank" rel="noopener" href="https://data.services.jetbrains.com/products">https://data.services.jetbrains.com/products</a>，其中<code>code</code>、<code>salesCode</code>都是产品代码。<br>
+这个文件很大，可以过滤掉无关的数据访问：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://data.services.jetbrains.com/products?fields=code,salesCode,name</span><br></pre></td></tr></table></figure>
 <p>但是据说这个产品代码也不是很全，干脆用别人收集好的算了。写在脚本中生成。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义产品代码</span></span><br><span class="line">product_codes = [<span class="string">&quot;YTD&quot;</span>, <span class="string">&quot;QDGO&quot;</span>, <span class="string">&quot;MF&quot;</span>, <span class="string">&quot;DG&quot;</span>, <span class="string">&quot;PS&quot;</span>, <span class="string">&quot;QA&quot;</span>, <span class="string">&quot;IIE&quot;</span>, <span class="string">&quot;YTWE&quot;</span>, <span class="string">&quot;FLS&quot;</span>, <span class="string">&quot;DLE&quot;</span>, <span class="string">&quot;RFU&quot;</span>, <span class="string">&quot;PPS&quot;</span>, <span class="string">&quot;PCWMP&quot;</span>, <span class="string">&quot;II&quot;</span>, <span class="string">&quot;TCC&quot;</span>, <span class="string">&quot;RSU&quot;</span>, <span class="string">&quot;PCC&quot;</span>, <span class="string">&quot;RC&quot;</span>, </span><br><span class="line"><span class="string">&quot;PCE&quot;</span>, <span class="string">&quot;FLIJ&quot;</span>, <span class="string">&quot;TBA&quot;</span>, <span class="string">&quot;DL&quot;</span>, <span class="string">&quot;SPP&quot;</span>, <span class="string">&quot;QDCLD&quot;</span>, <span class="string">&quot;SPA&quot;</span>, <span class="string">&quot;DMCLP&quot;</span>, <span class="string">&quot;PSW&quot;</span>, <span class="string">&quot;GW&quot;</span>, <span class="string">&quot;PSI&quot;</span>, <span class="string">&quot;IIU&quot;</span>, <span class="string">&quot;DMU&quot;</span>, <span class="string">&quot;PWS&quot;</span>, <span class="string">&quot;HB&quot;</span>, <span class="string">&quot;WS&quot;</span>, <span class="string">&quot;PCP&quot;</span>, <span class="string">&quot;KT&quot;</span>, <span class="string">&quot;DCCLT&quot;</span>, </span><br><span class="line"><span class="string">&quot;RSCLT&quot;</span>, <span class="string">&quot;WRS&quot;</span>, <span class="string">&quot;RSC&quot;</span>, <span class="string">&quot;RRD&quot;</span>, <span class="string">&quot;TC&quot;</span>, <span class="string">&quot;IIC&quot;</span>, <span class="string">&quot;QDPY&quot;</span>, <span class="string">&quot;DPK&quot;</span>, <span class="string">&quot;DC&quot;</span>, <span class="string">&quot;PDB&quot;</span>, <span class="string">&quot;DPPS&quot;</span>, <span class="string">&quot;QDPHP&quot;</span>, <span class="string">&quot;GO&quot;</span>, <span class="string">&quot;HCC&quot;</span>, <span class="string">&quot;RDCPPP&quot;</span>, <span class="string">&quot;QDJVMC&quot;</span>, <span class="string">&quot;CL&quot;</span>, <span class="string">&quot;DM&quot;</span>, </span><br><span class="line"><span class="string">&quot;CWML&quot;</span>, <span class="string">&quot;FLL&quot;</span>, <span class="string">&quot;RR&quot;</span>, <span class="string">&quot;QDJS&quot;</span>, <span class="string">&quot;RS&quot;</span>, <span class="string">&quot;RM&quot;</span>, <span class="string">&quot;DS&quot;</span>, <span class="string">&quot;MPS&quot;</span>, <span class="string">&quot;DPN&quot;</span>, <span class="string">&quot;US&quot;</span>, <span class="string">&quot;CLN&quot;</span>, <span class="string">&quot;DPCLT&quot;</span>, <span class="string">&quot;RSV&quot;</span>, <span class="string">&quot;MPSIIP&quot;</span>, <span class="string">&quot;DB&quot;</span>, <span class="string">&quot;QDANDC&quot;</span>, <span class="string">&quot;AC&quot;</span>, <span class="string">&quot;QDJVM&quot;</span>, <span class="string">&quot;PRB&quot;</span>, </span><br><span class="line"><span class="string">&quot;RD&quot;</span>, <span class="string">&quot;CWMR&quot;</span>, <span class="string">&quot;SP&quot;</span>, <span class="string">&quot;RS0&quot;</span>, <span class="string">&quot;DP&quot;</span>, <span class="string">&quot;RSF&quot;</span>, <span class="string">&quot;PGO&quot;</span>, <span class="string">&quot;QDPYC&quot;</span>, <span class="string">&quot;PPC&quot;</span>, <span class="string">&quot;PC&quot;</span>, <span class="string">&quot;EHS&quot;</span>, <span class="string">&quot;RSCHB&quot;</span>, <span class="string">&quot;FL&quot;</span>, <span class="string">&quot;QDNET&quot;</span>, <span class="string">&quot;JCD&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义模板</span></span><br><span class="line">template_data = &#123;</span><br><span class="line">    <span class="string">&quot;licenseId&quot;</span>: <span class="string">&quot;6G5NXCPJZB&quot;</span>,</span><br><span class="line">    <span class="string">&quot;licenseeName&quot;</span>: <span class="string">&quot;angelkyo&quot;</span>,</span><br><span class="line">    <span class="string">&quot;assigneeName&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;assigneeEmail&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;licenseRestriction&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;checkConcurrentUse&quot;</span>: <span class="literal">False</span>,</span><br><span class="line">    <span class="string">&quot;products&quot;</span>: [],</span><br><span class="line">    <span class="string">&quot;metadata&quot;</span>: <span class="string">&quot;0120220902PSAN000005&quot;</span>,</span><br><span class="line">    <span class="string">&quot;hash&quot;</span>: <span class="string">&quot;TRIAL:-1078390568&quot;</span>,</span><br><span class="line">    <span class="string">&quot;gracePeriodDays&quot;</span>: <span class="number">7</span>,</span><br><span class="line">    <span class="string">&quot;autoProlongated&quot;</span>: <span class="literal">False</span>,</span><br><span class="line">    <span class="string">&quot;isAutoProlongated&quot;</span>: <span class="literal">False</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 遍历 product_codes 中的每个 code</span></span><br><span class="line"><span class="keyword">for</span> code <span class="keyword">in</span> product_codes:</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建一个新的产品对象，使用 code 值和模板中的其余值</span></span><br><span class="line">    new_product = &#123;</span><br><span class="line">        <span class="string">&#x27;code&#x27;</span>: code,</span><br><span class="line">        <span class="string">&#x27;fallbackDate&#x27;</span>: <span class="string">&quot;2299-12-31&quot;</span>,</span><br><span class="line">        <span class="string">&#x27;paidUpTo&#x27;</span>: <span class="string">&quot;2299-12-31&quot;</span>,</span><br><span class="line">        <span class="string">&#x27;extended&#x27;</span>: <span class="literal">True</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 把新的产品对象添加到模板的 &#x27;products&#x27; 字段中</span></span><br><span class="line">    template_data[<span class="string">&#x27;products&#x27;</span>].append(new_product)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开 reg.json 文件，并将已修改的模板数据写入</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;reg.json&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    json.dump(template_data, f, indent=<span class="number">4</span>)  <span class="comment"># 使用 indent 参数使输出更易读</span></span><br></pre></td></tr></table></figure>
 <p>这样就能得到一个全家桶的激活码。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://data.services.jetbrains.com/products?fields=code,salesCode,name</span><br><span class="line">https://data.services.jetbrains.com/products?fields=name,forSale,salesCode</span><br></pre></td></tr></table></figure>
-
-<h2 id="ReSharper"><a href="#ReSharper" class="headerlink" title="ReSharper"></a>ReSharper</h2><p>插件产品因为没有<code>.vmoptions</code>文件，所以不能用激活码激活，需要用破解补丁。<br>Jetbrains Resharper Ultimate generic patcher v0.4.0<br><a target="_blank" rel="noopener" href="https://www.123pan.com/s/A6cA-0FAJh">https://www.123pan.com/s/A6cA-0FAJh</a><br><a target="_blank" rel="noopener" href="https://423down.lanzouv.com/ifGnm09e0xvi">https://423down.lanzouv.com/ifGnm09e0xvi</a></p>
-<p><br>破解最高支持<code>2024.2.2</code>版本的破解。<br><a target="_blank" rel="noopener" href="https://download.jetbrains.com/resharper/dotUltimate.2024.2.2/JetBrains.dotUltimate.2024.2.2.exe">JetBrains.dotUltimate.2024.2.2.exe</a></p>
-<p><br>仅支持<code>JetBrains.dotUltimate.2024.3.2</code>版本的破解补丁，是以VS插件形式提供的，<a target="_blank" rel="noopener" href="https://www.chinapyg.com/thread-157143-1-1.html">https://www.chinapyg.com/thread-157143-1-1.html</a>。</p>
-<p><br>最推荐的还是用第三方授权服务器：<code>https://jetbra.in</code>。</p>
-<h2 id="第三方插件"><a href="#第三方插件" class="headerlink" title="第三方插件"></a>第三方插件</h2><p>插件市场中也有收费插件，需要拿到插件的产品代码，步骤如下：</p>
+<h2 id="ReSharper"><a class="header-anchor" href="#ReSharper">#</a>ReSharper</h2>
+<p>插件产品因为没有<code>.vmoptions</code>文件，所以不能用激活码激活，需要用破解补丁。<br>
+Jetbrains Resharper Ultimate generic patcher v0.4.0<br>
+<a target="_blank" rel="noopener" href="https://www.123pan.com/s/A6cA-0FAJh">https://www.123pan.com/s/A6cA-0FAJh</a><br>
+<a target="_blank" rel="noopener" href="https://423down.lanzouv.com/ifGnm09e0xvi">https://423down.lanzouv.com/ifGnm09e0xvi</a></p>
+<p><br>
+破解最高支持<code>2024.2.2</code>版本的破解。<br>
+<a target="_blank" rel="noopener" href="https://download.jetbrains.com/resharper/dotUltimate.2024.2.2/JetBrains.dotUltimate.2024.2.2.exe">JetBrains.dotUltimate.2024.2.2.exe</a></p>
+<p><br>
+仅支持<code>JetBrains.dotUltimate.2024.3.2</code>版本的破解补丁，是以VS插件形式提供的，<a target="_blank" rel="noopener" href="https://www.chinapyg.com/thread-157143-1-1.html">https://www.chinapyg.com/thread-157143-1-1.html</a>。</p>
+<p><br>
+最推荐的还是用第三方授权服务器：<code>https://jetbra.in</code>。</p>
+<h2 id="第三方插件"><a class="header-anchor" href="#第三方插件">#</a>第三方插件</h2>
+<p>插件市场中也有收费插件，需要拿到插件的产品代码，步骤如下：</p>
 <ol>
 <li>访问<code>https://plugins.jetbrains.com/api/searchPlugins?max=10000&amp;offset=0&amp;search=&lt;keyword&gt;</code>搜索插件信息，<code>search</code>是关键字。得到插件ID。</li>
 <li>用上面拿到的<code>ID</code>访问<code>plugins.jetbrains.com/api/plugins/&lt;id&gt;</code>查看<code>productCode</code>属性，即产品代码。</li>
 </ol>
-<p><br>然后将产品代码追加到前面的脚本中即可。<br>比如 <a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/10080-rainbow-brackets">Rainbow Brackets</a> 插件：<br><a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/api/searchPlugins?max=10000&offset=0&search=rainbow">https://plugins.jetbrains.com/api/searchPlugins?max=10000&offset=0&search=rainbow</a><br><a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/api/plugins/10080">https://plugins.jetbrains.com/api/plugins/10080</a></p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-271578.htm">ja-netfilter 代理框架</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/494706735">分析ja-netfilter如何破解jetbrains的IDE</a><br><a target="_blank" rel="noopener" href="https://linux.do/t/topic/1798">自定内容并生成Idea激活码，已废弃，请考虑自己部署</a><br><a target="_blank" rel="noopener" href="https://notabug.org/Nasller/LicenseServer">LicenseServer</a></p>
+<p><br>
+然后将产品代码追加到前面的脚本中即可。<br>
+比如 <a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/plugin/10080-rainbow-brackets">Rainbow Brackets</a> 插件：<br>
+<a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/api/searchPlugins?max=10000&amp;offset=0&amp;search=rainbow">https://plugins.jetbrains.com/api/searchPlugins?max=10000&amp;offset=0&amp;search=rainbow</a><br>
+<a target="_blank" rel="noopener" href="https://plugins.jetbrains.com/api/plugins/10080">https://plugins.jetbrains.com/api/plugins/10080</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-271578.htm">ja-netfilter 代理框架</a><br>
+<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/494706735">分析ja-netfilter如何破解jetbrains的IDE</a><br>
+<a target="_blank" rel="noopener" href="https://linux.do/t/topic/1798">自定内容并生成Idea激活码，已废弃，请考虑自己部署</a><br>
+<a target="_blank" rel="noopener" href="https://notabug.org/Nasller/LicenseServer">LicenseServer</a></p>
 
       </div>
       
@@ -203,24 +239,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-10-03 19:52:08
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/JetBrains/" title="JetBrains">
-                        #JetBrains
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -262,13 +280,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -488,43 +509,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + JetBrains%20%E5%85%A8%E5%AE%B6%E6%A1%B6%E6%BF%80%E6%B4%BB%E6%96%B9%E6%B3%95 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F09%2F28%2FJetBrains-Licenses%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/09/28/JetBrains-Licenses/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

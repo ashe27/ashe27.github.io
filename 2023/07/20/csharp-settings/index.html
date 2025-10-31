@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,13 +166,20 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>在C#中，有两种配置文件的机制，分别是用户配置文件和应用程序配置文件，它们分别对应产生<code>user.config</code>和<code>app.config</code>文件。<br>这两种机制的主要区别在于：</p>
+        <h2 id="介绍"><a class="header-anchor" href="#介绍">#</a>介绍</h2>
+<p>在C#中，有两种配置文件的机制，分别是用户配置文件和应用程序配置文件，它们分别对应产生<code>user.config</code>和<code>app.config</code>文件。<br>
+这两种机制的主要区别在于：</p>
 <ul>
 <li>存储位置：应用程序配置文件位于应用程序的根目录下，而用户配置文件位于用户的应用程序数据文件夹下。因此，用户配置文件是与具体用户相关的，而应用程序配置文件是与应用程序相关的。</li>
 <li>读写权限：应用程序配置文件是只读的，而用户配置文件是可写的。因此，在应用程序配置文件中存储的配置信息是全局的，只能在应用程序部署时进行修改，而在用户配置文件中存储的配置信息是与具体用户相关的，可以在运行时根据用户的偏好进行修改。</li>
 <li>使用方式：应用程序配置文件主要用于存储应用程序的全局配置信息，而用户配置文件主要用于存储用户的偏好设置。在代码中，可以使用ConfigurationManager类来读取应用程序配置文件中的配置信息，而使用Settings类来读取和写入用户配置文件中的配置信息。</li>
 </ul>
-<h2 id="user-config"><a href="#user-config" class="headerlink" title="user.config"></a>user.config</h2><p>用户配置文件（user.config）是用于存储应用程序的用户配置信息，例如窗口尺寸、字体样式、颜色方案等等。用户配置文件通常位于用户的应用程序数据文件夹下，并且是可写的。在Visual Studio中，可以使用“项目属性”窗口来定义这些用户配置信息，系统会自动生成一个Settings.settings文件，并在运行时自动创建和维护相应的user.config文件。在代码中，可以使用Settings类来读取和写入用户配置文件中的配置信息。<br><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.applicationsettingsbase">ApplicationSettingsBase</a> 类可以用于管理应用程序的设置，通过使用 ApplicationSettingsBase 类，我们可以轻松地读取和写入应用程序级别的设置，而无需编写大量的代码来实现这些功能。<br>要使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.applicationsettingsbase">ApplicationSettingsBase</a>，通常需要创建一个自定义设置类，该类继承自 ApplicationSettingsBase。在自定义设置类中，可以定义代表应用程序可配置设置的属性。通过使用<code> [DefaultSettingValue]</code>或<code>[UserScopedSetting]</code>等属性，可以为每个设置项指定默认值和作用域。<br>先看一个简单的例子：</p>
+<h2 id="user-config"><a class="header-anchor" href="#user-config">#</a>user.config</h2>
+<p>用户配置文件（user.config）是用于存储应用程序的用户配置信息，例如窗口尺寸、字体样式、颜色方案等等。用户配置文件通常位于用户的应用程序数据文件夹下，并且是可写的。在Visual Studio中，可以使用“项目属性”窗口来定义这些用户配置信息，系统会自动生成一个Settings.settings文件，并在运行时自动创建和维护相应的user.config文件。在代码中，可以使用Settings类来读取和写入用户配置文件中的配置信息。<br>
+<br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.applicationsettingsbase">ApplicationSettingsBase</a> 类可以用于管理应用程序的设置，通过使用 ApplicationSettingsBase 类，我们可以轻松地读取和写入应用程序级别的设置，而无需编写大量的代码来实现这些功能。<br>
+要使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.applicationsettingsbase">ApplicationSettingsBase</a>，通常需要创建一个自定义设置类，该类继承自 ApplicationSettingsBase。在自定义设置类中，可以定义代表应用程序可配置设置的属性。通过使用<code> [DefaultSettingValue]</code>或<code>[UserScopedSetting]</code>等属性，可以为每个设置项指定默认值和作用域。<br>
+先看一个简单的例子：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Configuration;</span><br><span class="line"></span><br><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">AppSettings</span> : <span class="title">ApplicationSettingsBase</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="built_in">bool</span> IsActive</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span> =&gt; (<span class="built_in">bool</span>)<span class="keyword">this</span>[<span class="keyword">nameof</span>(IsActive)];</span><br><span class="line">        <span class="keyword">set</span> =&gt; <span class="keyword">this</span>[<span class="keyword">nameof</span>(IsActive)] = <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>运行后会发生异常</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The settings property &#x27;IsActive&#x27; was not found.</span><br></pre></td></tr></table></figure>
@@ -176,22 +187,30 @@
 <ol>
 <li>属性访问权限必须是<code>public</code>。</li>
 <li>必须提供范围注解：<code>[UserScopedSetting]</code>或者<code>[ApplicationScopedSetting]</code>。</li>
-<li>必须提供默认值。<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">AppSettings</span> : <span class="title">ApplicationSettingsBase</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">UserScopedSetting()</span>]</span><br><span class="line">    [<span class="meta">DefaultSettingValue(<span class="string">&quot;true&quot;</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span> IsActive</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span> =&gt; (<span class="built_in">bool</span>)<span class="keyword">this</span>[<span class="keyword">nameof</span>(IsActive)];</span><br><span class="line">        <span class="keyword">set</span> =&gt; <span class="keyword">this</span>[<span class="keyword">nameof</span>(IsActive)] = <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>必须提供默认值。</li>
 </ol>
-<h3 id="用户级设置"><a href="#用户级设置" class="headerlink" title="用户级设置"></a>用户级设置</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.userscopedsettingattribute">UserScopedSetting</a> 注解表示这个属性是<strong>用户级的设置</strong>。<br>所谓用户级的设置，是指属性存储在当前进程用户的相关位置，该设置不会与其他用户共享设置。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">AppSettings</span> : <span class="title">ApplicationSettingsBase</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">UserScopedSetting()</span>]</span><br><span class="line">    [<span class="meta">DefaultSettingValue(<span class="string">&quot;true&quot;</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span> IsActive</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span> =&gt; (<span class="built_in">bool</span>)<span class="keyword">this</span>[<span class="keyword">nameof</span>(IsActive)];</span><br><span class="line">        <span class="keyword">set</span> =&gt; <span class="keyword">this</span>[<span class="keyword">nameof</span>(IsActive)] = <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="用户级设置"><a class="header-anchor" href="#用户级设置">#</a>用户级设置</h3>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.userscopedsettingattribute">UserScopedSetting</a> 注解表示这个属性是<strong>用户级的设置</strong>。<br>
+所谓用户级的设置，是指属性存储在当前进程用户的相关位置，该设置不会与其他用户共享设置。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">AppSettings</span> : <span class="title">ApplicationSettingsBase</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">UserScopedSetting()</span>]</span><br><span class="line">    [<span class="meta">DefaultSettingValue(<span class="string">&quot;true&quot;</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span> IsActive</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span> =&gt; (<span class="built_in">bool</span>)<span class="keyword">this</span>[<span class="keyword">nameof</span>(IsActive)];</span><br><span class="line">        <span class="keyword">set</span> =&gt; <span class="keyword">this</span>[<span class="keyword">nameof</span>(IsActive)] = <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>使用方法</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> settings = <span class="keyword">new</span> AppSettings();</span><br><span class="line"><span class="keyword">var</span> isActive = settings.IsActive;</span><br><span class="line">settings.Save();</span><br></pre></td></tr></table></figure>
-<p>调用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.applicationsettingsbase.save">Save</a> 方法后会持久化设置（仅会保存用户设置）。<br>配置文件在哪个位置呢？可以使用这段代码查看</p>
+<p>调用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.applicationsettingsbase.save">Save</a> 方法后会持久化设置（仅会保存用户设置）。<br>
+配置文件在哪个位置呢？可以使用这段代码查看</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">string</span> <span class="title">GetDefaultExeConfigPath</span>(<span class="params">ConfigurationUserLevel userLevel</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> userConfig = System.Configuration.ConfigurationManager.OpenExeConfiguration(userLevel);</span><br><span class="line">    <span class="keyword">return</span> userConfig.FilePath;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> path = GetDefaultExeConfigPath(ConfigurationUserLevel.PerUserRoamingAndLocal);</span><br></pre></td></tr></table></figure>
 <p>得到的路径大概是这样：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Admin\AppData\Local\MyCompany\MyApp_Url_lab5ev2xnbcazbd33m1aiehm2mtop5ce\1.0.0.0\user.config</span><br></pre></td></tr></table></figure>
-<h3 id="存储到-Roaming-目录"><a href="#存储到-Roaming-目录" class="headerlink" title="存储到 Roaming 目录"></a>存储到 Roaming 目录</h3><p>默认情况下属性将存储在当前用户目录下，如果要存储到<code>Roaming</code>目录，需要使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.settingsmanageabilityattribute">SettingsManageability</a> 标注。</p>
+<h3 id="存储到-Roaming-目录"><a class="header-anchor" href="#存储到-Roaming-目录">#</a>存储到 Roaming 目录</h3>
+<p>默认情况下属性将存储在当前用户目录下，如果要存储到<code>Roaming</code>目录，需要使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.settingsmanageabilityattribute">SettingsManageability</a> 标注。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">AppSettings</span> : <span class="title">ApplicationSettingsBase</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">UserScopedSetting()</span>]</span><br><span class="line">    [<span class="meta">SettingsManageability(SettingsManageability.Roaming)</span>]</span><br><span class="line">    [<span class="meta">DefaultSettingValue(<span class="string">&quot;true&quot;</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span> IsActive</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span> =&gt; (<span class="built_in">bool</span>)<span class="keyword">this</span>[<span class="keyword">nameof</span>(IsActive)];</span><br><span class="line">        <span class="keyword">set</span> =&gt; <span class="keyword">this</span>[<span class="keyword">nameof</span>(IsActive)] = <span class="keyword">value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这样配置文件路径将会在：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Admin\AppData\Roaming\...</span><br></pre></td></tr></table></figure>
-<h3 id="应用级设置"><a href="#应用级设置" class="headerlink" title="应用级设置"></a>应用级设置</h3><p>与用户级设置对应的是应用级的设置，用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.applicationscopedsettingattribute">ApplicationScopedSetting</a> 注解类标注。<br>应用级的设置是不可以持久化的，默认值就是属性注解中的值。</p>
-<h3 id="存储位置"><a href="#存储位置" class="headerlink" title="存储位置"></a>存储位置</h3><p><code>user.config</code>文件的完整路径如下所示：</p>
+<h3 id="应用级设置"><a class="header-anchor" href="#应用级设置">#</a>应用级设置</h3>
+<p>与用户级设置对应的是应用级的设置，用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.applicationscopedsettingattribute">ApplicationScopedSetting</a> 注解类标注。<br>
+应用级的设置是不可以持久化的，默认值就是属性注解中的值。</p>
+<h3 id="存储位置"><a class="header-anchor" href="#存储位置">#</a>存储位置</h3>
+<p><code>user.config</code>文件的完整路径如下所示：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Profile Directory&gt;\&lt;Company Name&gt;\&lt;App Name&gt;_&lt;Evidence Type&gt;_&lt;Evidence Hash&gt;\&lt;Version&gt;\user.config</span><br></pre></td></tr></table></figure>
 <p>其中，不同部分的含义如下：</p>
 <ul>
@@ -201,14 +220,23 @@
 <li><code>&lt;Evidence Type&gt;</code>和<code>&lt;Evidence Hash&gt;</code>：这些是关于应用程序证据（Evidence）的信息，用于标识不同应用程序的实例。证据信息可以包括应用程序的启动路径、域名等。这有助于区分不同实例的应用程序，以防止设置的冲突。</li>
 <li><code>&lt;Version&gt;</code>：应用程序的版本号，用于标识当前设置的版本。</li>
 </ul>
-<h3 id="升级文件"><a href="#升级文件" class="headerlink" title="升级文件"></a>升级文件</h3><p>微软考虑的非常细致，在<code>user.config</code>路径中还有程序版本，这样当有多个版本的程序共存时，不会互相干扰。<br>但为了新版本的程序在首次运行时能够获取到旧的设置，需要先将设置文件升级</p>
+<h3 id="升级文件"><a class="header-anchor" href="#升级文件">#</a>升级文件</h3>
+<p>微软考虑的非常细致，在<code>user.config</code>路径中还有程序版本，这样当有多个版本的程序共存时，不会互相干扰。<br>
+但为了新版本的程序在首次运行时能够获取到旧的设置，需要先将设置文件升级</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> configPath = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal).FilePath;</span><br><span class="line"><span class="keyword">if</span> (!File.Exists(configPath))</span><br><span class="line">&#123;</span><br><span class="line">    Settings.Default.Upgrade();</span><br><span class="line">    Settings.Default.Reload();</span><br><span class="line">    Settings.Default.Save();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="设置提供程序"><a href="#设置提供程序" class="headerlink" title="设置提供程序"></a>设置提供程序</h3><p>ApplicationSettingsBase 自身不保留也不加载设置，而是由设置提供程序（派生自 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.settingsprovider">SettingsProvider</a> 的类）完成。<br>如果 ApplicationSettingsBase 的派生类未通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.settingsproviderattribute">SettingsProviderAttribute</a> 指定设置提供程序，则默认使用提供程序 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.localfilesettingsprovider">LocalFileSettingsProvider</a>。<br>一个最小的自定义提供程序的例子：</p>
+<h3 id="设置提供程序"><a class="header-anchor" href="#设置提供程序">#</a>设置提供程序</h3>
+<p>ApplicationSettingsBase 自身不保留也不加载设置，而是由设置提供程序（派生自 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.settingsprovider">SettingsProvider</a> 的类）完成。<br>
+如果 ApplicationSettingsBase 的派生类未通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.settingsproviderattribute">SettingsProviderAttribute</a> 指定设置提供程序，则默认使用提供程序 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.localfilesettingsprovider">LocalFileSettingsProvider</a>。<br>
+一个最小的自定义提供程序的例子：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Specialized;</span><br><span class="line"><span class="keyword">using</span> System.Configuration;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">MyApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">class</span> <span class="title">CustomSettingsProvider</span> : <span class="title">SettingsProvider</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> SettingsPropertyValueCollection <span class="title">GetPropertyValues</span>(<span class="params">SettingsContext context, SettingsPropertyCollection collection</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NotImplementedException();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Initialize</span>(<span class="params"><span class="built_in">string</span> name, NameValueCollection config</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">string</span>.IsNullOrEmpty(name))</span><br><span class="line">            &#123;</span><br><span class="line">                name = <span class="keyword">nameof</span>(CustomSettingsProvider);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">base</span>.Initialize(name, config);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">SetPropertyValues</span>(<span class="params">SettingsContext context, SettingsPropertyValueCollection collection</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NotImplementedException();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">override</span> <span class="built_in">string</span> ApplicationName &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125; = <span class="string">&quot;myapp&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>然后通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.settingsproviderattribute">SettingsProviderAttribute</a> 注解标注</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">SettingsProvider(typeof(CustomSettingsProvider))</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AppSettings</span> : <span class="title">ApplicationSettingsBase</span></span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>除非是自己需要完全控制配置文件的格式或文件路径，所以一般不需要自己实现。<br>自己实现提供程序需要考虑安全、版本等问题，比较繁琐。默认的<code>LocalFileSettingsProvider</code>已经足够应付绝大多数场景。</p>
-<h3 id="官方的实现-Settings"><a href="#官方的实现-Settings" class="headerlink" title="官方的实现 Settings"></a>官方的实现 Settings</h3><p>微软在 Visual Studio 中提供了对<code>ApplicationSettingsBase</code>的包装，并支持可视化操作，它就是<code>Settings.settings</code>文件。<br>创建文件：可以在 Visual Studio 中右击项目，选择 “Add”（添加） -&gt; “New Item”（新建项），然后选择 “Settings File”（设置文件）。<br>VS会工程目录下生成3个文件</p>
+<p>除非是自己需要完全控制配置文件的格式或文件路径，所以一般不需要自己实现。<br>
+自己实现提供程序需要考虑安全、版本等问题，比较繁琐。默认的<code>LocalFileSettingsProvider</code>已经足够应付绝大多数场景。</p>
+<h3 id="官方的实现-Settings"><a class="header-anchor" href="#官方的实现-Settings">#</a>官方的实现 Settings</h3>
+<p>微软在 Visual Studio 中提供了对<code>ApplicationSettingsBase</code>的包装，并支持可视化操作，它就是<code>Settings.settings</code>文件。<br>
+创建文件：可以在 Visual Studio 中右击项目，选择 “Add”（添加） -&gt; “New Item”（新建项），然后选择 “Settings File”（设置文件）。<br>
+VS会工程目录下生成3个文件</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Settings.cs</span><br><span class="line">Properties\Settings.settings</span><br><span class="line">Properties\Settings.Designer.cs</span><br></pre></td></tr></table></figure>
 <ul>
 <li>双击<code>Settings.settings</code>文件可以进行设置的可视化编辑。</li>
@@ -216,12 +244,17 @@
 <li><code>Settings.cs</code>文件下有一个名为<code>Settings</code>的类，这里的代码是可以编辑的。</li>
 </ul>
 <p>这个类继承自<code>ApplicationSettingsBase</code>，实行了单例模式，在程序直接使用即可。所以在实际开发中，我们按照微软的实践来即可，通常情况下不需要自己去实现<code>ApplicationSettingsBase</code>。</p>
-<h3 id="实现自定义的类型"><a href="#实现自定义的类型" class="headerlink" title="实现自定义的类型"></a>实现自定义的类型</h3><p>在VS中编辑设置的类型，只有一些如string等等的内置类型，如果要实现自己的类型如何做呢？这就需要用到 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.componentmodel.typeconverter">TypeConverter</a>。<br>在 VS2022 中，<code>类型</code>的下拉框并没有自定义选项，所以需要手动编辑<code>Settings.settings</code>文件</p>
+<h3 id="实现自定义的类型"><a class="header-anchor" href="#实现自定义的类型">#</a>实现自定义的类型</h3>
+<p>在VS中编辑设置的类型，只有一些如string等等的内置类型，如果要实现自己的类型如何做呢？这就需要用到 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.componentmodel.typeconverter">TypeConverter</a>。<br>
+在 VS2022 中，<code>类型</code>的下拉框并没有自定义选项，所以需要手动编辑<code>Settings.settings</code>文件</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">SettingsFile</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/VisualStudio/2004/01/settings&quot;</span> <span class="attr">CurrentProfile</span>=<span class="string">&quot;(Default)&quot;</span> <span class="attr">GeneratedClassNamespace</span>=<span class="string">&quot;MyApp.Properties&quot;</span> <span class="attr">GeneratedClassName</span>=<span class="string">&quot;Settings&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Profiles</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Settings</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Setting</span> <span class="attr">Name</span>=<span class="string">&quot;UserOption1&quot;</span> <span class="attr">Type</span>=<span class="string">&quot;MyApp.MyOption&quot;</span> <span class="attr">Scope</span>=<span class="string">&quot;User&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">Value</span> <span class="attr">Profile</span>=<span class="string">&quot;(Default)&quot;</span>&gt;</span>user1<span class="tag">&lt;/<span class="name">Value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Setting</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Settings</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">SettingsFile</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>将<code>Type</code>属性修改为自定义类型的完全限定名。并且实现自己的<code>TypeConverter</code>。一个简单的例子</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">TypeConverter(typeof(CustomSettingConverter))</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyOption</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> Age &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CustomSettingConverter</span> : <span class="title">TypeConverter</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="built_in">bool</span> <span class="title">CanConvertFrom</span>(<span class="params">ITypeDescriptorContext context, Type sourceType</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> sourceType == <span class="keyword">typeof</span>(<span class="built_in">string</span>) || <span class="keyword">base</span>.CanConvertFrom(context, sourceType);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="built_in">object</span> <span class="title">ConvertFrom</span>(<span class="params">ITypeDescriptorContext context, System.Globalization.CultureInfo culture, <span class="built_in">object</span> <span class="keyword">value</span></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> stringValue = <span class="keyword">value</span> <span class="keyword">as</span> <span class="built_in">string</span>;</span><br><span class="line">        <span class="keyword">if</span> (stringValue != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> MyOption() &#123; Age = <span class="number">50</span> &#125;;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">base</span>.ConvertFrom(context, culture, <span class="keyword">value</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">override</span> <span class="built_in">object</span>? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, <span class="built_in">object</span>? <span class="keyword">value</span>, Type destinationType)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (destinationType == <span class="keyword">typeof</span>(<span class="built_in">string</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> opt = <span class="keyword">value</span> <span class="keyword">as</span> MyOption;</span><br><span class="line">            <span class="keyword">return</span> opt?.Age.ToString();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">base</span>.ConvertTo(context, culture, <span class="keyword">value</span>, destinationType);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>本质上，就是处理字符串与自定义类型之间的转换过程。</p>
-<h2 id="app-config"><a href="#app-config" class="headerlink" title="app.config"></a>app.config</h2><p>应用程序配置文件（app.config）是一个XML文件，用于存储应用程序的全局配置信息，例如数据库连接字符串、日志级别、应用程序设置等等。应用程序配置文件通常位于应用程序的根目录下，并且是只读的。在代码中，可以使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationmanager">ConfigurationManager</a> 类来读取应用程序配置文件中的配置信息。<br><br>按照以下步骤来创建app.config文件：</p>
+<h2 id="app-config"><a class="header-anchor" href="#app-config">#</a>app.config</h2>
+<p>应用程序配置文件（app.config）是一个XML文件，用于存储应用程序的全局配置信息，例如数据库连接字符串、日志级别、应用程序设置等等。应用程序配置文件通常位于应用程序的根目录下，并且是只读的。在代码中，可以使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationmanager">ConfigurationManager</a> 类来读取应用程序配置文件中的配置信息。<br>
+<br>
+按照以下步骤来创建app.config文件：</p>
 <ol>
 <li>右键单击项目名称，选择“添加”-&gt;“新建项”菜单项。</li>
 <li>在“添加新项”对话框中，选择“应用程序配置文件”模板，并指定文件名为“app.config”。</li>
@@ -229,18 +262,21 @@
 <p>文件内容：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span> ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>你可以在其中添加配置信息。在app.config文件中添加配置信息，例如数据库连接字符串、日志级别、应用程序设置等等，并在代码中使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationmanager">ConfigurationManager</a> 类来读取app.config文件中的配置信息。</p>
-<h3 id="AppSettings和ConnectionStrings属性"><a href="#AppSettings和ConnectionStrings属性" class="headerlink" title="AppSettings和ConnectionStrings属性"></a>AppSettings和ConnectionStrings属性</h3><p>微软在 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationmanager">ConfigurationManager</a> 上安排了两个属性：</p>
+<h3 id="AppSettings和ConnectionStrings属性"><a class="header-anchor" href="#AppSettings和ConnectionStrings属性">#</a>AppSettings和ConnectionStrings属性</h3>
+<p>微软在 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationmanager">ConfigurationManager</a> 上安排了两个属性：</p>
 <ol>
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationmanager.appsettings">AppSettings</a></li>
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationmanager.connectionstrings">ConnectionStrings</a></li>
 </ol>
-<p>分别对应文件中<code>AppSettingsSection</code>和<code>ConnectionStringsSection</code>两个配置节，用于存储应用程序的常规设置和数据库连接字符串信息。<br>AppSettingsSection 配置节用于存储应用程序的常规设置，例如日志级别、应用程序设置等等，例如：</p>
+<p>分别对应文件中<code>AppSettingsSection</code>和<code>ConnectionStringsSection</code>两个配置节，用于存储应用程序的常规设置和数据库连接字符串信息。<br>
+AppSettingsSection 配置节用于存储应用程序的常规设置，例如日志级别、应用程序设置等等，例如：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">appSettings</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">add</span> <span class="attr">key</span>=<span class="string">&quot;LogLevel&quot;</span> <span class="attr">value</span>=<span class="string">&quot;DEBUG&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">add</span> <span class="attr">key</span>=<span class="string">&quot;MaxRetryCount&quot;</span> <span class="attr">value</span>=<span class="string">&quot;3&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">appSettings</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>ConnectionStringsSection 配置节用于存储应用程序的数据库连接字符串信息，例如：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">connectionStrings</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">add</span> <span class="attr">name</span>=<span class="string">&quot;MyDB&quot;</span> <span class="attr">connectionString</span>=<span class="string">&quot;server=myserver;database=mydb;uid=myuser;password=mypassword&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">connectionStrings</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>在代码中，可以使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationmanager">ConfigurationManager</a> 类来读取 app.config 文件中的配置信息。例如，以下代码演示了如何读取名为”LogLevel”的应用程序设置和名为”MyDB”的数据库连接字符串：</p>
+<p>在代码中，可以使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationmanager">ConfigurationManager</a> 类来读取 app.config 文件中的配置信息。例如，以下代码演示了如何读取名为&quot;LogLevel&quot;的应用程序设置和名为&quot;MyDB&quot;的数据库连接字符串：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> logLevel = ConfigurationManager.AppSettings[<span class="string">&quot;LogLevel&quot;</span>];</span><br><span class="line"><span class="built_in">string</span> connectionString = ConfigurationManager.ConnectionStrings[<span class="string">&quot;MyDB&quot;</span>].ConnectionString;</span><br></pre></td></tr></table></figure>
-<h3 id="自定义Section"><a href="#自定义Section" class="headerlink" title="自定义Section"></a>自定义Section</h3><p>使用自定义配置节之前，我们需要在<code>app.config</code>中注册该配置节（在<code>&lt;configSections&gt;</code>下定义），以便应用程序能够识别并正确地读取该配置节。</p>
+<h3 id="自定义Section"><a class="header-anchor" href="#自定义Section">#</a>自定义Section</h3>
+<p>使用自定义配置节之前，我们需要在<code>app.config</code>中注册该配置节（在<code>&lt;configSections&gt;</code>下定义），以便应用程序能够识别并正确地读取该配置节。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">configSections</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">section</span> <span class="attr">name</span>=<span class="string">&quot;MySettings&quot;</span> <span class="attr">type</span>=<span class="string">&quot;System.Configuration.NameValueSectionHandler&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">configSections</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">MySettings</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">add</span> <span class="attr">key</span>=<span class="string">&quot;MySetting1&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Value1&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">add</span> <span class="attr">key</span>=<span class="string">&quot;MySetting2&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Value2&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">MySettings</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>name：自定义配置节的名称。</li>
@@ -248,15 +284,31 @@
 </ul>
 <p>使用很简单</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> section = (NameValueCollection)System.Configuration.ConfigurationManager.GetSection(<span class="string">&quot;MySettings&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> v1 = section[<span class="string">&quot;MySetting1&quot;</span>];</span><br><span class="line"><span class="keyword">var</span> v2 = section[<span class="string">&quot;MySetting2&quot;</span>];</span><br></pre></td></tr></table></figure>
-<p>键值对类型的选项可以用官方提供的 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.namevaluesectionhandler">NameValueSectionHandler</a>。<br>但如果需要更复杂的类型，可以实现自己的节类，它应该继承自 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationsection">ConfigurationSection</a>。</p>
+<p>键值对类型的选项可以用官方提供的 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.namevaluesectionhandler">NameValueSectionHandler</a>。<br>
+但如果需要更复杂的类型，可以实现自己的节类，它应该继承自 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationsection">ConfigurationSection</a>。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyCustomSection</span> : <span class="title">ConfigurationSection</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">ConfigurationProperty(<span class="string">&quot;MySetting1&quot;</span>, IsRequired = true)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">string</span> MySetting1</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; <span class="keyword">return</span> (<span class="built_in">string</span>)<span class="keyword">this</span>[<span class="string">&quot;MySetting1&quot;</span>]; &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123; <span class="keyword">this</span>[<span class="string">&quot;MySetting1&quot;</span>] = <span class="keyword">value</span>; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">ConfigurationProperty(<span class="string">&quot;MySetting2&quot;</span>, IsRequired = true)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> MySetting2</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span> &#123; <span class="keyword">return</span> (<span class="built_in">int</span>)<span class="keyword">this</span>[<span class="string">&quot;MySetting2&quot;</span>]; &#125;</span><br><span class="line">        <span class="keyword">set</span> &#123; <span class="keyword">this</span>[<span class="string">&quot;MySetting2&quot;</span>] = <span class="keyword">value</span>; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后在 app.config 文件中添加一个名为”MyCustomSection”的自定义配置节：</p>
+<p>然后在 app.config 文件中添加一个名为&quot;MyCustomSection&quot;的自定义配置节：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">configSections</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">section</span> <span class="attr">name</span>=<span class="string">&quot;MyCustomSection&quot;</span> <span class="attr">type</span>=<span class="string">&quot;MyNamespace.MyCustomSection, MyAssembly&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">configSections</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">MyCustomSection</span> <span class="attr">MySetting1</span>=<span class="string">&quot;Value1&quot;</span> <span class="attr">MySetting2</span>=<span class="string">&quot;2&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>注意<code>type</code>中的格式，前面是自定义节类型的完全名称，然后用逗号分隔，逗号后是程序集的名称。<br>这样就能得到一个自定义的类实例：</p>
+<p>注意<code>type</code>中的格式，前面是自定义节类型的完全名称，然后用逗号分隔，逗号后是程序集的名称。<br>
+这样就能得到一个自定义的类实例：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mySection = ConfigurationManager.GetSection(<span class="string">&quot;MyCustomSection&quot;</span>) <span class="keyword">as</span> MyCustomSection;</span><br></pre></td></tr></table></figure>
 <p>如果设置节还有子类型的话也是可以做到的，更高级的用法可以自行查阅相关资料，本文就不展开了。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>当项目中有 app.config 文件时，对 .settings 的编辑会自动同步到 app.config 文件中。同步过去的应用范围设置会在<code>applicationSettings</code>节点。而通过<code>ConfigurationManager.AppSettings[&#39;key&#39;]</code>这种方式访问的是<code>&lt;appSettings&gt;</code>节点，且总是字符串类型。所以我有理由相信，在今天，已经不推荐用这种方式了。<br><br>在VS中，对 .settings 支持更多，可以可视化编辑、自动生成相关代码，是强类型的。<br>所以在实际开发中，建议通过 .settings 来管理设置。如果需要给用户编辑应用范围设置的机会，如数据库连接字符串，那么就新建一个 app.config 文件，这样 .settings 中的应用级设置会同步过来，并且复制到程序目录，使得用户编辑成为可能。否则，就可以不需要 app.config 文件。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1075204">When using a Settings.settings file in .NET, where is the config actually stored?</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/23924183">Keep user’s settings after altering assembly&#x2F;file version</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/previous-versions/aa730869(v=vs.80)">Using Settings in C#</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b2022ec4d6c7">使用微软提供的Settings以及自定义SettingsProvider</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/previous-versions/ms379611(v=vs.80)">在VisualBasic2005中使用My.Settings</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/visualstudio/ide/reference/settings-page-project-designer">“设置”页面，项目设计器</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/desktop/winforms/advanced/application-settings-architecture">应用程序设置体系结构</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/desktop/winforms/advanced/application-settings-attributes">应用程序设置特性</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yukaizhao/archive/2011/12/02/net-web-config-costom-config-implement.html">在Web.config或App.config中的添加自定义配置</a><br><a target="_blank" rel="noopener" href="http://www.blackwasp.co.uk/CustomAppSettings.aspx">Using Custom Classes with Application Settings</a></p>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<p>当项目中有 app.config 文件时，对 .settings 的编辑会自动同步到 app.config 文件中。同步过去的应用范围设置会在<code>applicationSettings</code>节点。而通过<code>ConfigurationManager.AppSettings['key']</code>这种方式访问的是<code>&lt;appSettings&gt;</code>节点，且总是字符串类型。所以我有理由相信，在今天，已经不推荐用这种方式了。<br>
+<br>
+在VS中，对 .settings 支持更多，可以可视化编辑、自动生成相关代码，是强类型的。<br>
+所以在实际开发中，建议通过 .settings 来管理设置。如果需要给用户编辑应用范围设置的机会，如数据库连接字符串，那么就新建一个 app.config 文件，这样 .settings 中的应用级设置会同步过来，并且复制到程序目录，使得用户编辑成为可能。否则，就可以不需要 app.config 文件。</p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/1075204">When using a Settings.settings file in .NET, where is the config actually stored?</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/23924183">Keep user’s settings after altering assembly/file version</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/previous-versions/aa730869(v=vs.80)">Using Settings in C#</a><br>
+<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/b2022ec4d6c7">使用微软提供的Settings以及自定义SettingsProvider</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/previous-versions/ms379611(v=vs.80)">在VisualBasic2005中使用My.Settings</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/visualstudio/ide/reference/settings-page-project-designer">&quot;设置&quot;页面，项目设计器</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/desktop/winforms/advanced/application-settings-architecture">应用程序设置体系结构</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/desktop/winforms/advanced/application-settings-attributes">应用程序设置特性</a><br>
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/yukaizhao/archive/2011/12/02/net-web-config-costom-config-implement.html">在Web.config或App.config中的添加自定义配置</a><br>
+<a target="_blank" rel="noopener" href="http://www.blackwasp.co.uk/CustomAppSettings.aspx">Using Custom Classes with Application Settings</a></p>
 
       </div>
       
@@ -268,24 +320,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -327,13 +361,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -553,43 +590,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + C%23%20%E4%B8%AD%E4%B8%A4%E7%A7%8D%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%9C%BA%E5%88%B6 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F07%2F20%2Fcsharp-settings%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/07/20/csharp-settings/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

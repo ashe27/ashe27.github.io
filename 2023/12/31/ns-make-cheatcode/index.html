@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,30 +166,57 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="作弊工具"><a href="#作弊工具" class="headerlink" title="作弊工具"></a>作弊工具</h2><p>目前在大气层系统中，作弊工具有两个：<a target="_blank" rel="noopener" href="https://github.com/tomvita/EdiZon-SE">EdiZon SE</a> 和 <a target="_blank" rel="noopener" href="https://github.com/tomvita/Breeze-Beta">Breeze</a>。都出自同一个作者。<br>EdiZon SE 是老牌工具，UI 操作反人类，相关教程与工具会多一写。<br>Breeze 是新秀，UI 更人性化，速度更快，支持修改汇编代码。</p>
-<h2 id="内存区域概念"><a href="#内存区域概念" class="headerlink" title="内存区域概念"></a>内存区域概念</h2><p>作弊分为两类，修改游戏数据和修改游戏逻辑代码。</p>
+        <h2 id="作弊工具"><a class="header-anchor" href="#作弊工具">#</a>作弊工具</h2>
+<p>目前在大气层系统中，作弊工具有两个：<a target="_blank" rel="noopener" href="https://github.com/tomvita/EdiZon-SE">EdiZon SE</a> 和 <a target="_blank" rel="noopener" href="https://github.com/tomvita/Breeze-Beta">Breeze</a>。都出自同一个作者。<br>
+EdiZon SE 是老牌工具，UI 操作反人类，相关教程与工具会多一写。<br>
+Breeze 是新秀，UI 更人性化，速度更快，支持修改汇编代码。</p>
+<h2 id="内存区域概念"><a class="header-anchor" href="#内存区域概念">#</a>内存区域概念</h2>
+<p>作弊分为两类，修改游戏数据和修改游戏逻辑代码。</p>
 <ol>
 <li>修改数据：向内存区域写入数据，比如将金币改为 9999。这种方式不需要了解汇编代码。</li>
 <li>修改逻辑：改变程序的执行逻辑，比如购买物品会扣掉 100 金币，改为购买物品增加 100 金币。</li>
 </ol>
-<p><br>无论是哪种方式，都需要先找到要修改的内存地址，而内存地址可能是会随着每次启动游戏而变动的。<br>为了搞清有哪些内存区域，可以用在 IDA 附加后，在下方命令栏输入<code>get info</code>查询，得到信息如：</p>
+<p><br>
+无论是哪种方式，都需要先找到要修改的内存地址，而内存地址可能是会随着每次启动游戏而变动的。<br>
+为了搞清有哪些内存区域，可以用在 IDA 附加后，在下方命令栏输入<code>get info</code>查询，得到信息如：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">GDB&gt;get info</span><br><span class="line">Process:     0x89 (Application)</span><br><span class="line">Program Id:  0x01007ef00011e000</span><br><span class="line">Application: 1</span><br><span class="line">Hbl:         0</span><br><span class="line">Layout:</span><br><span class="line">  Alias: 0x5b9a200000 - 0x6b9a1fffff</span><br><span class="line">  Heap:  0x765e400000 - 0x785e3fffff</span><br><span class="line">  Aslr:  0x0008000000 - 0x7fffffffff</span><br><span class="line">  Stack: 0x6f25a00000 - 0x6fa59fffff</span><br><span class="line">Modules:</span><br><span class="line">  0x350d600000 - 0x350d601fff nnrtld.elf</span><br><span class="line">  0x350d604000 - 0x350f72dfff U-King.nss</span><br><span class="line">  0x351036a000 - 0x35106ddfff multimedia.elf</span><br><span class="line">  0x3510a87000 - 0x3510fb4fff nnSdk.elf</span><br></pre></td></tr></table></figure>
-<p>留意后缀为 .nss 的模块，这是主程序的代码区，也就是所谓的 Main 区段，当我们要修改程序逻辑的时候就是针对这一块区域。<br>另一个要关注的就是 Heap 区段，几乎绝大多数游戏数据都会在这一块区域。</p>
+<p>留意后缀为 .nss 的模块，这是主程序的代码区，也就是所谓的 Main 区段，当我们要修改程序逻辑的时候就是针对这一块区域。<br>
+另一个要关注的就是 Heap 区段，几乎绝大多数游戏数据都会在这一块区域。</p>
 <p>另外，也可以用 Breeze 来查看游戏内存布局信息：</p>
-<p><img src="/images/ns-make-cheatcode/01.webp"></p>
-<h2 id="制作金手指文件"><a href="#制作金手指文件" class="headerlink" title="制作金手指文件"></a>制作金手指文件</h2><p>这里以<code>塞尔达传说：旷野之息</code>为例。游戏信息：</p>
+<p><img src="/images/ns-make-cheatcode/01.webp" alt=""></p>
+<h2 id="制作金手指文件"><a class="header-anchor" href="#制作金手指文件">#</a>制作金手指文件</h2>
+<p>这里以<code>塞尔达传说：旷野之息</code>为例。游戏信息：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TID：01007EF00011E000</span><br><span class="line">BID：8E9978D50BDD20B4</span><br></pre></td></tr></table></figure>
-<p>数据搜索过程很简单就不多说了。卢比的修改地址是：<br>真实数值：heap + 0E435B40<br>显示数值：heap + A0E26620<br><br>金手指文件格式是怎样的呢？不得不先看看大气层官方文档 <a target="_blank" rel="noopener" href="https://github.com/Atmosphere-NX/Atmosphere/blob/master/docs/features/cheats.md#cheat-code-format">作弊码格式</a> 一节。<br>卢比是 u32 类型，占用 4 字节。并且我们是向 Heap 区域写入，那么最终的金手指格式如下：</p>
+<p>数据搜索过程很简单就不多说了。卢比的修改地址是：<br>
+真实数值：heap + 0E435B40<br>
+显示数值：heap + A0E26620<br>
+<br>
+金手指文件格式是怎样的呢？不得不先看看大气层官方文档 <a target="_blank" rel="noopener" href="https://github.com/Atmosphere-NX/Atmosphere/blob/master/docs/features/cheats.md#cheat-code-format">作弊码格式</a> 一节。<br>
+卢比是 u32 类型，占用 4 字节。并且我们是向 Heap 区域写入，那么最终的金手指格式如下：</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[10000 卢比]</span></span><br><span class="line">04100000 0E435B40 00002710</span><br><span class="line">04100000 A0E26620 00002710</span><br></pre></td></tr></table></figure>
 <p>第一部分是操作码，第二部分是前面内存偏移地址，第三部分是待写入的值。</p>
-<p>然后将文件保存到<code>sdmc:/atmosphere/contents/&#123;TID&#125;/cheats/&#123;BID&#125;.txt</code>。<br>其中 TID 是应用的标识符，每个程序唯一的。BID 对应该游戏的不同版本，每个版本有不同的 BID。<br><br>最后看看效果，成功！</p>
-<p><img src="/images/ns-make-cheatcode/02.webp"></p>
-<h2 id="搜索指针"><a href="#搜索指针" class="headerlink" title="搜索指针"></a>搜索指针</h2><p>实际上，heap 的地址是不稳定的，是易变的。虽然不知道为什么我重开游戏后金手指仍然有效，但是要稳定的话还是建议用指针定位内存地址。<br><br>用 <a target="_blank" rel="noopener" href="https://github.com/tomvita/Noexes">JNoexs</a> 附加到游戏，搜索一次数据后软件会在当前目录<code>tmp</code>下生成一个<code>.dmp</code>文件。<br>第一次搜索数据需要很长时间，因为是全内存搜索。搜索时切记不要让 Switch 息屏，否则软件会停止工作。</p>
+<p>然后将文件保存到<code>sdmc:/atmosphere/contents/{TID}/cheats/{BID}.txt</code>。<br>
+其中 TID 是应用的标识符，每个程序唯一的。BID 对应该游戏的不同版本，每个版本有不同的 BID。<br>
+<br>
+最后看看效果，成功！</p>
+<p><img src="/images/ns-make-cheatcode/02.webp" alt=""></p>
+<h2 id="搜索指针"><a class="header-anchor" href="#搜索指针">#</a>搜索指针</h2>
+<p>实际上，heap 的地址是不稳定的，是易变的。虽然不知道为什么我重开游戏后金手指仍然有效，但是要稳定的话还是建议用指针定位内存地址。<br>
+<br>
+用 <a target="_blank" rel="noopener" href="https://github.com/tomvita/Noexes">JNoexs</a> 附加到游戏，搜索一次数据后软件会在当前目录<code>tmp</code>下生成一个<code>.dmp</code>文件。<br>
+第一次搜索数据需要很长时间，因为是全内存搜索。搜索时切记不要让 Switch 息屏，否则软件会停止工作。</p>
 <p>然后切换到<code>Pointer Search</code>页面，<code>Dump File</code>选择刚才产生的<code>.dmp</code>文件，<code>Address</code>选择数据内存地址，<code>main</code>填入 main 区起始地址，其他设置保持默认就行了</p>
-<p><img src="/images/ns-make-cheatcode/03.webp"></p>
-<p>运气好的话，<code>Output</code>区域会显示一个结果，那么就可以制作金手指了。<br>但如果结果非常多，那么就尝试将<code>Max Offset</code>设置更大些再搜索。<br><br>用指针定位内存地址的方式在制作金手指时要稍微复杂一点点，可以用 <a target="_blank" rel="noopener" href="http://ruisan.blog.jp/Simple%20SX%20OS%20Code%20Builder%20-%20.beta7.exe">Simple SX OS Code Builder</a> 这款工具来生成金手指代码。</p>
-<p><img src="/images/ns-make-cheatcode/04.webp"></p>
-<h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><p><a target="_blank" rel="noopener" href="https://gist.github.com/xfangfang/167865cd4a7be03d912df4f149ce263d">GDB for Switch Modding Cheatsheet&#x2F;Tutorial</a><br><a target="_blank" rel="noopener" href="https://github.com/Atmosphere-NX/Atmosphere/blob/master/docs/features/cheats.md">Cheats</a><br><a target="_blank" rel="noopener" href="https://ruisan.blog.jp/archives/4327227.html">Swtich金手指制作 指针寻找 Noexes使用全面教程</a><br><a target="_blank" rel="noopener" href="https://www.tekqart.com/thread-161094-1-1.html">Jnoexs查找指针地址金手指代码制作</a></p>
+<p><img src="/images/ns-make-cheatcode/03.webp" alt=""></p>
+<p>运气好的话，<code>Output</code>区域会显示一个结果，那么就可以制作金手指了。<br>
+但如果结果非常多，那么就尝试将<code>Max Offset</code>设置更大些再搜索。<br>
+<br>
+用指针定位内存地址的方式在制作金手指时要稍微复杂一点点，可以用 <a target="_blank" rel="noopener" href="http://ruisan.blog.jp/Simple%20SX%20OS%20Code%20Builder%20-%20.beta7.exe">Simple SX OS Code Builder</a> 这款工具来生成金手指代码。</p>
+<p><img src="/images/ns-make-cheatcode/04.webp" alt=""></p>
+<h2 id="相关资料"><a class="header-anchor" href="#相关资料">#</a>相关资料</h2>
+<p><a target="_blank" rel="noopener" href="https://gist.github.com/xfangfang/167865cd4a7be03d912df4f149ce263d">GDB for Switch Modding Cheatsheet/Tutorial</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/Atmosphere-NX/Atmosphere/blob/master/docs/features/cheats.md">Cheats</a><br>
+<a target="_blank" rel="noopener" href="https://ruisan.blog.jp/archives/4327227.html">Swtich金手指制作 指针寻找 Noexes使用全面教程</a><br>
+<a target="_blank" rel="noopener" href="https://www.tekqart.com/thread-161094-1-1.html">Jnoexs查找指针地址金手指代码制作</a></p>
 
       </div>
       
@@ -197,24 +228,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Switch/" title="Switch">
-                        #Switch
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -256,13 +269,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -482,43 +498,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%88%B6%E4%BD%9C%20Switch%20%E6%B8%B8%E6%88%8F%E9%87%91%E6%89%8B%E6%8C%87%E6%96%87%E4%BB%B6 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F12%2F31%2Fns-make-cheatcode%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/12/31/ns-make-cheatcode/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

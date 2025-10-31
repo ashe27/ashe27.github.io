@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,28 +166,43 @@
           
       </div>
       <div class="markdown-body">
-        <p>本以为带有<code>GC</code>功能的 C# 不会有内存泄露问题，原来我天真了，其实 C# 也会有内存泄露问题，只是不像 C&#x2F;C++ 那么有负担。</p>
-<h2 id="常见泄露方式"><a href="#常见泄露方式" class="headerlink" title="常见泄露方式"></a>常见泄露方式</h2><p>在 C&#x2F;C++ 语言中，内存泄露是因为分配了内存后未释放，同时没有指针指向它导致的。<br>而在 C# 中，内存泄露是因为内存被引用了，但引用这块内存的实例却从不会被访问到，从而导致 GC 无法回收它。</p>
-<h3 id="未取消事件订阅"><a href="#未取消事件订阅" class="headerlink" title="未取消事件订阅"></a>未取消事件订阅</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Publisher</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> EventHandler MyEvent;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">DoSomething</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        MyEvent(<span class="keyword">this</span>, EventArgs.Empty);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Subscriber</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Subscribe</span>(<span class="params">Publisher publisher</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        publisher.MyEvent += HandleEvent;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">HandleEvent</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;Event handled by Subscriber&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>(<span class="params">Publisher publisher</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> subscriber = <span class="keyword">new</span> Subscriber();</span><br><span class="line">        subscriber.Subscribe(publisher);</span><br><span class="line">        publisher.DoSomething();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] args</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> publisher = <span class="keyword">new</span> Publisher();</span><br><span class="line">        Foo(publisher);</span><br><span class="line">        publisher.DoSomething();</span><br><span class="line">        Console.ReadLine();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>不出意外的话，事件处理器会被调用两次。因为 Publisher 实例的 MyEvent 一直持有对 Subscriber 的引用，导致内存泄露。<br>最好的解决方式是手动用<code>-=</code>操作及时取消订阅，这是最好的方式，没有之一。</p>
-<h3 id="使用弱事件模式"><a href="#使用弱事件模式" class="headerlink" title="使用弱事件模式"></a>使用弱事件模式</h3><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/desktop/wpf/events/weak-event-patterns">弱事件模式</a>（Weak Event Pattern）是一种在事件订阅中使用弱引用的设计模式。它旨在解决常见的事件订阅导致的潜在内存泄漏问题。<br>订阅者对象使用弱引用来订阅事件。通过使用弱引用，订阅者对象可以在没有其他强引用时被垃圾回收，从而避免潜在的内存泄漏问题。当订阅者对象被垃圾回收时，事件发布者不再持有对其的引用，因此不会阻止其被回收。</p>
+        <p>本以为带有<code>GC</code>功能的 C# 不会有内存泄露问题，原来我天真了，其实 C# 也会有内存泄露问题，只是不像 C/C++ 那么有负担。</p>
+<h2 id="常见泄露方式"><a class="header-anchor" href="#常见泄露方式">#</a>常见泄露方式</h2>
+<p>在 C/C++ 语言中，内存泄露是因为分配了内存后未释放，同时没有指针指向它导致的。<br>
+而在 C# 中，内存泄露是因为内存被引用了，但引用这块内存的实例却从不会被访问到，从而导致 GC 无法回收它。</p>
+<h3 id="未取消事件订阅"><a class="header-anchor" href="#未取消事件订阅">#</a>未取消事件订阅</h3>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Publisher</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> EventHandler MyEvent;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">DoSomething</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        MyEvent(<span class="keyword">this</span>, EventArgs.Empty);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Subscriber</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Subscribe</span>(<span class="params">Publisher publisher</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        publisher.MyEvent += HandleEvent;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">HandleEvent</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">&quot;Event handled by Subscriber&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Foo</span>(<span class="params">Publisher publisher</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> subscriber = <span class="keyword">new</span> Subscriber();</span><br><span class="line">        subscriber.Subscribe(publisher);</span><br><span class="line">        publisher.DoSomething();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="built_in">string</span>[] <span class="keyword">args</span></span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> publisher = <span class="keyword">new</span> Publisher();</span><br><span class="line">        Foo(publisher);</span><br><span class="line">        publisher.DoSomething();</span><br><span class="line">        Console.ReadLine();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不出意外的话，事件处理器会被调用两次。因为 Publisher 实例的 MyEvent 一直持有对 Subscriber 的引用，导致内存泄露。<br>
+最好的解决方式是手动用<code>-=</code>操作及时取消订阅，这是最好的方式，没有之一。</p>
+<h3 id="使用弱事件模式"><a class="header-anchor" href="#使用弱事件模式">#</a>使用弱事件模式</h3>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/desktop/wpf/events/weak-event-patterns">弱事件模式</a>（Weak Event Pattern）是一种在事件订阅中使用弱引用的设计模式。它旨在解决常见的事件订阅导致的潜在内存泄漏问题。<br>
+订阅者对象使用弱引用来订阅事件。通过使用弱引用，订阅者对象可以在没有其他强引用时被垃圾回收，从而避免潜在的内存泄漏问题。当订阅者对象被垃圾回收时，事件发布者不再持有对其的引用，因此不会阻止其被回收。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Subscribe</span>(<span class="params">Publisher publisher</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//publisher.MyEvent += HandleEvent;</span></span><br><span class="line">    </span><br><span class="line">    WeakEventManager&lt;Publisher, EventArgs&gt;.AddHandler(publisher, <span class="keyword">nameof</span>(publisher.MyEvent), HandleEvent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.weakeventmanager">WeakEventManager</a> 是基础。.NET 内置了一些弱事件类如 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.weakeventmanager-2">WeakEventManager&lt;TEventSource,TEventArgs&gt;</a>、<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.componentmodel.propertychangedeventmanager">PropertyChangedEventManager</a> 等等。<br>再次运行程序，还是会有两次输出，这是因为 GC 没有及时回收 Subscriber，这可能会导致各种意想不到的副作用。所以在使用弱事件时需要注意这个问题。</p>
-<h3 id="lambda函数"><a href="#lambda函数" class="headerlink" title="lambda函数"></a>lambda函数</h3><p>lambda函数适合作为事件处理器吗？</p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">publisher.MyEvent += (<span class="built_in">object</span> sender, EventArgs args) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="keyword">this</span>._name);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>结果是 GC 之后处理器仍然会被调用。本质上这个处理器还是强引用，且无法被取消。<br>而如果在这个函数中有任何对类实例的引用，那么也会造成内存泄露。</p>
-<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">publisher.MyEvent += (<span class="built_in">object</span> sender, EventArgs args) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="keyword">this</span>.name); <span class="comment">// 引用了类的字段</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.weakeventmanager">WeakEventManager</a> 是基础。.NET 内置了一些弱事件类如 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.weakeventmanager-2">WeakEventManager&lt;TEventSource,TEventArgs&gt;</a>、<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.componentmodel.propertychangedeventmanager">PropertyChangedEventManager</a> 等等。<br>
+再次运行程序，还是会有两次输出，这是因为 GC 没有及时回收 Subscriber，这可能会导致各种意想不到的副作用。所以在使用弱事件时需要注意这个问题。</p>
+<h3 id="lambda函数"><a class="header-anchor" href="#lambda函数">#</a>lambda函数</h3>
+<p>lambda函数适合作为事件处理器吗？</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">publisher.MyEvent += (<span class="built_in">object</span> sender, EventArgs <span class="keyword">args</span>) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="keyword">this</span>._name);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>结果是 GC 之后处理器仍然会被调用。本质上这个处理器还是强引用，且无法被取消。<br>
+而如果在这个函数中有任何对类实例的引用，那么也会造成内存泄露。</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">publisher.MyEvent += (<span class="built_in">object</span> sender, EventArgs <span class="keyword">args</span>) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="keyword">this</span>.name); <span class="comment">// 引用了类的字段</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>所以为了避免内存泄露，还是要为实例指定一个变量并稍后取消订阅：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">EventHandler handler = <span class="built_in">delegate</span> (<span class="built_in">object</span> sender, EventArgs e)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//some code</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">publisher.MyEvent += handler;</span><br><span class="line">publisher.MyEvent -= handler;</span><br></pre></td></tr></table></figure>
-
-<h3 id="静态引用"><a href="#静态引用" class="headerlink" title="静态引用"></a>静态引用</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;MyClass&gt; _instances = <span class="keyword">new</span> List&lt;MyClass&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        _instances.Add(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在这段代码中，<code>MyClass</code>类的构造函数会将每个新创建的实例添加到一个静态的<code>List&lt;MyClass&gt;</code>集合中。由于<code>List&lt;MyClass&gt;</code>是静态的，它会一直保留对所有实例的引用。这将导致内存泄漏，因为这些对象无法被释放。<br>为了解决这个问题，可以通过添加一个析构函数或者手动释放资源的方法来从<code>_instances</code>集合中移除实例。例如：</p>
+<h3 id="静态引用"><a class="header-anchor" href="#静态引用">#</a>静态引用</h3>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;MyClass&gt; _instances = <span class="keyword">new</span> List&lt;MyClass&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        _instances.Add(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这段代码中，<code>MyClass</code>类的构造函数会将每个新创建的实例添加到一个静态的<code>List&lt;MyClass&gt;</code>集合中。由于<code>List&lt;MyClass&gt;</code>是静态的，它会一直保留对所有实例的引用。这将导致内存泄漏，因为这些对象无法被释放。<br>
+为了解决这个问题，可以通过添加一个析构函数或者手动释放资源的方法来从<code>_instances</code>集合中移除实例。例如：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;MyClass&gt; _instances = <span class="keyword">new</span> List&lt;MyClass&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        _instances.Add(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~MyClass()</span><br><span class="line">    &#123;</span><br><span class="line">        _instances.Remove(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="计时器"><a href="#计时器" class="headerlink" title="计时器"></a>计时器</h3><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Timer timer = <span class="keyword">new</span> Timer(HandleTick);</span><br><span class="line">        timer.Change(TimeSpan.FromSeconds(<span class="number">5</span>), TimeSpan.FromSeconds(<span class="number">5</span>));</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">HandleTick</span>(<span class="params"><span class="built_in">object</span> state</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="计时器"><a class="header-anchor" href="#计时器">#</a>计时器</h3>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyClass</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyClass</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Timer timer = <span class="keyword">new</span> Timer(HandleTick);</span><br><span class="line">        timer.Change(TimeSpan.FromSeconds(<span class="number">5</span>), TimeSpan.FromSeconds(<span class="number">5</span>));</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">HandleTick</span>(<span class="params"><span class="built_in">object</span> state</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>由于没有在适当的时候停止或销毁 Timer，它将一直保持对 MyClass 实例的引用，导致内存泄漏。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>内存泄漏的本质是引用没有被正确释放，导致对象无法被垃圾回收器回收。在 C# 中，垃圾回收器负责自动管理内存，它会跟踪对象之间的引用关系，并在对象不再被引用时，自动回收它们所占用的内存。<br>当一个对象不再被引用时，垃圾回收器会将其标记为可回收。但如果该对象仍然被其他对象引用，或者存在循环引用，垃圾回收器无法判断该对象是否仍然需要保留。这就导致了一个内存泄漏的情况，即对象无法被垃圾回收器正确释放，从而持续占用内存。<br>为了避免内存泄漏，需要及时释放对象的引用。这可以通过手动解除对象之间的引用、及时取消注册事件处理器、释放非托管资源、将静态变量设置为弱引用等方式来实现。这样，垃圾回收器就能够正确地判断对象是否可以被回收，并及时释放对象所占用的内存。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/141032986">可能会导致.NET内存泄露的8种行为</a><br><a target="_blank" rel="noopener" href="https://michaelscodingspot.com/5-techniques-to-avoid-memory-leaks-by-events-in-c-net-you-should-know/">5 Techniques to avoid Memory Leaks by Events in C# .NET you should know</a></p>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<p>内存泄漏的本质是引用没有被正确释放，导致对象无法被垃圾回收器回收。在 C# 中，垃圾回收器负责自动管理内存，它会跟踪对象之间的引用关系，并在对象不再被引用时，自动回收它们所占用的内存。<br>
+当一个对象不再被引用时，垃圾回收器会将其标记为可回收。但如果该对象仍然被其他对象引用，或者存在循环引用，垃圾回收器无法判断该对象是否仍然需要保留。这就导致了一个内存泄漏的情况，即对象无法被垃圾回收器正确释放，从而持续占用内存。<br>
+为了避免内存泄漏，需要及时释放对象的引用。这可以通过手动解除对象之间的引用、及时取消注册事件处理器、释放非托管资源、将静态变量设置为弱引用等方式来实现。这样，垃圾回收器就能够正确地判断对象是否可以被回收，并及时释放对象所占用的内存。</p>
+<h2 id="参考资料"><a class="header-anchor" href="#参考资料">#</a>参考资料</h2>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/141032986">可能会导致.NET内存泄露的8种行为</a><br>
+<a target="_blank" rel="noopener" href="https://michaelscodingspot.com/5-techniques-to-avoid-memory-leaks-by-events-in-c-net-you-should-know/">5 Techniques to avoid Memory Leaks by Events in C# .NET you should know</a></p>
 
       </div>
       
@@ -195,24 +214,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -254,13 +255,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -480,43 +484,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%B8%B8%E8%A7%81%E7%9A%84%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E6%96%B9%E5%BC%8F + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F12%2F01%2Fnet-memory-leak%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/12/01/net-memory-leak/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,8 +172,10 @@
           
       </div>
       <div class="markdown-body">
-        <p>XPath 不会经常用，但是需要的时候又想不起来一些特性该怎么用，所以整理了一些比较常见的用法。<br>在 C# 中，主要用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.xmlnode.selectsinglenode">XmlNode.SelectSingleNode</a> 和 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.xmlnode.selectnodes">XmlNode.SelectNodes 方法</a> 方法查询，前者查询单个节点，后者查询多个节点。</p>
-<h2 id="节点类型"><a href="#节点类型" class="headerlink" title="节点类型"></a>节点类型</h2><p>先复习一下节点的类型。在XML中有5种主要的节点类型，它们是：</p>
+        <p>XPath 不会经常用，但是需要的时候又想不起来一些特性该怎么用，所以整理了一些比较常见的用法。<br>
+在 C# 中，主要用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.xmlnode.selectsinglenode">XmlNode.SelectSingleNode</a> 和 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.xml.xmlnode.selectnodes">XmlNode.SelectNodes 方法</a> 方法查询，前者查询单个节点，后者查询多个节点。</p>
+<h2 id="节点类型"><a class="header-anchor" href="#节点类型">#</a>节点类型</h2>
+<p>先复习一下节点的类型。在XML中有5种主要的节点类型，它们是：</p>
 <ol>
 <li>元素节点（Element Node）：表示XML文档的元素，包括标签、属性和内容。</li>
 <li>属性节点（Attribute Node）：用于描述元素节点的属性。</li>
@@ -177,15 +183,20 @@
 <li>注释节点（Comment Node）：用于添加注释或说明性文本到XML文件中。</li>
 <li>CDATA节（CDATA Section）：用于在XML文档中包含需要保留原始格式的文本数据。</li>
 </ol>
-<p><br>此外，还有两种特殊类型的节点：<br>6. 处理指令节点（Processing Instruction Node）：用于向XML解析器提供额外的指令或信息，通常位于XML文档的开头。<br>7. 命名空间节点（Namespace Node）：用于定义和管理XML文档中的命名空间。</p>
-<p>这些节点类型共同构成了XML文档的结构和内容。<br>在日常开发中，主要就是对前三种类型节点的查询与读写。</p>
-<h2 id="选择节点"><a href="#选择节点" class="headerlink" title="选择节点"></a>选择节点</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;.&quot;</span>);              <span class="comment">// 当前节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;..&quot;</span>);             <span class="comment">// 父节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;Item&quot;</span>);           <span class="comment">// 从当前节点中查找子节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;*&quot;</span>);              <span class="comment">// 任意节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;/Root&quot;</span>);          <span class="comment">// 文档的根节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item&quot;</span>);         <span class="comment">// 查找文档中所有的 &quot;Item&quot; 节点，无论节点有多深</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[Child]&quot;</span>);  <span class="comment">// 选择包含有子节点 &quot;Child&quot; 的节点</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="按属性过滤"><a href="#按属性过滤" class="headerlink" title="按属性过滤"></a>按属性过滤</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 选择属性节点 */</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item/@Name&quot;</span>);  <span class="comment">// 选择所有名为 &quot;Name&quot; 的属性节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item/@*&quot;</span>);     <span class="comment">// 选取所有属性节点</span></span><br><span class="line"></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[@Id]&quot;</span>);             <span class="comment">// 包含属性名为 &quot;Id&quot; 的节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[@Name=&#x27;jack&#x27;]&quot;</span>);    <span class="comment">// 要求属性等于指定的值</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 没有用引号的表示是数字，可以用逻辑表运算符</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[@Id &lt; 10]&quot;</span>);  <span class="comment">// 属性 Id 值小于 10 的节点</span></span><br><span class="line"></span><br><span class="line">SelectNodes(<span class="string">&quot;//*[@Id=3][@Age=18]&quot;</span>);     <span class="comment">// 逻辑与，要求同时满足条件</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//*[@Id=3 and @Age=18]&quot;</span>);  <span class="comment">// 逻辑与，要求同时满足条件</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//*[@Id=3 or @Age=18]&quot;</span>);   <span class="comment">// 逻辑或，满足条件之一即可</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="按位置过滤"><a href="#按位置过滤" class="headerlink" title="按位置过滤"></a>按位置过滤</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 按索引返回，与数组一样，不过索引从1开始</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[1]&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h2><p>逻辑运算符通常用于属性过滤时。</p>
+<p><br>
+此外，还有两种特殊类型的节点：<br>
+6. 处理指令节点（Processing Instruction Node）：用于向XML解析器提供额外的指令或信息，通常位于XML文档的开头。<br>
+7. 命名空间节点（Namespace Node）：用于定义和管理XML文档中的命名空间。</p>
+<p>这些节点类型共同构成了XML文档的结构和内容。<br>
+在日常开发中，主要就是对前三种类型节点的查询与读写。</p>
+<h2 id="选择节点"><a class="header-anchor" href="#选择节点">#</a>选择节点</h2>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;.&quot;</span>);              <span class="comment">// 当前节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;..&quot;</span>);             <span class="comment">// 父节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;Item&quot;</span>);           <span class="comment">// 从当前节点中查找子节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;*&quot;</span>);              <span class="comment">// 任意节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;/Root&quot;</span>);          <span class="comment">// 文档的根节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item&quot;</span>);         <span class="comment">// 查找文档中所有的 &quot;Item&quot; 节点，无论节点有多深</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[Child]&quot;</span>);  <span class="comment">// 选择包含有子节点 &quot;Child&quot; 的节点</span></span><br></pre></td></tr></table></figure>
+<h2 id="按属性过滤"><a class="header-anchor" href="#按属性过滤">#</a>按属性过滤</h2>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 选择属性节点 */</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item/@Name&quot;</span>);  <span class="comment">// 选择所有名为 &quot;Name&quot; 的属性节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item/@*&quot;</span>);     <span class="comment">// 选取所有属性节点</span></span><br><span class="line"></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[@Id]&quot;</span>);             <span class="comment">// 包含属性名为 &quot;Id&quot; 的节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[@Name=&#x27;jack&#x27;]&quot;</span>);    <span class="comment">// 要求属性等于指定的值</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 没有用引号的表示是数字，可以用逻辑表运算符</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[@Id &lt; 10]&quot;</span>);  <span class="comment">// 属性 Id 值小于 10 的节点</span></span><br><span class="line"></span><br><span class="line">SelectNodes(<span class="string">&quot;//*[@Id=3][@Age=18]&quot;</span>);     <span class="comment">// 逻辑与，要求同时满足条件</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//*[@Id=3 and @Age=18]&quot;</span>);  <span class="comment">// 逻辑与，要求同时满足条件</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//*[@Id=3 or @Age=18]&quot;</span>);   <span class="comment">// 逻辑或，满足条件之一即可</span></span><br></pre></td></tr></table></figure>
+<h2 id="按位置过滤"><a class="header-anchor" href="#按位置过滤">#</a>按位置过滤</h2>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 按索引返回，与数组一样，不过索引从1开始</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[1]&quot;</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="逻辑运算符"><a class="header-anchor" href="#逻辑运算符">#</a>逻辑运算符</h2>
+<p>逻辑运算符通常用于属性过滤时。</p>
 <ul>
 <li><code>=</code>：等于</li>
 <li><code>!=</code>：不等于</li>
@@ -196,41 +207,50 @@
 <li><code>and</code>：逻辑与</li>
 <li><code>or</code>：逻辑或</li>
 </ul>
-<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><h3 id="node"><a href="#node" class="headerlink" title="node"></a>node</h3><p>返回当前节点下的子节点，无论是什么类型。</p>
+<h2 id="函数"><a class="header-anchor" href="#函数">#</a>函数</h2>
+<h3 id="node"><a class="header-anchor" href="#node">#</a>node</h3>
+<p>返回当前节点下的子节点，无论是什么类型。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;/Root/node()&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h3 id="text"><a href="#text" class="headerlink" title="text"></a>text</h3><p>获取文本节点内容。<br>XML内容：</p>
+<h3 id="text"><a class="header-anchor" href="#text">#</a>text</h3>
+<p>获取文本节点内容。<br>
+XML内容：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Root</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Node</span>&gt;</span>jack<span class="tag">&lt;/<span class="name">Node</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Root</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>取得文本节点值有两种方式：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> node = doc.SelectSingleNode(<span class="string">&quot;/Root/Node&quot;</span>);</span><br><span class="line">Debug.WriteLine(node.InnerText);</span><br></pre></td></tr></table></figure>
 <p>方式二就是使用<code>text()</code>函数：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> node = doc.SelectSingleNode(<span class="string">&quot;/Root/Node/text()&quot;</span>);</span><br><span class="line">Debug.WriteLine(node.Value);  <span class="comment">// jack</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="position"><a href="#position" class="headerlink" title="position"></a>position</h3><p>返回节点位置，下标从1开始</p>
+<h3 id="position"><a class="header-anchor" href="#position">#</a>position</h3>
+<p>返回节点位置，下标从1开始</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* position 表示结果列表中的索引 */</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[position() &lt;= 5]&quot;</span>);  <span class="comment">// 选取前面5个节点</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="last"><a href="#last" class="headerlink" title="last"></a>last</h3><p>最后一个元素。</p>
+<h3 id="last"><a class="header-anchor" href="#last">#</a>last</h3>
+<p>最后一个元素。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* last 选择列表中最后一个节点 */</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[last()]&quot;</span>);      <span class="comment">// 最后一个节点</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[last() - 1]&quot;</span>);  <span class="comment">// 倒数第2个节点</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="contains"><a href="#contains" class="headerlink" title="contains"></a>contains</h3><p>属性值是否包含指定字符串。</p>
+<h3 id="contains"><a class="header-anchor" href="#contains">#</a>contains</h3>
+<p>属性值是否包含指定字符串。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* start-with、ends-with、contains */</span></span><br><span class="line">SelectNodes(<span class="string">&quot;//Item[contains(@name, &#x27;xxx&#x27;)]&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h3 id="starts-with"><a href="#starts-with" class="headerlink" title="starts-with"></a>starts-with</h3><p>属性值是否以指定字符串开始。</p>
+<h3 id="starts-with"><a class="header-anchor" href="#starts-with">#</a>starts-with</h3>
+<p>属性值是否以指定字符串开始。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;//Item[starts-with(@name, &#x27;xxx&#x27;)]&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h3 id="ends-with"><a href="#ends-with" class="headerlink" title="ends-with"></a>ends-with</h3><p>属性值是否以指定字符串结束。</p>
+<h3 id="ends-with"><a class="header-anchor" href="#ends-with">#</a>ends-with</h3>
+<p>属性值是否以指定字符串结束。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;//Item[ends-with(@name, &#x27;xxx&#x27;)]&quot;</span>);</span><br></pre></td></tr></table></figure>
 <p><strong>测试发现 C# 不支持此函数</strong>。</p>
-<h3 id="name"><a href="#name" class="headerlink" title="name"></a>name</h3><p>返回当前节点的名称。</p>
+<h3 id="name"><a class="header-anchor" href="#name">#</a>name</h3>
+<p>返回当前节点的名称。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;//*[contains(name(), &#x27;Item&#x27;)]&quot;</span>);  <span class="comment">// 所有元素节点名中包含 &quot;Item&quot; 的节点</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="substring"><a href="#substring" class="headerlink" title="substring"></a>substring</h3><p>字串查询。</p>
+<h3 id="substring"><a class="header-anchor" href="#substring">#</a>substring</h3>
+<p>字串查询。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SelectNodes(<span class="string">&quot;//*[substring(name(), 1, 4) = &#x27;Node&#x27;]&quot;</span>);  <span class="comment">// 从位置1取4个字符</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><h3 id="索引筛选出多个结果"><a href="#索引筛选出多个结果" class="headerlink" title="索引筛选出多个结果"></a>索引筛选出多个结果</h3><p>假设 XML 内容如下：</p>
+<h2 id="实践"><a class="header-anchor" href="#实践">#</a>实践</h2>
+<h3 id="索引筛选出多个结果"><a class="header-anchor" href="#索引筛选出多个结果">#</a>索引筛选出多个结果</h3>
+<p>假设 XML 内容如下：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Employees</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Employee</span> <span class="attr">Id</span>=<span class="string">&quot;1&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Employee</span> <span class="attr">Id</span>=<span class="string">&quot;2&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Employee</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Employee</span> <span class="attr">Id</span>=<span class="string">&quot;3&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Employees</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>如果用<code>SelectNodes(&quot;//Item[1]&quot;)</code>会查询出几个结果呢？答案是两个。因为这句话的意思是<strong>查询任意位置，名为 Item 的第1个节点</strong>。<br>由于<code>&lt;Employee Id=&quot;2&quot; /&gt;</code>处于父节点中第一个符合条件的，所以也会被筛选出来。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/xpath/index.asp">XPath 教程</a><br><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/xpath/xpath_functions.asp">XPath 函数</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Loofah/archive/2012/05/10/2494036.html">Xpath语法格式整理</a></p>
+<p>如果用<code>SelectNodes(&quot;//Item[1]&quot;)</code>会查询出几个结果呢？答案是两个。因为这句话的意思是<strong>查询任意位置，名为 Item 的第1个节点</strong>。<br>
+由于<code>&lt;Employee Id=&quot;2&quot; /&gt;</code>处于父节点中第一个符合条件的，所以也会被筛选出来。</p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/xpath/index.asp">XPath 教程</a><br>
+<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/xpath/xpath_functions.asp">XPath 函数</a><br>
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Loofah/archive/2012/05/10/2494036.html">Xpath语法格式整理</a></p>
 
       </div>
       
@@ -242,30 +262,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/XML/" title="XML">
-                        #XML
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -307,13 +303,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -533,43 +532,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + XPath%20%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F11%2F08%2Fxpath-syntax%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/11/08/xpath-syntax/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

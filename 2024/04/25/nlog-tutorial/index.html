@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -169,15 +173,19 @@
       </div>
       <div class="markdown-body">
         <p>使用 NLog 需要先进行配置。可以通过文件配置或代码配置。大多数时候都是通过文件来配置。</p>
-<h2 id="配置文件搜索顺序"><a href="#配置文件搜索顺序" class="headerlink" title="配置文件搜索顺序"></a>配置文件搜索顺序</h2><p>程序启动时会依次搜索以下文件，直到搜索到为止：</p>
+<h2 id="配置文件搜索顺序"><a class="header-anchor" href="#配置文件搜索顺序">#</a>配置文件搜索顺序</h2>
+<p>程序启动时会依次搜索以下文件，直到搜索到为止：</p>
 <ol>
 <li>标准应用程序配置文件 app.config（例如 <code>myapp.exe.config</code>）。</li>
 <li>应用程序目录中的 <code>myapp.exe.nlog</code>。</li>
 <li>应用程序目录中的 <code>NLog.config</code>。</li>
 <li><code>NLog.dll.nlog</code> 位于 NLog.dll 所在目录中（仅当 NLog 未安装在 GAC 中时）。</li>
 </ol>
-<p><br>从这个顺序可以看出，当有多个项目时可以为每个 exe 独立配置规则，也可以共用一个规则。</p>
-<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>在工程目录下创建一个 <code>NLog.config</code> 文件，在 Visual Studio 中选中该文件将属性<code>复制到输出目录</code>改为<code>始终复制</code>或<code>如果较新则复制</code>。<br>一个简单的配置文件：</p>
+<p><br>
+从这个顺序可以看出，当有多个项目时可以为每个 exe 独立配置规则，也可以共用一个规则。</p>
+<h2 id="配置文件"><a class="header-anchor" href="#配置文件">#</a>配置文件</h2>
+<p>在工程目录下创建一个 <code>NLog.config</code> 文件，在 Visual Studio 中选中该文件将属性<code>复制到输出目录</code>改为<code>始终复制</code>或<code>如果较新则复制</code>。<br>
+一个简单的配置文件：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span> ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">nlog</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 日志输出到哪些地方 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">targets</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- name 是目标名称，后面规则中会用到。type 决定了输出位置。其他属性根据 type 有所不同 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">&quot;logfile&quot;</span> <span class="attr">type</span>=<span class="string">&quot;File&quot;</span> <span class="attr">fileName</span>=<span class="string">&quot;$&#123;basedir&#125;/file.log&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">target</span> <span class="attr">name</span>=<span class="string">&quot;dbg&quot;</span> <span class="attr">type</span>=<span class="string">&quot;Debugger&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">targets</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- 日志输出规则 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">rules</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- minlevel 是命中级别，该级别及以上才会命中。writeTo 是写入哪个目标 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Info&quot;</span> <span class="attr">writeTo</span>=<span class="string">&quot;logfile&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Debug&quot;</span> <span class="attr">writeTo</span>=<span class="string">&quot;dbg&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">rules</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">nlog</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>测试代码：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> NLog;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">WinFormsApp1</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">readonly</span> Logger s_logger = LogManager.GetCurrentClassLogger();</span><br><span class="line"></span><br><span class="line">        [<span class="meta">STAThread</span>]</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">        &#123;</span><br><span class="line">            s_logger.Info(<span class="string">&quot;hello info&quot;</span>);</span><br><span class="line">            s_logger.Debug(<span class="string">&quot;Hello debug&quot;</span>);</span><br><span class="line"></span><br><span class="line">            Application.EnableVisualStyles();</span><br><span class="line">            Application.SetCompatibleTextRenderingDefault(<span class="literal">false</span>);</span><br><span class="line">            Application.Run(<span class="keyword">new</span> Form1());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -185,13 +193,14 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2024-04-25 23:22:03.6134|INFO|WinFormsApp1.Program|hello info</span><br><span class="line">2024-04-25 23:22:03.6344|DEBUG|WinFormsApp1.Program|Hello debug</span><br></pre></td></tr></table></figure>
 <p>日志文件输出：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2024-04-25 23:22:03.6134|INFO|WinFormsApp1.Program|hello info</span><br></pre></td></tr></table></figure>
-
-<h2 id="Targets"><a href="#Targets" class="headerlink" title="Targets"></a>Targets</h2><p>targets 部分定义日志目标。每个目标都由一个 target 元素表示。每个目标需要两个属性：</p>
+<h2 id="Targets"><a class="header-anchor" href="#Targets">#</a>Targets</h2>
+<p>targets 部分定义日志目标。每个目标都由一个 target 元素表示。每个目标需要两个属性：</p>
 <ul>
 <li>name：目标名称，在 logger 中需要用到。</li>
 <li>type：目标类型，表示日志将写到哪里。</li>
 </ul>
-<h3 id="Type"><a href="#Type" class="headerlink" title="Type"></a>Type</h3><table>
+<h3 id="Type"><a class="header-anchor" href="#Type">#</a>Type</h3>
+<table>
 <thead>
 <tr>
 <th>目标</th>
@@ -199,7 +208,8 @@
 <th>文档</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Chainsaw</td>
 <td>将日志消息发送到 Log4J XML Viewer 应用程序的远程实例。</td>
 <td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Chainsaw-target">Wiki</a></td>
@@ -299,9 +309,13 @@
 <td></td>
 <td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/WebService-target">Wiki</a></td>
 </tr>
-</tbody></table>
-<p><br>每个 target 都有自己的配置属性，查看官方 Wiki 即可。其中用的最多的当然还是 <a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/File-target">File target</a> 了。<br>注意，某些 target 还需要按照依赖包才会生效。</p>
-<h3 id="Layout"><a href="#Layout" class="headerlink" title="Layout"></a>Layout</h3><p><code>laytou</code> 属性默认值是：</p>
+</tbody>
+</table>
+<p><br>
+每个 target 都有自己的配置属性，查看官方 Wiki 即可。其中用的最多的当然还是 <a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/File-target">File target</a> 了。<br>
+注意，某些 target 还需要按照依赖包才会生效。</p>
+<h3 id="Layout"><a class="header-anchor" href="#Layout">#</a>Layout</h3>
+<p><code>laytou</code> 属性默认值是：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;longdate&#125;|$&#123;level:uppercase=true&#125;|$&#123;logger&#125;|$&#123;message:withexception=true&#125;</span><br></pre></td></tr></table></figure>
 <p>输出的日志：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2024-04-27 13:40:17.5794|TRACE|WindowsFormsApp.Program|start</span><br></pre></td></tr></table></figure>
@@ -315,7 +329,8 @@
 <th>文档</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>${shortdate}</td>
 <td>2024-04-27</td>
 <td>当前日期</td>
@@ -329,7 +344,7 @@
 </tr>
 <tr>
 <td>${date}</td>
-<td>2024&#x2F;04&#x2F;27 14:04:02.735</td>
+<td>2024/04/27 14:04:02.735</td>
 <td>当前日期时间（短）</td>
 <td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Date-layout-renderer">Wiki</a></td>
 </tr>
@@ -495,29 +510,42 @@
 <td>将填充应用于另一个布局输出</td>
 <td><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Pad-Layout-Renderer">Wiki</a></td>
 </tr>
-</tbody></table>
-<p><br>常用的一般就是进程、线程信息了。还有其他一些高级用法可以参考官方文档。<br>另外注意，某些变量需要依赖扩展包，否则不会生效。</p>
-<p><br>我个人喜欢的一个布局：</p>
+</tbody>
+</table>
+<p><br>
+常用的一般就是进程、线程信息了。还有其他一些高级用法可以参考官方文档。<br>
+另外注意，某些变量需要依赖扩展包，否则不会生效。</p>
+<p><br>
+我个人喜欢的一个布局：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;longdate&#125; [$&#123;level:uppercase=true:padding=5&#125;] [$&#123;threadid&#125;] [$&#123;logger&#125;] $&#123;message&#125;</span><br></pre></td></tr></table></figure>
 <p>在默认的布局上对齐日志级别以及加入线程ID</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2024-04-27 15:03:14.0145 [TRACE] [1] [WindowsFormsApp.Program] Hello</span><br></pre></td></tr></table></figure>
-
-<h2 id="Rules"><a href="#Rules" class="headerlink" title="Rules"></a>Rules</h2><p>rules 部分控制什么级别的日志输出到什么 target。一些例子：</p>
+<h2 id="Rules"><a class="header-anchor" href="#Rules">#</a>Rules</h2>
+<p>rules 部分控制什么级别的日志输出到什么 target。一些例子：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span> ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">nlog</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">rules</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 匹配任何名称的记录器，Info 级及以上日志输出到 logfile --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Info&quot;</span> <span class="attr">writeTo</span>=<span class="string">&quot;logfile&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- Trace 日志输出到 logfile --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">level</span>=<span class="string">&quot;Trace&quot;</span>  <span class="attr">writeTo</span>=<span class="string">&quot;logfile&quot;</span> /&gt;</span></span><br><span class="line">	</span><br><span class="line">    <span class="comment">&lt;!-- 禁用的记录器 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;mylog&quot;</span> <span class="attr">levels</span>=<span class="string">&quot;Warn,Error&quot;</span> <span class="attr">enabled</span>=<span class="string">&quot;false&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">rules</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">nlog</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>NLog 会自上而下去尝试匹配每个 logger，匹配到了就打印日志到 target，除非遇到了 final 属性，比如：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">rules</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Trace&quot;</span> <span class="attr">writeTo</span>=<span class="string">&quot;logfile&quot;</span> <span class="attr">final</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">&quot;*&quot;</span> <span class="attr">minlevel</span>=<span class="string">&quot;Trace&quot;</span>  <span class="attr">writeTo</span>=<span class="string">&quot;dbgSys&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">rules</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p><code>final</code>属性会阻止 NLog 继续向下匹配，所以这个例子只会将日志输出到 logfile target。</p>
-<h3 id="name"><a href="#name" class="headerlink" title="name"></a>name</h3><p>匹配记录器对象的记录器名称，可以包含通配符（<code>*</code>和<code>?</code>）。<br>创建 NLog 记录器对象时，必须提供类似 <code>NLog.LogManager.GetLogger(&quot;logger name&quot;)</code> 的记录器名称。还可以使用 <code>NLog.LogManager.GetCurrentClassLogger()</code> 从类上下文中提取记录器名称。</p>
+<h3 id="name"><a class="header-anchor" href="#name">#</a>name</h3>
+<p>匹配记录器对象的记录器名称，可以包含通配符（<code>*</code>和<code>?</code>）。<br>
+创建 NLog 记录器对象时，必须提供类似 <code>NLog.LogManager.GetLogger(&quot;logger name&quot;)</code> 的记录器名称。还可以使用 <code>NLog.LogManager.GetCurrentClassLogger()</code> 从类上下文中提取记录器名称。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> logger = LogManager.GetCurrentClassLogger();</span><br><span class="line">        <span class="comment">// 等于 var logger = LogManager.GetLogger(typeof(Program).FullName);</span></span><br><span class="line"></span><br><span class="line">        Application.EnableVisualStyles();</span><br><span class="line">        Application.SetCompatibleTextRenderingDefault(<span class="literal">false</span>);</span><br><span class="line">        Application.Run(<span class="keyword">new</span> Form1());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="记录器级别过滤器"><a href="#记录器级别过滤器" class="headerlink" title="记录器级别过滤器"></a>记录器级别过滤器</h3><p>如果规则包含多个级别声明属性（ level 、 levels 、 minlevel 和 maxlevel ），则仅包含第一个级别声明使用属性或集合，其余的将被忽略。<br>级别声明属性按以下顺序处理：</p>
+<h3 id="记录器级别过滤器"><a class="header-anchor" href="#记录器级别过滤器">#</a>记录器级别过滤器</h3>
+<p>如果规则包含多个级别声明属性（ level 、 levels 、 minlevel 和 maxlevel ），则仅包含第一个级别声明使用属性或集合，其余的将被忽略。<br>
+级别声明属性按以下顺序处理：</p>
 <ol>
 <li>levels</li>
 <li>level</li>
 <li>minlevel 和 maxlevel （它们具有相同的优先级）</li>
 </ol>
-<p><br>注意这里是我测试过的排序，与官方文档中的优先级不同（NLog v5.2.8）。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Tutorial/">Tutorial</a><br><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Configuration-file/">Configuration file</a><br><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Configure-from-code">Configure from code</a><br><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Layouts">Layouts</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/shieryoufeng/p/17788734.html">Nlog笔记</a></p>
+<p><br>
+注意这里是我测试过的排序，与官方文档中的优先级不同（NLog v5.2.8）。</p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Tutorial/">Tutorial</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Configuration-file/">Configuration file</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Configure-from-code">Configure from code</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/NLog/NLog/wiki/Layouts">Layouts</a><br>
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/shieryoufeng/p/17788734.html">Nlog笔记</a></p>
 
       </div>
       
@@ -529,30 +557,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/NLog/" title="NLog">
-                        #NLog
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -594,13 +598,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -820,43 +827,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + NLog%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F04%2F25%2Fnlog-tutorial%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/04/25/nlog-tutorial/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

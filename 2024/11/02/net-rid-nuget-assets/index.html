@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,13 +166,21 @@
           
       </div>
       <div class="markdown-body">
-        <p>项目中引用了一个第三方包，在编译时输出目录下多了所有平台相关的动态库文件，导致占用了很多不必要的空间。而我只是需要 Windows 平台的资源而已。<br><img src="/images/net-rid-nuget-assets/01.webp"></p>
-<h2 id="RuntimeIdentifier"><a href="#RuntimeIdentifier" class="headerlink" title="RuntimeIdentifier"></a>RuntimeIdentifier</h2><p>研究后发现 nuget 包会根据 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifier">RuntimeIdentifier</a> 属性决定将哪些平台的资源拷贝到输出目录下。</p>
-<p><br>但我们项目可能存在多种架构的支持，而这个属性却只能写一个<code>RID</code>，怎么办呢？动态地根据当前<code>Platform</code>去设置就行了：</p>
+        <p>项目中引用了一个第三方包，在编译时输出目录下多了所有平台相关的动态库文件，导致占用了很多不必要的空间。而我只是需要 Windows 平台的资源而已。<br>
+<img src="/images/net-rid-nuget-assets/01.webp" alt=""></p>
+<h2 id="RuntimeIdentifier"><a class="header-anchor" href="#RuntimeIdentifier">#</a>RuntimeIdentifier</h2>
+<p>研究后发现 nuget 包会根据 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#runtimeidentifier">RuntimeIdentifier</a> 属性决定将哪些平台的资源拷贝到输出目录下。</p>
+<p><br>
+但我们项目可能存在多种架构的支持，而这个属性却只能写一个<code>RID</code>，怎么办呢？动态地根据当前<code>Platform</code>去设置就行了：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(RuntimeIdentifier)|$(Platform)&#x27; == &#x27;|AnyCPU&#x27;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RuntimeIdentifier</span>&gt;</span>win<span class="tag">&lt;/<span class="name">RuntimeIdentifier</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(RuntimeIdentifier)|$(Platform)&#x27; == &#x27;|ARM32&#x27;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RuntimeIdentifier</span>&gt;</span>win-arm<span class="tag">&lt;/<span class="name">RuntimeIdentifier</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(RuntimeIdentifier)|$(Platform)&#x27; == &#x27;|ARM64&#x27;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RuntimeIdentifier</span>&gt;</span>win-arm64<span class="tag">&lt;/<span class="name">RuntimeIdentifier</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(RuntimeIdentifier)|$(Platform)&#x27; == &#x27;|x86&#x27;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RuntimeIdentifier</span>&gt;</span>win-x86<span class="tag">&lt;/<span class="name">RuntimeIdentifier</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(RuntimeIdentifier)|$(Platform)&#x27; == &#x27;|x64&#x27;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RuntimeIdentifier</span>&gt;</span>win-x64<span class="tag">&lt;/<span class="name">RuntimeIdentifier</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>这里只简单考虑 Windows 系统，跨平台项目还要加入更多验证条件。</p>
-<p><br>实际上这个属性标准用法是在使用<code>发布</code>功能时由命令行设置或在<code>pubxml</code>文件中指定的。<br>因为在很早以前没有<code>发布</code>的概念，都是将项目用 Release 编译后就行了。只有在不使用<code>发布</code>功能时才可以考虑自己去设置<code>RuntimeIdentifier</code>。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/dotnet/core/rid-catalog#using-rids">.NET RID Catalog</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/43519690">.NET Core RuntimeIdentifier vs TargetFramework</a><br><a target="_blank" rel="noopener" href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/PortableRuntimeIdentifierGraph.json">PortableRuntimeIdentifierGraph.json</a></p>
+<p><br>
+实际上这个属性标准用法是在使用<code>发布</code>功能时由命令行设置或在<code>pubxml</code>文件中指定的。<br>
+因为在很早以前没有<code>发布</code>的概念，都是将项目用 Release 编译后就行了。只有在不使用<code>发布</code>功能时才可以考虑自己去设置<code>RuntimeIdentifier</code>。</p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/dotnet/core/rid-catalog#using-rids">.NET RID Catalog</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/43519690">.NET Core RuntimeIdentifier vs TargetFramework</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/PortableRuntimeIdentifierGraph.json">PortableRuntimeIdentifierGraph.json</a></p>
 
       </div>
       
@@ -180,24 +192,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -239,13 +233,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -465,43 +462,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%8E%92%E9%99%A4%20nuget%20%E5%8C%85%E4%B8%AD%E4%B8%8E%E5%B9%B3%E5%8F%B0%E6%97%A0%E5%85%B3%E7%9A%84%E8%B5%84%E6%BA%90 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F11%2F02%2Fnet-rid-nuget-assets%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/11/02/net-rid-nuget-assets/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

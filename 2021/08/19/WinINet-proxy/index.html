@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,8 +172,24 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="什么是系统代理"><a href="#什么是系统代理" class="headerlink" title="什么是系统代理"></a>什么是系统代理</h2><p>我们在网上冲浪时，无时无刻都在使用着基于HTTP协议的应用程序，使用最多的就是浏览器了。<br>面向开发者而言，微软提供了 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 和 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 两套网络API。<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 是 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 的超集。<br>我们在桌面上使用的应用程序几乎都是用的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a>，而 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 通常用于一些无GUI的服务程序中。<br>关于 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 和 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 的差别可以查看官方手册 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/wininet-vs-winhttp">WinINet vs. WinHTTP</a>。<br>本文所讨论的是 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 的代理机制。</p>
-<h2 id="WinINet的代理策略"><a href="#WinINet的代理策略" class="headerlink" title="WinINet的代理策略"></a>WinINet的代理策略</h2><p>API函数 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenw">InternetOpenW</a> 决定了程序如何使用代理，重点在第2个参数<code>AccessType</code>，解释如下：<br><code>INTERNET_OPEN_TYPE_DIRECT</code>：直连，不走代理。<br><code>INTERNET_OPEN_TYPE_PRECONFIG</code>：从注册表获取代理设置并使用。<br><code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>：从注册表获取代理设置并使用，但不使用”自动配置”代理设置。<br><code>INTERNET_OPEN_TYPE_PROXY</code>：绕过注册表的代理设置，直连代理服务器，代理服务器由第3个参数指定。<br>第1个和第4个参数很好理解，说下第2个和第3个参数，WinINet的代理机制分两种，一种是<code>自动配置</code>，另一种是<code>代理服务器</code><br><img src="/images/1629336801688.png"><br><code>自动配置</code>基于 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BB%A3%E7%90%86%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE">PAC</a> 技术来实现代理。而<code>代理服务器</code>则是比较传统的方式，通过指定地址和协议来代理的，虽然也可以指定黑名单IP禁止代理，但灵活性是不如 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BB%A3%E7%90%86%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE">PAC</a> 代理技术的。<br>当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数时，表示<strong>优先使用”自动配置”代理，否则使用”代理服务器”的设置</strong>。<br>而当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>作为参数时，表示<strong>跳过”自动配置”代理，直接使用”代理服务器”的设置</strong>。<br>最常见的浏览器和绝大多数应用通常是使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数，用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>的情况比较少见。</p>
+        <h2 id="什么是系统代理"><a class="header-anchor" href="#什么是系统代理">#</a>什么是系统代理</h2>
+<p>我们在网上冲浪时，无时无刻都在使用着基于HTTP协议的应用程序，使用最多的就是浏览器了。<br>
+面向开发者而言，微软提供了 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 和 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 两套网络API。<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 是 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 的超集。<br>
+我们在桌面上使用的应用程序几乎都是用的 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a>，而 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 通常用于一些无GUI的服务程序中。<br>
+关于 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 和 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winhttp/about-winhttp">WinHTTP</a> 的差别可以查看官方手册 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/wininet-vs-winhttp">WinINet vs. WinHTTP</a>。<br>
+本文所讨论的是 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/wininet/about-wininet">WinINet</a> 的代理机制。</p>
+<h2 id="WinINet的代理策略"><a class="header-anchor" href="#WinINet的代理策略">#</a>WinINet的代理策略</h2>
+<p>API函数 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenw">InternetOpenW</a> 决定了程序如何使用代理，重点在第2个参数<code>AccessType</code>，解释如下：<br>
+<code>INTERNET_OPEN_TYPE_DIRECT</code>：直连，不走代理。<br>
+<code>INTERNET_OPEN_TYPE_PRECONFIG</code>：从注册表获取代理设置并使用。<br>
+<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>：从注册表获取代理设置并使用，但不使用&quot;自动配置&quot;代理设置。<br>
+<code>INTERNET_OPEN_TYPE_PROXY</code>：绕过注册表的代理设置，直连代理服务器，代理服务器由第3个参数指定。<br>
+第1个和第4个参数很好理解，说下第2个和第3个参数，WinINet的代理机制分两种，一种是<code>自动配置</code>，另一种是<code>代理服务器</code><br>
+<img src="/images/1629336801688.png" alt=""><br>
+<code>自动配置</code>基于 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BB%A3%E7%90%86%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE">PAC</a> 技术来实现代理。而<code>代理服务器</code>则是比较传统的方式，通过指定地址和协议来代理的，虽然也可以指定黑名单IP禁止代理，但灵活性是不如 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E4%BB%A3%E7%90%86%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE">PAC</a> 代理技术的。<br>
+当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数时，表示<strong>优先使用&quot;自动配置&quot;代理，否则使用&quot;代理服务器&quot;的设置</strong>。<br>
+而当程序使用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>作为参数时，表示<strong>跳过&quot;自动配置&quot;代理，直接使用&quot;代理服务器&quot;的设置</strong>。<br>
+最常见的浏览器和绝大多数应用通常是使用<code>INTERNET_OPEN_TYPE_PRECONFIG</code>作为参数，用<code>INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY</code>的情况比较少见。</p>
 
       </div>
       
@@ -181,30 +201,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows%E7%BC%96%E7%A8%8B/" title="Windows编程">
-                        #Windows编程
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/WinINet/" title="WinINet">
-                        #WinINet
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -246,13 +242,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -472,43 +471,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + WinINet%E7%9A%84%E4%BB%A3%E7%90%86%E7%AD%96%E7%95%A5 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2021%2F08%2F19%2FWinINet-proxy%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2021/08/19/WinINet-proxy/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

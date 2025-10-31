@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,30 +166,41 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="双光标问题"><a href="#双光标问题" class="headerlink" title="双光标问题"></a>双光标问题</h2><p>向游戏窗口注入 ImGui 窗口后，默认情况下就会出现双光标。<br><img src="https://pic.rmb.bdstatic.com/bjh/be508fcee683d16f23191aae290ab444.png"></p>
-<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>更新光标的地方在<code>imgui_impl_win32.cpp</code>文件中</p>
+        <h2 id="双光标问题"><a class="header-anchor" href="#双光标问题">#</a>双光标问题</h2>
+<p>向游戏窗口注入 ImGui 窗口后，默认情况下就会出现双光标。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/be508fcee683d16f23191aae290ab444.png" alt=""></p>
+<h2 id="解决"><a class="header-anchor" href="#解决">#</a>解决</h2>
+<p>更新光标的地方在<code>imgui_impl_win32.cpp</code>文件中</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> <span class="type">bool</span> <span class="title">ImGui_ImplWin32_UpdateMouseCursor</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ImGuiIO&amp; io = ImGui::<span class="built_in">GetIO</span>();</span><br><span class="line">    <span class="keyword">if</span> (io.ConfigFlags &amp; ImGuiConfigFlags_NoMouseCursorChange)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    ImGuiMouseCursor imgui_cursor = ImGui::<span class="built_in">GetMouseCursor</span>();</span><br><span class="line">    <span class="keyword">if</span> (imgui_cursor == ImGuiMouseCursor_None || io.MouseDrawCursor)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Hide OS mouse cursor if imgui is drawing it or if it wants no cursor</span></span><br><span class="line">        ::<span class="built_in">SetCursor</span>(<span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Show OS mouse cursor</span></span><br><span class="line">        LPTSTR win32_cursor = IDC_ARROW;</span><br><span class="line">        <span class="keyword">switch</span> (imgui_cursor)</span><br><span class="line">        &#123;</span><br><span class="line">        <span class="keyword">case</span> ImGuiMouseCursor_Arrow:        win32_cursor = IDC_ARROW; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> ImGuiMouseCursor_TextInput:    win32_cursor = IDC_IBEAM; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> ImGuiMouseCursor_ResizeAll:    win32_cursor = IDC_SIZEALL; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> ImGuiMouseCursor_ResizeEW:     win32_cursor = IDC_SIZEWE; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> ImGuiMouseCursor_ResizeNS:     win32_cursor = IDC_SIZENS; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> ImGuiMouseCursor_ResizeNESW:   win32_cursor = IDC_SIZENESW; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> ImGuiMouseCursor_ResizeNWSE:   win32_cursor = IDC_SIZENWSE; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> ImGuiMouseCursor_Hand:         win32_cursor = IDC_HAND; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> ImGuiMouseCursor_NotAllowed:   win32_cursor = IDC_NO; <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ::<span class="built_in">SetCursor</span>(::<span class="built_in">LoadCursor</span>(<span class="literal">NULL</span>, win32_cursor));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>从代码能看出，如果不希望出现光标，也就是执行<code>::SetCursor(::LoadCursor(NULL, win32_cursor))</code>这句，那么有两个地方可以修改</p>
 <ol>
 <li>为<code>ConfigFlags</code>加上<code>ImGuiConfigFlags_NoMouseCursorChange</code>参数，函数将完全失效。</li>
 <li><code>io.MouseDrawCursor</code>这个值为<code>true</code>时（默认值为false）。</li>
 </ol>
-<h3 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h3><p>在创建 ImGui 时为<code>ConfigFlags</code>加上<code>ImGuiConfigFlags_NoMouseCursorChange</code>参数，使<code>ImGui_ImplWin32_UpdateMouseCursor</code>函数彻底失效</p>
+<h3 id="方式一"><a class="header-anchor" href="#方式一">#</a>方式一</h3>
+<p>在创建 ImGui 时为<code>ConfigFlags</code>加上<code>ImGuiConfigFlags_NoMouseCursorChange</code>参数，使<code>ImGui_ImplWin32_UpdateMouseCursor</code>函数彻底失效</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ImGui::<span class="built_in">CreateContext</span>();</span><br><span class="line">ImGuiIO&amp; io = ImGui::<span class="built_in">GetIO</span>();</span><br><span class="line">io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;</span><br></pre></td></tr></table></figure>
 <p>接着在窗口消息处理过程中，自行决定是否渲染光标，所以需要处理<code>WM_SETCURSOR</code>消息</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LRESULT WINAPI <span class="title">MyWndProc</span><span class="params">(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">ImGui_ImplWin32_WndProcHandler</span>(hWnd, uMsg, wParam, lParam)) &#123;</span><br><span class="line">        <span class="keyword">return</span> ERROR_SUCCESS;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (uMsg == WM_SETCURSOR) &#123;</span><br><span class="line">        <span class="comment">// 如果鼠标在 ImGui 窗口内就渲染一个箭头光标</span></span><br><span class="line">        ::<span class="built_in">SetCursor</span>(io.WantCaptureMouse ? ::<span class="built_in">LoadCursorW</span>(<span class="literal">nullptr</span>, IDC_ARROW) : <span class="literal">nullptr</span>);</span><br><span class="line">        <span class="keyword">return</span> ERROR_SUCCESS;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ::<span class="built_in">CallWindowProcW</span>(_oldWndProc, hWnd, uMsg, wParam, lParam);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但有瑕疵<br><img src="https://pic.rmb.bdstatic.com/bjh/fc92731aba2ea18dda92dbc4356408bb.png"><br>当光标在输入框，窗口边框等情况下，它任然会显示箭头，所以还需要对每种情况进行处理，这使得工作变得复杂。<br>查看源码发现，ImGui 会在<code>ImGui_ImplWin32_WndProcHandler</code>中调用<code>ImGui_ImplWin32_UpdateMouseCursor</code></p>
+<p>但有瑕疵<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/fc92731aba2ea18dda92dbc4356408bb.png" alt=""><br>
+当光标在输入框，窗口边框等情况下，它任然会显示箭头，所以还需要对每种情况进行处理，这使得工作变得复杂。<br>
+查看源码发现，ImGui 会在<code>ImGui_ImplWin32_WndProcHandler</code>中调用<code>ImGui_ImplWin32_UpdateMouseCursor</code></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">IMGUI_IMPL_API LRESULT <span class="title">ImGui_ImplWin32_WndProcHandler</span><span class="params">(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">case</span> WM_SETCURSOR:</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">LOWORD</span>(lParam) == HTCLIENT &amp;&amp; <span class="built_in">ImGui_ImplWin32_UpdateMouseCursor</span>())</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>所以也可以换个思路，去掉<code>ImGuiConfigFlags_NoMouseCursorChange</code>设置，并在消息中拦截处理</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LRESULT WINAPI <span class="title">MyWndProc</span><span class="params">(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ImGuiIO&amp; io = ImGui::<span class="built_in">GetIO</span>();</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">LOWORD</span>(lParam) == HTCLIENT &amp;&amp; uMsg == WM_SETCURSOR) &#123;</span><br><span class="line">        <span class="comment">// 鼠标不在外挂窗口内时不要渲染光标</span></span><br><span class="line">        <span class="keyword">if</span> (!io.WantCaptureMouse) &#123;</span><br><span class="line">            ::<span class="built_in">SetCursor</span>(<span class="literal">nullptr</span>);</span><br><span class="line">            <span class="keyword">return</span> ERROR_SUCCESS;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 外挂窗口隐藏时就返回，不要交给 ImGui 处理，否则会出现箭头光标</span></span><br><span class="line">        <span class="keyword">if</span> (!_show) &#123;</span><br><span class="line">            <span class="keyword">return</span> ERROR_SUCCESS;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">ImGui_ImplWin32_WndProcHandler</span>(hWnd, uMsg, wParam, lParam)) &#123;</span><br><span class="line">        <span class="keyword">return</span> ERROR_SUCCESS;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ::<span class="built_in">CallWindowProcW</span>(_oldWndProc, hWnd, uMsg, wParam, lParam);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>还没完，通常外挂窗口可以通过快捷键隐藏，当通过快捷键隐藏窗口时也要处理光标</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (uMsg == WM_KEYUP) &#123;</span><br><span class="line">    <span class="keyword">if</span> (wParam == VK_F4) &#123;</span><br><span class="line">        _show = !_show;</span><br><span class="line">        ::<span class="built_in">SetCursor</span>(_show ? ::<span class="built_in">LoadCursorW</span>(<span class="literal">nullptr</span>, IDC_ARROW) : <span class="literal">nullptr</span>);</span><br><span class="line">        <span class="keyword">return</span> ERROR_SUCCESS;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h3><p>从<code>ImGui_ImplWin32_UpdateMouseCursor</code>的逻辑看，当<code>io.MouseDrawCursor</code>为<code>true</code>时，ImGui 就不会使用系统光标，而是自行绘制光标</p>
+<h3 id="方式二"><a class="header-anchor" href="#方式二">#</a>方式二</h3>
+<p>从<code>ImGui_ImplWin32_UpdateMouseCursor</code>的逻辑看，当<code>io.MouseDrawCursor</code>为<code>true</code>时，ImGui 就不会使用系统光标，而是自行绘制光标</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ImGui::<span class="built_in">CreateContext</span>();</span><br><span class="line">io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange; <span class="comment">// 屏蔽系统光标</span></span><br><span class="line">io.MouseDrawCursor = <span class="literal">true</span>;  <span class="comment">// ImGui 自行绘制</span></span><br></pre></td></tr></table></figure>
 <p>此时就需要在每一帧创建后指定光标类型</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ImGui::<span class="built_in">NewFrame</span>();</span><br><span class="line"><span class="keyword">if</span> (!io.WantCaptureMouse)</span><br><span class="line">    ImGui::<span class="built_in">SetMouseCursor</span>(ImGuiMouseCursor_None);</span><br></pre></td></tr></table></figure>
 <p>工作一切正常，很完美，实现起来比方式一更简单。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://github.com/ocornut/imgui/issues/2479">SDL2 hide cursor</a><br><a target="_blank" rel="noopener" href="https://www.unknowncheats.me/forum/counterstrike-global-offensive/295275-panorama-cursor-fix-imgui.html">Panorama cursor fix (imgui)</a><br><a target="_blank" rel="noopener" href="https://www.unknowncheats.me/forum/direct3d/190472-imgui-mouse-cursor.html">ImGUI mouse cursor problem</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/ocornut/imgui/issues/2479">SDL2 hide cursor</a><br>
+<a target="_blank" rel="noopener" href="https://www.unknowncheats.me/forum/counterstrike-global-offensive/295275-panorama-cursor-fix-imgui.html">Panorama cursor fix (imgui)</a><br>
+<a target="_blank" rel="noopener" href="https://www.unknowncheats.me/forum/direct3d/190472-imgui-mouse-cursor.html">ImGUI mouse cursor problem</a></p>
 
       </div>
       
@@ -197,24 +212,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Dear-ImGui/" title="Dear ImGui">
-                        #Dear ImGui
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -256,13 +253,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -482,43 +482,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Dear%20ImGui%E6%B8%B8%E6%88%8F%E7%AA%97%E5%8F%A3%E5%8F%8C%E5%85%89%E6%A0%87%E9%97%AE%E9%A2%98 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F05%2F15%2F16273544%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/05/15/16273544/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,20 +166,32 @@
           
       </div>
       <div class="markdown-body">
-        <p>Windows 系统存在两个常用的内置账户：<code>Administrator</code>和<code>Guest</code>。<br>而这两个帐户名称是可以在组策略中修改的<br><img src="/images/get-builtin-account/01.webp"></p>
-<p><br>而一些关于帐户的 API 函数都要求提供帐户名，比如 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/lmaccess/nf-lmaccess-netusergetinfo">NetUserGetInfo</a> 和 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/lmaccess/nf-lmaccess-netusersetinfo">NetUserSetInfo</a>。<br>要操作系统内置帐户的时候不应该假设管理员是<code>Administrator</code>，游客是<code>Guest</code>，而应该调用相关函数获取。</p>
-<p><br>微软预定义了很多 SID，结合这些 SID，再通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winbase/nf-winbase-lookupaccountsidw">LookupAccountSid</a> 函数即可获取帐户名和域名称。<br>预定义 SID 需要通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/securitybaseapi/nf-securitybaseapi-createwellknownsid">CreateWellKnownSid</a> 函数创建，它的第一个参数指向 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winnt/ne-winnt-well_known_sid_type">WELL_KNOWN_SID_TYPE</a> 枚举类型，这就是预定义的 SID 类型标识符。<br>其中内置管理员帐户对应的值是<code>WinAccountAdministratorSid</code>，来宾帐户对应的值是<code>WinAccountGuestSid</code>。</p>
-<p><br>当我尝试这样调用时，总是返回错误码 87</p>
+        <p>Windows 系统存在两个常用的内置账户：<code>Administrator</code>和<code>Guest</code>。<br>
+而这两个帐户名称是可以在组策略中修改的<br>
+<img src="images/get-builtin-account/01.webp" alt=""></p>
+<p><br>
+而一些关于帐户的 API 函数都要求提供帐户名，比如 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/lmaccess/nf-lmaccess-netusergetinfo">NetUserGetInfo</a> 和 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/lmaccess/nf-lmaccess-netusersetinfo">NetUserSetInfo</a>。<br>
+要操作系统内置帐户的时候不应该假设管理员是<code>Administrator</code>，游客是<code>Guest</code>，而应该调用相关函数获取。</p>
+<p><br>
+微软预定义了很多 SID，结合这些 SID，再通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winbase/nf-winbase-lookupaccountsidw">LookupAccountSid</a> 函数即可获取帐户名和域名称。<br>
+预定义 SID 需要通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/securitybaseapi/nf-securitybaseapi-createwellknownsid">CreateWellKnownSid</a> 函数创建，它的第一个参数指向 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winnt/ne-winnt-well_known_sid_type">WELL_KNOWN_SID_TYPE</a> 枚举类型，这就是预定义的 SID 类型标识符。<br>
+其中内置管理员帐户对应的值是<code>WinAccountAdministratorSid</code>，来宾帐户对应的值是<code>WinAccountGuestSid</code>。</p>
+<p><br>
+当我尝试这样调用时，总是返回错误码 87</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DWORD cbSid = <span class="number">0</span>;</span><br><span class="line">BOOL bSuccess = <span class="built_in">CreateWellKnownSid</span>(WinAccountGuestSid, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, &amp;cbSid);</span><br><span class="line">DWORD dwErr = <span class="built_in">GetLastError</span>(); <span class="comment">// 错误 87</span></span><br></pre></td></tr></table></figure>
-<p>我在这里卡了几个小时，最终发现第2个参数不能为空，必须填写本机域 SID。<br>我们只需要将计算机名称传递给 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winbase/nf-winbase-lookupaccountnamew">LookupAccountName</a> 函数即可查询到其 SID。<br>得到了内置帐户 SID 后就可以通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winbase/nf-winbase-lookupaccountsidw">LookupAccountSid</a> 取到帐户名了。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>获取系统内置帐户名的流程如下：</p>
+<p>我在这里卡了几个小时，最终发现第2个参数不能为空，必须填写本机域 SID。<br>
+我们只需要将计算机名称传递给 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winbase/nf-winbase-lookupaccountnamew">LookupAccountName</a> 函数即可查询到其 SID。<br>
+得到了内置帐户 SID 后就可以通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winbase/nf-winbase-lookupaccountsidw">LookupAccountSid</a> 取到帐户名了。</p>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<p>获取系统内置帐户名的流程如下：</p>
 <ol>
 <li>用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/sysinfoapi/nf-sysinfoapi-getcomputernameexw">GetComputerNameEx</a> 获取计算机名称。</li>
 <li>用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winbase/nf-winbase-lookupaccountnamew">LookupAccountName</a> 查询域 SID。</li>
 <li>用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/securitybaseapi/nf-securitybaseapi-createwellknownsid">CreateWellKnownSid</a> 创建帐户 SID。</li>
 <li>用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/api/winbase/nf-winbase-lookupaccountsidw">LookupAccountSid</a> 查询帐户名称。</li>
 </ol>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-server/identity/ad-ds/manage/understand-security-identifiers">安全标识符</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-server/identity/ad-ds/manage/understand-security-identifiers">安全标识符</a></p>
 
       </div>
       
@@ -187,24 +203,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows%E7%BC%96%E7%A8%8B/" title="Windows编程">
-                        #Windows编程
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -246,13 +244,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -472,43 +473,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%BC%96%E7%A8%8B%E8%8E%B7%E5%8F%96%20Windows%20%E5%86%85%E7%BD%AE%E5%B8%90%E6%88%B7%E5%90%8D%E7%A7%B0 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F05%2F18%2Fget-builtin-account%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/05/18/get-builtin-account/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

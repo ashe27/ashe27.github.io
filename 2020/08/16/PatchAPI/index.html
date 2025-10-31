@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,21 +166,31 @@
           
       </div>
       <div class="markdown-body">
-        <p>微软提供了两套API来制作增量补丁，PatchAPI和MSDelta<br>PatchAPI支持XP，效率高但文件会比MSDelta大，属于第一代增量压缩接口，不建议使用。<br>MSDelta不支持XP系统，补丁文件更小，兼容PatchAPI的补丁，微软的补丁包用了此接口。</p>
-<h2 id="PatchAPI"><a href="#PatchAPI" class="headerlink" title="PatchAPI"></a>PatchAPI</h2><p>创建补丁文件通过 <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx#createpatchfileaw">CreatePatchFile</a> 函数，它是高级的API，制作一对一的升级补丁</p>
+        <p>微软提供了两套API来制作增量补丁，PatchAPI和MSDelta<br>
+PatchAPI支持XP，效率高但文件会比MSDelta大，属于第一代增量压缩接口，不建议使用。<br>
+MSDelta不支持XP系统，补丁文件更小，兼容PatchAPI的补丁，微软的补丁包用了此接口。</p>
+<h2 id="PatchAPI"><a class="header-anchor" href="#PatchAPI">#</a>PatchAPI</h2>
+<p>创建补丁文件通过 <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx#createpatchfileaw">CreatePatchFile</a> 函数，它是高级的API，制作一对一的升级补丁</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;PatchApi.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib, <span class="string">&quot;mspatchc&quot;</span>)</span></span><br><span class="line"></span><br><span class="line">BOOL bSuccess = ::<span class="built_in">CreatePatchFileA</span>(<span class="string">&quot;D:\\v1.exe&quot;</span>, <span class="string">&quot;D:\\v2.exe&quot;</span>, <span class="string">&quot;D:\\Patch.dat&quot;</span>, PATCH_OPTION_USE_BEST, <span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure>
 <p>补丁文件由文件头和数据组成，提取文件头可以用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/devnotes/patchapi-extractpatchheadertofile">ExtractPatchHeaderToFile</a> 函数</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BOOL bSuccess = <span class="built_in">ExtractPatchHeaderToFileA</span>(<span class="string">&quot;D:\\Patch.dat&quot;</span>, <span class="string">&quot;D:\\header.dat&quot;</span>);</span><br></pre></td></tr></table></figure>
-<p>文件头数据由”PA19”标记开始<br><img src="/images/1627176446114.png"><br>打补丁通过 <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx#applypatchtofileaw">ApplyPatchToFile</a> 函数，它是由mspatcha.dll提供的</p>
+<p>文件头数据由&quot;PA19&quot;标记开始<br>
+<img src="/images/1627176446114.png" alt=""><br>
+打补丁通过 <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx#applypatchtofileaw">ApplyPatchToFile</a> 函数，它是由mspatcha.dll提供的</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;PatchApi.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib, <span class="string">&quot;mspatcha&quot;</span>)</span></span><br><span class="line"></span><br><span class="line">BOOL bSuccess = ::<span class="built_in">ApplyPatchToFileA</span>(<span class="string">&quot;D:\\Patch.dat&quot;</span>, <span class="string">&quot;D:\\v1.exe&quot;</span>, <span class="string">&quot;D:\\v2.exe&quot;</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<p>如果需要验证补丁而不应用，可以用 <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx#testapplypatchtofileaw">TestApplyPatchToFile</a> 函数。<br>从多个源文件制作补丁可以用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/devnotes/patchapi-createpatchfileex">CreatePatchFileEx</a> 函数</p>
+<p>如果需要验证补丁而不应用，可以用 <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx#testapplypatchtofileaw">TestApplyPatchToFile</a> 函数。<br>
+从多个源文件制作补丁可以用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/devnotes/patchapi-createpatchfileex">CreatePatchFileEx</a> 函数</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;PatchApi.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib, <span class="string">&quot;mspatchc&quot;</span>)</span></span><br><span class="line"></span><br><span class="line">PATCH_OLD_FILE_INFO_A src[<span class="number">2</span>]&#123; <span class="number">0</span> &#125;;</span><br><span class="line">src[<span class="number">0</span>].OldFileName = <span class="string">&quot;D:\\v1.exe&quot;</span>;</span><br><span class="line">src[<span class="number">1</span>].OldFileName = <span class="string">&quot;D:\\v2.exe&quot;</span>;</span><br><span class="line"></span><br><span class="line">BOOL bSuccess = <span class="built_in">CreatePatchFileExA</span>(_countof(src), src, <span class="string">&quot;D:\\v3.exe&quot;</span>, <span class="string">&quot;D:\\Patch.dat&quot;</span>, <span class="number">0</span>, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure>
 <p>这样无论是v1还是v2都能升级到v3</p>
-<h2 id="MSDelta"><a href="#MSDelta" class="headerlink" title="MSDelta"></a>MSDelta</h2><p>PatchAPI的升级版本，补丁文件的头为”PA30”。<br>制作补丁使用 <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx#createdeltaaw">CreateDelta</a> 函数</p>
+<h2 id="MSDelta"><a class="header-anchor" href="#MSDelta">#</a>MSDelta</h2>
+<p>PatchAPI的升级版本，补丁文件的头为&quot;PA30&quot;。<br>
+制作补丁使用 <a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx#createdeltaaw">CreateDelta</a> 函数</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;msdelta.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> comment(lib, <span class="string">&quot;msdelta&quot;</span>)</span></span><br><span class="line"></span><br><span class="line">BOOL bSuccess = <span class="built_in">CreateDeltaA</span>(DELTA_FILE_TYPE_SET_EXECUTABLES_LATEST, DELTA_FLAG_NONE, DELTA_FLAG_NONE, <span class="string">&quot;D:\\v1.exe&quot;</span>, <span class="string">&quot;D:\\v2.exe&quot;</span>, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, &#123; <span class="number">0</span> &#125;, <span class="literal">nullptr</span>, <span class="number">0</span>, <span class="string">&quot;D:\\Patch.dat&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>获取增量补丁信息：<a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx#getdeltainfoaw">GetDeltaInfo</a><br>应用增量补丁：<a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx#applydeltaaw">ApplyDelta</a><br>从文档上看，并没有提供从多个源文件制作补丁的方法</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx">Delta Compression Application Programming Interfaces</a></p>
+<p>获取增量补丁信息：<a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx#getdeltainfoaw">GetDeltaInfo</a><br>
+应用增量补丁：<a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx#applydeltaaw">ApplyDelta</a><br>
+从文档上看，并没有提供从多个源文件制作补丁的方法</p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://msdn.microsoft.com/en-us/library/bb417345.aspx">Delta Compression Application Programming Interfaces</a></p>
 <p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/devnotes/patchapi">PatchAPI</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/hfiref0x/SXSEXP">https://github.com/hfiref0x/SXSEXP</a></p>
 <p><a target="_blank" rel="noopener" href="https://forum.xda-developers.com/windows-10-mobile/decompress-manifests-files-winsxs-folder-t3367399">https://forum.xda-developers.com/windows-10-mobile/decompress-manifests-files-winsxs-folder-t3367399</a></p>
@@ -191,24 +205,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows%E7%BC%96%E7%A8%8B/" title="Windows编程">
-                        #Windows编程
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -250,13 +246,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -476,43 +475,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%BC%96%E7%A8%8B%E6%96%B9%E5%BC%8F%E5%88%B6%E4%BD%9C%E5%A2%9E%E9%87%8F%E8%A1%A5%E4%B8%81 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2020%2F08%2F16%2FPatchAPI%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2020/08/16/PatchAPI/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

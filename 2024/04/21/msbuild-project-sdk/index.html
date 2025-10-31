@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,21 +166,25 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>.NET 项目基于 MSBuild 格式。 项目文件的根元素是 Project 元素。 Project 元素有一个可选的 Sdk 属性，该属性指定要使用的 SDK（和版本）。 若要使用 .NET 工具并构建你的代码，请将 Sdk 属性设置为可用 SDK 表中的其中一个 ID。</p>
-<h2 id="引用-Sdk"><a href="#引用-Sdk" class="headerlink" title="引用 Sdk"></a>引用 Sdk</h2><p>常见的引用方式：</p>
+        <h2 id="概述"><a class="header-anchor" href="#概述">#</a>概述</h2>
+<p>.NET 项目基于 MSBuild 格式。 项目文件的根元素是 Project 元素。 Project 元素有一个可选的 Sdk 属性，该属性指定要使用的 SDK（和版本）。 若要使用 .NET 工具并构建你的代码，请将 Sdk 属性设置为可用 SDK 表中的其中一个 ID。</p>
+<h2 id="引用-Sdk"><a class="header-anchor" href="#引用-Sdk">#</a>引用 Sdk</h2>
+<p>常见的引用方式：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span>&gt;</span></span><br><span class="line">  ...</span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>这等价于：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Sdk</span> <span class="attr">Name</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>MSBuild 会在顶部和底部导入<code>Sdk.props</code>和<code>Sdk.targets</code>，实际在背后文件是这样子：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;Sdk.props&quot;</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span> /&gt;</span></span><br><span class="line">  ...</span><br><span class="line">  <span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;Sdk.targets&quot;</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p><a target="_blank" rel="noopener" href="https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/sdk/Sdk.props">Sdk.props</a> 和 <a target="_blank" rel="noopener" href="https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/sdk/Sdk.NuGet.targets">Sdk.targets</a> 文件位于计算机中的位置：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%ProgramFiles%\dotnet\sdk\[version]\Sdks\Microsoft.NET.Sdk\Sdk</span><br></pre></td></tr></table></figure>
 <p>SDK 有哪些可用值可以参考<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/overview#available-sdks">官方文档</a></p>
-<h2 id="Sdk-props"><a href="#Sdk-props" class="headerlink" title="Sdk.props"></a>Sdk.props</h2><p><a target="_blank" rel="noopener" href="https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/sdk/Sdk.props">Sdk.props</a> 是项目导入的第一个文件。</p>
+<h2 id="Sdk-props"><a class="header-anchor" href="#Sdk-props">#</a>Sdk.props</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/sdk/Sdk.props">Sdk.props</a> 是项目导入的第一个文件。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">***********************************************************************************************</span></span><br><span class="line"><span class="comment">Sdk.props</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have</span></span><br><span class="line"><span class="comment">          created a backup copy.  Incorrect changes to this file will make it</span></span><br><span class="line"><span class="comment">          impossible to load or build your projects from the command-line or the IDE.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">Copyright (c) .NET Foundation. All rights reserved.</span></span><br><span class="line"><span class="comment">***********************************************************************************************</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">_AfterSdkPublishDependsOn</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(_IsAspNetCoreProject)&#x27; == &#x27;true&#x27;&quot;</span>&gt;</span>AfterPublish<span class="tag">&lt;/<span class="name">_AfterSdkPublishDependsOn</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">_AfterSdkPublishDependsOn</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(_IsAspNetCoreProject)&#x27; != &#x27;true&#x27;&quot;</span>&gt;</span>Publish<span class="tag">&lt;/<span class="name">_AfterSdkPublishDependsOn</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">Target</span> <span class="attr">Name</span>=<span class="string">&quot;AfterSdkPublish&quot;</span> <span class="attr">AfterTargets</span>=<span class="string">&quot;$(_AfterSdkPublishDependsOn)&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">Target</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">      Indicate to other targets that Microsoft.NET.Sdk is being used.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      This must be set here (as early as possible, before Microsoft.Common.props)</span></span><br><span class="line"><span class="comment">      so that everything that follows can depend on it.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      In particular, Directory.Build.props and nuget package props need to be able</span></span><br><span class="line"><span class="comment">      to use this flag and they are imported by Microsoft.Common.props.</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">UsingMicrosoftNETSdk</span>&gt;</span>true<span class="tag">&lt;/<span class="name">UsingMicrosoftNETSdk</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">      Indicate whether the set of SDK defaults that makes SDK style project concise are being used.</span></span><br><span class="line"><span class="comment">      For example: globbing, importing msbuild common targets.</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      Similar to the property above, it must be set here.</span></span><br><span class="line"><span class="comment">    --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">UsingNETSdkDefaults</span>&gt;</span>true<span class="tag">&lt;/<span class="name">UsingNETSdkDefaults</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">CustomAfterDirectoryBuildProps</span>&gt;</span>$(CustomAfterDirectoryBuildProps);$(MSBuildThisFileDirectory)UseArtifactsOutputPath.props<span class="tag">&lt;/<span class="name">CustomAfterDirectoryBuildProps</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(MSBuildProjectFullPath)&#x27; == &#x27;$(ProjectToOverrideProjectExtensionsPath)&#x27;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">MSBuildProjectExtensionsPath</span>&gt;</span>$(ProjectExtensionsPathForSpecifiedProject)<span class="tag">&lt;/<span class="name">MSBuildProjectExtensionsPath</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;$(AlternateCommonProps)&quot;</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(AlternateCommonProps)&#x27; != &#x27;&#x27;&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props&quot;</span> <span class="attr">Condition</span>=<span class="string">&quot;&#x27;$(AlternateCommonProps)&#x27; == &#x27;&#x27;&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;$(MSBuildThisFileDirectory)..\targets\Microsoft.NET.Sdk.props&quot;</span>  /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>这里有个 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/visualstudio/msbuild/customize-net-builds#replace-common-props-file">AlternateCommonProps</a> 属性值得留意一下，它可以用来替换接下来即将导入的 <a target="_blank" rel="noopener" href="https://github.com/dotnet/msbuild/blob/main/src/Tasks/Microsoft.Common.props">Microsoft.Common.props</a> 文件，不过一般情况下用不到。</p>
-<h2 id="Microsoft-Common-props"><a href="#Microsoft-Common-props" class="headerlink" title="Microsoft.Common.props"></a>Microsoft.Common.props</h2><p><a target="_blank" rel="noopener" href="https://github.com/dotnet/msbuild/blob/main/src/Tasks/Microsoft.Common.props">Microsoft.Common.props</a> 是第二个导入的文件，包含了一些初始化导入和钩子。<br>比如：</p>
+<h2 id="Microsoft-Common-props"><a class="header-anchor" href="#Microsoft-Common-props">#</a>Microsoft.Common.props</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/dotnet/msbuild/blob/main/src/Tasks/Microsoft.Common.props">Microsoft.Common.props</a> 是第二个导入的文件，包含了一些初始化导入和钩子。<br>
+比如：</p>
 <ul>
 <li><code>Directory.Build.props</code>文件就是在这里导入的。</li>
 <li><code>&lt;ImportDirectoryBuildProps&gt;</code>属性可以决定是否导入<code>Directory.Build.props</code>。</li>
@@ -184,13 +192,17 @@
 <li><code>&lt;CustomAfterDirectoryBuildProps&gt;</code>在<code>Directory.Build.props</code>之后导入。</li>
 <li>设置了中间目录<code>&lt;BaseIntermediateOutputPath&gt;</code>。</li>
 </ul>
-<p><br>从这个文件中可以看出，如果我们需要禁止导入<code>Directory.Build.props</code>文件或设置中间目录，就必须在<code>Microsoft.Common.props</code>导入前就设置好，那么引用 Sdk 时必须显示导入：</p>
+<p><br>
+从这个文件中可以看出，如果我们需要禁止导入<code>Directory.Build.props</code>文件或设置中间目录，就必须在<code>Microsoft.Common.props</code>导入前就设置好，那么引用 Sdk 时必须显示导入：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ImportDirectoryBuildProps</span>&gt;</span>false<span class="tag">&lt;/<span class="name">ImportDirectoryBuildProps</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">BaseIntermediateOutputPath</span>&gt;</span>obj2\<span class="tag">&lt;/<span class="name">BaseIntermediateOutputPath</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;Sdk.props&quot;</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">Import</span> <span class="attr">Project</span>=<span class="string">&quot;Sdk.targets&quot;</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="预处理项目文件"><a href="#预处理项目文件" class="headerlink" title="预处理项目文件"></a>预处理项目文件</h2><p>使用<code>dotnet msbuild -preprocess</code>命令，可以看到 MSBuild 在包含 SDK 及其目标之后所显示的完全扩展的项目。</p>
+<h2 id="预处理项目文件"><a class="header-anchor" href="#预处理项目文件">#</a>预处理项目文件</h2>
+<p>使用<code>dotnet msbuild -preprocess</code>命令，可以看到 MSBuild 在包含 SDK 及其目标之后所显示的完全扩展的项目。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet msbuild -preprocess:output.xml</span><br></pre></td></tr></table></figure>
 <p>我们便可以分析输出的 xml 文件，大概是一个几千行的项目文件，自上而下导入了各种 .props 和 .targets 文件，这有利于我们快速排查问题。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/overview/">.NET 项目 SDK</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/visualstudio/msbuild/how-to-use-project-sdk/">使用 MSBuild 项目 SDK</a><br><a target="_blank" rel="noopener" href="https://github.com/dotnet/msbuild/issues/2767">Document the import order of the common msbuild extension points.</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/project-sdk/overview/">.NET 项目 SDK</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/visualstudio/msbuild/how-to-use-project-sdk/">使用 MSBuild 项目 SDK</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/dotnet/msbuild/issues/2767">Document the import order of the common msbuild extension points.</a></p>
 
       </div>
       
@@ -202,24 +214,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/MSBuild/" title="MSBuild">
-                        #MSBuild
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -261,13 +255,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -487,43 +484,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + .NET%20%E9%A1%B9%E7%9B%AE%20SDK%20%E4%BB%8B%E7%BB%8D + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F04%2F21%2Fmsbuild-project-sdk%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/04/21/msbuild-project-sdk/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

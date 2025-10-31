@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,26 +166,44 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="hekate"><a href="#hekate" class="headerlink" title="hekate"></a>hekate</h2><p><a target="_blank" rel="noopener" href="https://github.com/CTCaer/hekate">hekate </a> 是 Switch 开机后第一个运行的程序，类似于 PC 电脑上的 BIOS 程序，负责引导系统（比如大气层系统）。<br>还有一些实用工具等功能。</p>
-<h2 id="Atmosphere-大气层系统"><a href="#Atmosphere-大气层系统" class="headerlink" title="Atmosphere 大气层系统"></a>Atmosphere 大气层系统</h2><p>GitHub：<a target="_blank" rel="noopener" href="https://github.com/Atmosphere-NX/Atmosphere">https://github.com/Atmosphere-NX/Atmosphere</a><br>升级系统时，要确认 Atmosphere 的版本是否支持目标 Switch 版本，如果不支持的话则要先升级 Atmosphere，再升级 Switch 系统版本。</p>
-<h3 id="系统插件"><a href="#系统插件" class="headerlink" title="系统插件"></a>系统插件</h3><p>插件是随系统启动的。类似于 Windows 系统上的服务程序，是不可见的，在后台工作。<br>系统插件安装目录：<code>\atmosphere\contents</code><br>插件的配置目录：<code>\config</code><br>插件配置文件夹要与插件名相同，比如特斯拉插件的配置路径是：</p>
+        <h2 id="hekate"><a class="header-anchor" href="#hekate">#</a>hekate</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/CTCaer/hekate">hekate </a> 是 Switch 开机后第一个运行的程序，类似于 PC 电脑上的 BIOS 程序，负责引导系统（比如大气层系统）。<br>
+还有一些实用工具等功能。</p>
+<h2 id="Atmosphere-大气层系统"><a class="header-anchor" href="#Atmosphere-大气层系统">#</a>Atmosphere 大气层系统</h2>
+<p>GitHub：<a target="_blank" rel="noopener" href="https://github.com/Atmosphere-NX/Atmosphere">https://github.com/Atmosphere-NX/Atmosphere</a><br>
+升级系统时，要确认 Atmosphere 的版本是否支持目标 Switch 版本，如果不支持的话则要先升级 Atmosphere，再升级 Switch 系统版本。</p>
+<h3 id="系统插件"><a class="header-anchor" href="#系统插件">#</a>系统插件</h3>
+<p>插件是随系统启动的。类似于 Windows 系统上的服务程序，是不可见的，在后台工作。<br>
+系统插件安装目录：<code>\atmosphere\contents</code><br>
+插件的配置目录：<code>\config</code><br>
+插件配置文件夹要与插件名相同，比如特斯拉插件的配置路径是：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\config\Tesla\</span><br></pre></td></tr></table></figure>
-
-<h3 id="系统应用"><a href="#系统应用" class="headerlink" title="系统应用"></a>系统应用</h3><p>应用程序文件扩展名是<code>.nro</code>，等同于我们手机上的 APP，需要从系统相册中启动应用。<br>系统应用安装目录：<code>\atmosphere\switch</code></p>
-<h2 id="特斯拉菜单"><a href="#特斯拉菜单" class="headerlink" title="特斯拉菜单"></a>特斯拉菜单</h2><p>特斯拉需要单独拿出来讲，因为它有自己的开发框架和应用（.ovl程序）。简单理解的话就是类似微信，它为我们提供了小程序（.ovl程序）。<br>特斯拉由两个部分组成：<a target="_blank" rel="noopener" href="https://github.com/WerWolv/nx-ovlloader">nx-ovlloader</a> 和 <a target="_blank" rel="noopener" href="https://github.com/WerWolv/Tesla-Menu">Tesla-Menu</a>。<br>工作原理：<code>nx-ovlloader</code>是系统插件，它会加载<code>\switch\.overlays\ovlmenu.ovl</code>，也就是特斯拉菜单。<br>特斯拉菜单自身也属于一个加载器（微信），它负责加载<code>.ovl</code>后缀的菜单程序（小程序）。<br>菜单程序安装位置：<code>switch\.overlays</code></p>
-<h3 id="配置特斯拉菜单"><a href="#配置特斯拉菜单" class="headerlink" title="配置特斯拉菜单"></a>配置特斯拉菜单</h3><p>呼出快捷键修改位置：<code>\config\tesla\config.ini</code>。<strong>如果文件不存在则创建它，否则无法呼出菜单</strong>。</p>
+<h3 id="系统应用"><a class="header-anchor" href="#系统应用">#</a>系统应用</h3>
+<p>应用程序文件扩展名是<code>.nro</code>，等同于我们手机上的 APP，需要从系统相册中启动应用。<br>
+系统应用安装目录：<code>\atmosphere\switch</code></p>
+<h2 id="特斯拉菜单"><a class="header-anchor" href="#特斯拉菜单">#</a>特斯拉菜单</h2>
+<p>特斯拉需要单独拿出来讲，因为它有自己的开发框架和应用（.ovl程序）。简单理解的话就是类似微信，它为我们提供了小程序（.ovl程序）。<br>
+特斯拉由两个部分组成：<a target="_blank" rel="noopener" href="https://github.com/WerWolv/nx-ovlloader">nx-ovlloader</a> 和 <a target="_blank" rel="noopener" href="https://github.com/WerWolv/Tesla-Menu">Tesla-Menu</a>。<br>
+工作原理：<code>nx-ovlloader</code>是系统插件，它会加载<code>\switch\.overlays\ovlmenu.ovl</code>，也就是特斯拉菜单。<br>
+特斯拉菜单自身也属于一个加载器（微信），它负责加载<code>.ovl</code>后缀的菜单程序（小程序）。<br>
+菜单程序安装位置：<code>switch\.overlays</code></p>
+<h3 id="配置特斯拉菜单"><a class="header-anchor" href="#配置特斯拉菜单">#</a>配置特斯拉菜单</h3>
+<p>呼出快捷键修改位置：<code>\config\tesla\config.ini</code>。<strong>如果文件不存在则创建它，否则无法呼出菜单</strong>。</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[tesla]</span></span><br><span class="line"><span class="attr">key_combo</span>=L+DDOWN</span><br></pre></td></tr></table></figure>
-<p>上面的配置是指按<code>L + 左摇杆下</code>呼出菜单。<br>支持的按键：</p>
+<p>上面的配置是指按<code>L + 左摇杆下</code>呼出菜单。<br>
+支持的按键：</p>
 <ul>
-<li>普通按键 &#x3D; A, B, X, Y, L, R, ZL, ZR</li>
-<li>摇杆 &#x3D; LS, RS</li>
-<li>加和减 &#x3D; PLUS, MINUS,</li>
-<li>方向键 &#x3D; DUP, DDOWN, DLEFT, DRIGHT</li>
+<li>普通按键 = A, B, X, Y, L, R, ZL, ZR</li>
+<li>摇杆 = LS, RS</li>
+<li>加和减 = PLUS, MINUS,</li>
+<li>方向键 = DUP, DDOWN, DLEFT, DRIGHT</li>
 </ul>
-<p><br>如果想修改菜单的顺序，可以插件名字前面加个数字，比如：</p>
+<p><br>
+如果想修改菜单的顺序，可以插件名字前面加个数字，比如：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0_EdiZon</span><br><span class="line">1_emuiibo</span><br><span class="line">2_QuickNTP</span><br></pre></td></tr></table></figure>
-
-<h2 id="虚拟amiibo"><a href="#虚拟amiibo" class="headerlink" title="虚拟amiibo"></a>虚拟amiibo</h2><p><a target="_blank" rel="noopener" href="https://github.com/XorTroll/emuiibo">emuiibo</a> 是一个可以虚拟 amiibo 的插件，支持特斯拉。<br>主要讲讲如何生成 amiboo 数据：</p>
+<h2 id="虚拟amiibo"><a class="header-anchor" href="#虚拟amiibo">#</a>虚拟amiibo</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/XorTroll/emuiibo">emuiibo</a> 是一个可以虚拟 amiibo 的插件，支持特斯拉。<br>
+主要讲讲如何生成 amiboo 数据：</p>
 <ol>
 <li>安装 <a target="_blank" rel="noopener" href="https://github.com/XorTroll/emuiibo">emuiibo</a> 插件。</li>
 <li>安装 <a target="_blank" rel="noopener" href="https://github.com/Slluxx/AmiiboGenerator">AmiiboGenerator</a>。</li>
@@ -190,68 +212,82 @@
 <li>可选图像下载。按下<code>B</code>，再按<code>ZR</code>启用图像下载。网络不好的最好设置代理服务器。</li>
 <li>按下<code>ZL</code>键选中所有的数据，再按<code>X</code>键开始生成数据，生成完毕后打开 emuiibo 就可以模拟 amiibo 了。</li>
 </ol>
-<p><br>amiboo 数据库地址：<a target="_blank" rel="noopener" href="https://www.amiiboapi.com/api/amiibo/">https://www.amiiboapi.com/api/amiibo/</a><br>懒得折腾的话就直接下载网友生成好的数据：<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv25544001/">https://www.bilibili.com/read/cv25544001/</a></p>
-<h2 id="金手指"><a href="#金手指" class="headerlink" title="金手指"></a>金手指</h2><p><a target="_blank" rel="noopener" href="https://github.com/tomvita/EdiZon-SE">EdiZon-SE</a> 是金手指插件。<br>作弊码可以通过 <a target="_blank" rel="noopener" href="https://github.com/HamletDuFromage/aio-switch-updater">aio-switch-updater</a> 程序在线下载，不过都是英文的。<br>推荐还是按需下载，玩什么游戏就去网上找，解压到 <code>\atmosphere\contents\</code> 目录下。<br><br>特斯拉版本插件用这个：<a target="_blank" rel="noopener" href="https://github.com/proferabg/EdiZon-Overlay">https://github.com/proferabg/EdiZon-Overlay</a></p>
-<h2 id="常用插件和程序"><a href="#常用插件和程序" class="headerlink" title="常用插件和程序"></a>常用插件和程序</h2><table>
+<p><br>
+amiboo 数据库地址：<a target="_blank" rel="noopener" href="https://www.amiiboapi.com/api/amiibo/">https://www.amiiboapi.com/api/amiibo/</a><br>
+懒得折腾的话就直接下载网友生成好的数据：<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv25544001/">https://www.bilibili.com/read/cv25544001/</a></p>
+<h2 id="金手指"><a class="header-anchor" href="#金手指">#</a>金手指</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/tomvita/EdiZon-SE">EdiZon-SE</a> 是金手指插件。<br>
+作弊码可以通过 <a target="_blank" rel="noopener" href="https://github.com/HamletDuFromage/aio-switch-updater">aio-switch-updater</a> 程序在线下载，不过都是英文的。<br>
+推荐还是按需下载，玩什么游戏就去网上找，解压到 <code>\atmosphere\contents\</code> 目录下。<br>
+<br>
+特斯拉版本插件用这个：<a target="_blank" rel="noopener" href="https://github.com/proferabg/EdiZon-Overlay">https://github.com/proferabg/EdiZon-Overlay</a></p>
+<h2 id="常用插件和程序"><a class="header-anchor" href="#常用插件和程序">#</a>常用插件和程序</h2>
+<table>
 <thead>
 <tr>
 <th>应用名称</th>
-<th align="center">.nro</th>
-<th align="center">.ovl</th>
+<th style="text-align:center">.nro</th>
+<th style="text-align:center">.ovl</th>
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>daybreak</td>
-<td align="center">✔️</td>
-<td align="center">❌</td>
+<td style="text-align:center">✔️</td>
+<td style="text-align:center">❌</td>
 <td>系统固件升级程序。已经包含在大气层系统中</td>
 </tr>
 <tr>
 <td><a target="_blank" rel="noopener" href="https://github.com/rashevskyv/dbi">DBI</a></td>
-<td align="center">✔️</td>
-<td align="center">❌</td>
+<td style="text-align:center">✔️</td>
+<td style="text-align:center">❌</td>
 <td>系统必备！安装游戏、传输文件等功能</td>
 </tr>
 <tr>
 <td><a target="_blank" rel="noopener" href="https://github.com/BernardoGiordano/Checkpoint">Checkpoint</a></td>
-<td align="center">✔️</td>
-<td align="center">❌</td>
+<td style="text-align:center">✔️</td>
+<td style="text-align:center">❌</td>
 <td>存档管理工具。支持备份、还原等</td>
 </tr>
 <tr>
 <td><a target="_blank" rel="noopener" href="https://github.com/HamletDuFromage/aio-switch-updater">aio-switch-updater</a></td>
-<td align="center">✔️</td>
-<td align="center">❌</td>
+<td style="text-align:center">✔️</td>
+<td style="text-align:center">❌</td>
 <td>在线更新系统、金手指作弊码等功能</td>
 </tr>
 <tr>
 <td><a target="_blank" rel="noopener" href="https://github.com/tomvita/EdiZon-SE">EdiZon-SE</a></td>
-<td align="center">✔️</td>
-<td align="center">❌</td>
+<td style="text-align:center">✔️</td>
+<td style="text-align:center">❌</td>
 <td>金手指</td>
 </tr>
 <tr>
 <td><a target="_blank" rel="noopener" href="https://github.com/proferabg/EdiZon-Overlay">EdiZon-Overlay</a></td>
-<td align="center">❌</td>
-<td align="center">✔️</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">✔️</td>
 <td>特斯拉版金手指</td>
 </tr>
 <tr>
 <td><a target="_blank" rel="noopener" href="https://github.com/XorTroll/emuiibo">emuiibo</a></td>
-<td align="center">❌</td>
-<td align="center">✔️</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">✔️</td>
 <td>虚拟amiibo</td>
 </tr>
 <tr>
 <td><a target="_blank" rel="noopener" href="https://github.com/WerWolv/ovl-sysmodules">ovl-sysmodules</a></td>
-<td align="center">❌</td>
-<td align="center">✔️</td>
+<td style="text-align:center">❌</td>
+<td style="text-align:center">✔️</td>
 <td>系统模块管理</td>
 </tr>
-</tbody></table>
-<h2 id="Switch-固件下载地址"><a href="#Switch-固件下载地址" class="headerlink" title="Switch 固件下载地址"></a>Switch 固件下载地址</h2><p><a target="_blank" rel="noopener" href="https://darthsternie.net/switch-firmwares/">https://darthsternie.net/switch-firmwares/</a><br><a target="_blank" rel="noopener" href="https://github.com/THZoria/NX_Firmware">https://github.com/THZoria/NX_Firmware</a></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://gbatemp.net/threads/tesla-the-nintendo-switch-overlay-menu.557362/">Tesla - The Nintendo Switch Overlay Menu</a><br><a target="_blank" rel="noopener" href="http://www.265xh.com/nszhinan/4455.html">大气层特斯拉菜单插件排序调整方法</a></p>
+</tbody>
+</table>
+<h2 id="Switch-固件下载地址"><a class="header-anchor" href="#Switch-固件下载地址">#</a>Switch 固件下载地址</h2>
+<p><a target="_blank" rel="noopener" href="https://darthsternie.net/switch-firmwares/">https://darthsternie.net/switch-firmwares/</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/THZoria/NX_Firmware">https://github.com/THZoria/NX_Firmware</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://gbatemp.net/threads/tesla-the-nintendo-switch-overlay-menu.557362/">Tesla - The Nintendo Switch Overlay Menu</a><br>
+<a target="_blank" rel="noopener" href="http://www.265xh.com/nszhinan/4455.html">大气层特斯拉菜单插件排序调整方法</a></p>
 
       </div>
       
@@ -263,24 +299,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Switch/" title="Switch">
-                        #Switch
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -322,13 +340,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -548,43 +569,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Switch%20%E5%A4%A7%E6%B0%94%E5%B1%82%E7%B3%BB%E7%BB%9F%E4%BB%8B%E7%BB%8D + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F10%2F21%2Fswitch-atmosphere%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/10/21/switch-atmosphere/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

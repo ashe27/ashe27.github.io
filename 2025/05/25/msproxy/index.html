@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,57 +166,69 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>最近了解到了一个微软开源的 C++ 库<code>Proxy</code>，并称其为下一代多态库，旨在解决 C++ 传统虚函数和继承带来的问题。<br>GitHub：<a target="_blank" rel="noopener" href="https://github.com/microsoft/proxy">https://github.com/microsoft/proxy</a></p>
-<p><br>简单点说，这个库实现了类似 go 语言中的 interface。直接看一个例子就懂了，传统C++风格的多态：</p>
+        <h2 id="介绍"><a class="header-anchor" href="#介绍">#</a>介绍</h2>
+<p>最近了解到了一个微软开源的 C++ 库<code>Proxy</code>，并称其为下一代多态库，旨在解决 C++ 传统虚函数和继承带来的问题。<br>
+GitHub：<a target="_blank" rel="noopener" href="https://github.com/microsoft/proxy">https://github.com/microsoft/proxy</a></p>
+<p><br>
+简单点说，这个库实现了类似 go 语言中的 interface。直接看一个例子就懂了，传统C++风格的多态：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">animal</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> std::string <span class="title">name</span><span class="params">()</span> <span class="type">const</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">dog</span> : <span class="keyword">public</span> animal</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">std::string <span class="title">name</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">override</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;dog&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">cat</span> : <span class="keyword">public</span> animal</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">std::string <span class="title">name</span><span class="params">()</span> <span class="type">const</span> <span class="keyword">override</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;cat&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_name</span><span class="params">(animal&amp; a)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout &lt;&lt; a.<span class="built_in">name</span>() &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    dog d;</span><br><span class="line">    <span class="built_in">print_name</span>(d);</span><br><span class="line"></span><br><span class="line">    cat c;</span><br><span class="line">    <span class="built_in">print_name</span>(c);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>用了<code>Proxy</code>后的样子：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;proxy.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">dog</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">std::string <span class="title">name</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;dog&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">cat</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">std::string <span class="title">name</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;cat&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义成员方法</span></span><br><span class="line"><span class="built_in">PRO_DEF_MEM_DISPATCH</span>(MemName, name);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 理解为接口即可</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">AnimalFacade</span> : pro::facade_builder</span><br><span class="line">    ::add_convention&lt;MemName, std::<span class="built_in">string</span>() <span class="type">const</span>&gt;</span><br><span class="line">    ::build</span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_name</span><span class="params">(<span class="type">const</span> pro::proxy&lt;AnimalFacade&gt;&amp; a)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout &lt;&lt; a-&gt;<span class="built_in">name</span>() &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> d = pro::<span class="built_in">make_proxy</span>&lt;AnimalFacade, dog&gt;();</span><br><span class="line">    <span class="built_in">print_name</span>(d);</span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="keyword">auto</span> c = pro::<span class="built_in">make_proxy</span>&lt;AnimalFacade, cat&gt;();</span><br><span class="line">    <span class="built_in">print_name</span>(c);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>区别很明显：<code>dog</code>和<code>cat</code>没有祖先类，也没有虚函数。只需要满足<code>Facade</code>定义即可，成功干掉了虚函数。</p>
-<h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2><p>空接口</p>
+<h2 id="构造方法"><a class="header-anchor" href="#构造方法">#</a>构造方法</h2>
+<p>空接口</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pro::proxy&lt;AnimalFacade&gt; empty_facade;</span><br><span class="line"><span class="built_in">assert</span>(empty_facade == <span class="literal">nullptr</span>);</span><br></pre></td></tr></table></figure>
 <p>构造新实例</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pro::proxy&lt;AnimalFacade&gt; p1 = pro::<span class="built_in">make_proxy</span>&lt;AnimalFacade, dog&gt;();</span><br><span class="line">pro::proxy&lt;AnimalFacade&gt; p2 = pro::<span class="built_in">make_proxy_inplace</span>&lt;AnimalFacade, dog&gt;();</span><br><span class="line">pro::proxy&lt;AnimalFacade&gt; p3 = pro::<span class="built_in">make_proxy_shared</span>&lt;AnimalFacade, dog&gt;();</span><br></pre></td></tr></table></figure>
 <p>这三种构造方式的主要区别在于<strong>内存分配方式</strong>和<strong>生命周期管理</strong>：</p>
-<h3 id="pro-make-proxy"><a href="#pro-make-proxy" class="headerlink" title="pro::make_proxy"></a>pro::make_proxy</h3><ul>
+<h3 id="pro-make-proxy"><a class="header-anchor" href="#pro-make-proxy">#</a>pro::make_proxy</h3>
+<ul>
 <li><strong>堆分配</strong>：在堆上创建 <code>dog</code> 对象</li>
 <li><strong>独占所有权</strong>：类似 <code>std::unique_ptr</code></li>
 <li><strong>移动语义</strong>：只能移动，不能拷贝（除非指定 <code>support_copy</code>）</li>
 </ul>
-<h3 id="pro-make-proxy-inplace"><a href="#pro-make-proxy-inplace" class="headerlink" title="pro::make_proxy_inplace"></a>pro::make_proxy_inplace</h3><ul>
+<h3 id="pro-make-proxy-inplace"><a class="header-anchor" href="#pro-make-proxy-inplace">#</a>pro::make_proxy_inplace</h3>
+<ul>
 <li><strong>栈内分配</strong>：在 <code>proxy</code> 对象内部直接存储 <code>dog</code></li>
 <li><strong>无堆分配</strong>：性能更好，避免动态内存分配</li>
 <li><strong>大小限制</strong>：对象必须足够小以适应 <code>proxy</code> 的内部存储</li>
 </ul>
-<h3 id="pro-make-proxy-shared"><a href="#pro-make-proxy-shared" class="headerlink" title="pro::make_proxy_shared"></a>pro::make_proxy_shared</h3><ul>
+<h3 id="pro-make-proxy-shared"><a class="header-anchor" href="#pro-make-proxy-shared">#</a>pro::make_proxy_shared</h3>
+<ul>
 <li><strong>共享所有权</strong>：类似 <code>std::shared_ptr</code></li>
 <li><strong>引用计数</strong>：多个 <code>proxy</code> 可以共享同一个对象</li>
 <li><strong>自动销毁</strong>：当最后一个引用被销毁时，对象才被销毁</li>
 </ul>
-<h3 id="简短示例说明"><a href="#简短示例说明" class="headerlink" title="简短示例说明"></a>简短示例说明</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">demonstrate_differences</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1. 堆分配，独占所有权</span></span><br><span class="line">    <span class="keyword">auto</span> p1 = pro::<span class="built_in">make_proxy</span>&lt;AnimalFacade, dog&gt;();</span><br><span class="line">    <span class="comment">// auto p1_copy = p1;  // 错误：无法拷贝（除非支持 support_copy）</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 栈内分配，无堆开销</span></span><br><span class="line">    <span class="keyword">auto</span> p2 = pro::<span class="built_in">make_proxy_inplace</span>&lt;AnimalFacade, dog&gt;();</span><br><span class="line">    <span class="comment">// 性能最佳，但对象大小有限制</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3. 共享所有权，可以安全拷贝</span></span><br><span class="line">    <span class="keyword">auto</span> p3 = pro::<span class="built_in">make_proxy_shared</span>&lt;AnimalFacade, dog&gt;();</span><br><span class="line">    <span class="keyword">auto</span> p3_copy = p3;  <span class="comment">// 正确：共享同一个对象</span></span><br><span class="line">    </span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;p3 和 p3_copy 指向同一个对象&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<h3 id="简短示例说明"><a class="header-anchor" href="#简短示例说明">#</a>简短示例说明</h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">demonstrate_differences</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1. 堆分配，独占所有权</span></span><br><span class="line">    <span class="keyword">auto</span> p1 = pro::<span class="built_in">make_proxy</span>&lt;AnimalFacade, dog&gt;();</span><br><span class="line">    <span class="comment">// auto p1_copy = p1;  // 错误：无法拷贝（除非支持 support_copy）</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 2. 栈内分配，无堆开销</span></span><br><span class="line">    <span class="keyword">auto</span> p2 = pro::<span class="built_in">make_proxy_inplace</span>&lt;AnimalFacade, dog&gt;();</span><br><span class="line">    <span class="comment">// 性能最佳，但对象大小有限制</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 3. 共享所有权，可以安全拷贝</span></span><br><span class="line">    <span class="keyword">auto</span> p3 = pro::<span class="built_in">make_proxy_shared</span>&lt;AnimalFacade, dog&gt;();</span><br><span class="line">    <span class="keyword">auto</span> p3_copy = p3;  <span class="comment">// 正确：共享同一个对象</span></span><br><span class="line">    </span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;p3 和 p3_copy 指向同一个对象&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>选择建议</strong>：</p>
 <ul>
 <li><strong>性能优先</strong>且对象较小 → <code>make_proxy_inplace</code></li>
-<li><strong>需要共享</strong> → <code>make_proxy_shared</code>  </li>
+<li><strong>需要共享</strong> → <code>make_proxy_shared</code></li>
 <li><strong>一般情况</strong> → <code>make_proxy</code></li>
 </ul>
-<h2 id="拷贝-support-copy"><a href="#拷贝-support-copy" class="headerlink" title="拷贝 support_copy"></a>拷贝 support_copy</h2><p>默认情况下是禁止 proxy 之间拷贝的</p>
+<h2 id="拷贝-support-copy"><a class="header-anchor" href="#拷贝-support-copy">#</a>拷贝 support_copy</h2>
+<p>默认情况下是禁止 proxy 之间拷贝的</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> p1 = pro::<span class="built_in">make_proxy</span>&lt;AnimalFacade, cat&gt;();</span><br><span class="line"><span class="keyword">auto</span> p2 = pro::<span class="built_in">make_proxy</span>&lt;AnimalFacade, dog&gt;();</span><br><span class="line">p1 = p2; <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
 <p>除非在facade定义时显示设置允许拷贝</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">AnimalFacade</span> : pro::facade_builder</span><br><span class="line">    ::add_convention&lt;MemName, std::<span class="built_in">string</span>() <span class="type">const</span>&gt;</span><br><span class="line">    ::add_convention&lt;MemAge, <span class="built_in">int</span>() <span class="type">const</span>&gt;</span><br><span class="line">    ::add_convention&lt;MemSetAge, <span class="built_in">void</span>(<span class="type">int</span>)&gt;</span><br><span class="line">    ::support_copy&lt;pro::constraint_level::nontrivial&gt;  <span class="comment">// 非平凡拷贝</span></span><br><span class="line">    ::build</span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p><code>support_copy</code> 支持四个不同的 <code>constraint_level</code> 选项，它们定义了对象拷贝能力的不同约束级别：</p>
-<h3 id="1-constraint-level-none"><a href="#1-constraint-level-none" class="headerlink" title="1. constraint_level::none"></a>1. <code>constraint_level::none</code></h3><ul>
+<h3 id="1-constraint-level-none"><a class="header-anchor" href="#1-constraint-level-none">#</a>1. <code>constraint_level::none</code></h3>
+<ul>
 <li><strong>含义</strong>：不支持拷贝</li>
-<li><strong>特点</strong>：<ul>
+<li><strong>特点</strong>：
+<ul>
 <li>禁止拷贝操作</li>
 <li>这是默认级别（如果不指定 <code>support_copy</code>）</li>
 <li>适用于只移动（move-only）的类型</li>
 </ul>
 </li>
 </ul>
-<h3 id="2-constraint-level-nontrivial"><a href="#2-constraint-level-nontrivial" class="headerlink" title="2. constraint_level::nontrivial"></a>2. <code>constraint_level::nontrivial</code></h3><ul>
+<h3 id="2-constraint-level-nontrivial"><a class="header-anchor" href="#2-constraint-level-nontrivial">#</a>2. <code>constraint_level::nontrivial</code></h3>
+<ul>
 <li><strong>含义</strong>：支持非平凡拷贝</li>
-<li><strong>特点</strong>：<ul>
+<li><strong>特点</strong>：
+<ul>
 <li>要求类型具有拷贝构造函数（<code>std::is_copy_constructible_v&lt;T&gt;</code>）</li>
 <li>允许有用户定义的拷贝构造函数</li>
 <li>拷贝操作可能抛出异常</li>
@@ -220,18 +236,22 @@
 </ul>
 </li>
 </ul>
-<h3 id="3-constraint-level-nothrow"><a href="#3-constraint-level-nothrow" class="headerlink" title="3. constraint_level::nothrow"></a>3. <code>constraint_level::nothrow</code></h3><ul>
+<h3 id="3-constraint-level-nothrow"><a class="header-anchor" href="#3-constraint-level-nothrow">#</a>3. <code>constraint_level::nothrow</code></h3>
+<ul>
 <li><strong>含义</strong>：支持无异常拷贝</li>
-<li><strong>特点</strong>：<ul>
+<li><strong>特点</strong>：
+<ul>
 <li>要求类型具有无异常拷贝构造函数（<code>std::is_nothrow_copy_constructible_v&lt;T&gt;</code>）</li>
 <li>拷贝操作保证不抛出异常</li>
 <li>提供更强的异常安全保证</li>
 </ul>
 </li>
 </ul>
-<h3 id="4-constraint-level-trivial"><a href="#4-constraint-level-trivial" class="headerlink" title="4. constraint_level::trivial"></a>4. <code>constraint_level::trivial</code></h3><ul>
+<h3 id="4-constraint-level-trivial"><a class="header-anchor" href="#4-constraint-level-trivial">#</a>4. <code>constraint_level::trivial</code></h3>
+<ul>
 <li><strong>含义</strong>：支持平凡拷贝</li>
-<li><strong>特点</strong>：<ul>
+<li><strong>特点</strong>：
+<ul>
 <li>要求类型具有平凡拷贝构造函数和平凡析构函数</li>
 <li><code>std::is_trivially_copy_constructible_v&lt;T&gt;</code> 和 <code>std::is_trivially_destructible_v&lt;T&gt;</code></li>
 <li>最高效的拷贝方式，通常可以使用 <code>memcpy</code></li>
@@ -239,19 +259,21 @@
 </ul>
 </li>
 </ul>
-<h2 id="组合接口"><a href="#组合接口" class="headerlink" title="组合接口"></a>组合接口</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">ReadFacade</span> : pro::facade_builder</span><br><span class="line">    ::add_convention&lt;MemRead, <span class="built_in">void</span>()&gt;</span><br><span class="line">    ::build</span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">WriteFacade</span> : pro::facade_builder</span><br><span class="line">    ::add_convention&lt;MemWrite, <span class="built_in">void</span>()&gt;</span><br><span class="line">    ::build</span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">FileFacade</span> : pro::facade_builder</span><br><span class="line">    ::add_facade&lt;ReadFacade&gt;</span><br><span class="line">    ::add_facade&lt;WriteFacade&gt;</span><br><span class="line">    ::build</span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="组合接口"><a class="header-anchor" href="#组合接口">#</a>组合接口</h2>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">ReadFacade</span> : pro::facade_builder</span><br><span class="line">    ::add_convention&lt;MemRead, <span class="built_in">void</span>()&gt;</span><br><span class="line">    ::build</span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">WriteFacade</span> : pro::facade_builder</span><br><span class="line">    ::add_convention&lt;MemWrite, <span class="built_in">void</span>()&gt;</span><br><span class="line">    ::build</span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">FileFacade</span> : pro::facade_builder</span><br><span class="line">    ::add_facade&lt;ReadFacade&gt;</span><br><span class="line">    ::add_facade&lt;WriteFacade&gt;</span><br><span class="line">    ::build</span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>默认情况下，接口无法向上转换</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> p1 = pro::<span class="built_in">make_proxy</span>&lt;FileFacade, dog&gt;();</span><br><span class="line">pro::proxy&lt;ReadFacade&gt; p2 = p1; <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
 <p>需要显示指定<code>add_facade</code>第2个参数为<code>true</code></p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">FileFacade</span> : pro::facade_builder</span><br><span class="line">    ::add_facade&lt;ReadFacade, <span class="literal">true</span>&gt;</span><br><span class="line">    ::add_facade&lt;WriteFacade, <span class="literal">true</span>&gt;</span><br><span class="line">    ::build</span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>要注意，转换时的拷贝行为</p>
-<h3 id="1-make-proxy-会发生拷贝"><a href="#1-make-proxy-会发生拷贝" class="headerlink" title="1. make_proxy - 会发生拷贝"></a>1. <strong><code>make_proxy</code> - 会发生拷贝</strong></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> p1 = pro::<span class="built_in">make_proxy</span>&lt;FileFacade, dog&gt;();  <span class="comment">// 堆分配，独占所有权</span></span><br><span class="line">pro::proxy&lt;ReadFacade&gt; p2 = p1;  <span class="comment">// ❌ 发生拷贝！创建新的 dog 对象</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-make-proxy-inplace-会发生拷贝"><a href="#2-make-proxy-inplace-会发生拷贝" class="headerlink" title="2. make_proxy_inplace - 会发生拷贝"></a>2. <strong><code>make_proxy_inplace</code> - 会发生拷贝</strong></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> p1 = pro::<span class="built_in">make_proxy_inplace</span>&lt;FileFacade, dog&gt;();  <span class="comment">// 栈内分配</span></span><br><span class="line">pro::proxy&lt;ReadFacade&gt; p2 = p1;  <span class="comment">// ❌ 发生拷贝！创建新的 dog 对象</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="3-make-proxy-shared-不会拷贝"><a href="#3-make-proxy-shared-不会拷贝" class="headerlink" title="3. make_proxy_shared - 不会拷贝"></a>3. <strong><code>make_proxy_shared</code> - 不会拷贝</strong></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> p1 = pro::<span class="built_in">make_proxy_shared</span>&lt;FileFacade, dog&gt;();  <span class="comment">// 共享所有权</span></span><br><span class="line">pro::proxy&lt;ReadFacade&gt; p2 = p1;  <span class="comment">// ✅ 不拷贝！共享同一个 dog 对象</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<h3 id="1-make-proxy-会发生拷贝"><a class="header-anchor" href="#1-make-proxy-会发生拷贝">#</a>1. <strong><code>make_proxy</code> - 会发生拷贝</strong></h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> p1 = pro::<span class="built_in">make_proxy</span>&lt;FileFacade, dog&gt;();  <span class="comment">// 堆分配，独占所有权</span></span><br><span class="line">pro::proxy&lt;ReadFacade&gt; p2 = p1;  <span class="comment">// ❌ 发生拷贝！创建新的 dog 对象</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-make-proxy-inplace-会发生拷贝"><a class="header-anchor" href="#2-make-proxy-inplace-会发生拷贝">#</a>2. <strong><code>make_proxy_inplace</code> - 会发生拷贝</strong></h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> p1 = pro::<span class="built_in">make_proxy_inplace</span>&lt;FileFacade, dog&gt;();  <span class="comment">// 栈内分配</span></span><br><span class="line">pro::proxy&lt;ReadFacade&gt; p2 = p1;  <span class="comment">// ❌ 发生拷贝！创建新的 dog 对象</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-make-proxy-shared-不会拷贝"><a class="header-anchor" href="#3-make-proxy-shared-不会拷贝">#</a>3. <strong><code>make_proxy_shared</code> - 不会拷贝</strong></h3>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> p1 = pro::<span class="built_in">make_proxy_shared</span>&lt;FileFacade, dog&gt;();  <span class="comment">// 共享所有权</span></span><br><span class="line">pro::proxy&lt;ReadFacade&gt; p2 = p1;  <span class="comment">// ✅ 不拷贝！共享同一个 dog 对象</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<ul>
 <li><code>make_proxy</code>：堆上分配，类似<code>std::unique_ptr</code>，独占所有权，默认只许移动。但可以设置<code>support_copy</code>允许拷贝。</li>
 <li><code>make_proxy_inplace</code>：栈上分配，类似<code>std::unique_ptr</code>，独占所有权，默认只许移动。可以显示设置<code>support_copy</code>允许拷贝。</li>
 <li><code>make_proxy_shared</code>：堆上分配，类似<code>std::shared_ptr</code>，共享所有权，不发生拷贝，只增加引用计数。</li>
@@ -267,24 +289,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/c-plus-plus/" title="C++">
-                        #C++
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -326,13 +330,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -552,43 +559,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B%20Microsoft%20Proxy%20%E5%BA%93 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F05%2F25%2Fmsproxy%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/05/25/msproxy/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

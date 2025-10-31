@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,14 +166,26 @@
           
       </div>
       <div class="markdown-body">
-        <p>公共控件 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview">ListView</a> 内置了编辑框功能，但是有个致命的缺陷：只能编辑第一列，第二列后都无法编辑。<br>为了能编辑任意单元格，所以我们需要扩展它。</p>
-<h2 id="编辑框基本用法"><a href="#编辑框基本用法" class="headerlink" title="编辑框基本用法"></a>编辑框基本用法</h2><p>控件窗口添加 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/list-view-window-styles#lvs_editlabels">LVS_EDITLABELS</a> 样式</p>
+        <p>公共控件 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview">ListView</a> 内置了编辑框功能，但是有个致命的缺陷：只能编辑第一列，第二列后都无法编辑。<br>
+为了能编辑任意单元格，所以我们需要扩展它。</p>
+<h2 id="编辑框基本用法"><a class="header-anchor" href="#编辑框基本用法">#</a>编辑框基本用法</h2>
+<p>控件窗口添加 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/list-view-window-styles#lvs_editlabels">LVS_EDITLABELS</a> 样式</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">DWORD dwStyle = _list.<span class="built_in">GetStyle</span>();</span><br><span class="line">dwStyle |= LVS_EDITLABELS;</span><br><span class="line">_list.<span class="built_in">ModifyStyle</span>(<span class="number">0</span>, LVS_EDITLABELS);</span><br></pre></td></tr></table></figure>
-<p>然后就可以调用其成员方法 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/mfc/reference/clistctrl-class#editlabel">EditLabel</a> 了。<br>相应的，取消编辑框使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/mfc/reference/clistctrl-class#canceleditlabel">CancelEditLabel</a> 方法。</p>
-<h2 id="ListView-内部处理过程"><a href="#ListView-内部处理过程" class="headerlink" title="ListView 内部处理过程"></a>ListView 内部处理过程</h2><p>当用户调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/mfc/reference/clistctrl-class#editlabel">EditLabel</a> 方法时，本质就是向控件发送一个 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/lvm-editlabel">LVM_EDITLABEL</a> 消息，接着内部就创建一个 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/about-edit-controls">Edit</a> 控件。（向控件发送 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/lvm-geteditcontrol">LVM_GETEDITCONTROL</a> 消息可以获得控件句柄）</p>
-<p>在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/mfc/reference/clistctrl-class?editlabel">EditLabel</a> 执行过程中，会向其自身发送一个 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/lvn-beginlabeledit">LVN_BEGINLABELEDIT</a> 消息，预示着编辑框即将显示。<br>当编辑框失去焦点或编辑完成时，ListView 会收到 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/lvn-endlabeledit">LVN_ENDLABELEDIT</a> 消息，表示编辑工作结束。</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>网上有两种解决方案，一个是子类化<code>Edit</code>控件，就像这两篇文章中介绍的方法<br><a target="_blank" rel="noopener" href="https://www.codeguru.com/cplusplus/editing-listview-subitems-using-lvm_geteditcontrol/">Editing listview subitems using LVM_GETEDITCONTROL</a><br><a target="_blank" rel="noopener" href="https://www.codeguru.com/cplusplus/simplified-subitem-editing/">Simplified Subitem Editing</a><br>测试发现有些弊端，比如在 WinCE 系统上没有 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging">ON_WM_WINDOWPOSCHANGING</a> 消息，得在其他地方改变 Edit 控件的位置。还有一个绘制问题，ListView 内部实现会使第一列内容区无效（表现为空白，可能是为了提高绘图效率），待编辑框结束后才会显示。</p>
-<p>第二种方法就是自己创建一个 Edit 控件，这样就没有第一种方法的一些问题，实现更简单。<br>网上看到的方案都是扩展 ListView 控件，内部在单击或双击时显示 Edit 控件，完全不理会 MFC 提供的 EditLabel 等方法。<br>我稍微变化一下，自己处理几个相关的消息，这样的好处是兼容了 MFC 的接口，对外是透明的。<br>根据前面提到的知识点，源头是从 LVN_BEGINLABELEDIT 消息开始的，所以我们需要”劫持”这个消息</p>
+<p>然后就可以调用其成员方法 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/mfc/reference/clistctrl-class?#editlabel">EditLabel</a> 了。<br>
+相应的，取消编辑框使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/mfc/reference/clistctrl-class?#canceleditlabel">CancelEditLabel</a> 方法。</p>
+<h2 id="ListView-内部处理过程"><a class="header-anchor" href="#ListView-内部处理过程">#</a>ListView 内部处理过程</h2>
+<p>当用户调用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/mfc/reference/clistctrl-class?#editlabel">EditLabel</a> 方法时，本质就是向控件发送一个 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/lvm-editlabel">LVM_EDITLABEL</a> 消息，接着内部就创建一个 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/about-edit-controls">Edit</a> 控件。（向控件发送 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/lvm-geteditcontrol">LVM_GETEDITCONTROL</a> 消息可以获得控件句柄）</p>
+<p>在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/mfc/reference/clistctrl-class?editlabel">EditLabel</a> 执行过程中，会向其自身发送一个 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/lvn-beginlabeledit">LVN_BEGINLABELEDIT</a> 消息，预示着编辑框即将显示。<br>
+当编辑框失去焦点或编辑完成时，ListView 会收到 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/controls/lvn-endlabeledit">LVN_ENDLABELEDIT</a> 消息，表示编辑工作结束。</p>
+<h2 id="解决方案"><a class="header-anchor" href="#解决方案">#</a>解决方案</h2>
+<p>网上有两种解决方案，一个是子类化<code>Edit</code>控件，就像这两篇文章中介绍的方法<br>
+<a target="_blank" rel="noopener" href="https://www.codeguru.com/cplusplus/editing-listview-subitems-using-lvm_geteditcontrol/">Editing listview subitems using LVM_GETEDITCONTROL</a><br>
+<a target="_blank" rel="noopener" href="https://www.codeguru.com/cplusplus/simplified-subitem-editing/">Simplified Subitem Editing</a><br>
+测试发现有些弊端，比如在 WinCE 系统上没有 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging">ON_WM_WINDOWPOSCHANGING</a> 消息，得在其他地方改变 Edit 控件的位置。还有一个绘制问题，ListView 内部实现会使第一列内容区无效（表现为空白，可能是为了提高绘图效率），待编辑框结束后才会显示。</p>
+<p>第二种方法就是自己创建一个 Edit 控件，这样就没有第一种方法的一些问题，实现更简单。<br>
+网上看到的方案都是扩展 ListView 控件，内部在单击或双击时显示 Edit 控件，完全不理会 MFC 提供的 EditLabel 等方法。<br>
+我稍微变化一下，自己处理几个相关的消息，这样的好处是兼容了 MFC 的接口，对外是透明的。<br>
+根据前面提到的知识点，源头是从 LVN_BEGINLABELEDIT 消息开始的，所以我们需要&quot;劫持&quot;这个消息</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">BEGIN_MESSAGE_MAP</span>(CListCtrlEx, CListCtrl)</span><br><span class="line">    <span class="built_in">ON_NOTIFY_REFLECT_EX</span>(LVN_BEGINLABELEDIT, OnBeginLabelEdit)</span><br><span class="line"><span class="built_in">END_MESSAGE_MAP</span>()</span><br></pre></td></tr></table></figure>
 <p>这里要做的就是将 Edit 移动到合适的位置，并填充文本内容</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BOOL <span class="title">CListCtrlEx::OnBeginLabelEdit</span><span class="params">(LPNMHDR pNMHDR, LRESULT* pResult)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// NMLVDISPINFO* pItem = reinterpret_cast&lt;NMLVDISPINFO*&gt;(pNMHDR);</span></span><br><span class="line"></span><br><span class="line">    _edit.<span class="built_in">SetWindowText</span>(<span class="built_in">GetItemText</span>(_nCurRow, _nCurCol));</span><br><span class="line">    CRect rc;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">GetSubItemRect</span>(_nCurRow, _nCurCol, LVIR_LABEL, rc)) &#123;</span><br><span class="line">        _edit.<span class="built_in">MoveWindow</span>(rc);</span><br><span class="line">        _edit.<span class="built_in">ShowWindow</span>(SW_SHOW);</span><br><span class="line">        _edit.<span class="built_in">SetSel</span>(_edit.<span class="built_in">LineLength</span>());</span><br><span class="line">        _edit.<span class="built_in">SetFocus</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 关键的两句，表示&quot;已处理&quot;该消息，这样就屏蔽了 ListView 控件的默认行为</span></span><br><span class="line">    *pResult = TRUE;</span><br><span class="line">    <span class="keyword">return</span> TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -189,24 +205,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/MFC/" title="MFC">
-                        #MFC
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -248,13 +246,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -474,43 +475,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%89%A9%E5%B1%95CListCtrl%E7%BC%96%E8%BE%91%E6%A1%86%E5%8A%9F%E8%83%BD + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F08%2F26%2F16627340%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/08/26/16627340/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

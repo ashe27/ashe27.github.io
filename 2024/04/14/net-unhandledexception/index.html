@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,16 +172,22 @@
           
       </div>
       <div class="markdown-body">
-        <p>在 .NET 中，如果主线程发生了一个异常而未被<code>try/catch</code>捕获的话则会弹出一个错误对话框，报告该异常的信息：<br><img src="/images/net-unhandledexception/01.webp"><br>用户可以点击<code>详细信息</code>按钮，将其中的内容提供给开发者，帮助开发者排查问题。同时允许用户继续运行程序。</p>
-<h2 id="未处理异常事件"><a href="#未处理异常事件" class="headerlink" title="未处理异常事件"></a>未处理异常事件</h2><p>在 .NET 中，有两个事件可以处理未处理异常：</p>
+        <p>在 .NET 中，如果主线程发生了一个异常而未被<code>try/catch</code>捕获的话则会弹出一个错误对话框，报告该异常的信息：<br>
+<img src="/images/net-unhandledexception/01.webp" alt=""><br>
+用户可以点击<code>详细信息</code>按钮，将其中的内容提供给开发者，帮助开发者排查问题。同时允许用户继续运行程序。</p>
+<h2 id="未处理异常事件"><a class="header-anchor" href="#未处理异常事件">#</a>未处理异常事件</h2>
+<p>在 .NET 中，有两个事件可以处理未处理异常：</p>
 <ol>
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.application.threadexception">Application.ThreadException</a>。仅适用于 WinForms 程序，只能处理主线程异常，且程序可以继续运行。</li>
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.appdomain.unhandledexception">AppDomain.UnhandledException</a>。</li>
 </ol>
-<p><br>两者的区别很明显，ThreadException 是 WinForms 程序特定的，只处理 UI 线程的异常，并且程序允许不退出。<br>而 UnhandledException 是真正意义上的未处理异常处理事件。</p>
+<p><br>
+两者的区别很明显，ThreadException 是 WinForms 程序特定的，只处理 UI 线程的异常，并且程序允许不退出。<br>
+而 UnhandledException 是真正意义上的未处理异常处理事件。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">STAThread</span>]</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        Application.ThreadException += ApplicationOnThreadException;</span><br><span class="line">        AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;</span><br><span class="line"></span><br><span class="line">        Application.EnableVisualStyles();</span><br><span class="line">        Application.SetCompatibleTextRenderingDefault(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">        Application.Run(<span class="keyword">new</span> Form1());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">CurrentDomainOnUnhandledException</span>(<span class="params"><span class="built_in">object</span> sender, UnhandledExceptionEventArgs e</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MessageBox.Show(<span class="string">&quot;UnhandledException&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ApplicationOnThreadException</span>(<span class="params"><span class="built_in">object</span> sender, ThreadExceptionEventArgs e</span>)</span></span><br><span class="line">    &#123;</span><br><span class="line">        MessageBox.Show(<span class="string">&quot;ThreadException&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="设置异常处理模式"><a href="#设置异常处理模式" class="headerlink" title="设置异常处理模式"></a>设置异常处理模式</h2><p>通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.application.setunhandledexceptionmode">Application.SetUnhandledExceptionMode</a> 方法指定异常处理模式。<br>参数是一个 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.unhandledexceptionmode">UnhandledExceptionMode</a> 类型。</p>
+<h2 id="设置异常处理模式"><a class="header-anchor" href="#设置异常处理模式">#</a>设置异常处理模式</h2>
+<p>通过 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.application.setunhandledexceptionmode">Application.SetUnhandledExceptionMode</a> 方法指定异常处理模式。<br>
+参数是一个 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.unhandledexceptionmode">UnhandledExceptionMode</a> 类型。</p>
 <table>
 <thead>
 <tr>
@@ -185,7 +195,8 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Automatic</td>
 <td>将所有异常都传送到 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.application.threadexception">ThreadException</a> 处理程序，除非应用程序的配置文件指定了其他位置。</td>
 </tr>
@@ -197,23 +208,33 @@
 <td>CatchException</td>
 <td>始终将异常传送到 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.windows.forms.application.threadexception">ThreadException</a> 处理程序。 忽略应用程序配置文件。</td>
 </tr>
-</tbody></table>
-<p><br>简单说，<strong>处理模式就是决定主线程异常要不要交给 UnhandledException 事件处理</strong>。</p>
-<h3 id="通过配置文件指定异常处理模式"><a href="#通过配置文件指定异常处理模式" class="headerlink" title="通过配置文件指定异常处理模式"></a>通过配置文件指定异常处理模式</h3><p>这些选项都提到了应用程序配置文件，用文件是这样配置的：</p>
+</tbody>
+</table>
+<p><br>
+简单说，<strong>处理模式就是决定主线程异常要不要交给 UnhandledException 事件处理</strong>。</p>
+<h3 id="通过配置文件指定异常处理模式"><a class="header-anchor" href="#通过配置文件指定异常处理模式">#</a>通过配置文件指定异常处理模式</h3>
+<p>这些选项都提到了应用程序配置文件，用文件是这样配置的：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span> ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">system.windows.forms</span> <span class="attr">jitDebugging</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>这个配置等同于在程序中使用：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);</span><br></pre></td></tr></table></figure>
-<p><strong>不过这个配置文件选项只有在没有指定 ThreadException 处理程序时有效</strong>。<br>看一个例子：</p>
+<p><strong>不过这个配置文件选项只有在没有指定 ThreadException 处理程序时有效</strong>。<br>
+看一个例子：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>()</span></span><br><span class="line">&#123; </span><br><span class="line">    Application.SetUnhandledExceptionMode(UnhandledExceptionMode.Automatic); <span class="comment">// Automatic 是默认值</span></span><br><span class="line">    AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;</span><br><span class="line"></span><br><span class="line">    Application.EnableVisualStyles();</span><br><span class="line">    Application.SetCompatibleTextRenderingDefault(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">    Application.Run(<span class="keyword">new</span> Form1());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">CurrentDomainOnUnhandledException</span>(<span class="params"><span class="built_in">object</span> sender, UnhandledExceptionEventArgs e</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    MessageBox.Show(<span class="string">&quot;UnhandledException&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>根据 Automatic 的作用，未处理异常应该在 ThreadException 中处理，但由于配置了<code>&lt;system.windows.forms jitDebugging=&quot;true&quot;/&gt;</code>，导致异常交给了 UnhandledException 来处理。<br>如果想忽略配置文件的设置，应该将模式改为<code>UnhandledExceptionMode.CatchException</code>。<br>对于这个文件配置，了解一下即可，几乎不会用到。</p>
-<h2 id="legacyUnhandledExceptionPolicy"><a href="#legacyUnhandledExceptionPolicy" class="headerlink" title="legacyUnhandledExceptionPolicy"></a>legacyUnhandledExceptionPolicy</h2><p><code>legacyUnhandledExceptionPolicy</code>配置可以防止工作线程未处理异常后强制退出。</p>
+<p>根据 Automatic 的作用，未处理异常应该在 ThreadException 中处理，但由于配置了<code>&lt;system.windows.forms jitDebugging=&quot;true&quot;/&gt;</code>，导致异常交给了 UnhandledException 来处理。<br>
+如果想忽略配置文件的设置，应该将模式改为<code>UnhandledExceptionMode.CatchException</code>。<br>
+对于这个文件配置，了解一下即可，几乎不会用到。</p>
+<h2 id="legacyUnhandledExceptionPolicy"><a class="header-anchor" href="#legacyUnhandledExceptionPolicy">#</a>legacyUnhandledExceptionPolicy</h2>
+<p><code>legacyUnhandledExceptionPolicy</code>配置可以防止工作线程未处理异常后强制退出。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span> ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">runtime</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">legacyUnhandledExceptionPolicy</span> <span class="attr">enabled</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">runtime</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<ul>
 <li>ThreadException 这个名字有点迷惑，实际它就是主线程异常处理事件。</li>
 <li>对于异常处理模式，Automatic 是默认值，不需要显示指定。CatchException 和 Automatic 作用相同，只是忽略配置文件，而配置文件基本不会用到，所以当我们要显示指定处理模式时，基本就是设置为 ThrowException。</li>
 </ul>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/2014562">Application.ThreadException 和 AppDomain.CurrentDomain.UnhandledException 之间有什么区别？</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/545760/">当 UnhandledExceptionMode 设置为 UnhandledExceptionMode.Automatic 时，哪个 .config 元素会影响异常处理？</a><br><a target="_blank" rel="noopener" href="https://blog.walterlv.com/post/prevent-app-crash-by-background-thread.html">配置 legacyUnhandledExceptionPolicy 防止后台线程抛出的异常让程序崩溃退出</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/2014562">Application.ThreadException 和 AppDomain.CurrentDomain.UnhandledException 之间有什么区别？</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/545760/">当 UnhandledExceptionMode 设置为 UnhandledExceptionMode.Automatic 时，哪个 .config 元素会影响异常处理？</a><br>
+<a target="_blank" rel="noopener" href="https://blog.walterlv.com/post/prevent-app-crash-by-background-thread.html">配置 legacyUnhandledExceptionPolicy 防止后台线程抛出的异常让程序崩溃退出</a></p>
 
       </div>
       
@@ -225,30 +246,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/WinForms/" title="WinForms">
-                        #WinForms
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -290,13 +287,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -516,43 +516,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + .NET%20%E4%B8%AD%E7%9A%84%E6%9C%AA%E5%A4%84%E7%90%86%E5%BC%82%E5%B8%B8 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F04%2F14%2Fnet-unhandledexception%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/04/14/net-unhandledexception/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

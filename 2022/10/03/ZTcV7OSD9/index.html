@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,27 +166,46 @@
           
       </div>
       <div class="markdown-body">
-        <p>模板是个好东西，可以直观地展现出文件结构，便于分析文件。<br>平时用的不多，但要写的时候又总忘记，所以在此记录一下。</p>
-<h2 id="模板文件"><a href="#模板文件" class="headerlink" title="模板文件"></a>模板文件</h2><p>模板文件扩展名为<code>.bt</code>，是一个文本文件，可以自己创建一个<code>.txt</code>文件修改为<code>.bt</code>，或者通过点击菜单<code>Templates &gt; New Template</code>来创建。<br>一个简单的例子</p>
+        <p>模板是个好东西，可以直观地展现出文件结构，便于分析文件。<br>
+平时用的不多，但要写的时候又总忘记，所以在此记录一下。</p>
+<h2 id="模板文件"><a class="header-anchor" href="#模板文件">#</a>模板文件</h2>
+<p>模板文件扩展名为<code>.bt</code>，是一个文本文件，可以自己创建一个<code>.txt</code>文件修改为<code>.bt</code>，或者通过点击菜单<code>Templates &gt; New Template</code>来创建。<br>
+一个简单的例子</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//------------------------------------------------</span><br><span class="line">//--- 010 Editor v12.0.1 Binary Template</span><br><span class="line">//</span><br><span class="line">//      File: </span><br><span class="line">//   Authors: </span><br><span class="line">//   Version: </span><br><span class="line">//   Purpose: </span><br><span class="line">//  Category: WeChat</span><br><span class="line">// File Mask: *.wxapkg</span><br><span class="line">//  ID Bytes: BE, 56 31 4D 4D 57 58</span><br><span class="line">//   History: </span><br><span class="line">//------------------------------------------------</span><br><span class="line"></span><br><span class="line">int x;</span><br></pre></td></tr></table></figure>
-<p>文件最开始若干行用<code>//</code>注释的元信息，用于描述模板文件及如何匹配魔术数，都是可选的，可以不填写，但是强烈建议填写<code>File Mask</code>和<code>ID Bytes</code>。<br><img src="https://pic.rmb.bdstatic.com/bjh/3007acb10284992050c1cd0466b2929f.png"><br>程序会优先用<code>File Mask</code>匹配文件扩展名，再用<code>ID Bytes</code>匹配魔术数，匹配成功的话就会自动加载模板文件。<br>当然，如果你不需要自动加载模板文件这个功能的话就可以不写，通过菜单手动加载模板。<br>如果文件可能有多种扩展名，就用逗号分隔，比如<code>*.txt,*.xml</code>。<br><code>ID Bytes</code>也是一样，比如<code>ID Bytes: BE, 56 31 4D 4D 57 58</code>。</p>
-<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><p>模板是从上到下运行的，我们的主要工作就是定义各种数据结构、控制流程等等。<br>因为编写模板和开发C语言程序几乎差不多，所以我只讲一些常见的需要注意的地方。</p>
-<h3 id="本地变量"><a href="#本地变量" class="headerlink" title="本地变量"></a>本地变量</h3><p>默认情况下，所有变量都会显示在模板窗口中。比如我定义了一个<code>int x;</code><br><img src="https://pic.rmb.bdstatic.com/bjh/ee389bdc17421eaccd1a7fd333e52bc0.png"><br>可以通过<code>local</code>关键字定义变量，这样的变量默认不会显示在模板窗口中，不过用户任然可以在窗口中点击右键菜单中的<code>Show Local Variables</code>来显示局部变量。<br><a target="_blank" rel="noopener" href="https://www.sweetscape.com/010editor/manual/TemplateVariables.htm#local">Local Variables</a></p>
-<h3 id="大小端"><a href="#大小端" class="headerlink" title="大小端"></a>大小端</h3><p>默认随系统，比如在 Windows 下是按照小端模式，通过<code>BigEndian</code>和<code>LittleEndian</code>来调整读取方式。</p>
+<p>文件最开始若干行用<code>//</code>注释的元信息，用于描述模板文件及如何匹配魔术数，都是可选的，可以不填写，但是强烈建议填写<code>File Mask</code>和<code>ID Bytes</code>。<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/3007acb10284992050c1cd0466b2929f.png" alt=""><br>
+程序会优先用<code>File Mask</code>匹配文件扩展名，再用<code>ID Bytes</code>匹配魔术数，匹配成功的话就会自动加载模板文件。<br>
+当然，如果你不需要自动加载模板文件这个功能的话就可以不写，通过菜单手动加载模板。<br>
+如果文件可能有多种扩展名，就用逗号分隔，比如<code>*.txt,*.xml</code>。<br>
+<code>ID Bytes</code>也是一样，比如<code>ID Bytes: BE, 56 31 4D 4D 57 58</code>。</p>
+<h2 id="语法"><a class="header-anchor" href="#语法">#</a>语法</h2>
+<p>模板是从上到下运行的，我们的主要工作就是定义各种数据结构、控制流程等等。<br>
+因为编写模板和开发C语言程序几乎差不多，所以我只讲一些常见的需要注意的地方。</p>
+<h3 id="本地变量"><a class="header-anchor" href="#本地变量">#</a>本地变量</h3>
+<p>默认情况下，所有变量都会显示在模板窗口中。比如我定义了一个<code>int x;</code><br>
+<img src="https://pic.rmb.bdstatic.com/bjh/ee389bdc17421eaccd1a7fd333e52bc0.png" alt=""><br>
+可以通过<code>local</code>关键字定义变量，这样的变量默认不会显示在模板窗口中，不过用户任然可以在窗口中点击右键菜单中的<code>Show Local Variables</code>来显示局部变量。<br>
+<a target="_blank" rel="noopener" href="https://www.sweetscape.com/010editor/manual/TemplateVariables.htm#local">Local Variables</a></p>
+<h3 id="大小端"><a class="header-anchor" href="#大小端">#</a>大小端</h3>
+<p>默认随系统，比如在 Windows 下是按照小端模式，通过<code>BigEndian</code>和<code>LittleEndian</code>来调整读取方式。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">BigEndian();    <span class="comment">// 转换为大端模式</span></span><br><span class="line"><span class="type">int</span> x;</span><br><span class="line">LittleEndian(); <span class="comment">// 转换为小端模式</span></span><br></pre></td></tr></table></figure>
-<p>更多内置函数查看官方手册：<a target="_blank" rel="noopener" href="https://www.sweetscape.com/010editor/manual/FuncIO.htm">I&#x2F;O Functions</a></p>
-<h3 id="停止执行脚本"><a href="#停止执行脚本" class="headerlink" title="停止执行脚本"></a>停止执行脚本</h3><p>如果在执行过程中发现脚本结构不对时可以提前结束，使用<code>return</code>语句即可</p>
+<p>更多内置函数查看官方手册：<a target="_blank" rel="noopener" href="https://www.sweetscape.com/010editor/manual/FuncIO.htm">I/O Functions</a></p>
+<h3 id="停止执行脚本"><a class="header-anchor" href="#停止执行脚本">#</a>停止执行脚本</h3>
+<p>如果在执行过程中发现脚本结构不对时可以提前结束，使用<code>return</code>语句即可</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">local <span class="built_in">string</span> magic = ReadString(<span class="number">0</span>, <span class="number">5</span>);</span><br><span class="line"><span class="keyword">if</span> (magic == <span class="string">&quot;Hello&quot;</span>) &#123;</span><br><span class="line">  Printf(<span class="string">&quot;无法解析加密文件&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>我们把整个脚本文件看作是一个C函数，用<code>return</code>就可以提前退出函数。</p>
-<h3 id="结构体构造函数"><a href="#结构体构造函数" class="headerlink" title="结构体构造函数"></a>结构体构造函数</h3><p>这样是合法的</p>
+<h3 id="结构体构造函数"><a class="header-anchor" href="#结构体构造函数">#</a>结构体构造函数</h3>
+<p>这样是合法的</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="title function_">struct</span> <span class="params">(uint offset)</span> &#123;</span><br><span class="line">  uint x;</span><br><span class="line">&#125; FILE;</span><br></pre></td></tr></table></figure>
 <p>使用方法</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FILE <span class="title function_">f</span><span class="params">(<span class="number">123</span>)</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="结构体中可以有表达式"><a href="#结构体中可以有表达式" class="headerlink" title="结构体中可以有表达式"></a>结构体中可以有表达式</h3><p>有时候结构体不是固定长度，而是根据字段的值来决定的</p>
+<h3 id="结构体中可以有表达式"><a class="header-anchor" href="#结构体中可以有表达式">#</a>结构体中可以有表达式</h3>
+<p>有时候结构体不是固定长度，而是根据字段的值来决定的</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">  FILE_NAME fileName;</span><br><span class="line">  uint offset;</span><br><span class="line">  uint size;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    local int64 pos = FTell();</span><br><span class="line">    FSeek(offset);</span><br><span class="line">    uchar data[size];</span><br><span class="line">    FSeek(pos);</span><br><span class="line">  &#125;</span><br><span class="line">&#125; FILE_INFO &lt;comment=fileName.fileName&gt;;</span><br></pre></td></tr></table></figure>
-
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://www.sweetscape.com/010editor/manual/IntroTemplates.htm">Writing Templates</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ba60ebd8f916">010Editor脚本语法入门</a><br><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-257797.htm">宇宙最强 010 Editor 模板开发教程</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://www.sweetscape.com/010editor/manual/IntroTemplates.htm">Writing Templates</a><br>
+<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ba60ebd8f916">010Editor脚本语法入门</a><br>
+<a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-257797.htm">宇宙最强 010 Editor 模板开发教程</a></p>
 
       </div>
       
@@ -194,24 +217,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/010-Editor/" title="010 Editor">
-                        #010 Editor
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -253,13 +258,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -479,43 +487,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + 010%20Editor%20%E6%A8%A1%E6%9D%BF%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F10%2F03%2FZTcV7OSD9%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/10/03/ZTcV7OSD9/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

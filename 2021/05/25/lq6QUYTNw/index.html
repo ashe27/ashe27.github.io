@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,28 +172,43 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="起始页"><a href="#起始页" class="headerlink" title="起始页"></a>起始页</h2><p>网上有很多话题反映说在IE选项里了设置了新的首页，但是没有任何效果，除去软件劫持等原因以外，这都是对IE的首页读取策略没有搞清楚导致的。</p>
+        <h2 id="起始页"><a class="header-anchor" href="#起始页">#</a>起始页</h2>
+<p>网上有很多话题反映说在IE选项里了设置了新的首页，但是没有任何效果，除去软件劫持等原因以外，这都是对IE的首页读取策略没有搞清楚导致的。</p>
 <p>在很久以前，大概是XP+IE6的时代，设置IE首页只需要设置一个注册表值就可以了</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;Start Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
-
 <p>自从IE8开始，首页的读取策略就变化了，浏览器启动后会<strong>依次访问</strong>以下位置来获取首页地址</p>
-<h3 id="第1个位置"><a href="#第1个位置" class="headerlink" title="第1个位置"></a>第1个位置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;First Home Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="第1个位置"><a class="header-anchor" href="#第1个位置">#</a>第1个位置</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;First Home Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
 <p>这里的权重最高，但是只会执行一次，浏览器读取后会删掉该值，也可以称为一次性首页。</p>
-<h3 id="第2个位置"><a href="#第2个位置" class="headerlink" title="第2个位置"></a>第2个位置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;First Home Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="第2个位置"><a class="header-anchor" href="#第2个位置">#</a>第2个位置</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;First Home Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
 <p>与HKCU不同的是，这个值读取后不会自动删除，<strong>所以这里是锁定首页的最佳位置</strong>。</p>
-<h3 id="第3个位置"><a href="#第3个位置" class="headerlink" title="第3个位置"></a>第3个位置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\EUPP]</span><br><span class="line">&quot;BackupHomePage&quot;=hex:.....</span><br></pre></td></tr></table></figure>
-<p>如其名，这是一个缓存的首页地址，如果缓存地址和第6步中的地址不同，则会从第4步开始依次访问对应注册表位置的值来询问用户是否更改首页<br><img src="/images/1627432328308.png"></p>
-<h3 id="第4个位置"><a href="#第4个位置" class="headerlink" title="第4个位置"></a>第4个位置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;Start Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
-<h3 id="第5个位置"><a href="#第5个位置" class="headerlink" title="第5个位置"></a>第5个位置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;Start Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
-<h3 id="第6个位置"><a href="#第6个位置" class="headerlink" title="第6个位置"></a>第6个位置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;Start Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
-<h3 id="第7个位置"><a href="#第7个位置" class="headerlink" title="第7个位置"></a>第7个位置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;Start Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
-<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>对于锁定首页来说，修改第2个位置就行了，它优先级高，且不出现在IE选项里，普通用户无法通过更改IE设置来还原首页。</p>
-<p>如果你想让IE以选项里的设置为准，只需要删除”BackupHomePage”和”First Home Page”即可，我这里提供一个写好的批处理<br> <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="built_in">set</span> HOMEPAGE=www.google.com</span><br><span class="line">REG DELETE &quot;HKCU\SOFTWARE\Microsoft\Internet Explorer\EUPP&quot; /v &quot;BackupHomePage&quot; /f</span><br><span class="line">REG DELETE &quot;HKLM\SOFTWARE\Microsoft\Internet Explorer\Main&quot; /v &quot;<span class="built_in">Start</span> Page&quot; /f</span><br><span class="line">REG DELETE &quot;HKCU\SOFTWARE\Policies\Microsoft\Internet Explorer\Main&quot; /v &quot;<span class="built_in">Start</span> Page&quot; /f</span><br><span class="line">REG DELETE &quot;HKLM\SOFTWARE\Policies\Microsoft\Internet Explorer\Main&quot; /v &quot;<span class="built_in">Start</span> Page&quot; /f</span><br><span class="line">REG DELETE &quot;HKCU\SOFTWARE\Microsoft\Internet Explorer\Main&quot; /v &quot;First Home Page&quot; /f</span><br><span class="line">REG DELETE &quot;HKLM\SOFTWARE\Microsoft\Internet Explorer\Main&quot; /v &quot;First Home Page&quot; /f</span><br><span class="line">REG ADD &quot;HKCU\SOFTWARE\Microsoft\Internet Explorer\Main&quot; /v &quot;<span class="built_in">Start</span> Page&quot; /t REG_SZ /d <span class="variable">%HOMEPAGE%</span> /f</span><br></pre></td></tr></table></figure><br> 第一行修改为自己的网址即可，由于删除了缓存地址，IE会提示设置已损坏，点击更改即可。<br> 使用此脚本重置后就可以在IE选项里修改首页了。<br> <img src="/images/1627432337787.png"></p>
+<h3 id="第3个位置"><a class="header-anchor" href="#第3个位置">#</a>第3个位置</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Internet Explorer\EUPP]</span><br><span class="line">&quot;BackupHomePage&quot;=hex:.....</span><br></pre></td></tr></table></figure>
+<p>如其名，这是一个缓存的首页地址，如果缓存地址和第6步中的地址不同，则会从第4步开始依次访问对应注册表位置的值来询问用户是否更改首页<br>
+<img src="/images/1627432328308.png" alt=""></p>
+<h3 id="第4个位置"><a class="header-anchor" href="#第4个位置">#</a>第4个位置</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;Start Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="第5个位置"><a class="header-anchor" href="#第5个位置">#</a>第5个位置</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;Start Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="第6个位置"><a class="header-anchor" href="#第6个位置">#</a>第6个位置</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;Start Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="第7个位置"><a class="header-anchor" href="#第7个位置">#</a>第7个位置</h3>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;Start Page&quot;=&quot;www.google.com&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="结论"><a class="header-anchor" href="#结论">#</a>结论</h3>
+<p>对于锁定首页来说，修改第2个位置就行了，它优先级高，且不出现在IE选项里，普通用户无法通过更改IE设置来还原首页。</p>
+<p>如果你想让IE以选项里的设置为准，只需要删除&quot;BackupHomePage&quot;和&quot;First Home Page&quot;即可，我这里提供一个写好的批处理</p>
+ <figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="built_in">set</span> HOMEPAGE=www.google.com</span><br><span class="line">REG DELETE &quot;HKCU\SOFTWARE\Microsoft\Internet Explorer\EUPP&quot; /v &quot;BackupHomePage&quot; /f</span><br><span class="line">REG DELETE &quot;HKLM\SOFTWARE\Microsoft\Internet Explorer\Main&quot; /v &quot;<span class="built_in">Start</span> Page&quot; /f</span><br><span class="line">REG DELETE &quot;HKCU\SOFTWARE\Policies\Microsoft\Internet Explorer\Main&quot; /v &quot;<span class="built_in">Start</span> Page&quot; /f</span><br><span class="line">REG DELETE &quot;HKLM\SOFTWARE\Policies\Microsoft\Internet Explorer\Main&quot; /v &quot;<span class="built_in">Start</span> Page&quot; /f</span><br><span class="line">REG DELETE &quot;HKCU\SOFTWARE\Microsoft\Internet Explorer\Main&quot; /v &quot;First Home Page&quot; /f</span><br><span class="line">REG DELETE &quot;HKLM\SOFTWARE\Microsoft\Internet Explorer\Main&quot; /v &quot;First Home Page&quot; /f</span><br><span class="line">REG ADD &quot;HKCU\SOFTWARE\Microsoft\Internet Explorer\Main&quot; /v &quot;<span class="built_in">Start</span> Page&quot; /t REG_SZ /d <span class="variable">%HOMEPAGE%</span> /f</span><br></pre></td></tr></table></figure>
+<p>第一行修改为自己的网址即可，由于删除了缓存地址，IE会提示设置已损坏，点击更改即可。<br>
+使用此脚本重置后就可以在IE选项里修改首页了。<br>
+<img src="/images/1627432337787.png" alt=""></p>
 <hr>
-<h2 id="辅助起始页"><a href="#辅助起始页" class="headerlink" title="辅助起始页"></a>辅助起始页</h2><p>辅助起始页是随着浏览器启动的多开网页地址，和第一首页不冲突，同样的，HKCU比HKLM优先级高</p>
+<h2 id="辅助起始页"><a class="header-anchor" href="#辅助起始页">#</a>辅助起始页</h2>
+<p>辅助起始页是随着浏览器启动的多开网页地址，和第一首页不冲突，同样的，HKCU比HKLM优先级高</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main]</span><br><span class="line">&quot;Secondary Start Pages&quot;=hex(7):68,00,74,00,74,00,70,00,3a,00,2f,00,2f,00,77,00,\</span><br><span class="line">  77,00,77,00,2e,00,71,00,71,00,2e,00,63,00,6f,00,6d,00,2f,00,00,00,68,00,74,\</span><br><span class="line">  00,74,00,70,00,3a,00,2f,00,2f,00,77,00,77,00,77,00,2e,00,31,00,36,00,33,00,\</span><br><span class="line">  2e,00,63,00,6f,00,6d,00,2f,00,00,00,00,00</span><br></pre></td></tr></table></figure>
-<p>因为可以设置多个网址，所以注册表值类型是”REG_MULTI_SZ”。由于该功能使用不多，就不继续深究了。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-196517.htm">逆向IE11的首页保护算法</a></p>
+<p>因为可以设置多个网址，所以注册表值类型是&quot;REG_MULTI_SZ&quot;。由于该功能使用不多，就不继续深究了。</p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://bbs.pediy.com/thread-196517.htm">逆向IE11的首页保护算法</a></p>
 
       </div>
       
@@ -201,30 +220,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/IE/" title="IE">
-                        #IE
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows/" title="Windows">
-                        #Windows
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -266,13 +261,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -492,43 +490,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + IE%E9%A6%96%E9%A1%B5%E8%AF%BB%E5%8F%96%E7%AD%96%E7%95%A5 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2021%2F05%2F25%2Flq6QUYTNw%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2021/05/25/lq6QUYTNw/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

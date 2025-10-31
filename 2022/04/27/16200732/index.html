@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -174,8 +178,11 @@
           
       </div>
       <div class="markdown-body">
-        <p>用过Qt的人都知道它自带有多语言支持的功能，只要在源码中将需要翻译的字符串用<code>tr</code>包裹起来，就可以很轻松的利用其提供的 Qt Linguist 软件进行文字翻译。<br>如果我们的工程并非Qt项目，那么可以考虑使用 <a target="_blank" rel="noopener" href="https://www.gnu.org/software/gettext/">gettext</a> 解决方案。其实现库<code>libintl</code>是C语言开发的，在 linux 系统上用的比较多。<br>在C++中，更适合使用 <a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/index.html">Boost.Locale</a>，用于替代<code>libintl</code>。</p>
-<h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p>需要了解的是，Boost.Locale 只是一个运行时，它本身并不生成语言文件。我们需要使用<code>gettext</code>的相关工具去进行提取和翻译工作。</p>
+        <p>用过Qt的人都知道它自带有多语言支持的功能，只要在源码中将需要翻译的字符串用<code>tr</code>包裹起来，就可以很轻松的利用其提供的 Qt Linguist 软件进行文字翻译。<br>
+如果我们的工程并非Qt项目，那么可以考虑使用 <a target="_blank" rel="noopener" href="https://www.gnu.org/software/gettext/">gettext</a> 解决方案。其实现库<code>libintl</code>是C语言开发的，在 linux 系统上用的比较多。<br>
+在C++中，更适合使用 <a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/index.html">Boost.Locale</a>，用于替代<code>libintl</code>。</p>
+<h2 id="基本用法"><a class="header-anchor" href="#基本用法">#</a>基本用法</h2>
+<p>需要了解的是，Boost.Locale 只是一个运行时，它本身并不生成语言文件。我们需要使用<code>gettext</code>的相关工具去进行提取和翻译工作。</p>
 <blockquote>
 <p>文本假设你已经知道了如何制作.mo等语言文件。</p>
 </blockquote>
@@ -185,20 +192,31 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">\languages\zh\LC_MESSAGES\foo.mo</span><br><span class="line">\languages\zh_CN\LC_MESSAGES\foo.mo</span><br></pre></td></tr></table></figure>
 <p>generate 方法使用空字符串作为参数时将采用<code>系统默认区域 + UTF8</code>编码</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 重载了 () 操作符，等同于调用 generate 方法</span></span><br><span class="line">std::locale loc = <span class="built_in">gen</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 验证</span></span><br><span class="line"><span class="keyword">auto</span>&amp; info = std::<span class="built_in">use_facet</span>&lt;boost::locale::info&gt;(loc);</span><br><span class="line">std::string v1 = info.<span class="built_in">name</span>();     <span class="comment">// zh_CN.UTF-8</span></span><br><span class="line">std::string v2 = info.<span class="built_in">language</span>(); <span class="comment">// zh</span></span><br><span class="line">std::string v3 = info.<span class="built_in">country</span>();  <span class="comment">// CN</span></span><br><span class="line">std::string v4 = info.<span class="built_in">encoding</span>(); <span class="comment">// utf-8</span></span><br><span class="line"><span class="type">bool</span> v5 = info.<span class="built_in">utf8</span>();            <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<p>翻译字符串主要是两个静态方法<code>translate</code>和<code>gettext</code>。<br><code>translate</code>返回的是一个模板类<code>basic_message</code>，它允许原文延迟翻译，也就是只有在需要<code>string</code>的时候才会翻译。<br>而<code>gettext</code>方法是建立在<code>basic_message</code>之上的，它会立即构造一个<code>basic_message</code>并且调用<code>str()</code>方法得到字符串。</p>
+<p>翻译字符串主要是两个静态方法<code>translate</code>和<code>gettext</code>。<br>
+<code>translate</code>返回的是一个模板类<code>basic_message</code>，它允许原文延迟翻译，也就是只有在需要<code>string</code>的时候才会翻译。<br>
+而<code>gettext</code>方法是建立在<code>basic_message</code>之上的，它会立即构造一个<code>basic_message</code>并且调用<code>str()</code>方法得到字符串。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> CharType&gt;</span></span><br><span class="line"><span class="function">std::basic_string&lt;CharType&gt; <span class="title">gettext</span><span class="params">(CharType <span class="type">const</span> *id, std::locale <span class="type">const</span> &amp;loc=std::locale())</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">basic_message</span>&lt;CharType&gt;(id).<span class="built_in">str</span>(loc);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果只是想立即得到译文，用<code>gettext</code>就够了。</p>
-<h2 id="gettext"><a href="#gettext" class="headerlink" title="gettext"></a>gettext</h2><ol>
-<li>获得译文，没有译文就返回原文<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::string str = boost::locale::<span class="built_in">gettext</span>(<span class="string">&quot;Love&quot;</span>);</span><br></pre></td></tr></table></figure></li>
-<li>第二个参数可以指定 locale<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::string str = boost::locale::<span class="built_in">gettext</span>(<span class="string">&quot;Love&quot;</span>, de);</span><br></pre></td></tr></table></figure></li>
+<h2 id="gettext"><a class="header-anchor" href="#gettext">#</a>gettext</h2>
+<ol>
+<li>获得译文，没有译文就返回原文</li>
 </ol>
-<h3 id="dgettext"><a href="#dgettext" class="headerlink" title="dgettext"></a>dgettext</h3><p>从指定的 domain(文件) 中获取译文。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::string str = boost::locale::<span class="built_in">gettext</span>(<span class="string">&quot;Love&quot;</span>);</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>第二个参数可以指定 locale</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::string str = boost::locale::<span class="built_in">gettext</span>(<span class="string">&quot;Love&quot;</span>, de);</span><br></pre></td></tr></table></figure>
+<h3 id="dgettext"><a class="header-anchor" href="#dgettext">#</a>dgettext</h3>
+<p>从指定的 domain(文件) 中获取译文。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::string str1 = boost::locale::<span class="built_in">dgettext</span>(<span class="string">&quot;foo2&quot;</span>, <span class="string">&quot;Love&quot;</span>);</span><br><span class="line">std::string str2 = boost::locale::<span class="built_in">dgettext</span>(<span class="string">&quot;foo2&quot;</span>, <span class="string">&quot;Love&quot;</span>, gbk);</span><br></pre></td></tr></table></figure>
-<h3 id="ngettext"><a href="#ngettext" class="headerlink" title="ngettext"></a>ngettext</h3><p><code>ngettext</code>用于处理某些语言的复数形式</p>
+<h3 id="ngettext"><a class="header-anchor" href="#ngettext">#</a>ngettext</h3>
+<p><code>ngettext</code>用于处理某些语言的复数形式</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> count = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">auto</span> str = fmt::format(boost::locale::<span class="built_in">ngettext</span>(<span class="string">&quot;1 file&quot;</span>, <span class="string">&quot;&#123;&#125; files&quot;</span>, count), count); <span class="comment">// 1 file</span></span><br><span class="line"></span><br><span class="line">count = <span class="number">2</span>;</span><br><span class="line">str = fmt::format(boost::locale::<span class="built_in">ngettext</span>(<span class="string">&quot;1 file&quot;</span>, <span class="string">&quot;&#123;&#125; files&quot;</span>, count), count); <span class="comment">// 2 files</span></span><br></pre></td></tr></table></figure>
-<h3 id="pgettext"><a href="#pgettext" class="headerlink" title="pgettext"></a>pgettext</h3><p>根据上下文获得译文。上下文功能在某些场景下是有用的，它可以使同一个原文返回不同的译文。</p>
+<h3 id="pgettext"><a class="header-anchor" href="#pgettext">#</a>pgettext</h3>
+<p>根据上下文获得译文。上下文功能在某些场景下是有用的，它可以使同一个原文返回不同的译文。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::string str1 = boost::locale::<span class="built_in">pgettext</span>(<span class="string">&quot;ctx1&quot;</span>, <span class="string">&quot;Love&quot;</span>);</span><br><span class="line">std::string str2 = boost::locale::<span class="built_in">pgettext</span>(<span class="string">&quot;ctx2&quot;</span>, <span class="string">&quot;Love&quot;</span>, gbk);</span><br></pre></td></tr></table></figure>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>gettext</code>是高级别的方法，使用简单。还有扩展的的方法如<code>dgettext</code>、<code>ngettext</code>、<code>pgettext</code>等等。我们只要记住三个字母：</p>
+<h3 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h3>
+<p><code>gettext</code>是高级别的方法，使用简单。还有扩展的的方法如<code>dgettext</code>、<code>ngettext</code>、<code>pgettext</code>等等。我们只要记住三个字母：</p>
 <ol>
 <li><code>d</code>表示<code>domain</code>，支持指定域（语言文件）。</li>
 <li><code>n</code>表示<code>number</code>，用于处理复数形式。</li>
@@ -206,20 +224,25 @@
 </ol>
 <p><code>gettext</code>所有的方法如下，看字母就知道怎么用了</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">boost::locale::<span class="built_in">gettext</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// d 开头</span></span><br><span class="line">boost::locale::<span class="built_in">dgettext</span>()</span><br><span class="line">boost::locale::<span class="built_in">dngettext</span>()</span><br><span class="line">boost::locale::<span class="built_in">dnpgettext</span>()</span><br><span class="line">boost::locale::<span class="built_in">dpgettext</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// n 开头</span></span><br><span class="line">boost::locale::<span class="built_in">ngettext</span>()</span><br><span class="line">boost::locale::<span class="built_in">npgettext</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// p 开头</span></span><br><span class="line">boost::locale::<span class="built_in">pgettext</span>();</span><br></pre></td></tr></table></figure>
-<h2 id="translate"><a href="#translate" class="headerlink" title="translate"></a>translate</h2><p>前面说过，<code>translate</code>才是底层的API，主要用于需要延迟翻译的时候，使用方法和<code>gettext</code>差不多</p>
+<h2 id="translate"><a class="header-anchor" href="#translate">#</a>translate</h2>
+<p>前面说过，<code>translate</code>才是底层的API，主要用于需要延迟翻译的时候，使用方法和<code>gettext</code>差不多</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">std::string str = boost::locale::<span class="built_in">translate</span>(<span class="string">&quot;Love&quot;</span>).<span class="built_in">str</span>();</span><br><span class="line"><span class="comment">// 等同于 gettext</span></span><br><span class="line"></span><br><span class="line">std::string str = boost::locale::<span class="built_in">translate</span>(<span class="string">&quot;Love&quot;</span>).<span class="built_in">str</span>(<span class="string">&quot;domain&quot;</span>);</span><br><span class="line"><span class="comment">// 等同于 dgettext</span></span><br><span class="line"></span><br><span class="line">std::string str = boost::locale::<span class="built_in">translate</span>(<span class="string">&quot;1 files&quot;</span>, <span class="string">&quot;N files&quot;</span>, <span class="number">1</span>).<span class="built_in">str</span>();</span><br><span class="line"><span class="comment">// 等同于 ngettext</span></span><br><span class="line"></span><br><span class="line">std::string str = boost::locale::<span class="built_in">translate</span>(<span class="string">&quot;ctx&quot;</span>, <span class="string">&quot;Love&quot;</span>).<span class="built_in">str</span>();</span><br><span class="line"><span class="comment">// 等同于 pgettext</span></span><br></pre></td></tr></table></figure>
-<h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><p>软件首次运行时一般有三种选择</p>
+<h2 id="实践"><a class="header-anchor" href="#实践">#</a>实践</h2>
+<p>软件首次运行时一般有三种选择</p>
 <ol>
 <li>默认采用英文显示。</li>
 <li>有安装程序的，在安装过程中让用户决定使用的语言。</li>
 <li>跟随系统区域设置决定使用哪种语言。</li>
 </ol>
-<p>对于第三种方式，我们需要获取计算机的区域设置。上面说过<code>generator</code>支持用空字符串来生成系统默认区域的locale，但是编码是用的UTF-8。<br>如果我们想获取系统的区域设置，可以用boost完成这项工作：</p>
+<p>对于第三种方式，我们需要获取计算机的区域设置。上面说过<code>generator</code>支持用空字符串来生成系统默认区域的locale，但是编码是用的UTF-8。<br>
+如果我们想获取系统的区域设置，可以用boost完成这项工作：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::string localeStr = boost::locale::util::<span class="built_in">get_system_locale</span>();</span><br><span class="line"><span class="comment">// 在简体中文Windows上，结果为 zh_CN.windows-936</span></span><br></pre></td></tr></table></figure>
 <p>然后将结果告诉<code>generator</code>，这样程序首次运行时将使用系统默认的语言显示了。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::locale loc = boost::locale::<span class="built_in">generator</span>().<span class="built_in">generate</span>(localeStr);</span><br></pre></td></tr></table></figure>
-
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.helywin.com/posts/20200814061352/">gettext使用</a><br><a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/locale_gen.html">Locale Generation</a><br><a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/messages_formatting.html">Messages Formatting (Translation)</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://www.helywin.com/posts/20200814061352/">gettext使用</a><br>
+<a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/locale_gen.html">Locale Generation</a><br>
+<a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/release/libs/locale/doc/html/messages_formatting.html">Messages Formatting (Translation)</a></p>
 
       </div>
       
@@ -231,36 +254,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Boost/" title="Boost">
-                        #Boost
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/gettext/" title="gettext">
-                        #gettext
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E6%9C%AC%E5%9C%B0%E5%8C%96/" title="本地化">
-                        #本地化
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -302,13 +295,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -528,43 +524,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E7%94%A8%20Boost.Locale%20%E4%BD%BF%E8%BD%AF%E4%BB%B6%E6%94%AF%E6%8C%81%E5%A4%9A%E5%9B%BD%E8%AF%AD%E8%A8%80 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F04%2F27%2F16200732%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/04/27/16200732/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

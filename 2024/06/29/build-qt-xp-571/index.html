@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,17 +166,27 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="为什么选择-VS2017"><a href="#为什么选择-VS2017" class="headerlink" title="为什么选择 VS2017"></a>为什么选择 VS2017</h2><p>Visual Studio 2017 是最后一个支持编译 XP 程序的工具集了，而且支持 C++17，这样可以用上更多的新特性，提高开发效率。</p>
-<h2 id="为什么选择-Qt-5-7-1"><a href="#为什么选择-Qt-5-7-1" class="headerlink" title="为什么选择 Qt 5.7.1"></a>为什么选择 Qt 5.7.1</h2><p>因为这是最后一个支持 XP 的大版本中的最后一个小版本，再往上的版本就开始使用了 Vista 以后才有的 API 和数据结构。<br>在编译 Qt 时有一个配置参数<code>target</code>，它有一个唯一值是<code>xp</code>，这个选项在 5.7.0 版中还存在，但在 5.7.1 版中就移除了。</p>
+        <h2 id="为什么选择-VS2017"><a class="header-anchor" href="#为什么选择-VS2017">#</a>为什么选择 VS2017</h2>
+<p>Visual Studio 2017 是最后一个支持编译 XP 程序的工具集了，而且支持 C++17，这样可以用上更多的新特性，提高开发效率。</p>
+<h2 id="为什么选择-Qt-5-7-1"><a class="header-anchor" href="#为什么选择-Qt-5-7-1">#</a>为什么选择 Qt 5.7.1</h2>
+<p>因为这是最后一个支持 XP 的大版本中的最后一个小版本，再往上的版本就开始使用了 Vista 以后才有的 API 和数据结构。<br>
+在编译 Qt 时有一个配置参数<code>target</code>，它有一个唯一值是<code>xp</code>，这个选项在 5.7.0 版中还存在，但在 5.7.1 版中就移除了。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-target ............ Set target OS version. Currently the only valid value </span><br><span class="line">                     is &#x27;xp&#x27; for targeting Windows XP.</span><br><span class="line">                     MSVC &gt;= 2012 targets Windows Vista by default.</span><br></pre></td></tr></table></figure>
 <p>而这个参数似乎也只是影响<code>/SUBSYSTEM</code>链接参数而已（将其值设置为 5.01 以便在 XP 系统上运行），而这个参数我们可以通过其他方式修改。</p>
-<h2 id="编译-qtbase"><a href="#编译-qtbase" class="headerlink" title="编译 qtbase"></a>编译 qtbase</h2><p>首先去 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/">https://download.qt.io/new_archive&#x2F;qt&#x2F;5.7&#x2F;5.7.1&#x2F;submodules&#x2F;</a> 下载基础模块 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qtbase-opensource-src-5.7.1.7z">qtbase-opensource-src-5.7.1.7z</a>。<br>解压缩后在源码根目录下创建一个子目录<code>_build</code>作为编译输出目录。启动 VS2017 命令行工具，执行配置：</p>
+<h2 id="编译-qtbase"><a class="header-anchor" href="#编译-qtbase">#</a>编译 qtbase</h2>
+<p>首先去 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/">https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/</a> 下载基础模块 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qtbase-opensource-src-5.7.1.7z">qtbase-opensource-src-5.7.1.7z</a>。<br>
+解压缩后在源码根目录下创建一个子目录<code>_build</code>作为编译输出目录。启动 VS2017 命令行工具，执行配置：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">..\configure.bat -prefix &quot;C:/Qt/Qt5.7.1-vc141-x86&quot; -platform win32-msvc2015 -confirm-license -opensource -debug-and-release -shared -nomake examples -nomake tests -no-style-fusion -no-directwrite -no-angle -opengl desktop -mp</span><br></pre></td></tr></table></figure>
 <p>参数可以根据自身需求调整，但是<code>-no-directwrite</code>必须设置。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-no-directwrite .... Do not build support for DirectWrite font rendering.</span><br></pre></td></tr></table></figure>
 <p>这个选项是关于字体渲染的（<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/directwrite/direct-write-portal">DirectWrite</a>），但是这个技术只在 Vista 以后的系统上受支持，所以我们要禁用它。</p>
-<p><br>另外值得注意的一个是<code>-platform</code>选项设置的是<code>win32-msvc2015</code>，为什么不是<code>win32-msvc2017</code>呢？因为从 Qt 5.7.0 开始已经没有提供<code>win32-msvc2017</code>的设置了<br><img src="/images/build-qt-xp-571/01.webp"><br>编译过程中的一些条件分支最高只验证到 VS2015，所以我们选择一个最高的版本即可。</p>
-<h3 id="编辑-msvc-desktop-conf"><a href="#编辑-msvc-desktop-conf" class="headerlink" title="编辑 msvc-desktop.conf"></a>编辑 msvc-desktop.conf</h3><p>配置完成后先关闭 VS 命令行窗口。接着编辑<code>mkspecs\common\msvc-desktop.conf</code>文件。<br>找到这行：</p>
+<p><br>
+另外值得注意的一个是<code>-platform</code>选项设置的是<code>win32-msvc2015</code>，为什么不是<code>win32-msvc2017</code>呢？因为从 Qt 5.7.0 开始已经没有提供<code>win32-msvc2017</code>的设置了<br>
+<img src="/images/build-qt-xp-571/01.webp" alt=""><br>
+编译过程中的一些条件分支最高只验证到 VS2015，所以我们选择一个最高的版本即可。</p>
+<h3 id="编辑-msvc-desktop-conf"><a class="header-anchor" href="#编辑-msvc-desktop-conf">#</a>编辑 msvc-desktop.conf</h3>
+<p>配置完成后先关闭 VS 命令行窗口。接着编辑<code>mkspecs\common\msvc-desktop.conf</code>文件。<br>
+找到这行：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEFINES += UNICODE WIN32</span><br></pre></td></tr></table></figure>
 <p>修改为</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEFINES += UNICODE WIN32 WINVER=0x0501 _WIN32_WINNT=0x0501 _USING_V110_SDK71_</span><br></pre></td></tr></table></figure>
@@ -180,16 +194,20 @@
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/porting/modifying-winver-and-win32-winnt">WINVER</a> 和 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/porting/modifying-winver-and-win32-winnt">_WIN32_WINNT</a> 决定支持的最低操作系统，<code>0x0501</code>表示 32 位 XP 系统。</li>
 <li><code>_USING_V110_SDK71_</code> 则表示使用 SDK 7.1，这是最后一个支持 XP 的 SDK。</li>
 </ul>
-<p><br>接着修改<code>/SUBSYSTEM</code>链接参数为<code>5.01</code>，<strong>但注意，在 Qt 5.7.1 版本中，不可以这样改：</strong></p>
+<p><br>
+接着修改<code>/SUBSYSTEM</code>链接参数为<code>5.01</code>，<strong>但注意，在 Qt 5.7.1 版本中，不可以这样改：</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_LFLAGS_CONSOLE    = /SUBSYSTEM:CONSOLE,5.01</span><br><span class="line">QMAKE_LFLAGS_WINDOWS    = /SUBSYSTEM:WINDOWS,5.01</span><br></pre></td></tr></table></figure>
-<p>网上很多文章中都是这样改的，是因为 Qt 版本不同，5.7.1 版本这样改是没有效果的。<br>我们以<code>/SUBSYSTEM:WINDOWS</code>作为关键词搜索，可以在<code>mkspecs\common\msvc-base.conf</code>文件中找到这么一段：</p>
+<p>网上很多文章中都是这样改的，是因为 Qt 版本不同，5.7.1 版本这样改是没有效果的。<br>
+我们以<code>/SUBSYSTEM:WINDOWS</code>作为关键词搜索，可以在<code>mkspecs\common\msvc-base.conf</code>文件中找到这么一段：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">greaterThan(MSC_VER, 1699) &#123;</span><br><span class="line">    # Visual Studio 2012 (11.0) / Visual C++ 17.0 and up</span><br><span class="line">    QMAKE_CXXFLAGS_EXCEPTIONS_OFF = -D_HAS_EXCEPTIONS=0</span><br><span class="line">    QMAKE_LFLAGS_CONSOLE = /SUBSYSTEM:CONSOLE@QMAKE_SUBSYSTEM_SUFFIX@</span><br><span class="line">    QMAKE_LFLAGS_WINDOWS = /SUBSYSTEM:WINDOWS@QMAKE_SUBSYSTEM_SUFFIX@</span><br><span class="line">    QT_CONFIG          += c++11</span><br><span class="line">    CONFIG             += c++11</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>最老的 VS2017 版本的 MSC_VER 值是 1910 了，所以这段配置会生效。<br>这里用到了<code>QMAKE_SUBSYSTEM_SUFFIX</code>变量，而这个变量的初始化在<code>mkspecs\features\win32\qt_config.prf</code>文件中：</p>
+<p>最老的 VS2017 版本的 MSC_VER 值是 1910 了，所以这段配置会生效。<br>
+这里用到了<code>QMAKE_SUBSYSTEM_SUFFIX</code>变量，而这个变量的初始化在<code>mkspecs\features\win32\qt_config.prf</code>文件中：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">load(qt_config)</span><br><span class="line"></span><br><span class="line">equals(QMAKE_TARGET_OS, xp) &#123;</span><br><span class="line">    # http://blogs.msdn.com/b/vcblog/archive/2012/10/08/10357555.aspx?PageIndex=3</span><br><span class="line">    equals(QT_ARCH, x86_64) &#123;</span><br><span class="line">        QMAKE_SUBSYSTEM_SUFFIX = ,5.02</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        QMAKE_SUBSYSTEM_SUFFIX = ,5.01</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>变量<code>QMAKE_TARGET_OS</code>正是前面说的在 Qt 5.7.0 以前支持的配置参数<code>target</code>的值，由于在 5.7.1 中移除了该选项，导致<code>QMAKE_SUBSYSTEM_SUFFIX</code>为空，同时会导致<code>/SUBSYSTEM</code>参数为空。而当<code>/SUBSYSTEM</code>的值为空时，将会使用<code>6.0</code>作为默认值，这样编译出的程序在 XP 系统上运行就会提示<code>不是有效的Win32程序</code>。<br>解决办法就是给<code>QMAKE_SUBSYSTEM_SUFFIX</code>赋值：</p>
+<p>变量<code>QMAKE_TARGET_OS</code>正是前面说的在 Qt 5.7.0 以前支持的配置参数<code>target</code>的值，由于在 5.7.1 中移除了该选项，导致<code>QMAKE_SUBSYSTEM_SUFFIX</code>为空，同时会导致<code>/SUBSYSTEM</code>参数为空。而当<code>/SUBSYSTEM</code>的值为空时，将会使用<code>6.0</code>作为默认值，这样编译出的程序在 XP 系统上运行就会提示<code>不是有效的Win32程序</code>。<br>
+解决办法就是给<code>QMAKE_SUBSYSTEM_SUFFIX</code>赋值：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_LFLAGS_CONSOLE    = /SUBSYSTEM:CONSOLE</span><br><span class="line">QMAKE_LFLAGS_WINDOWS    = /SUBSYSTEM:WINDOWS</span><br><span class="line">QMAKE_SUBSYSTEM_SUFFIX  = ,5.01</span><br></pre></td></tr></table></figure>
-
-<h3 id="编译源码"><a href="#编译源码" class="headerlink" title="编译源码"></a>编译源码</h3><p>由于使用了 SDK 7.1，所以需要在 CMD 环境中配置一下头文件、库文件的搜索路径，在<code>_build</code>目录下创建一个<code>build.bat</code>文件并执行，内容如下：</p>
+<h3 id="编译源码"><a class="header-anchor" href="#编译源码">#</a>编译源码</h3>
+<p>由于使用了 SDK 7.1，所以需要在 CMD 环境中配置一下头文件、库文件的搜索路径，在<code>_build</code>目录下创建一个<code>build.bat</code>文件并执行，内容如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@echo off</span><br><span class="line">call &quot;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build\vcvars32.bat&quot;</span><br><span class="line">set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin;%PATH%</span><br><span class="line">set INCLUDE=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include;%INCLUDE%</span><br><span class="line">set LIB=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib;%LIB%</span><br><span class="line">nmake</span><br><span class="line">nmake install</span><br></pre></td></tr></table></figure>
 <p>开始编译后不久会碰到第一个错误：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">src\widgets\util\qsystemtrayicon_win.cpp(270): error C2065: “NIF_SHOWTIP”: 未声明的标识符</span><br><span class="line">src\widgets\util\qsystemtrayicon_win.cpp(283): error C2065: “NIF_SHOWTIP”: 未声明的标识符</span><br><span class="line">src\widgets\util\qsystemtrayicon_win.cpp(327): error C2065: “NOTIFYICON_VERSION_4”: 未声明的标识符</span><br></pre></td></tr></table></figure>
@@ -197,27 +215,46 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> Q_CC_MINGW</span></span><br><span class="line"><span class="meta">#    <span class="keyword">define</span> NIN_SELECT (WM_USER + 0)</span></span><br><span class="line"><span class="meta">#    <span class="keyword">define</span> NIN_BALLOONTIMEOUT (WM_USER + 4)</span></span><br><span class="line"><span class="meta">#    <span class="keyword">define</span> NIN_BALLOONUSERCLICK (WM_USER + 5)</span></span><br><span class="line"><span class="meta">#    <span class="keyword">define</span> NIF_SHOWTIP 0x00000080</span></span><br><span class="line"><span class="meta">#    <span class="keyword">define</span> NOTIFYICON_VERSION_4 4</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
 <p>我们只需要在后面定义即可</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifdef</span> Q_CC_MINGW</span></span><br><span class="line"><span class="meta">#    <span class="keyword">define</span> NIN_SELECT (WM_USER + 0)</span></span><br><span class="line"><span class="meta">#    <span class="keyword">define</span> NIN_BALLOONTIMEOUT (WM_USER + 4)</span></span><br><span class="line"><span class="meta">#    <span class="keyword">define</span> NIN_BALLOONUSERCLICK (WM_USER + 5)</span></span><br><span class="line"><span class="meta">#    <span class="keyword">define</span> NIF_SHOWTIP 0x00000080</span></span><br><span class="line"><span class="meta">#    <span class="keyword">define</span> NOTIFYICON_VERSION_4 4</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> NIF_SHOWTIP</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NIF_SHOWTIP 0x00000080</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> NOTIFYICON_VERSION_4</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NOTIFYICON_VERSION_4 4</span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-<p><br>接着会碰到第二个编译错误：<br><code>src\testlib\qtestcase.cpp(1578): error C3861: “RtlCaptureStackBackTrace”: 找不到标识符</code><br>定位到问题处：</p>
+<p><br>
+接着会碰到第二个编译错误：<br>
+<code>src\testlib\qtestcase.cpp(1578): error C3861: “RtlCaptureStackBackTrace”: 找不到标识符</code><br>
+定位到问题处：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> LONG WINAPI <span class="title">windowsFaultHandler</span><span class="params">(<span class="keyword">struct</span> _EXCEPTION_POINTERS *exInfo)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">enum</span> &#123; maxStackFrames = <span class="number">100</span> &#125;;</span><br><span class="line">    <span class="type">char</span> appName[MAX_PATH];</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">GetModuleFileNameA</span>(<span class="literal">NULL</span>, appName, MAX_PATH))</span><br><span class="line">        appName[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> msecsFunctionTime = <span class="built_in">qRound</span>(QTestLog::<span class="built_in">msecsFunctionTime</span>());</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> msecsTotalTime = <span class="built_in">qRound</span>(QTestLog::<span class="built_in">msecsTotalTime</span>());</span><br><span class="line">    <span class="type">const</span> <span class="type">void</span> *exceptionAddress = exInfo-&gt;ExceptionRecord-&gt;ExceptionAddress;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;A crash occurred in %s.\n&quot;</span></span><br><span class="line">           <span class="string">&quot;Function time: %dms Total time: %dms\n\n&quot;</span></span><br><span class="line">           <span class="string">&quot;Exception address: 0x%p\n&quot;</span></span><br><span class="line">           <span class="string">&quot;Exception code   : 0x%lx\n&quot;</span>,</span><br><span class="line">           appName, msecsFunctionTime, msecsTotalTime,</span><br><span class="line">           exceptionAddress, exInfo-&gt;ExceptionRecord-&gt;ExceptionCode);</span><br><span class="line"></span><br><span class="line">    <span class="function">DebugSymbolResolver <span class="title">resolver</span><span class="params">(GetCurrentProcess())</span></span>;</span><br><span class="line">    <span class="keyword">if</span> (resolver.<span class="built_in">isValid</span>()) &#123;</span><br><span class="line">        DebugSymbolResolver::Symbol exceptionSymbol = resolver.<span class="built_in">resolveSymbol</span>(<span class="built_in">DWORD64</span>(exceptionAddress));</span><br><span class="line">        <span class="keyword">if</span> (exceptionSymbol.name) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Nearby symbol    : %s\n&quot;</span>, exceptionSymbol.name);</span><br><span class="line">            <span class="keyword">delete</span> [] exceptionSymbol.name;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">void</span> *stack[maxStackFrames];</span><br><span class="line">        <span class="built_in">fputs</span>(<span class="string">&quot;\nStack:\n&quot;</span>, stdout);</span><br><span class="line">        <span class="type">const</span> <span class="type">unsigned</span> frameCount = <span class="built_in">CaptureStackBackTrace</span>(<span class="number">0</span>, <span class="built_in">DWORD</span>(maxStackFrames), stack, <span class="literal">NULL</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">unsigned</span> f = <span class="number">0</span>; f &lt; frameCount; ++f)     &#123;</span><br><span class="line">            DebugSymbolResolver::Symbol symbol = resolver.<span class="built_in">resolveSymbol</span>(<span class="built_in">DWORD64</span>(stack[f]));</span><br><span class="line">            <span class="keyword">if</span> (symbol.name) &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;#%3u: %s() - 0x%p\n&quot;</span>, f + <span class="number">1</span>, symbol.name, (<span class="type">const</span> <span class="type">void</span> *)symbol.address);</span><br><span class="line">                <span class="keyword">delete</span> [] symbol.name;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;#%3u: Unable to obtain symbol\n&quot;</span>, f + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">fputc</span>(<span class="string">&#x27;\n&#x27;</span>, stdout);</span><br><span class="line">    <span class="built_in">fflush</span>(stdout);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> EXCEPTION_EXECUTE_HANDLER;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/debug/capturestackbacktrace">CaptureStackBackTrace</a> 的实际定义是 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/drivers/ddi/ntifs/nf-ntifs-rtlcapturestackbacktrace">RtlCaptureStackBackTrace</a> 函数。它是在<code>kernel32.lib</code>中导出的，所以我们可以添加几行代码手动导入它：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> __declspec(dllimport) <span class="function">USHORT WINAPI <span class="title">RtlCaptureStackBackTrace</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    __in ULONG FramesToSkip,</span></span></span><br><span class="line"><span class="params"><span class="function">    __in ULONG FramesToCapture,</span></span></span><br><span class="line"><span class="params"><span class="function">    __out_ecount(FramesToCapture) PVOID *BackTrace,</span></span></span><br><span class="line"><span class="params"><span class="function">    __out_opt PULONG BackTraceHash</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
-<p>最后去下载一个 <a target="_blank" rel="noopener" href="https://download.qt.io/official_releases/qtcreator/">QtCreator</a> 并导入编译好的 Qt 即可。<br><img src="/images/build-qt-xp-571/02.webp"></p>
-<h2 id="安装-qttools"><a href="#安装-qttools" class="headerlink" title="安装 qttools"></a>安装 qttools</h2><p>qttools 模块包含设计器、语言家、助手等工具，这也是开发时必须要有的东西。下载 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qttools-opensource-src-5.7.1.7z">qttools-opensource-src-5.7.1.7z</a> 并解压。<br>接着用前面编译好的<code>qmake.exe</code>来编译 qttools 模块，创建一个<code>build.bat</code>文件，内容如下：</p>
+<p>最后去下载一个 <a target="_blank" rel="noopener" href="https://download.qt.io/official_releases/qtcreator/">QtCreator</a> 并导入编译好的 Qt 即可。<br>
+<img src="/images/build-qt-xp-571/02.webp" alt=""></p>
+<h2 id="安装-qttools"><a class="header-anchor" href="#安装-qttools">#</a>安装 qttools</h2>
+<p>qttools 模块包含设计器、语言家、助手等工具，这也是开发时必须要有的东西。下载 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qttools-opensource-src-5.7.1.7z">qttools-opensource-src-5.7.1.7z</a> 并解压。<br>
+接着用前面编译好的<code>qmake.exe</code>来编译 qttools 模块，创建一个<code>build.bat</code>文件，内容如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">call &quot;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build\vcvars32.bat&quot;</span><br><span class="line">set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin;%PATH%</span><br><span class="line">set INCLUDE=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include;%INCLUDE%</span><br><span class="line">set LIB=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib;%LIB%</span><br><span class="line">C:\Qt\Qt5.7.1-vc141-x86\bin\qmake.exe -makefile -spec win32-msvc2015</span><br><span class="line">nmake</span><br><span class="line">nmake install</span><br></pre></td></tr></table></figure>
 <p>等待编译、安装完即可。</p>
-<h2 id="编译语言包"><a href="#编译语言包" class="headerlink" title="编译语言包"></a>编译语言包</h2><p>安装好 qttools 后随便打开一个工具运行一下，发现软件都是英文的。<br><img src="/images/build-qt-xp-571/03.webp"></p>
-<p>因为源码是不包含语言包的，我们要手动下载语言包编译。<br>去 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/">https://download.qt.io/new_archive&#x2F;qt&#x2F;5.7&#x2F;5.7.1&#x2F;submodules&#x2F;</a> 下载 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qttranslations-opensource-src-5.7.1.7z">qttranslations-opensource-src-5.7.1.7z</a> 文件。</p>
+<h2 id="编译语言包"><a class="header-anchor" href="#编译语言包">#</a>编译语言包</h2>
+<p>安装好 qttools 后随便打开一个工具运行一下，发现软件都是英文的。<br>
+<img src="/images/build-qt-xp-571/03.webp" alt=""></p>
+<p>因为源码是不包含语言包的，我们要手动下载语言包编译。<br>
+去 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/">https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/</a> 下载 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qttranslations-opensource-src-5.7.1.7z">qttranslations-opensource-src-5.7.1.7z</a> 文件。</p>
 <p>接着用前面编译好的<code>qmake.exe</code>来编译 qttranslations 模块，创建一个<code>build.bat</code>文件，内容如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">call &quot;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build\vcvars32.bat&quot;</span><br><span class="line">set PATH=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Bin;%PATH%</span><br><span class="line">set INCLUDE=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include;%INCLUDE%</span><br><span class="line">set LIB=C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib;%LIB%</span><br><span class="line">C:\Qt\Qt5.7.1-vc141-x86\bin\qmake.exe -makefile -spec win32-msvc2015</span><br><span class="line">nmake</span><br><span class="line">nmake install</span><br></pre></td></tr></table></figure>
-<p>等待编译、安装完即可。<br><img src="/images/build-qt-xp-571/04.webp"></p>
-<h2 id="编译文档"><a href="#编译文档" class="headerlink" title="编译文档"></a>编译文档</h2><p>文档是随着模块源码一起的，所以每个模块的文档要单独编译。回到前面 qtbase 模块的<code>_build</code>目录，启动 VS2017 命令行工具依次执行：</p>
+<p>等待编译、安装完即可。<br>
+<img src="/images/build-qt-xp-571/04.webp" alt=""></p>
+<h2 id="编译文档"><a class="header-anchor" href="#编译文档">#</a>编译文档</h2>
+<p>文档是随着模块源码一起的，所以每个模块的文档要单独编译。回到前面 qtbase 模块的<code>_build</code>目录，启动 VS2017 命令行工具依次执行：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nmake docs</span><br><span class="line">nmake install_docs</span><br></pre></td></tr></table></figure>
-<p>编译安装完成后，再次打开 Qt 助手工具，就能看到文档了。<br><img src="/images/build-qt-xp-571/05.webp"></p>
-<h2 id="发布验证"><a href="#发布验证" class="headerlink" title="发布验证"></a>发布验证</h2><p><img src="/images/build-qt-xp-571/06.webp"><br>一个最简单的 hello world 窗口程序需要四个 dll 文件，并按照此目录结构部署即可。</p>
+<p>编译安装完成后，再次打开 Qt 助手工具，就能看到文档了。<br>
+<img src="/images/build-qt-xp-571/05.webp" alt=""></p>
+<h2 id="发布验证"><a class="header-anchor" href="#发布验证">#</a>发布验证</h2>
+<p><img src="/images/build-qt-xp-571/06.webp" alt=""><br>
+一个最简单的 hello world 窗口程序需要四个 dll 文件，并按照此目录结构部署即可。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.exe</span><br><span class="line">Qt5Core.dll</span><br><span class="line">Qt5Gui.dll</span><br><span class="line">Qt5Widgets.dll</span><br><span class="line">platforms/</span><br><span class="line">└── qwindows.dll</span><br></pre></td></tr></table></figure>
-<h2 id="大陆地区镜像站点"><a href="#大陆地区镜像站点" class="headerlink" title="大陆地区镜像站点"></a>大陆地区镜像站点</h2><p>当网络不好时，可以从国内的镜像站点下载相关资源</p>
-<p>阿里云：<a target="_blank" rel="noopener" href="https://mirrors.aliyun.com/qt/">https://mirrors.aliyun.com/qt/</a><br>清华大学：<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/qt/">https://mirrors.tuna.tsinghua.edu.cn/qt/</a><br>中国科学技术大学：<a target="_blank" rel="noopener" href="http://mirrors.ustc.edu.cn/qtproject/">http://mirrors.ustc.edu.cn/qtproject/</a></p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://forum.qt.io/topic/62162/qt-5-6-doesn-t-compatible-with-windows-xp/3">Qt 5.6 doesn’t compatible with Windows XP</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/superbi/p/5672049.html">QT5.7.0在win10下使用visual studio 2015编译（目标平台 xp）</a></p>
+<h2 id="大陆地区镜像站点"><a class="header-anchor" href="#大陆地区镜像站点">#</a>大陆地区镜像站点</h2>
+<p>当网络不好时，可以从国内的镜像站点下载相关资源</p>
+<p>阿里云：<a target="_blank" rel="noopener" href="https://mirrors.aliyun.com/qt/">https://mirrors.aliyun.com/qt/</a><br>
+清华大学：<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/qt/">https://mirrors.tuna.tsinghua.edu.cn/qt/</a><br>
+中国科学技术大学：<a target="_blank" rel="noopener" href="http://mirrors.ustc.edu.cn/qtproject/">http://mirrors.ustc.edu.cn/qtproject/</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://forum.qt.io/topic/62162/qt-5-6-doesn-t-compatible-with-windows-xp/3">Qt 5.6 doesn’t compatible with Windows XP</a><br>
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/superbi/p/5672049.html">QT5.7.0在win10下使用visual studio 2015编译（目标平台 xp）</a></p>
 
       </div>
       
@@ -229,24 +266,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Qt/" title="Qt">
-                        #Qt
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -288,13 +307,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -514,43 +536,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + VS2017%20%E7%BC%96%E8%AF%91%20Qt%205.7.1 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F06%2F29%2Fbuild-qt-xp-571%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/06/29/build-qt-xp-571/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

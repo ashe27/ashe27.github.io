@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,23 +172,47 @@
           
       </div>
       <div class="markdown-body">
-        <p>国产手机ROOT真是麻烦，每次要折腾的时候总是碰到这样那样的问题，一弄就是几小时。<br>今天在此记录一下步骤，以后要折腾的话就很节约时间。</p>
-<h2 id="手机解锁"><a href="#手机解锁" class="headerlink" title="手机解锁"></a>手机解锁</h2><p>手机解锁需要向手机厂商申请，小米的解锁申请地址：<a target="_blank" rel="noopener" href="http://www.miui.com/unlock/index.html">http://www.miui.com/unlock/index.html</a></p>
-<h2 id="打开USB调试模式"><a href="#打开USB调试模式" class="headerlink" title="打开USB调试模式"></a>打开USB调试模式</h2><p>在<code>设置 &gt; 我的设备 &gt; 全部参数 &gt; MIUI 版本</code>上点击7次即可启用开发者选项，然后打开其中的<code>USB 调试</code>。</p>
-<h2 id="用-USB2-0-或打补丁"><a href="#用-USB2-0-或打补丁" class="headerlink" title="用 USB2.0 或打补丁"></a>用 USB2.0 或打补丁</h2><p>如果电脑用的是<code>USB 2.0</code>可以跳过此步骤。<br>如果是<code>USB 3.0</code>则需要”打补丁”，否则<code>fastboot</code>模式下无法识别手机<br>管理员方式运行以下命令</p>
+        <p>国产手机ROOT真是麻烦，每次要折腾的时候总是碰到这样那样的问题，一弄就是几小时。<br>
+今天在此记录一下步骤，以后要折腾的话就很节约时间。</p>
+<h2 id="手机解锁"><a class="header-anchor" href="#手机解锁">#</a>手机解锁</h2>
+<p>手机解锁需要向手机厂商申请，小米的解锁申请地址：<a target="_blank" rel="noopener" href="http://www.miui.com/unlock/index.html">http://www.miui.com/unlock/index.html</a></p>
+<h2 id="打开USB调试模式"><a class="header-anchor" href="#打开USB调试模式">#</a>打开USB调试模式</h2>
+<p>在<code>设置 &gt; 我的设备 &gt; 全部参数 &gt; MIUI 版本</code>上点击7次即可启用开发者选项，然后打开其中的<code>USB 调试</code>。</p>
+<h2 id="用-USB2-0-或打补丁"><a class="header-anchor" href="#用-USB2-0-或打补丁">#</a>用 USB2.0 或打补丁</h2>
+<p>如果电脑用的是<code>USB 2.0</code>可以跳过此步骤。<br>
+如果是<code>USB 3.0</code>则需要&quot;打补丁&quot;，否则<code>fastboot</code>模式下无法识别手机<br>
+管理员方式运行以下命令</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\usbflags\18D1D00D0100&quot; /v &quot;osvc&quot; /t REG_BINARY /d &quot;0000&quot; /f</span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\usbflags\18D1D00D0100&quot; /v &quot;SkipContainerIdQuery&quot; /t REG_BINARY /d &quot;01000000&quot; /f</span><br><span class="line">reg add &quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\usbflags\18D1D00D0100&quot; /v &quot;SkipBOSDescriptorQuery&quot; /t REG_BINARY /d &quot;01000000&quot; /f</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装ADB驱动"><a href="#安装ADB驱动" class="headerlink" title="安装ADB驱动"></a>安装ADB驱动</h2><p>我们可以通过<code>MiFlash</code>工具来安装驱动，这个工具是线刷工具，但我们只是为了用它安装驱动而已。<br>下载地址：<a target="_blank" rel="noopener" href="https://cdn.alsgp0.fds.api.mi-img.com/micomm/MiFlash2020-3-14-0.rar">MiFlash2020-3-14-0.rar</a><br>点击菜单中的<code>Driver</code>来安装驱动<br><img src="https://pic.rmb.bdstatic.com/bjh/747d6d8b8a80bfcc9aeaf336d183de70.png"></p>
-<h2 id="下载TWRP"><a href="#下载TWRP" class="headerlink" title="下载TWRP"></a>下载TWRP</h2><p>进入TWRP官网设备页面，比如小米的是 <a target="_blank" rel="noopener" href="https://twrp.me/Devices/Xiaomi/">Xiaomi</a><br>比如我的 MIX 2S 的页面是<a target="_blank" rel="noopener" href="https://twrp.me/xiaomi/xiaomimimix2s.html">https://twrp.me/xiaomi/xiaomimimix2s.html</a><br>找到对应的安装包，目前适合 MIX 2S 最新的是 <a target="_blank" rel="noopener" href="https://dl.twrp.me/polaris/twrp-3.6.2_9-0-polaris.img">https://dl.twrp.me/polaris/twrp-3.6.2_9-0-polaris.img</a></p>
-<h2 id="下载-Android-SDK-Platform-Tools-工具"><a href="#下载-Android-SDK-Platform-Tools-工具" class="headerlink" title="下载 Android SDK Platform-Tools 工具"></a>下载 Android SDK Platform-Tools 工具</h2><p>下载地址：<a target="_blank" rel="noopener" href="https://developer.android.google.cn/studio/releases/platform-tools.html">https://developer.android.google.cn/studio/releases/platform-tools.html</a></p>
-<h2 id="删除各种锁屏密码"><a href="#删除各种锁屏密码" class="headerlink" title="删除各种锁屏密码"></a>删除各种锁屏密码</h2><p>为了避免后面进入<code>TWRP</code>后文件都是”乱码”，需要在手机上删除锁屏密码、PIN码、指纹。</p>
-<h2 id="进入fastboot模式"><a href="#进入fastboot模式" class="headerlink" title="进入fastboot模式"></a>进入fastboot模式</h2><ol>
+<h2 id="安装ADB驱动"><a class="header-anchor" href="#安装ADB驱动">#</a>安装ADB驱动</h2>
+<p>我们可以通过<code>MiFlash</code>工具来安装驱动，这个工具是线刷工具，但我们只是为了用它安装驱动而已。<br>
+下载地址：<a target="_blank" rel="noopener" href="https://cdn.alsgp0.fds.api.mi-img.com/micomm/MiFlash2020-3-14-0.rar">MiFlash2020-3-14-0.rar</a><br>
+点击菜单中的<code>Driver</code>来安装驱动<br>
+<img src="https://pic.rmb.bdstatic.com/bjh/747d6d8b8a80bfcc9aeaf336d183de70.png" alt=""></p>
+<h2 id="下载TWRP"><a class="header-anchor" href="#下载TWRP">#</a>下载TWRP</h2>
+<p>进入TWRP官网设备页面，比如小米的是 <a target="_blank" rel="noopener" href="https://twrp.me/Devices/Xiaomi/">Xiaomi</a><br>
+比如我的 MIX 2S 的页面是<a target="_blank" rel="noopener" href="https://twrp.me/xiaomi/xiaomimimix2s.html">https://twrp.me/xiaomi/xiaomimimix2s.html</a><br>
+找到对应的安装包，目前适合 MIX 2S 最新的是 <a target="_blank" rel="noopener" href="https://dl.twrp.me/polaris/twrp-3.6.2_9-0-polaris.img">https://dl.twrp.me/polaris/twrp-3.6.2_9-0-polaris.img</a></p>
+<h2 id="下载-Android-SDK-Platform-Tools-工具"><a class="header-anchor" href="#下载-Android-SDK-Platform-Tools-工具">#</a>下载 Android SDK Platform-Tools 工具</h2>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://developer.android.google.cn/studio/releases/platform-tools.html">https://developer.android.google.cn/studio/releases/platform-tools.html</a></p>
+<h2 id="删除各种锁屏密码"><a class="header-anchor" href="#删除各种锁屏密码">#</a>删除各种锁屏密码</h2>
+<p>为了避免后面进入<code>TWRP</code>后文件都是&quot;乱码&quot;，需要在手机上删除锁屏密码、PIN码、指纹。</p>
+<h2 id="进入fastboot模式"><a class="header-anchor" href="#进入fastboot模式">#</a>进入fastboot模式</h2>
+<ol>
 <li>关机。</li>
-<li>同时按住<code>音量键-</code>和<code>电源键</code>直至看到开机画面，大概三秒左右的样子。<br>确保手机与电脑是连接的。<br>或者通过 ADB 执行命令&#96;&#96;adb.exe reboot bootloader&#96;也可以。</li>
+<li>同时按住<code>音量键-</code>和<code>电源键</code>直至看到开机画面，大概三秒左右的样子。<br>
+确保手机与电脑是连接的。<br>
+或者通过 ADB 执行命令``adb.exe reboot bootloader`也可以。</li>
 </ol>
-<h2 id="刷入TWRP"><a href="#刷入TWRP" class="headerlink" title="刷入TWRP"></a>刷入TWRP</h2><p>运行命令<code>fastboot.exe flash recovery twrp-3.6.2_9-0-polaris.img</code>，其中文件名换成自己的<br>待CMD窗口显示完成后，按住手机<code>音量+</code>键不放，电脑上输入命令<code>fastboot.exe reboot</code>重启手机。<br>进入 TWRP 后，会询问“是否保持系统分区为只读”，这里滑动按钮以允许修改，否则 MIUI 会用官方 Recovery 的替换掉 TWRP。当然如果不想刷入的话就点击“保持系统分区只读”按钮。</p>
-<h2 id="刷入Magisk"><a href="#刷入Magisk" class="headerlink" title="刷入Magisk"></a>刷入Magisk</h2><p>下载页面：<a target="_blank" rel="noopener" href="https://github.com/topjohnwu/Magisk/releases">https://github.com/topjohnwu/Magisk/releases</a><br>下载后将文件拷贝至手机SD卡（此时手机可以用MTP模式传输文件），然后通过 TWRP 安装即可。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://onfix.cn/course/3845?bid=1&mid=45">小米（Mi） MIX 3手机刷 TWRP 方法，刷三方Recovery方法（解决卡米问题）</a><br><a target="_blank" rel="noopener" href="https://www.uso.cn/post/view/30830">TWRP中无法查看文件夹，显示全是乱码的解决方法</a></p>
+<h2 id="刷入TWRP"><a class="header-anchor" href="#刷入TWRP">#</a>刷入TWRP</h2>
+<p>运行命令<code>fastboot.exe flash recovery twrp-3.6.2_9-0-polaris.img</code>，其中文件名换成自己的<br>
+待CMD窗口显示完成后，按住手机<code>音量+</code>键不放，电脑上输入命令<code>fastboot.exe reboot</code>重启手机。<br>
+进入 TWRP 后，会询问“是否保持系统分区为只读”，这里滑动按钮以允许修改，否则 MIUI 会用官方 Recovery 的替换掉 TWRP。当然如果不想刷入的话就点击“保持系统分区只读”按钮。</p>
+<h2 id="刷入Magisk"><a class="header-anchor" href="#刷入Magisk">#</a>刷入Magisk</h2>
+<p>下载页面：<a target="_blank" rel="noopener" href="https://github.com/topjohnwu/Magisk/releases">https://github.com/topjohnwu/Magisk/releases</a><br>
+下载后将文件拷贝至手机SD卡（此时手机可以用MTP模式传输文件），然后通过 TWRP 安装即可。</p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://onfix.cn/course/3845?bid=1&amp;mid=45">小米（Mi） MIX 3手机刷 TWRP 方法，刷三方Recovery方法（解决卡米问题）</a><br>
+<a target="_blank" rel="noopener" href="https://www.uso.cn/post/view/30830">TWRP中无法查看文件夹，显示全是乱码的解决方法</a></p>
 
       </div>
       
@@ -196,30 +224,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E5%B0%8F%E7%B1%B3/" title="小米">
-                        #小米
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/ROOT/" title="ROOT">
-                        #ROOT
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -261,13 +265,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -487,43 +494,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%B0%8F%E7%B1%B3%E6%89%8B%E6%9C%BA%E5%88%B7%E5%85%A5%20Magisk + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F10%2F04%2FeHfAqLKSZ%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/10/04/eHfAqLKSZ/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

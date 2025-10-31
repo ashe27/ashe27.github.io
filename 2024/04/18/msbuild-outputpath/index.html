@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,13 +172,17 @@
           
       </div>
       <div class="markdown-body">
-        <p>在管理多个工程时，通常需要根据工程的属性并按照指定的规则来决定二进制文件的输出位置。第一直觉是在<code>Directory.Build.targets</code>文件中设置<code>OutputPath</code>属性。<br>然而实测发现<code>Directory.Build.targets</code>文件中的<code>OutputPath</code>并未生效。<br>Google 一番后找到两种解决办法。</p>
-<h2 id="BeforeTargetFrameworkInferenceTargets-属性"><a href="#BeforeTargetFrameworkInferenceTargets-属性" class="headerlink" title="BeforeTargetFrameworkInferenceTargets 属性"></a>BeforeTargetFrameworkInferenceTargets 属性</h2><p>这个属性出现在 <a target="_blank" rel="noopener" href="https://github.com/dotnet/sdk/blob/14b117b7088653b694e16ac2071fcbf634a2a9ab/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.TargetFrameworkInference.targets#L47">Microsoft.NET.TargetFrameworkInference.targets</a> 文件中，并没有官方的文档。<br>我们可以在<code>Directory.Build.props</code>中设置它：</p>
+        <p>在管理多个工程时，通常需要根据工程的属性并按照指定的规则来决定二进制文件的输出位置。第一直觉是在<code>Directory.Build.targets</code>文件中设置<code>OutputPath</code>属性。<br>
+然而实测发现<code>Directory.Build.targets</code>文件中的<code>OutputPath</code>并未生效。<br>
+Google 一番后找到两种解决办法。</p>
+<h2 id="BeforeTargetFrameworkInferenceTargets-属性"><a class="header-anchor" href="#BeforeTargetFrameworkInferenceTargets-属性">#</a>BeforeTargetFrameworkInferenceTargets 属性</h2>
+<p>这个属性出现在 <a target="_blank" rel="noopener" href="https://github.com/dotnet/sdk/blob/14b117b7088653b694e16ac2071fcbf634a2a9ab/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.TargetFrameworkInference.targets#L47">Microsoft.NET.TargetFrameworkInference.targets</a> 文件中，并没有官方的文档。<br>
+我们可以在<code>Directory.Build.props</code>中设置它：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">BeforeTargetFrameworkInferenceTargets</span>&gt;</span>$(MSBuildThisFileDirectory)OutputBuild.props<span class="tag">&lt;/<span class="name">BeforeTargetFrameworkInferenceTargets</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>然后在<code>OutputBuild.props</code>中覆盖<code>OutputPath</code>，这里是可以使用自定义属性的。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">OutputPath</span>&gt;</span>bin\$(Foo)<span class="tag">&lt;/<span class="name">OutputPath</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="props-和-targets-文件之前和之后"><a href="#props-和-targets-文件之前和之后" class="headerlink" title=".props 和 .targets 文件之前和之后"></a>.props 和 .targets 文件之前和之后</h2><p>比起没有文档的<code>BeforeTargetFrameworkInferenceTargets</code>属性，MSBuild 提供了一系列”钩子”属性，可以在<code>Microsoft.Common.Props</code>或<code>Microsoft.Common.Targets</code>文件的前后执行。</p>
+<h2 id="props-和-targets-文件之前和之后"><a class="header-anchor" href="#props-和-targets-文件之前和之后">#</a>.props 和 .targets 文件之前和之后</h2>
+<p>比起没有文档的<code>BeforeTargetFrameworkInferenceTargets</code>属性，MSBuild 提供了一系列&quot;钩子&quot;属性，可以在<code>Microsoft.Common.Props</code>或<code>Microsoft.Common.Targets</code>文件的前后执行。</p>
 <ul>
 <li>CustomBeforeMicrosoftCommonProps</li>
 <li>CustomBeforeMicrosoftCommonTargets</li>
@@ -185,7 +193,8 @@
 <li>CustomAfterMicrosoftCSharpTargets</li>
 <li>CustomAfterMicrosoftVisualBasicTargets</li>
 </ul>
-<p><br>从名字上看，我们只关心前面四个。测试一下：</p>
+<p><br>
+从名字上看，我们只关心前面四个。测试一下：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">CustomBeforeMicrosoftCommonProps</span>&gt;</span>$(MSBuildThisFileDirectory)BeforeMicrosoftCommon.props<span class="tag">&lt;/<span class="name">CustomBeforeMicrosoftCommonProps</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">CustomAfterMicrosoftCommonProps</span>&gt;</span>$(MSBuildThisFileDirectory)AfterMicrosoftCommon.props<span class="tag">&lt;/<span class="name">CustomAfterMicrosoftCommonProps</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">CustomBeforeMicrosoftCommonTargets</span>&gt;</span>$(MSBuildThisFileDirectory)BeforeMicrosoftCommon.targets<span class="tag">&lt;/<span class="name">CustomBeforeMicrosoftCommonTargets</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">CustomAfterMicrosoftCommonTargets</span>&gt;</span>$(MSBuildThisFileDirectory)AfterMicrosoftCommon.targets<span class="tag">&lt;/<span class="name">CustomAfterMicrosoftCommonTargets</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>这四个文件的载入顺序是：</p>
 <ol>
@@ -194,8 +203,13 @@
 <li>CustomBeforeMicrosoftCommonTargets。可使用工程的自定义属性。</li>
 <li>CustomAfterMicrosoftCommonTargets。无法覆盖<code>OutputPath</code>属性。</li>
 </ol>
-<p><br>所以，我们有机会在<code>CustomBeforeMicrosoftCommonTargets</code>中覆盖<code>OutputPath</code>属性。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://github.com/dotnet/msbuild/discussions/7669">setting OutputPath in a Directory.Build.targets</a><br><a target="_blank" rel="noopener" href="https://nietras.com/2022/01/24/bendingdotnet-improved-common-flat-build-output/">Bending .NET - Improved Common Flat Build Output</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/visualstudio/msbuild/customize-net-builds">自定义所有 .NET 生成</a><br><a target="_blank" rel="noopener" href="https://github.com/dotnet/msbuild/issues/2767">Document the import order of the common msbuild extension points.</a></p>
+<p><br>
+所以，我们有机会在<code>CustomBeforeMicrosoftCommonTargets</code>中覆盖<code>OutputPath</code>属性。</p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://github.com/dotnet/msbuild/discussions/7669">setting OutputPath in a Directory.Build.targets</a><br>
+<a target="_blank" rel="noopener" href="https://nietras.com/2022/01/24/bendingdotnet-improved-common-flat-build-output/">Bending .NET - Improved Common Flat Build Output</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/visualstudio/msbuild/customize-net-builds">自定义所有 .NET 生成</a><br>
+<a target="_blank" rel="noopener" href="https://github.com/dotnet/msbuild/issues/2767">Document the import order of the common msbuild extension points.</a></p>
 
       </div>
       
@@ -207,30 +221,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/MSBuild/" title="MSBuild">
-                        #MSBuild
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -272,13 +262,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -498,43 +491,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Directory.Build.targets%20%E6%97%A0%E6%B3%95%E8%A6%86%E7%9B%96%20OutputPath%20%E5%B1%9E%E6%80%A7 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F04%2F18%2Fmsbuild-outputpath%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/04/18/msbuild-outputpath/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

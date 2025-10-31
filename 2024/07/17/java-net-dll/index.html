@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,28 +172,38 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="Java-调用托管-DLL-的方式"><a href="#Java-调用托管-DLL-的方式" class="headerlink" title="Java 调用托管 DLL 的方式"></a>Java 调用托管 DLL 的方式</h2><p>基本上就两种方式：</p>
+        <h2 id="Java-调用托管-DLL-的方式"><a class="header-anchor" href="#Java-调用托管-DLL-的方式">#</a>Java 调用托管 DLL 的方式</h2>
+<p>基本上就两种方式：</p>
 <ol>
 <li>C# 开发 COM 组件，Java 调用。</li>
-<li>用 C++&#x2F;CLI 编写 DLL，暴露接口给 Java，内部再调用 C# DLL 的接口，起到桥接的作用。</li>
+<li>用 C++/CLI 编写 DLL，暴露接口给 Java，内部再调用 C# DLL 的接口，起到桥接的作用。</li>
 </ol>
-<p><br>用 COM 组件的方式简单直接，只是不够便携，需要注册才可使用，注册后 DLL 不可移动文件位置，否则要重新注册，不过也算不上大问题。<br>用 C++&#x2F;CLI 方案就繁琐些，需要了解一点 C++&#x2F;CLI 语法。但是对于 Java 来说就像调用纯 C DLL 一样简单。</p>
-<h2 id="Java-加载托管-DLL-的问题"><a href="#Java-加载托管-DLL-的问题" class="headerlink" title="Java 加载托管 DLL 的问题"></a>Java 加载托管 DLL 的问题</h2><p>在实践 C++&#x2F;CLI 方案中，碰到一个让人在意的问题：托管 DLL 放在哪里才能被 Java 加载？<br>在开发 C++&#x2F;CLI 工程时，正常做法都会引用 C# 工程：</p>
+<p><br>
+用 COM 组件的方式简单直接，只是不够便携，需要注册才可使用，注册后 DLL 不可移动文件位置，否则要重新注册，不过也算不上大问题。<br>
+用 C++/CLI 方案就繁琐些，需要了解一点 C++/CLI 语法。但是对于 Java 来说就像调用纯 C DLL 一样简单。</p>
+<h2 id="Java-加载托管-DLL-的问题"><a class="header-anchor" href="#Java-加载托管-DLL-的问题">#</a>Java 加载托管 DLL 的问题</h2>
+<p>在实践 C++/CLI 方案中，碰到一个让人在意的问题：托管 DLL 放在哪里才能被 Java 加载？<br>
+在开发 C++/CLI 工程时，正常做法都会引用 C# 工程：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#using <span class="string">&quot;CSharp.dll&quot;</span></span></span><br></pre></td></tr></table></figure>
 <p>因为只有 using 后才能在代码中调用托管接口，但这产生了一个问题，C++ DLL 在被加载时会启动 CLR，而 CLR 只会从当前进程目录和 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/framework/app-domains/gac">GAC</a> 中加载托管 DLL。如果主程序是 C++ 等程序倒不会有问题，因为 exe 和 dll 文件都在一个目录下，自然可以顺利加载。但是到了 Java 这里情况就不同了，比如应用目录是这样：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.jar</span><br><span class="line">Native.dll</span><br><span class="line">CSharp.dll</span><br></pre></td></tr></table></figure>
 <p>因为 Java 应用并不是传统的 exe 可执行文件，它最终是由<code>java.exe</code>作为宿主进程运行的，而<code>java.exe</code> 文件在<code>%JAVA_HOME%\bin</code>目录下，CLR 会从这里加载托管 DLL，这就逼迫我们必须将托管 DLL 放置在<code>%JAVA_HOME%\bin</code>目录下，很有侵入性。</p>
-<p><br>我想到有两种解决方案：</p>
+<p><br>
+我想到有两种解决方案：</p>
 <ol>
-<li><p>在开发 C++&#x2F;CLI 工程时，不要强引用 C# DLL 工程，这样生成的 DLL 文件不会在初始化时去加载托管 DLL。然后在代码中动态加载托管 DLL，大概是这样：</p>
+<li>在开发 C++/CLI 工程时，不要强引用 C# DLL 工程，这样生成的 DLL 文件不会在初始化时去加载托管 DLL。然后在代码中动态加载托管 DLL，大概是这样：</li>
+</ol>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String^ currentDir = Path::<span class="built_in">GetDirectoryName</span>(Assembly::<span class="built_in">GetExecutingAssembly</span>()-&gt;Location);</span><br><span class="line">String^ dllPath = Path::<span class="built_in">Combine</span>(currentDir, <span class="string">&quot;CSharp.dll&quot;</span>);</span><br><span class="line">Assembly::<span class="built_in">LoadFrom</span>(dllPath);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 动态查找接口</span></span><br><span class="line"><span class="type">static</span> MethodInfo^ <span class="built_in">GetMethod</span>(String^ name)</span><br><span class="line">&#123;</span><br><span class="line">    Type^ type = lib-&gt;<span class="built_in">GetType</span>(<span class="string">&quot;mynamespae.Demo&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> type-&gt;<span class="built_in">GetMethod</span>(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这样做的缺点就是在开发时会痛苦，因为无法直接使用托管 DLL 的接口了，完全靠动态加载，显得比较繁琐。好处是能将 DLL 放在 jar 包同一个目录下。</p>
-</li>
-<li><p>将托管 DLL 打包到资源中，在加载 C++ DLL 之前先将托管 DLL 释放到<code>%JAVA_HOME%\bin</code>目录，然后再加载 C++ DLL 文件。不过这样会污染 Java 目录。</p>
-</li>
+<ol start="2">
+<li>将托管 DLL 打包到资源中，在加载 C++ DLL 之前先将托管 DLL 释放到<code>%JAVA_HOME%\bin</code>目录，然后再加载 C++ DLL 文件。不过这样会污染 Java 目录。</li>
 </ol>
-<p><br>我个人推荐第一种方式，牺牲一点开发时的便捷性，提高环保性。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1597303">实现通过COM组件方式实现java调用C#写的DLL文件的完整demo</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhijian233/p/10752062.html">Java调用C#的DLL的坑</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/dotnet/dotnet-programming-with-cpp-cli-visual-cpp">使用 C++&#x2F;CLI 进行 .NET 编程</a></p>
+<p><br>
+我个人推荐第一种方式，牺牲一点开发时的便捷性，提高环保性。</p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1597303">实现通过COM组件方式实现java调用C#写的DLL文件的完整demo</a><br>
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhijian233/p/10752062.html">Java调用C#的DLL的坑</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/dotnet/dotnet-programming-with-cpp-cli-visual-cpp">使用 C++/CLI 进行 .NET 编程</a></p>
 
       </div>
       
@@ -201,30 +215,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Java/" title="Java">
-                        #Java
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -266,13 +256,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -492,43 +485,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Java%20%E8%B0%83%E7%94%A8%20C%23%20DLL%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E9%97%AE%E9%A2%98 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F07%2F17%2Fjava-net-dll%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/07/17/java-net-dll/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

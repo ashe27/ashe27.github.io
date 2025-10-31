@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -169,10 +173,15 @@
       </div>
       <div class="markdown-body">
         <p>在 Windows 安装过程中，有很多设置页面需要人工输入，为了实现自动化安装，微软提供了 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/wsim/answer-files-overview">应答文件</a> 机制。有了应答文件就可以全程无人值守安装。</p>
-<p><br>本篇教程以 <a href="ed2k://|file|cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso|2653276160|7503E4B9B8738DFCB95872445C72AEFB|/">cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso</a> 为样本，并以无人值守安装为目的制作最小的应答文件。</p>
-<h2 id="安装-Windows-ADK"><a href="#安装-Windows-ADK" class="headerlink" title="安装 Windows ADK"></a>安装 Windows ADK</h2><p>制作应答文件需要用到 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/get-started/adk-install">Windows ADK</a> 工具包中的 Windows 系统映像管理器(SIM) 。<br>直链：<a target="_blank" rel="noopener" href="https://download.microsoft.com/download/6/1/f/61fcd094-9641-439c-adb5-6e9fe2760856/adk/adksetup.exe">Windows ADK 10.1.25398.1</a></p>
-<p><br>仅安装<code>部署工具</code>即可，其中包含了<code>Windows 系统映像管理器</code>。软件操作很简单，这里不展开说了，网上有很多教程。</p>
-<h2 id="配置阶段"><a href="#配置阶段" class="headerlink" title="配置阶段"></a>配置阶段</h2><p>Windows 在整个安装过程中分为不同的阶段，依次为：</p>
+<p><br>
+本篇教程以 <a href="ed2k://%7Cfile%7Ccn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso%7C2653276160%7C7503E4B9B8738DFCB95872445C72AEFB%7C/">cn_windows_7_ultimate_with_sp1_x86_dvd_u_677486.iso</a> 为样本，并以无人值守安装为目的制作最小的应答文件。</p>
+<h2 id="安装-Windows-ADK"><a class="header-anchor" href="#安装-Windows-ADK">#</a>安装 Windows ADK</h2>
+<p>制作应答文件需要用到 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/get-started/adk-install">Windows ADK</a> 工具包中的 Windows 系统映像管理器(SIM) 。<br>
+直链：<a target="_blank" rel="noopener" href="https://download.microsoft.com/download/6/1/f/61fcd094-9641-439c-adb5-6e9fe2760856/adk/adksetup.exe">Windows ADK 10.1.25398.1</a></p>
+<p><br>
+仅安装<code>部署工具</code>即可，其中包含了<code>Windows 系统映像管理器</code>。软件操作很简单，这里不展开说了，网上有很多教程。</p>
+<h2 id="配置阶段"><a class="header-anchor" href="#配置阶段">#</a>配置阶段</h2>
+<p>Windows 在整个安装过程中分为不同的阶段，依次为：</p>
 <ol>
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/windowspe">windowsPE</a></li>
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/offlineservicing">offlineServicing</a></li>
@@ -182,52 +191,91 @@
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/audituser">auditUser</a></li>
 <li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/oobesystem">oobeSystem</a></li>
 </ol>
-<p><br>绝大多数时候也就只用到<code>windowsPE</code>、<code>specialize</code>和<code>oobeSystem</code>这三个配置阶段。</p>
-<h3 id="windowsPE"><a href="#windowsPE" class="headerlink" title="windowsPE"></a>windowsPE</h3><p>这是 Windows 安装过程的第一个阶段。主要用于启动安装程序，对硬盘格式化等操作。</p>
-<h4 id="跳过语言设置"><a href="#跳过语言设置" class="headerlink" title="跳过语言设置"></a>跳过语言设置</h4><p><img src="/images/windows-unattend/01.webp"></p>
-<p>为了跳过这个页面，我们在该阶段添加 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-international-core-winpe">Microsoft-Windows-International-Core-WinPE</a> 组件。<br>设置 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-international-core-winpe-inputlocale">InputLocale</a>、<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-international-core-winpe-systemlocale">SystemLocale</a>、<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-international-core-winpe-uilanguage">UILanguage</a>、<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-international-core-winpe-userlocale">UserLocale</a> 这四个值为<code>zh-CN</code>，表示用简体中文。</p>
-<p><img src="/images/windows-unattend/02.webp"></p>
-<h4 id="跳过许可条款"><a href="#跳过许可条款" class="headerlink" title="跳过许可条款"></a>跳过许可条款</h4><p>接着便是<code>软件许可条款</code>页面。<br><img src="/images/windows-unattend/03.webp"></p>
-<p>为了跳过这个页面，我们在该阶段添加 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup">Microsoft-Windows-Setup</a> 组件。<br>将 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-userdata">UserData</a>&#x2F;<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-userdata-accepteula">AcceptEula</a> 设置为<code>true</code>。</p>
-<p><img src="/images/windows-unattend/04.webp"></p>
-<h4 id="选择系统"><a href="#选择系统" class="headerlink" title="选择系统"></a>选择系统</h4><p>如果镜像文件中包含多个系统版本的话就会弹出这个页面。</p>
-<p><img src="/images/windows-unattend/05.webp"></p>
-<p>为了跳过这个页面，我们在该阶段添加 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup">Microsoft-Windows-Setup</a> 组件。<br>将 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-imageinstall">ImageInstall</a>&#x2F;<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-imageinstall-osimage">OSImage</a>&#x2F;<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-imageinstall-osimage-installfrom">InstallFrom</a>&#x2F;<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-imageinstall-osimage-installfrom-metadata">MetaData</a> 键值设置为<code>/IMAGE/INDEX</code>和<code>1</code>。<br>其中<code>1</code>表示安装列表中第一个操作系统，在这里也就是<code>Windows 7 简易版</code>。</p>
-<p><img src="/images/windows-unattend/06.webp"></p>
-<h4 id="安装位置"><a href="#安装位置" class="headerlink" title="安装位置"></a>安装位置</h4><p>选择系统安装在哪个硬盘的哪个分区上。<br>考虑到每个用户的硬件环境不同，需求不同，建议交给用户自己选择。否则容易对硬盘格式化造成硬盘数据丢失。</p>
-<p><img src="/images/windows-unattend/07.webp"></p>
+<p><br>
+绝大多数时候也就只用到<code>windowsPE</code>、<code>specialize</code>和<code>oobeSystem</code>这三个配置阶段。</p>
+<h3 id="windowsPE"><a class="header-anchor" href="#windowsPE">#</a>windowsPE</h3>
+<p>这是 Windows 安装过程的第一个阶段。主要用于启动安装程序，对硬盘格式化等操作。</p>
+<h4 id="跳过语言设置"><a class="header-anchor" href="#跳过语言设置">#</a>跳过语言设置</h4>
+<p><img src="/images/windows-unattend/01.webp" alt=""></p>
+<p>为了跳过这个页面，我们在该阶段添加 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-international-core-winpe">Microsoft-Windows-International-Core-WinPE</a> 组件。<br>
+设置 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-international-core-winpe-inputlocale">InputLocale</a>、<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-international-core-winpe-systemlocale">SystemLocale</a>、<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-international-core-winpe-uilanguage">UILanguage</a>、<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-international-core-winpe-userlocale">UserLocale</a> 这四个值为<code>zh-CN</code>，表示用简体中文。</p>
+<p><img src="/images/windows-unattend/02.webp" alt=""></p>
+<h4 id="跳过许可条款"><a class="header-anchor" href="#跳过许可条款">#</a>跳过许可条款</h4>
+<p>接着便是<code>软件许可条款</code>页面。<br>
+<img src="/images/windows-unattend/03.webp" alt=""></p>
+<p>为了跳过这个页面，我们在该阶段添加 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup">Microsoft-Windows-Setup</a> 组件。<br>
+将 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-userdata">UserData</a>/<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-userdata-accepteula">AcceptEula</a> 设置为<code>true</code>。</p>
+<p><img src="/images/windows-unattend/04.webp" alt=""></p>
+<h4 id="选择系统"><a class="header-anchor" href="#选择系统">#</a>选择系统</h4>
+<p>如果镜像文件中包含多个系统版本的话就会弹出这个页面。</p>
+<p><img src="/images/windows-unattend/05.webp" alt=""></p>
+<p>为了跳过这个页面，我们在该阶段添加 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup">Microsoft-Windows-Setup</a> 组件。<br>
+将 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-imageinstall">ImageInstall</a>/<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-imageinstall-osimage">OSImage</a>/<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-imageinstall-osimage-installfrom">InstallFrom</a>/<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-imageinstall-osimage-installfrom-metadata">MetaData</a> 键值设置为<code>/IMAGE/INDEX</code>和<code>1</code>。<br>
+其中<code>1</code>表示安装列表中第一个操作系统，在这里也就是<code>Windows 7 简易版</code>。</p>
+<p><img src="/images/windows-unattend/06.webp" alt=""></p>
+<h4 id="安装位置"><a class="header-anchor" href="#安装位置">#</a>安装位置</h4>
+<p>选择系统安装在哪个硬盘的哪个分区上。<br>
+考虑到每个用户的硬件环境不同，需求不同，建议交给用户自己选择。否则容易对硬盘格式化造成硬盘数据丢失。</p>
+<p><img src="/images/windows-unattend/07.webp" alt=""></p>
 <p>硬盘的无人值守设置参考 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-setup-imageinstall-osimage-installto">InstallTo</a> 配置。</p>
-<p><br>至此 windowsPE 阶段就算配置完成了，系统开始安装：</p>
-<p><img src="/images/windows-unattend/08.webp"></p>
+<p><br>
+至此 windowsPE 阶段就算配置完成了，系统开始安装：</p>
+<p><img src="/images/windows-unattend/08.webp" alt=""></p>
 <p>安装完成后会自动重启电脑，进入下一个阶段。</p>
-<h3 id="oobeSystem"><a href="#oobeSystem" class="headerlink" title="oobeSystem"></a>oobeSystem</h3><p>重启后来到的第一个设置页面，要求我们创建用户。</p>
-<p><img src="/images/windows-unattend/09.webp"><br><img src="/images/windows-unattend/10.webp"></p>
-<p>输入产品密钥<br><img src="/images/windows-unattend/11.webp"></p>
-<p>更新设置<br><img src="/images/windows-unattend/12.webp"></p>
-<p>时间设置<br><img src="/images/windows-unattend/13.webp"></p>
-<p>网络设置<br><img src="/images/windows-unattend/14.webp"></p>
-<p>以上这些设置可以统一用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/automate-oobe">SkipMachineOOBE</a> 属性跳过<br>添加 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup">Microsoft-Windows-Shell-Setup</a> 组件，将 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-oobe">OOBE</a>&#x2F;<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/automate-oobe">SkipMachineOOBE</a> 设置为<code>true</code>。</p>
-<p><img src="/images/windows-unattend/15.webp"></p>
-<p>注意，微软并不推荐使用<code>SkipMachineOOBE</code>，但是不用的话则会强制要求用户创建一个新用户才能进行下一步。<br>不过对于用户来说可以绕过：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/468116082">Windows系统安装后，跳过创建用户的向导，直接使用administrator账户</a></p>
-<p><br>事情还没完，因为前面跳过了创建用户的操作，Windows 内置用户<code>Administrator</code>又默认是禁用的，导致无法顺利进入桌面。</p>
-<p><img src="/images/windows-unattend/16.webp"></p>
-<p>所以要在应答文件中设置启用<code>Administrator</code>用户并自动登录。<br>添加 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup">Microsoft-Windows-Shell-Setup</a> 组件。<br>将 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon">AutoLogon</a>&#x2F;<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon-enabled">Enabled</a> 设置为<code>true</code>。</p>
-<p>将 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon">AutoLogon</a>&#x2F;<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon-username">Username</a> 设置为<code>Administrator</code>。</p>
-<p><img src="/images/windows-unattend/17.webp"></p>
-<h2 id="使用应答文件"><a href="#使用应答文件" class="headerlink" title="使用应答文件"></a>使用应答文件</h2><p>经过上面的分析，最终得到一个最小的应答文件：</p>
+<h3 id="oobeSystem"><a class="header-anchor" href="#oobeSystem">#</a>oobeSystem</h3>
+<p>重启后来到的第一个设置页面，要求我们创建用户。</p>
+<p><img src="/images/windows-unattend/09.webp" alt=""><br>
+<img src="/images/windows-unattend/10.webp" alt=""></p>
+<p>输入产品密钥<br>
+<img src="/images/windows-unattend/11.webp" alt=""></p>
+<p>更新设置<br>
+<img src="/images/windows-unattend/12.webp" alt=""></p>
+<p>时间设置<br>
+<img src="/images/windows-unattend/13.webp" alt=""></p>
+<p>网络设置<br>
+<img src="/images/windows-unattend/14.webp" alt=""></p>
+<p>以上这些设置可以统一用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/automate-oobe">SkipMachineOOBE</a> 属性跳过<br>
+添加 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup">Microsoft-Windows-Shell-Setup</a> 组件，将 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-oobe">OOBE</a>/<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/automate-oobe">SkipMachineOOBE</a> 设置为<code>true</code>。</p>
+<p><img src="/images/windows-unattend/15.webp" alt=""></p>
+<p>注意，微软并不推荐使用<code>SkipMachineOOBE</code>，但是不用的话则会强制要求用户创建一个新用户才能进行下一步。<br>
+不过对于用户来说可以绕过：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/468116082">Windows系统安装后，跳过创建用户的向导，直接使用administrator账户</a></p>
+<p><br>
+事情还没完，因为前面跳过了创建用户的操作，Windows 内置用户<code>Administrator</code>又默认是禁用的，导致无法顺利进入桌面。</p>
+<p><img src="/images/windows-unattend/16.webp" alt=""></p>
+<p>所以要在应答文件中设置启用<code>Administrator</code>用户并自动登录。<br>
+添加 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup">Microsoft-Windows-Shell-Setup</a> 组件。<br>
+将 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon">AutoLogon</a>/<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon-enabled">Enabled</a> 设置为<code>true</code>。</p>
+<p>将 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon">AutoLogon</a>/<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-shell-setup-autologon-username">Username</a> 设置为<code>Administrator</code>。</p>
+<p><img src="/images/windows-unattend/17.webp" alt=""></p>
+<h2 id="使用应答文件"><a class="header-anchor" href="#使用应答文件">#</a>使用应答文件</h2>
+<p>经过上面的分析，最终得到一个最小的应答文件：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">unattend</span> <span class="attr">xmlns</span>=<span class="string">&quot;urn:schemas-microsoft-com:unattend&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">settings</span> <span class="attr">pass</span>=<span class="string">&quot;windowsPE&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">component</span> <span class="attr">name</span>=<span class="string">&quot;Microsoft-Windows-International-Core-WinPE&quot;</span> <span class="attr">processorArchitecture</span>=<span class="string">&quot;x86&quot;</span> <span class="attr">publicKeyToken</span>=<span class="string">&quot;31bf3856ad364e35&quot;</span> <span class="attr">language</span>=<span class="string">&quot;neutral&quot;</span> <span class="attr">versionScope</span>=<span class="string">&quot;nonSxS&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">xmlns:wcm</span>=<span class="string">&quot;http://schemas.microsoft.com/WMIConfig/2002/State&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">InputLocale</span>&gt;</span>zh-CN<span class="tag">&lt;/<span class="name">InputLocale</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">SystemLocale</span>&gt;</span>zh-CN<span class="tag">&lt;/<span class="name">SystemLocale</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">UILanguage</span>&gt;</span>zh-CN<span class="tag">&lt;/<span class="name">UILanguage</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">UserLocale</span>&gt;</span>zh-CN<span class="tag">&lt;/<span class="name">UserLocale</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">component</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">component</span> <span class="attr">name</span>=<span class="string">&quot;Microsoft-Windows-Setup&quot;</span> <span class="attr">processorArchitecture</span>=<span class="string">&quot;x86&quot;</span> <span class="attr">publicKeyToken</span>=<span class="string">&quot;31bf3856ad364e35&quot;</span> <span class="attr">language</span>=<span class="string">&quot;neutral&quot;</span> <span class="attr">versionScope</span>=<span class="string">&quot;nonSxS&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">xmlns:wcm</span>=<span class="string">&quot;http://schemas.microsoft.com/WMIConfig/2002/State&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">UserData</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">AcceptEula</span>&gt;</span>true<span class="tag">&lt;/<span class="name">AcceptEula</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">UserData</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">component</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">settings</span> <span class="attr">pass</span>=<span class="string">&quot;oobeSystem&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">component</span> <span class="attr">name</span>=<span class="string">&quot;Microsoft-Windows-Shell-Setup&quot;</span> <span class="attr">processorArchitecture</span>=<span class="string">&quot;x86&quot;</span> <span class="attr">publicKeyToken</span>=<span class="string">&quot;31bf3856ad364e35&quot;</span> <span class="attr">language</span>=<span class="string">&quot;neutral&quot;</span> <span class="attr">versionScope</span>=<span class="string">&quot;nonSxS&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">xmlns:wcm</span>=<span class="string">&quot;http://schemas.microsoft.com/WMIConfig/2002/State&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">OOBE</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">SkipMachineOOBE</span>&gt;</span>true<span class="tag">&lt;/<span class="name">SkipMachineOOBE</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">OOBE</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">AutoLogon</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">Enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">Enabled</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">Username</span>&gt;</span>Administrator<span class="tag">&lt;/<span class="name">Username</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">AutoLogon</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">component</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">unattend</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>使用这个应答文件仅会出现两次交互，<code>选择系统版本</code>和<code>安装磁盘位置</code>。<br>最后将这个 xml 文件命名为<code>autounattend.xml</code>，放到 ISO 根目录下即可。</p>
-<p><img src="/images/windows-unattend/18.webp"></p>
-<h2 id="从第三方-WinPE-安装"><a href="#从第三方-WinPE-安装" class="headerlink" title="从第三方 WinPE 安装"></a>从第三方 WinPE 安装</h2><p>实际上，如今用微软官方 ISO 去安装的方式已经不多见了。主流的方式是用第三方 PE 系统，因为有桌面，有丰富的工具，比如 <a target="_blank" rel="noopener" href="https://www.wepe.com.cn/">微PE工具箱</a> 之类的系统。<br>从第三方 PE 去安装意味着应答文件中 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/windowspe">windowsPE</a> 阶段的设置都是无意义的。<br>所以从第三方 PE 安装的话，则最小应答文件是这样的：</p>
+<p>使用这个应答文件仅会出现两次交互，<code>选择系统版本</code>和<code>安装磁盘位置</code>。<br>
+最后将这个 xml 文件命名为<code>autounattend.xml</code>，放到 ISO 根目录下即可。</p>
+<p><img src="/images/windows-unattend/18.webp" alt=""></p>
+<h2 id="从第三方-WinPE-安装"><a class="header-anchor" href="#从第三方-WinPE-安装">#</a>从第三方 WinPE 安装</h2>
+<p>实际上，如今用微软官方 ISO 去安装的方式已经不多见了。主流的方式是用第三方 PE 系统，因为有桌面，有丰富的工具，比如 <a target="_blank" rel="noopener" href="https://www.wepe.com.cn">微PE工具箱</a> 之类的系统。<br>
+从第三方 PE 去安装意味着应答文件中 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/windowspe">windowsPE</a> 阶段的设置都是无意义的。<br>
+所以从第三方 PE 安装的话，则最小应答文件是这样的：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">unattend</span> <span class="attr">xmlns</span>=<span class="string">&quot;urn:schemas-microsoft-com:unattend&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">settings</span> <span class="attr">pass</span>=<span class="string">&quot;specialize&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">component</span> <span class="attr">name</span>=<span class="string">&quot;Microsoft-Windows-Security-SPP-UX&quot;</span> <span class="attr">processorArchitecture</span>=<span class="string">&quot;x86&quot;</span> <span class="attr">publicKeyToken</span>=<span class="string">&quot;31bf3856ad364e35&quot;</span> <span class="attr">language</span>=<span class="string">&quot;neutral&quot;</span> <span class="attr">versionScope</span>=<span class="string">&quot;nonSxS&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">xmlns:wcm</span>=<span class="string">&quot;http://schemas.microsoft.com/WMIConfig/2002/State&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">SkipAutoActivation</span>&gt;</span>true<span class="tag">&lt;/<span class="name">SkipAutoActivation</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">component</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">settings</span> <span class="attr">pass</span>=<span class="string">&quot;oobeSystem&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">component</span> <span class="attr">name</span>=<span class="string">&quot;Microsoft-Windows-Shell-Setup&quot;</span> <span class="attr">processorArchitecture</span>=<span class="string">&quot;x86&quot;</span> <span class="attr">publicKeyToken</span>=<span class="string">&quot;31bf3856ad364e35&quot;</span> <span class="attr">language</span>=<span class="string">&quot;neutral&quot;</span> <span class="attr">versionScope</span>=<span class="string">&quot;nonSxS&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">xmlns:wcm</span>=<span class="string">&quot;http://schemas.microsoft.com/WMIConfig/2002/State&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">OOBE</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">SkipMachineOOBE</span>&gt;</span>true<span class="tag">&lt;/<span class="name">SkipMachineOOBE</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">OOBE</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">AutoLogon</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">Enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">Enabled</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">Username</span>&gt;</span>Administrator<span class="tag">&lt;/<span class="name">Username</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">AutoLogon</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">component</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">settings</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">unattend</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>注意这里在 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/specialize">specialize</a> 阶段添加了 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-security-spp-ux">Microsoft-Windows-Security-SPP-UX</a> 组件。<br>属性 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-security-spp-ux-skipautoactivation">SkipAutoActivation</a> 值设置为<code>true</code>，表示跳过激活，否则安装会失败。</p>
-<p><br>使用方法：将应答文件放在 <code>C:\Windows\Panther\unattend.xml</code>即可。<br>或者用 WinNTSetup 之类的工具安装，可以指定应答文件。</p>
-<p><img src="/images/windows-unattend/19.webp"></p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>应答文件与系统版本是有关的，如果应答文件中存在不支持的参数，映像管理工具会警告：</p>
-<p><img src="/images/windows-unattend/20.webp"></p>
+<p>注意这里在 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/specialize">specialize</a> 阶段添加了 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-security-spp-ux">Microsoft-Windows-Security-SPP-UX</a> 组件。<br>
+属性 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/unattend/microsoft-windows-security-spp-ux-skipautoactivation">SkipAutoActivation</a> 值设置为<code>true</code>，表示跳过激活，否则安装会失败。</p>
+<p><br>
+使用方法：将应答文件放在 <code>C:\Windows\Panther\unattend.xml</code>即可。<br>
+或者用 WinNTSetup 之类的工具安装，可以指定应答文件。</p>
+<p><img src="/images/windows-unattend/19.webp" alt=""></p>
+<h2 id="其他"><a class="header-anchor" href="#其他">#</a>其他</h2>
+<p>应答文件与系统版本是有关的，如果应答文件中存在不支持的参数，映像管理工具会警告：</p>
+<p><img src="/images/windows-unattend/20.webp" alt=""></p>
 <p>如果试图用错误的应答文件安装会导致失败：</p>
-<p><img src="/images/windows-unattend/21.webp"></p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Junson142099/article/details/109308109">使用Windows Sysprep来封装系统</a><br><a target="_blank" rel="noopener" href="https://www.doc88.com/p-9992000210930.html">Windows7 无人值守技术</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/wsim/answer-files-overview">应答文件概述</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/automate-windows-setup">自动化 Windows 安装</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/wsim/best-practices-for-authoring-answer-files">有关创建应答文件的最佳做法</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/windows-setup-automation-overview#implicit-answer-file-search-order">应答文件搜索顺序</a></p>
+<p><img src="/images/windows-unattend/21.webp" alt=""></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Junson142099/article/details/109308109">使用Windows Sysprep来封装系统</a><br>
+<a target="_blank" rel="noopener" href="https://www.doc88.com/p-9992000210930.html">Windows7 无人值守技术</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/wsim/answer-files-overview">应答文件概述</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/automate-windows-setup">自动化 Windows 安装</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/customize/desktop/wsim/best-practices-for-authoring-answer-files">有关创建应答文件的最佳做法</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows-hardware/manufacture/desktop/windows-setup-automation-overview?#implicit-answer-file-search-order">应答文件搜索顺序</a></p>
 
       </div>
       
@@ -239,30 +287,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows/" title="Windows">
-                        #Windows
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E7%B3%BB%E7%BB%9F%E5%B0%81%E8%A3%85/" title="系统封装">
-                        #系统封装
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -304,13 +328,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -530,43 +557,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%88%B6%E4%BD%9C%20Windows%20%E5%BA%94%E7%AD%94%E6%96%87%E4%BB%B6 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F05%2F25%2Fwindows-unattend%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/05/25/windows-unattend/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -169,44 +173,55 @@
       </div>
       <div class="markdown-body">
         <p>研究 GCC 交叉编译器有些天了，相关的资料不算很多，可能是因为太折腾了，这个话题没有太多人讨论。没有特别需求的话大家更愿意用系统自带的交叉编译器，开箱即用。</p>
-<p><br>网络上相关资料更多都是在制作 Linux x86_64 和 Linux arm64 之间的交叉编译器，我也尝试过，但流程很复杂，每个人的编译环境又不同，很容易编译失败。<br>因为我平时主要在 Windows 平台上工作，所以尝试在 Linux 上编译一个 Windows 上运行的 GCC，经过数十次编译失败，耗费N个小时后，终于成功了！</p>
-<p><br>首先有些基本概念要了解一下：</p>
+<p><br>
+网络上相关资料更多都是在制作 Linux x86_64 和 Linux arm64 之间的交叉编译器，我也尝试过，但流程很复杂，每个人的编译环境又不同，很容易编译失败。<br>
+因为我平时主要在 Windows 平台上工作，所以尝试在 Linux 上编译一个 Windows 上运行的 GCC，经过数十次编译失败，耗费N个小时后，终于成功了！</p>
+<p><br>
+首先有些基本概念要了解一下：</p>
 <ul>
 <li>有个工具包叫<code>Binutils</code>，它是汇编器、链接器的源码，是必须要编译的，它不依赖 glibc 和 Linux 头文件，比较独立，所以编译一般不会出问题。</li>
 <li>如果目标是 Linux 平台，则编译过程比较复杂，gcc、glibc要分阶段编译，比较复杂，容易失败。而目标平台是 Windows 的话则简单很多。</li>
 </ul>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>我的编译环境是 Ubuntu 16.04</p>
+<h2 id="准备"><a class="header-anchor" href="#准备">#</a>准备</h2>
+<p>我的编译环境是 Ubuntu 16.04</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># lsb_release -a</span></span><br><span class="line">No LSB modules are available.</span><br><span class="line">Distributor ID: Ubuntu</span><br><span class="line">Description:    Ubuntu 16.04.7 LTS</span><br><span class="line">Release:        16.04</span><br><span class="line">Codename:       xenial</span><br></pre></td></tr></table></figure>
 <p>之所以选择这么低版本的系统是因为其 glibc 版本足够低，编译出的工具链可以运行在更高的系统之上，反之则不行。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ldd --version</span></span><br><span class="line">ldd (Ubuntu GLIBC 2.23-0ubuntu11.3) 2.23</span><br><span class="line">Copyright (C) 2016 Free Software Foundation, Inc.</span><br><span class="line">This is free software; see the <span class="built_in">source</span> <span class="keyword">for</span> copying conditions.  There is NO</span><br><span class="line">warranty; not even <span class="keyword">for</span> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</span><br><span class="line">Written by Roland McGrath and Ulrich Drepper.</span><br></pre></td></tr></table></figure>
-
-<p><br>Binutils 版本选择的是 2.44：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/binutils/">https://mirrors.ustc.edu.cn/gnu/binutils/</a><br>GCC 版本选择的是 15.1.0：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0/">https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0/</a><br>mingw-w64 13.0.0：<a target="_blank" rel="noopener" href="https://www.mingw-w64.org/source/">https://www.mingw-w64.org/source/</a></p>
-<p><br>预先设置一些环境变量，避免后面重复输入</p>
+<p><br>
+Binutils 版本选择的是 2.44：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/binutils/">https://mirrors.ustc.edu.cn/gnu/binutils/</a><br>
+GCC 版本选择的是 15.1.0：<a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0/">https://mirrors.ustc.edu.cn/gnu/gcc/gcc-15.1.0/</a><br>
+mingw-w64 13.0.0：<a target="_blank" rel="noopener" href="https://www.mingw-w64.org/source/">https://www.mingw-w64.org/source/</a></p>
+<p><br>
+预先设置一些环境变量，避免后面重复输入</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> BUILD=x86_64-linux-gnu</span><br><span class="line"><span class="built_in">export</span> HOST=x86_64-linux-gnu</span><br><span class="line"><span class="built_in">export</span> TARGET=x86_64-w64-mingw32</span><br><span class="line"><span class="built_in">export</span> PREFIX=/opt/cross</span><br><span class="line"><span class="built_in">export</span> SYSROOT=<span class="variable">$PREFIX</span>/<span class="variable">$TARGET</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="编译-Binutils"><a href="#编译-Binutils" class="headerlink" title="编译 Binutils"></a>编译 Binutils</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf binutils-2.44.tar.xz</span><br><span class="line"><span class="built_in">cd</span> binutils-2.44/</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=<span class="variable">$PREFIX</span> --disable-nls --disable-multilib --build=<span class="variable">$BUILD</span> --host=<span class="variable">$HOST</span> --target=<span class="variable">$TARGET</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
+<h2 id="编译-Binutils"><a class="header-anchor" href="#编译-Binutils">#</a>编译 Binutils</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf binutils-2.44.tar.xz</span><br><span class="line"><span class="built_in">cd</span> binutils-2.44/</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=<span class="variable">$PREFIX</span> --disable-nls --disable-multilib --build=<span class="variable">$BUILD</span> --host=<span class="variable">$HOST</span> --target=<span class="variable">$TARGET</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
 <p>binutils 不依赖内核头文件和 glibc，几乎不会失败。</p>
-<h2 id="编译-Stage-1-GCC"><a href="#编译-Stage-1-GCC" class="headerlink" title="编译 Stage 1 GCC"></a>编译 Stage 1 GCC</h2><p>接着编译第一阶段的 GCC，仅编译 C 部分，它的最用是编译后面的 mingw crt。<br>在开始前需要创建<code>include</code>和<code>lib</code>目录的软连接，不这么做的话会出现找不到 mingw-w64 头文件的错误，错误信息类似这样：</p>
+<h2 id="编译-Stage-1-GCC"><a class="header-anchor" href="#编译-Stage-1-GCC">#</a>编译 Stage 1 GCC</h2>
+<p>接着编译第一阶段的 GCC，仅编译 C 部分，它的最用是编译后面的 mingw crt。<br>
+在开始前需要创建<code>include</code>和<code>lib</code>目录的软连接，不这么做的话会出现找不到 mingw-w64 头文件的错误，错误信息类似这样：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">if [ -d ../prev-gcc ]; then \</span><br><span class="line">  cd ../prev-gcc &amp;&amp; \</span><br><span class="line">  make real-install-headers-tar DESTDIR=`pwd`/../gcc/ \</span><br><span class="line">    libsubdir=. ; \</span><br><span class="line">else \</span><br><span class="line">  set -e; for ml in `cat fixinc_list`; do \</span><br><span class="line">    sysroot_headers_suffix=`echo $&#123;ml&#125; | sed -e &#x27;s/;.*$//&#x27;`; \</span><br><span class="line">    multi_dir=`echo $&#123;ml&#125; | sed -e &#x27;s/^[^;]*;//&#x27;`; \</span><br><span class="line">    fix_dir=include-fixed$&#123;multi_dir&#125;; \</span><br><span class="line">    if ! false &amp;&amp; test ! -d `echo /usr/x86_64-w64-mingw32$&#123;sysroot_headers_suffix&#125;/mingw/include | sed -e :a -e &#x27;s,[^/]*/\.\.\/,,&#x27; -e ta`; then \</span><br><span class="line">      echo &quot;The directory (BUILD_SYSTEM_HEADER_DIR) that should contain system headers does not exist:&quot; &gt;&amp;2 ; \</span><br><span class="line">      echo &quot;  `echo /usr/x86_64-w64-mingw32$&#123;sysroot_headers_suffix&#125;/mingw/include | sed -e :a -e &#x27;s,[^/]*/\.\.\/,,&#x27; -e ta`&quot; &gt;&amp;2 ; \</span><br><span class="line">      case linux-gnu in \</span><br><span class="line">        darwin*) \</span><br><span class="line">          echo &quot;(on Darwin this usually means you need to pass the --with-sysroot= flag to point to a valid MacOS SDK)&quot; &gt;&amp;2; \</span><br><span class="line">          ;; \</span><br><span class="line">      esac; \</span><br><span class="line">      tooldir_sysinc=`echo &quot;/opt/x86_64-w64-mingw32-gcc15/lib/gcc/x86_64-w64-mingw32/15.1.0/../../../../x86_64-w64-mingw32/sys-include&quot; | sed -e :a -e &quot;s,[^/]*/\.\.\/,,&quot; -e ta`; \</span><br><span class="line">      if test &quot;x`echo /usr/x86_64-w64-mingw32$&#123;sysroot_headers_suffix&#125;/mingw/include | sed -e :a -e &#x27;s,[^/]*/\.\.\/,,&#x27; -e ta`&quot; = &quot;x$&#123;tooldir_sysinc&#125;&quot;; \</span><br><span class="line">      then sleep 1; else exit 1; fi; \</span><br><span class="line">    fi; \</span><br><span class="line">    /bin/bash ../../gcc/../mkinstalldirs $&#123;fix_dir&#125;; \</span><br><span class="line">    chmod a+rx $&#123;fix_dir&#125; || true; \</span><br><span class="line">    (TARGET_MACHINE=&#x27;x86_64-w64-mingw32&#x27;; srcdir=`cd ../../gcc; $&#123;PWDCMD-pwd&#125;`; \</span><br><span class="line">      SHELL=&#x27;/bin/bash&#x27;; MACRO_LIST=`$&#123;PWDCMD-pwd&#125;`/macro_list ; \</span><br><span class="line">      gcc_dir=`$&#123;PWDCMD-pwd&#125;` ; \</span><br><span class="line">      export TARGET_MACHINE srcdir SHELL MACRO_LIST &amp;&amp; \</span><br><span class="line">      cd ../build-x86_64-linux-gnu/fixincludes &amp;&amp; \</span><br><span class="line">      /bin/bash ./fixinc.sh &quot;$&#123;gcc_dir&#125;/$&#123;fix_dir&#125;&quot; \</span><br><span class="line">        `echo /usr/x86_64-w64-mingw32$&#123;sysroot_headers_suffix&#125;/mingw/include | sed -e :a -e &#x27;s,[^/]*/\.\.\/,,&#x27; -e ta`  ); \</span><br><span class="line">  done; \</span><br><span class="line">fi</span><br><span class="line">The directory (BUILD_SYSTEM_HEADER_DIR) that should contain system headers does not exist:</span><br><span class="line">  /usr/x86_64-w64-mingw32/mingw/include</span><br><span class="line">make[2]: *** [Makefile:3643: stmp-fixinc] Error 1</span><br><span class="line">make[2]: *** Waiting for unfinished jobs....</span><br><span class="line">rm gcc.pod</span><br><span class="line">make[2]: Leaving directory &#x27;/opt/gcc-15.1.0/build/gcc&#x27;</span><br><span class="line">make[1]: *** [Makefile:4728: all-gcc] Error 2</span><br><span class="line">make[1]: Leaving directory &#x27;/opt/gcc-15.1.0/build&#x27;</span><br><span class="line">make: *** [Makefile:1068: all] Error 2</span><br></pre></td></tr></table></figure>
-<p>Makefile 文件中硬编码了一个规则：它强制性地在<code>sysroot</code>路径后面拼接上了一个<code>/mingw/include</code>子目录，然后在这里查找头文件。<br>为了让 GCC 编译通过，必须能让它在<code>$SYSROOT/mingw/include</code>中找到头文件，<code>lib</code>目录同理。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p <span class="variable">$SYSROOT</span>/include <span class="variable">$SYSROOT</span>/mingw</span><br><span class="line">sudo <span class="built_in">ln</span> -s <span class="variable">$SYSROOT</span>/include <span class="variable">$SYSROOT</span>/mingw/include</span><br><span class="line">sudo <span class="built_in">ln</span> -s <span class="variable">$SYSROOT</span>/lib <span class="variable">$SYSROOT</span>/mingw/lib</span><br></pre></td></tr></table></figure>
+<p>Makefile 文件中硬编码了一个规则：它强制性地在<code>sysroot</code>路径后面拼接上了一个<code>/mingw/include</code>子目录，然后在这里查找头文件。<br>
+为了让 GCC 编译通过，必须能让它在<code>$SYSROOT/mingw/include</code>中找到头文件，<code>lib</code>目录同理。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p <span class="variable">$SYSROOT</span>/include <span class="variable">$SYSROOT</span>/mingw</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">ln</span> -s <span class="variable">$SYSROOT</span>/include <span class="variable">$SYSROOT</span>/mingw/include</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">ln</span> -s <span class="variable">$SYSROOT</span>/lib <span class="variable">$SYSROOT</span>/mingw/lib</span><br></pre></td></tr></table></figure>
 <p>开始编译</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt</span><br><span class="line">tar xf gcc-15.1.0.tar.xz</span><br><span class="line"><span class="built_in">cd</span> gcc-15.1.0/</span><br><span class="line">./contrib/download_prerequisites</span><br><span class="line"><span class="built_in">mkdir</span> build1 &amp;&amp; <span class="built_in">cd</span> build1</span><br><span class="line">../configure --prefix=<span class="variable">$PREFIX</span> \</span><br><span class="line">    --with-sysroot=<span class="variable">$SYSROOT</span> \</span><br><span class="line">    --enable-languages=c \</span><br><span class="line">    --disable-shared \</span><br><span class="line">    --disable-threads \</span><br><span class="line">    --disable-libstdcxx \</span><br><span class="line">    --disable-multilib \</span><br><span class="line">    --disable-werror \</span><br><span class="line">    --disable-checking \</span><br><span class="line">    --build=<span class="variable">$BUILD</span> \</span><br><span class="line">    --host=<span class="variable">$HOST</span> \</span><br><span class="line">    --target=<span class="variable">$TARGET</span></span><br><span class="line">    </span><br><span class="line">make -j$(<span class="built_in">nproc</span>) all-gcc</span><br><span class="line">make install-strip-gcc</span><br></pre></td></tr></table></figure>
-
-<h2 id="安装-mignw-w64-头文件"><a href="#安装-mignw-w64-头文件" class="headerlink" title="安装 mignw-w64 头文件"></a>安装 mignw-w64 头文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/mingw-w64-v13.0.0/mingw-w64-headers</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=<span class="variable">$SYSROOT</span> --build=<span class="variable">$BUILD</span> --host=<span class="variable">$HOST</span></span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
-
-<h2 id="编译-mignw-w64-crt"><a href="#编译-mignw-w64-crt" class="headerlink" title="编译 mignw-w64 crt"></a>编译 mignw-w64 crt</h2><p>从这一步开始，我们需要用到刚才制作的 GCC 编译器了，所以要将<code>bin</code>目录添加到<code>PATH</code>环境变量中：</p>
+<h2 id="安装-mignw-w64-头文件"><a class="header-anchor" href="#安装-mignw-w64-头文件">#</a>安装 mignw-w64 头文件</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/mingw-w64-v13.0.0/mingw-w64-headers</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=<span class="variable">$SYSROOT</span> --build=<span class="variable">$BUILD</span> --host=<span class="variable">$HOST</span></span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
+<h2 id="编译-mignw-w64-crt"><a class="header-anchor" href="#编译-mignw-w64-crt">#</a>编译 mignw-w64 crt</h2>
+<p>从这一步开始，我们需要用到刚才制作的 GCC 编译器了，所以要将<code>bin</code>目录添加到<code>PATH</code>环境变量中：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PREFIX</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
 <p>开始编译</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/mingw-w64-v13.0.0/mingw-w64-crt</span><br><span class="line"><span class="built_in">mkdir</span> build &amp;&amp; <span class="built_in">cd</span> build</span><br><span class="line">../configure --prefix=<span class="variable">$SYSROOT</span> --build=<span class="variable">$BUILD</span> --host=<span class="variable">$TARGET</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
-
-<h2 id="编译完整-GCC"><a href="#编译完整-GCC" class="headerlink" title="编译完整 GCC"></a>编译完整 GCC</h2><p>这是最后一步，编译完整的 GCC。注意编译时新建一个文件夹，不要在第一次的 build 目录中进行</p>
+<h2 id="编译完整-GCC"><a class="header-anchor" href="#编译完整-GCC">#</a>编译完整 GCC</h2>
+<p>这是最后一步，编译完整的 GCC。注意编译时新建一个文件夹，不要在第一次的 build 目录中进行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /opt/gcc-15.1.0/</span><br><span class="line"><span class="built_in">mkdir</span> build2 &amp;&amp; <span class="built_in">cd</span> build2</span><br><span class="line">../configure --prefix=<span class="variable">$PREFIX</span> --with-sysroot=<span class="variable">$SYSROOT</span> --enable-languages=c,c++ --enable-threads=win32 --enable-shared --disable-multilib --disable-werror --disable-checking --build=<span class="variable">$BUILD</span> --host=<span class="variable">$HOST</span> --target=<span class="variable">$TARGET</span></span><br><span class="line">make -j$(<span class="built_in">nproc</span>)</span><br><span class="line">make install-strip</span><br></pre></td></tr></table></figure>
 <p>大功告成！最后可以删除无用的目录</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf <span class="variable">$SYSROOT</span>/mingw</span><br><span class="line"><span class="built_in">rm</span> -rf <span class="variable">$SYSROOT</span>/lib32</span><br></pre></td></tr></table></figure>
-
-<h2 id="打包"><a href="#打包" class="headerlink" title="打包"></a>打包</h2><p>最后用<code>dpkg</code>打包为<code>.deb</code>文件，方便安装到其他机器上使用。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://www.wannaexpresso.com/2022/02/21/gcc-cross-compiler-make-it-your-own/">「天龙八部」年轻人的第一个GCC交叉编译器</a></p>
+<h2 id="打包"><a class="header-anchor" href="#打包">#</a>打包</h2>
+<p>最后用<code>dpkg</code>打包为<code>.deb</code>文件，方便安装到其他机器上使用。</p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://www.wannaexpresso.com/2022/02/21/gcc-cross-compiler-make-it-your-own/">「天龙八部」年轻人的第一个GCC交叉编译器</a></p>
 
       </div>
       
@@ -218,30 +233,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-20 09:44:38
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/GCC/" title="GCC">
-                        #GCC
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/" title="交叉编译">
-                        #交叉编译
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -283,13 +274,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -509,43 +503,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%88%B6%E4%BD%9C%20Linux%20%E4%B8%8A%E7%9A%84%20x86_64-w64-mingw32-gcc%20%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%99%A8 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2025%2F06%2F15%2F202506151%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2025/06/15/202506151/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,17 +166,33 @@
           
       </div>
       <div class="markdown-body">
-        <p><code>await Task.Yield()</code>的意义就是一句话：释放控制权，让其他任务得到执行的机会。<br>为什么要这么做呢？主要是 <strong>为了让调用者没有 await 的时候可以立即返回</strong>。<br><br>考虑以下例子：</p>
+        <p><code>await Task.Yield()</code>的意义就是一句话：释放控制权，让其他任务得到执行的机会。<br>
+为什么要这么做呢？主要是 <strong>为了让调用者没有 await 的时候可以立即返回</strong>。<br>
+<br>
+考虑以下例子：</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">async</span> Task <span class="title">Test</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    Thread.Sleep(<span class="number">1000</span>); <span class="comment">// 模拟耗时操作</span></span><br><span class="line">	</span><br><span class="line">    <span class="keyword">await</span> Bar(); <span class="comment">// 释放控制权</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">async</span> Task <span class="title">Foo</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    _ = Test(); <span class="comment">// 不需要等待 Test 执行完成，而是希望尽快返回</span></span><br><span class="line">    Console.WriteLine(<span class="string">&quot;Called Test&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>因为 Test 方法开头有一段耗时的操作，会阻塞 Foo 一秒钟。直到碰上<code>await</code>释放了控制权，此时由于调用方并没有用<code>await</code>去等待 Test 方法，所以 Foo 才得以继续执行。<br><br>问题是什么呢？问题在于 Foo 希望立即返回，而你（Test方法）却阻塞了我一秒钟！<br>作为异步 API 的设计者，那么就可以在函数开头加上一句<code>await Task.Yield()</code>。</p>
+<p>因为 Test 方法开头有一段耗时的操作，会阻塞 Foo 一秒钟。直到碰上<code>await</code>释放了控制权，此时由于调用方并没有用<code>await</code>去等待 Test 方法，所以 Foo 才得以继续执行。<br>
+<br>
+问题是什么呢？问题在于 Foo 希望立即返回，而你（Test方法）却阻塞了我一秒钟！<br>
+作为异步 API 的设计者，那么就可以在函数开头加上一句<code>await Task.Yield()</code>。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">async</span> Task <span class="title">Test</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">await</span> Task.Yield(); <span class="comment">// 立即释放控制权</span></span><br><span class="line">	</span><br><span class="line">    Thread.Sleep(<span class="number">1000</span>); <span class="comment">// 由于 await 之后重新分配到了新线程上执行，所以不会阻塞调用线程</span></span><br><span class="line">	</span><br><span class="line">    <span class="keyword">await</span> Bar();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这就实现了一个真正的异步方法！但注意这里有个前提，就是 <strong>调用者没有使用 await 去等待时才有意义</strong>。</p>
-<h2 id="为什么不用-Task-CompletedTask？"><a href="#为什么不用-Task-CompletedTask？" class="headerlink" title="为什么不用 Task.CompletedTask？"></a>为什么不用 Task.CompletedTask？</h2><p>从前面的内容来看，要实现一个能立即返回的异步方法，重点就是要尽可能快的调用<code>await</code>以达到释放控制权的目的。<br>那么我们可以去<code>await</code>框架内部的一些特殊的任务，比如 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.threading.tasks.task.completedtask">Task.CompletedTask</a>。</p>
+<h2 id="为什么不用-Task-CompletedTask？"><a class="header-anchor" href="#为什么不用-Task-CompletedTask？">#</a>为什么不用 Task.CompletedTask？</h2>
+<p>从前面的内容来看，要实现一个能立即返回的异步方法，重点就是要尽可能快的调用<code>await</code>以达到释放控制权的目的。<br>
+那么我们可以去<code>await</code>框架内部的一些特殊的任务，比如 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.threading.tasks.task.completedtask">Task.CompletedTask</a>。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">async</span> Task <span class="title">Test1</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">await</span> Task.CompletedTask; <span class="comment">// 因为是一个已完成的任务，所以不会释放控制权</span></span><br><span class="line">	</span><br><span class="line">    Thread.Sleep(<span class="number">1000</span>); <span class="comment">// 依然在调用线程上执行，导致阻塞</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>Task.CompletedTask</code>是一个已经完成的 Task 对象，它表示一个不返回任何结果的已完成任务。它会立即返回，并且不会引发线程切换。因为任务已经完成，不需要等待。<br>所以它和<code>Task.Yield</code>不是一回事。</p>
-<h2 id="Task-Delay-0-呢？"><a href="#Task-Delay-0-呢？" class="headerlink" title="Task.Delay(0) 呢？"></a>Task.Delay(0) 呢？</h2><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">async</span> Task <span class="title">Test1</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">await</span> Task.Delay(<span class="number">0</span>); <span class="comment">// 等同于 Task.CompletedTask</span></span><br><span class="line">	</span><br><span class="line">    Thread.Sleep(<span class="number">1000</span>); <span class="comment">// 依然在调用线程上执行，导致阻塞</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Task.CompletedTask</code>是一个已经完成的 Task 对象，它表示一个不返回任何结果的已完成任务。它会立即返回，并且不会引发线程切换。因为任务已经完成，不需要等待。<br>
+所以它和<code>Task.Yield</code>不是一回事。</p>
+<h2 id="Task-Delay-0-呢？"><a class="header-anchor" href="#Task-Delay-0-呢？">#</a>Task.Delay(0) 呢？</h2>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">async</span> Task <span class="title">Test1</span>()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">await</span> Task.Delay(<span class="number">0</span>); <span class="comment">// 等同于 Task.CompletedTask</span></span><br><span class="line">	</span><br><span class="line">    Thread.Sleep(<span class="number">1000</span>); <span class="comment">// 依然在调用线程上执行，导致阻塞</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在 <a target="_blank" rel="noopener" href="https://github.com/microsoft/referencesource/blob/master/mscorlib/system/threading/Tasks/Task.cs#L5863">Task.Delay</a> 实现中，延迟时间为 0 时将会返回<code>Task.CompletedTask</code>。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/22645024/">When would I use Task.Yield()?</a><br><a target="_blank" rel="noopener" href="https://blog.walterlv.com/post/sleep-delay-zero-vs-yield.html">C#&#x2F;.NET 中 Thread.Sleep(0), Task.Delay(0), Thread.Yield(), Task.Yield() 不同的执行效果和用法建议</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/OpenCoder/p/12201446.html">await Task.Yield()和await Task.CompletedTask有什么不同</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/dudu/p/task-yield.html">终于明白了 C# 中 Task.Yield 的用途</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/33407007/">Task.Delay(0) not asynchronous</a><br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18527149/">Task.Yield() versus Task.Delay(0)</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/22645024/">When would I use Task.Yield()?</a><br>
+<a target="_blank" rel="noopener" href="https://blog.walterlv.com/post/sleep-delay-zero-vs-yield.html">C#/.NET 中 Thread.Sleep(0), Task.Delay(0), Thread.Yield(), Task.Yield() 不同的执行效果和用法建议</a><br>
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/OpenCoder/p/12201446.html">await Task.Yield()和await Task.CompletedTask有什么不同</a><br>
+<a target="_blank" rel="noopener" href="https://www.cnblogs.com/dudu/p/task-yield.html">终于明白了 C# 中 Task.Yield 的用途</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/33407007/">Task.Delay(0) not asynchronous</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18527149/">Task.Yield() versus Task.Delay(0)</a></p>
 
       </div>
       
@@ -184,24 +204,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -243,13 +245,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -469,43 +474,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + await%20TaskYield%20%E7%9A%84%E6%84%8F%E4%B9%89 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2023%2F11%2F23%2Ftask-yield%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2023/11/23/task-yield/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

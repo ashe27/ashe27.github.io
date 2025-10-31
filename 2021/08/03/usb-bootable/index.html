@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -169,20 +173,27 @@
       </div>
       <div class="markdown-body">
         <p>目前市面上所有启动盘制作工具都可以说是套壳工具，核心都是依赖于finst和 <a target="_blank" rel="noopener" href="https://www.disktool.cn/">分区助手</a> 或 <a target="_blank" rel="noopener" href="https://www.diskgenius.cn/">DiskGenius</a>。</p>
-<h2 id="Legacy引导支持"><a href="#Legacy引导支持" class="headerlink" title="Legacy引导支持"></a>Legacy引导支持</h2><p>fbinst的作用是在U盘上分出一个自创格式的分区，也就是所谓的 <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/UD%E5%8C%BA/17608149">UD分区</a>，这个分区不被系统识别，所以有较强的防病毒作用，只能通过fbinst来编辑分区文件。缺点是不支持UEFI引导。<br>fbinst工具有1.6和1.7两个版本，互相不兼容，且只有1.6版本有命令行支持，所以所有启动盘制作工具都是用的1.6版本。</p>
+<h2 id="Legacy引导支持"><a class="header-anchor" href="#Legacy引导支持">#</a>Legacy引导支持</h2>
+<p>fbinst的作用是在U盘上分出一个自创格式的分区，也就是所谓的 <a target="_blank" rel="noopener" href="https://baike.baidu.com/item/UD%E5%8C%BA/17608149">UD分区</a>，这个分区不被系统识别，所以有较强的防病毒作用，只能通过fbinst来编辑分区文件。缺点是不支持UEFI引导。<br>
+fbinst工具有1.6和1.7两个版本，互相不兼容，且只有1.6版本有命令行支持，所以所有启动盘制作工具都是用的1.6版本。</p>
 <p>用命令行来划分UD区，并添加进去一个ISO文件的例子</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">:: 在第1块磁盘上，格式化并创建UD区，分配300m空间</span><br><span class="line">fbinst.exe (hd1) format --force --fat32 --align --extended 300m</span><br><span class="line">:: 添加菜单文件</span><br><span class="line">fbinst.exe (hd1) add-menu fb.cfg fb.cfg</span><br><span class="line">:: 添加grldr引导管理器</span><br><span class="line">fbinst.exe (hd1) add grldr grldr -e</span><br><span class="line">:: 添加ISO文件</span><br><span class="line">fbinst.exe (hd1) add wepe.iso wepe.iso -e</span><br></pre></td></tr></table></figure>
-
 <p>fb.cfg菜单</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">default 0</span><br><span class="line">timeout 0</span><br><span class="line">menu F1 grldr &quot;grldr&quot;</span><br></pre></td></tr></table></figure>
 <p>软件内置了grldr程序，但不是较新的版本，新的版本可以去 <a target="_blank" rel="noopener" href="http://grub4dos.chenall.net/">http://grub4dos.chenall.net/</a> 下载。然后手动添加到UD区并编辑内容为</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">map /wepe.iso (0xff)</span><br><span class="line">map --hook</span><br><span class="line">chainloader (0xff)</span><br></pre></td></tr></table></figure>
-<p>然后导出这个编辑过后的grldr即可，以后就可以通过命令行导入了。更多用法可以自行百度，这里不深究。<br>这样，这个U盘就支持Legacy引导了。</p>
-<h2 id="UEFI引导支持"><a href="#UEFI引导支持" class="headerlink" title="UEFI引导支持"></a>UEFI引导支持</h2><p>UEFI引导还需要再划出一个分区，一般是使用 <a target="_blank" rel="noopener" href="https://www.disktool.cn/">分区助手</a> 或 <a target="_blank" rel="noopener" href="https://www.diskgenius.cn/">DiskGenius</a> 来做。<br>并将支持UEFI引导的ISO文件解压到这个分区中，比如用分区助手大概是这样</p>
+<p>然后导出这个编辑过后的grldr即可，以后就可以通过命令行导入了。更多用法可以自行百度，这里不深究。<br>
+这样，这个U盘就支持Legacy引导了。</p>
+<h2 id="UEFI引导支持"><a class="header-anchor" href="#UEFI引导支持">#</a>UEFI引导支持</h2>
+<p>UEFI引导还需要再划出一个分区，一般是使用 <a target="_blank" rel="noopener" href="https://www.disktool.cn/">分区助手</a> 或 <a target="_blank" rel="noopener" href="https://www.diskgenius.cn/">DiskGenius</a> 来做。<br>
+并将支持UEFI引导的ISO文件解压到这个分区中，比如用分区助手大概是这样</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">:: 格式化</span><br><span class="line">PartAssist.exe /hd:1 /fmt:0 /fs:fat32</span><br><span class="line">:: 在U盘末尾分出300mb空间</span><br><span class="line">PartAssistexe /hd:1 /resize:0 /reduce-right:300 /align</span><br><span class="line">:: 在刚才的空间上创建一个隐藏分区</span><br><span class="line">PartAssist.exe /hd:1 /cre /pri /size:auto /end /fs:fat16 /hide /align /label:EFI</span><br><span class="line">:: 从EFI文件夹拷贝所有文件到隐藏分区</span><br><span class="line">PartAssist /hd:1 /whide:1 /src:D:\fbinst\EFI</span><br></pre></td></tr></table></figure>
 <p>这样，这个U盘就支持UEFI引导了。</p>
-<h2 id="用户数据区"><a href="#用户数据区" class="headerlink" title="用户数据区"></a>用户数据区</h2><p>用户数据区也就是用户用来存放数据的分区，系统可见，不需要额外操作。<br>经过上面两轮操作后，U盘就有了三个分区：UD分区、EFI分区、用户数据分区。</p>
-<p>最终就实现了市面上U盘制作工具所谓的三分区方案。<br><img src="/images/usb-bootable/1.png"></p>
+<h2 id="用户数据区"><a class="header-anchor" href="#用户数据区">#</a>用户数据区</h2>
+<p>用户数据区也就是用户用来存放数据的分区，系统可见，不需要额外操作。<br>
+经过上面两轮操作后，U盘就有了三个分区：UD分区、EFI分区、用户数据分区。</p>
+<p>最终就实现了市面上U盘制作工具所谓的三分区方案。<br>
+<img src="/images/usb-bootable/1.png" alt=""></p>
 <p>系统启动、封装相关技术可以去 <a target="_blank" rel="noopener" href="http://wuyou.net/">无忧启动</a> 论坛和 <a target="_blank" rel="noopener" href="https://www.itsk.com/">IT天空</a> 网站学习。</p>
 
       </div>
@@ -195,30 +206,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows/" title="Windows">
-                        #Windows
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E7%B3%BB%E7%BB%9F%E5%B0%81%E8%A3%85/" title="系统封装">
-                        #系统封装
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -260,13 +247,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -486,43 +476,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + U%E7%9B%98%E5%90%AF%E5%8A%A8%E7%9B%98%E5%B7%A5%E5%85%B7%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2021%2F08%2F03%2Fusb-bootable%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2021/08/03/usb-bootable/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,16 +166,24 @@
           
       </div>
       <div class="markdown-body">
-        <p>在用开发 DLL 模块时，DLL 往往需要知道自身何时被加载，以便初始化资源。<br>在非托管 DLL 开发中，是有 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/dlls/dllmain">DllMain</a> 入口点函数的，在这里可以处理初始化、卸载等操作。<br>而在 .NET 中，DLL 和 EXE 都被称作为 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/standard/assembly/">程序集</a>，程序集之间可以相互调用，无论是 EXE 或 DLL，这是与 Win32 开发中很大的一个不同之处。<br>而 DLL 程序集是没有入口点(<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.reflection.assembly.entrypoint">EntryPoint</a>)属性的。<br><br>那么如何解决 DLL 的初始化问题呢？<br>可以提供一个静态初始化方法，要求使用者必须先调用该方法进行 DLL 的初始化。但是这种解决方案一点都不酷。</p>
+        <p>在用开发 DLL 模块时，DLL 往往需要知道自身何时被加载，以便初始化资源。<br>
+在非托管 DLL 开发中，是有 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/dlls/dllmain">DllMain</a> 入口点函数的，在这里可以处理初始化、卸载等操作。<br>
+而在 .NET 中，DLL 和 EXE 都被称作为 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/standard/assembly/">程序集</a>，程序集之间可以相互调用，无论是 EXE 或 DLL，这是与 Win32 开发中很大的一个不同之处。<br>
+而 DLL 程序集是没有入口点(<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.reflection.assembly.entrypoint">EntryPoint</a>)属性的。<br>
+<br>
+那么如何解决 DLL 的初始化问题呢？<br>
+可以提供一个静态初始化方法，要求使用者必须先调用该方法进行 DLL 的初始化。但是这种解决方案一点都不酷。</p>
 <p>在 .NET 程序集中，EXE 是有入口点(<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.reflection.assembly.entrypoint">EntryPoint</a>)属性的，那么我们可以将工程改为 EXE，并将文件后缀名改为 <code>.dll</code>。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">OutputType</span>&gt;</span>WinExe<span class="tag">&lt;/<span class="name">OutputType</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TargetExt</span>&gt;</span>.dll<span class="tag">&lt;/<span class="name">TargetExt</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>在 EXE 的入口处调用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.appdomain.executeassembly">AppDomain.ExecuteAssembly</a> 方法进行 DLL 的初始化即可。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AppDomain.CurrentDomain.ExecuteAssembly(<span class="string">&quot;MyDll.dll&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="模块初始化器"><a href="#模块初始化器" class="headerlink" title="模块初始化器"></a>模块初始化器</h2><p>从 .NET 5 开始，提供了 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.runtime.compilerservices.moduleinitializerattribute">ModuleInitializerAttribute</a> 属性来标注模块的初始化方法。</p>
+<h2 id="模块初始化器"><a class="header-anchor" href="#模块初始化器">#</a>模块初始化器</h2>
+<p>从 .NET 5 开始，提供了 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/api/system.runtime.compilerservices.moduleinitializerattribute">ModuleInitializerAttribute</a> 属性来标注模块的初始化方法。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Runtime.CompilerServices;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">MyInitializer</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">ModuleInitializer</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Initialize</span>()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 在加载模块时执行初始化操作</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这样一来，无需显式调用初始化方法，初始化操作会在DLL被加载时自动执行。</p>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/9577567/">Can a C# .dll assembly contain an entry point?</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/csharp/language-reference/proposals/csharp-9.0/module-initializers">Module Initializers</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/9577567/">Can a C# .dll assembly contain an entry point?</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/csharp/language-reference/proposals/csharp-9.0/module-initializers">Module Initializers</a></p>
 
       </div>
       
@@ -183,24 +195,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -242,13 +236,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -468,43 +465,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + .NET%20DLL%20%E7%9A%84%E5%85%A5%E5%8F%A3%E7%82%B9 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F04%2F20%2Fnet-dll-entrypoint%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/04/20/net-dll-entrypoint/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

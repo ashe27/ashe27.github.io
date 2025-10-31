@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,54 +166,69 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="生成密钥文件"><a href="#生成密钥文件" class="headerlink" title="生成密钥文件"></a>生成密钥文件</h2><p>提前准备好一个密钥文件，因为将注册为 COM 组件时要求提供签名。<br>打开 Visual Studio 命令行工具，执行：</p>
+        <h2 id="生成密钥文件"><a class="header-anchor" href="#生成密钥文件">#</a>生成密钥文件</h2>
+<p>提前准备好一个密钥文件，因为将注册为 COM 组件时要求提供签名。<br>
+打开 Visual Studio 命令行工具，执行：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sn -k xxx.snk</span><br></pre></td></tr></table></figure>
 <p>得到文件后放到工程目录下即可。</p>
-<h2 id="NET-Framework-工程设置"><a href="#NET-Framework-工程设置" class="headerlink" title=".NET Framework 工程设置"></a>.NET Framework 工程设置</h2><p>传统风格的工程文件和新的 SDK style 稍微有些区别，所以分开说。</p>
-<h3 id="传统风格工程"><a href="#传统风格工程" class="headerlink" title="传统风格工程"></a>传统风格工程</h3><p><strong>默认 COM 可见性</strong><br>打开工程设置窗口，点击程序集设置</p>
-<p><img src="/images/net-expose-components/01.webp"><br><img src="/images/net-expose-components/02.webp"></p>
-<p>这里不建议勾选，因为 .NET 默认会将程序集中所有访问权限为<code>public</code>的类都对外公开，这当然是不合适的。<br>所以这里默认没有勾选，实际上，这里的选项会影响<code>AssemblyInfo.cs</code>文件中<code>ComVisible</code>属性值。</p>
-<p><img src="/images/net-expose-components/03.webp"></p>
-<p><code>为 COM 互操作注册</code>选项决定在编译后是否自动注册 DLL，根据自身需要设置。<br><img src="/images/net-expose-components/04.webp"><br>对应的工程属性为：</p>
+<h2 id="NET-Framework-工程设置"><a class="header-anchor" href="#NET-Framework-工程设置">#</a>.NET Framework 工程设置</h2>
+<p>传统风格的工程文件和新的 SDK style 稍微有些区别，所以分开说。</p>
+<h3 id="传统风格工程"><a class="header-anchor" href="#传统风格工程">#</a>传统风格工程</h3>
+<p><strong>默认 COM 可见性</strong><br>
+打开工程设置窗口，点击程序集设置</p>
+<p><img src="/images/net-expose-components/01.webp" alt=""><br>
+<img src="/images/net-expose-components/02.webp" alt=""></p>
+<p>这里不建议勾选，因为 .NET 默认会将程序集中所有访问权限为<code>public</code>的类都对外公开，这当然是不合适的。<br>
+所以这里默认没有勾选，实际上，这里的选项会影响<code>AssemblyInfo.cs</code>文件中<code>ComVisible</code>属性值。</p>
+<p><img src="/images/net-expose-components/03.webp" alt=""></p>
+<p><code>为 COM 互操作注册</code>选项决定在编译后是否自动注册 DLL，根据自身需要设置。<br>
+<img src="/images/net-expose-components/04.webp" alt=""><br>
+对应的工程属性为：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">RegisterForComInterop</span>&gt;</span>true<span class="tag">&lt;/<span class="name">RegisterForComInterop</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><br><strong>设置签名文件</strong></p>
-<p><img src="/images/net-expose-components/05.webp"></p>
+<p><br>
+<strong>设置签名文件</strong></p>
+<p><img src="/images/net-expose-components/05.webp" alt=""></p>
 <p>对应的工程属性为：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">SignAssembly</span>&gt;</span>true<span class="tag">&lt;/<span class="name">SignAssembly</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">AssemblyOriginatorKeyFile</span>&gt;</span>xxx.snk<span class="tag">&lt;/<span class="name">AssemblyOriginatorKeyFile</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>然后编写一个测试接口和其实现即可，注意要在实现类上设置<code>[ComVisible(true)]</code>。</p>
 <figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Runtime.InteropServices;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary2</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">ICalc</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="built_in">int</span> <span class="title">Add</span>(<span class="params"><span class="built_in">int</span> a, <span class="built_in">int</span> b</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">ComVisible(true)</span>]</span><br><span class="line">    [<span class="meta">Guid(<span class="string">&quot;365BBAE2-A911-4078-952A-9B5734538C35&quot;</span>)</span>]</span><br><span class="line">    [<span class="meta">ClassInterface(ClassInterfaceType.None)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">sealed</span> <span class="keyword">class</span> <span class="title">Calc</span> : <span class="title">ICalc</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="built_in">int</span> <span class="title">Add</span>(<span class="params"><span class="built_in">int</span> a, <span class="built_in">int</span> b</span>)</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> a + b;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="手动注册-COM-组件"><a href="#手动注册-COM-组件" class="headerlink" title="手动注册 COM 组件"></a>手动注册 COM 组件</h4><p>如果设置了<code>RegisterForComInterop</code>属性的话会在编译后自动注册，否则就需要手动注册。<br>而用 .NET Framework 开发的 COM 组件不能用传统的<code>regsvr32</code>去注册，要用运行时自带的<code>RegAsm.exe</code>工具注册：</p>
+<h4 id="手动注册-COM-组件"><a class="header-anchor" href="#手动注册-COM-组件">#</a>手动注册 COM 组件</h4>
+<p>如果设置了<code>RegisterForComInterop</code>属性的话会在编译后自动注册，否则就需要手动注册。<br>
+而用 .NET Framework 开发的 COM 组件不能用传统的<code>regsvr32</code>去注册，要用运行时自带的<code>RegAsm.exe</code>工具注册：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe ClassLibrary2.dll /tlb:ClassLibrary2.tlb /codebase</span><br></pre></td></tr></table></figure>
-<p>注意我这里用的是 x64 架构注册，注册 COM 组件时要确认架构一致性。<br>卸载的话使用<code>/u</code>选项：</p>
+<p>注意我这里用的是 x64 架构注册，注册 COM 组件时要确认架构一致性。<br>
+卸载的话使用<code>/u</code>选项：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%WINDIR%\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe ClassLibrary2.dll /u</span><br></pre></td></tr></table></figure>
-
 <p>我们可以用 <a target="_blank" rel="noopener" href="https://www.nirsoft.net/utils/registered_dll_view.html">RegDllView</a> 软件查看系统 COM 注册情况。</p>
-<p><img src="/images/net-expose-components/06.webp"></p>
-<h4 id="测试接口"><a href="#测试接口" class="headerlink" title="测试接口"></a>测试接口</h4><p>COM 组件的好处是语言无关性，我们可以编写一个 VBScript 脚本测试接口：</p>
+<p><img src="/images/net-expose-components/06.webp" alt=""></p>
+<h4 id="测试接口"><a class="header-anchor" href="#测试接口">#</a>测试接口</h4>
+<p>COM 组件的好处是语言无关性，我们可以编写一个 VBScript 脚本测试接口：</p>
 <figure class="highlight vbscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">Dim</span> obj</span><br><span class="line"><span class="keyword">Set</span> obj = <span class="built_in">CreateObject</span>(<span class="string">&quot;ClassLibrary2.Calc&quot;</span>)</span><br><span class="line"><span class="keyword">Dim</span> result</span><br><span class="line">result = obj.Add(<span class="number">5</span>, <span class="number">3</span>)</span><br><span class="line">MsgBox <span class="string">&quot;The result is: &quot;</span> &amp; result</span><br></pre></td></tr></table></figure>
-<p>结果正确<br><img src="/images/net-expose-components/07.webp"></p>
-<h3 id="NET-Sdk-风格工程"><a href="#NET-Sdk-风格工程" class="headerlink" title="NET.Sdk 风格工程"></a>NET.Sdk 风格工程</h3><p>.NET Sdk 风格的工程文件因为没有界面，所以需要手动编辑</p>
+<p>结果正确<br>
+<img src="/images/net-expose-components/07.webp" alt=""></p>
+<h3 id="NET-Sdk-风格工程"><a class="header-anchor" href="#NET-Sdk-风格工程">#</a>NET.Sdk 风格工程</h3>
+<p>.NET Sdk 风格的工程文件因为没有界面，所以需要手动编辑</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="tag">&lt;<span class="name">SignAssembly</span>&gt;</span>true<span class="tag">&lt;/<span class="name">SignAssembly</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">AssemblyOriginatorKeyFile</span>&gt;</span>xxx.snk<span class="tag">&lt;/<span class="name">AssemblyOriginatorKeyFile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">RegisterForComInterop</span>&gt;</span>true<span class="tag">&lt;/<span class="name">RegisterForComInterop</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Platforms</span>&gt;</span>AnyCPU;x64<span class="tag">&lt;/<span class="name">Platforms</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>因为 .NET Sdk 风格工程没有<code>AssemblyInfo.cs</code>文件设置程序集属性，这导致项目默认会将所有<code>public</code>的类都公开。<br>这就需要我们手动将程序集属性<code>ComVisible</code>设置为<code>false</code>。</p>
+<p>因为 .NET Sdk 风格工程没有<code>AssemblyInfo.cs</code>文件设置程序集属性，这导致项目默认会将所有<code>public</code>的类都公开。<br>
+这就需要我们手动将程序集属性<code>ComVisible</code>设置为<code>false</code>。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">AssemblyAttribute</span> <span class="attr">Include</span>=<span class="string">&quot;System.Runtime.InteropServices.ComVisibleAttribute&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">_Parameter1</span>&gt;</span>false<span class="tag">&lt;/<span class="name">_Parameter1</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">AssemblyAttribute</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>不同于传统风格工程文件是将属性写在代码中，Sdk 风格将属性配置在工程文件中。</p>
-<h2 id="NET-工程设置"><a href="#NET-工程设置" class="headerlink" title=".NET 工程设置"></a>.NET 工程设置</h2><p>对于新的 .NET 框架，使用<code>EnableComHosting</code>属性决定是否生成 COM Host（一个用于注册的本机 DLL 文件）。</p>
+<h2 id="NET-工程设置"><a class="header-anchor" href="#NET-工程设置">#</a>.NET 工程设置</h2>
+<p>对于新的 .NET 框架，使用<code>EnableComHosting</code>属性决定是否生成 COM Host（一个用于注册的本机 DLL 文件）。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">Sdk</span>=<span class="string">&quot;Microsoft.NET.Sdk&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">OutputType</span>&gt;</span>Library<span class="tag">&lt;/<span class="name">OutputType</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TargetFrameworks</span>&gt;</span>net8<span class="tag">&lt;/<span class="name">TargetFrameworks</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">ImplicitUsings</span>&gt;</span>disable<span class="tag">&lt;/<span class="name">ImplicitUsings</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Nullable</span>&gt;</span>enable<span class="tag">&lt;/<span class="name">Nullable</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">LangVersion</span>&gt;</span>12<span class="tag">&lt;/<span class="name">LangVersion</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">SignAssembly</span>&gt;</span>true<span class="tag">&lt;/<span class="name">SignAssembly</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">AssemblyOriginatorKeyFile</span>&gt;</span>xxx.snk<span class="tag">&lt;/<span class="name">AssemblyOriginatorKeyFile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">EnableComHosting</span>&gt;</span>true<span class="tag">&lt;/<span class="name">EnableComHosting</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Platforms</span>&gt;</span>AnyCPU;x64<span class="tag">&lt;/<span class="name">Platforms</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>当<code>EnableComHosting</code>属性为<code>true</code>时，编译后会多出一个<code>[ProjectName].comhost.dll</code>文件。</p>
-<p><img src="/images/net-expose-components/08.webp"></p>
+<p><img src="/images/net-expose-components/08.webp" alt=""></p>
 <p>这不是 .NET 程序集，而是一个本机的 DLL 文件。</p>
-<p><img src="/images/net-expose-components/09.webp"></p>
+<p><img src="/images/net-expose-components/09.webp" alt=""></p>
 <p>而这个 DLL 文件导出了注册 COM 需要的几个标准方法，用 C++ 开发过 COM 组件的一定都明白了。</p>
-<p><img src="/images/net-expose-components/10.webp"></p>
+<p><img src="/images/net-expose-components/10.webp" alt=""></p>
 <p>可以看出 .NET 不同于 .NET Framework 框架的处理方式。所以这里不再需要用<code>RegAsm.exe</code>去注册了，直接原生注册即可。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">regsvr32 ClassLibrary2.comhost.dll</span><br></pre></td></tr></table></figure>
 <p>卸载：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">regsvr32 /u ClassLibrary2.comhost.dll</span><br></pre></td></tr></table></figure>
-
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/native-interop/expose-components-to-com">向 COM 公开 .NET Core 组件</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/standard/assembly/set-attributes-project-file">在项目文件中设置程序集属性</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/core/native-interop/expose-components-to-com">向 COM 公开 .NET Core 组件</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/dotnet/standard/assembly/set-attributes-project-file">在项目文件中设置程序集属性</a></p>
 
       </div>
       
@@ -221,24 +240,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -280,13 +281,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -506,43 +510,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + .NET%20%E6%B3%A8%E5%86%8C%20COM%20%E7%BB%84%E4%BB%B6 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2024%2F06%2F13%2Fnet-expose-components%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2024/06/13/net-expose-components/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

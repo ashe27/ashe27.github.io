@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -167,53 +171,67 @@
 <li>使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/build/exporting-from-a-dll-using-declspec-dllexport">__declspec(dllexport)</a> 语法。</li>
 <li>使用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/build/exporting-from-a-dll-using-def-files">.def</a> 文件。</li>
 </ol>
-<p>但两者是有区别的，比如有这样一个函数签名<br><code>int __stdcall Foo(int);</code></p>
+<p>但两者是有区别的，比如有这样一个函数签名<br>
+<code>int __stdcall Foo(int);</code></p>
 <table>
 <thead>
 <tr>
-<th align="center">方法</th>
-<th align="center">lib符号名称</th>
-<th align="center">dll导出名称</th>
+<th style="text-align:center">方法</th>
+<th style="text-align:center">lib符号名称</th>
+<th style="text-align:center">dll导出名称</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="center">__declspec(dllexport)</td>
-<td align="center">?Foo@@YGHH@Z</td>
-<td align="center">?Foo@@YGHH@Z</td>
+<tbody>
+<tr>
+<td style="text-align:center">__declspec(dllexport)</td>
+<td style="text-align:center">?Foo@@YGHH@Z</td>
+<td style="text-align:center">?Foo@@YGHH@Z</td>
 </tr>
 <tr>
-<td align="center">.def file</td>
-<td align="center">?Foo@@YGHH@Z</td>
-<td align="center">Foo</td>
+<td style="text-align:center">.def file</td>
+<td style="text-align:center">?Foo@@YGHH@Z</td>
+<td style="text-align:center">Foo</td>
 </tr>
-</tbody></table>
-<p>用<code>.def</code>文件导出的函数名称是干净的，也方便其他程序调用。<br>而 <code>__declspec(dllexport)</code>导出的名称被修饰了，只适合C++程序使用。</p>
-<h2 id="extern-“C”"><a href="#extern-“C”" class="headerlink" title="extern “C”"></a>extern “C”</h2><p><code>extern &quot;C&quot;</code>的主要目的就是抑制C++编译器修饰符号名称，比如将 Foo 函数签名修改如下<br><code>extern &quot;C&quot; __declspec(dllexport) int __stdcall Foo(int);</code><br>导出符号变为：</p>
+</tbody>
+</table>
+<p>用<code>.def</code>文件导出的函数名称是干净的，也方便其他程序调用。<br>
+而 <code>__declspec(dllexport)</code>导出的名称被修饰了，只适合C++程序使用。</p>
+<h2 id="extern-“C”"><a class="header-anchor" href="#extern-“C”">#</a>extern “C”</h2>
+<p><code>extern &quot;C&quot;</code>的主要目的就是抑制C++编译器修饰符号名称，比如将 Foo 函数签名修改如下<br>
+<code>extern &quot;C&quot; __declspec(dllexport) int __stdcall Foo(int);</code><br>
+导出符号变为：</p>
 <table>
 <thead>
 <tr>
-<th align="center">方法</th>
-<th align="center">lib符号名称</th>
-<th align="center">dll导出名称</th>
+<th style="text-align:center">方法</th>
+<th style="text-align:center">lib符号名称</th>
+<th style="text-align:center">dll导出名称</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="center">__declspec(dllexport)</td>
-<td align="center">_Foo@4</td>
-<td align="center">_Foo@4</td>
+<tbody>
+<tr>
+<td style="text-align:center">__declspec(dllexport)</td>
+<td style="text-align:center">_Foo@4</td>
+<td style="text-align:center">_Foo@4</td>
 </tr>
 <tr>
-<td align="center">.def file</td>
-<td align="center">_Foo@4</td>
-<td align="center">Foo</td>
+<td style="text-align:center">.def file</td>
+<td style="text-align:center">_Foo@4</td>
+<td style="text-align:center">Foo</td>
 </tr>
-</tbody></table>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+</tbody>
+</table>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<ul>
 <li>对于 lib 静态库，用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/build/exporting-from-a-dll-using-declspec-dllexport">__declspec(dllexport)</a> 导出，用 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/build/importing-into-an-application-using-declspec-dllimport">__declspec(dllimport)</a> 导入。不需要<code>extern &quot;C&quot;</code>。</li>
 <li>对于 dll 动态库，如果需要供非C++程序使用，用<code>.def</code>文件声明导出函数，而不是<code>__declspec(dllexport)</code>。</li>
 <li>在导出 dll 函数时，<code>EXTERN_C</code>虽然不是必须的，但是建议加上，可供C语言调用。</li>
 </ul>
-<h2 id="相关阅读"><a href="#相关阅读" class="headerlink" title="相关阅读"></a>相关阅读</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/36785157/how-does-extern-c-allow-c-code-in-a-c-file">how does extern “C” allow C++ code in a C file?</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/build/importing-and-exporting">Importing and Exporting</a><br><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/previous-versions/5x49w699(v=vs.140)">Viewing Decorated Names</a><br><a target="_blank" rel="noopener" href="http://demangler.com/">GCC and MSVC C++ Demangler</a></p>
+<h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/36785157/how-does-extern-c-allow-c-code-in-a-c-file">how does extern “C” allow C++ code in a C file?</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/build/importing-and-exporting">Importing and Exporting</a><br>
+<a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/previous-versions/5x49w699(v=vs.140)">Viewing Decorated Names</a><br>
+<a target="_blank" rel="noopener" href="http://demangler.com">GCC and MSVC C++ Demangler</a></p>
 
       </div>
       
@@ -225,24 +243,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/c-plus-plus/" title="C++">
-                        #C++
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -284,13 +284,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -510,43 +513,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + DLL%E5%AF%BC%E5%87%BA%E7%AC%A6%E5%8F%B7%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F10%2F27%2F7HAXJIccr%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/10/27/7HAXJIccr/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

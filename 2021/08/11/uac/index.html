@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -162,15 +166,31 @@
           
       </div>
       <div class="markdown-body">
-        <p><img src="/images/1628674692462.png"><br>UAC相关设置保存在注册表中</p>
+        <p><img src="/images/1628674692462.png" alt=""><br>
+UAC相关设置保存在注册表中</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System</span><br></pre></td></tr></table></figure>
-<h2 id="ConsentPromptBehaviorAdmin"><a href="#ConsentPromptBehaviorAdmin" class="headerlink" title="ConsentPromptBehaviorAdmin"></a>ConsentPromptBehaviorAdmin</h2><p>用于控制通知方式，类型为<code>DWORD</code></p>
-<h3 id="0-从不通知"><a href="#0-从不通知" class="headerlink" title="0 &#x3D; 从不通知"></a>0 &#x3D; 从不通知</h3><h3 id="1-要求输入账户密码（发生在-安全桌面）"><a href="#1-要求输入账户密码（发生在-安全桌面）" class="headerlink" title="1 &#x3D; 要求输入账户密码（发生在 安全桌面）"></a>1 &#x3D; 要求输入账户密码（发生在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation">安全桌面</a>）</h3><p><img src="/images/1628725588340.png"></p>
-<h3 id="2-始终通知（发生在-安全桌面"><a href="#2-始终通知（发生在-安全桌面" class="headerlink" title="2 &#x3D; 始终通知（发生在 安全桌面)"></a>2 &#x3D; 始终通知（发生在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation">安全桌面</a>)</h3><p><img src="/images/1628725700789.png"></p>
-<h3 id="3-要求输入账户密码（用户桌面）"><a href="#3-要求输入账户密码（用户桌面）" class="headerlink" title="3 &#x3D; 要求输入账户密码（用户桌面）"></a>3 &#x3D; 要求输入账户密码（用户桌面）</h3><h3 id="4-需要用户确认（用户桌面）"><a href="#4-需要用户确认（用户桌面）" class="headerlink" title="4 &#x3D; 需要用户确认（用户桌面）"></a>4 &#x3D; 需要用户确认（用户桌面）</h3><h3 id="5-默认值"><a href="#5-默认值" class="headerlink" title="5 &#x3D; 默认值"></a>5 &#x3D; 默认值</h3><h2 id="PromptOnSecureDesktop"><a href="#PromptOnSecureDesktop" class="headerlink" title="PromptOnSecureDesktop"></a>PromptOnSecureDesktop</h2><p>用于控制是否降低桌面亮度，0为不降低亮度，1为降低亮度。</p>
-<h2 id="EnableLUA"><a href="#EnableLUA" class="headerlink" title="EnableLUA"></a>EnableLUA</h2><p>决定是否启用UAC功能，0为禁用，1为启用。修改后需要重新启动计算机。</p>
-<h2 id="禁用UAC"><a href="#禁用UAC" class="headerlink" title="禁用UAC"></a>禁用UAC</h2><p>重点来了，当<code>ConsentPromptBehaviorAdmin</code>为<code>0</code>时也可以关闭UAC通知，这和用<code>EnableLUA</code>方式关闭是否有区别？<br>答案是<strong>有区别</strong>，当<code>EnableLUA</code>为<code>1</code>的时候表示UAC系统仍然有效，只不过是不再通知用户而已。<br>最直观的就是需要管理员权限运行的程序图标上依然会有小盾牌，哪怕你设置了”从不通知”。<br>而且随Windows启动的需要管理员权限的程序都会失败，只有在彻底关闭UAC时Windows才能拉起需要管理员权限的程序。<br>所以，将<code>EnableLUA</code>设置为<code>0</code>才是真正意义上的关闭。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/341747f5-6b5d-4d30-85fc-fa1cc04038d4">ConsentPromptBehaviorAdmin</a></p>
+<h2 id="ConsentPromptBehaviorAdmin"><a class="header-anchor" href="#ConsentPromptBehaviorAdmin">#</a>ConsentPromptBehaviorAdmin</h2>
+<p>用于控制通知方式，类型为<code>DWORD</code></p>
+<h3 id="0-从不通知"><a class="header-anchor" href="#0-从不通知">#</a>0 = 从不通知</h3>
+<h3 id="1-要求输入账户密码（发生在-安全桌面）"><a class="header-anchor" href="#1-要求输入账户密码（发生在-安全桌面）">#</a>1 = 要求输入账户密码（发生在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation">安全桌面</a>）</h3>
+<p><img src="/images/1628725588340.png" alt=""></p>
+<h3 id="2-始终通知（发生在-安全桌面"><a class="header-anchor" href="#2-始终通知（发生在-安全桌面">#</a>2 = 始终通知（发生在 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation">安全桌面</a>)</h3>
+<p><img src="/images/1628725700789.png" alt=""></p>
+<h3 id="3-要求输入账户密码（用户桌面）"><a class="header-anchor" href="#3-要求输入账户密码（用户桌面）">#</a>3 = 要求输入账户密码（用户桌面）</h3>
+<h3 id="4-需要用户确认（用户桌面）"><a class="header-anchor" href="#4-需要用户确认（用户桌面）">#</a>4 = 需要用户确认（用户桌面）</h3>
+<h3 id="5-默认值"><a class="header-anchor" href="#5-默认值">#</a>5 = 默认值</h3>
+<h2 id="PromptOnSecureDesktop"><a class="header-anchor" href="#PromptOnSecureDesktop">#</a>PromptOnSecureDesktop</h2>
+<p>用于控制是否降低桌面亮度，0为不降低亮度，1为降低亮度。</p>
+<h2 id="EnableLUA"><a class="header-anchor" href="#EnableLUA">#</a>EnableLUA</h2>
+<p>决定是否启用UAC功能，0为禁用，1为启用。修改后需要重新启动计算机。</p>
+<h2 id="禁用UAC"><a class="header-anchor" href="#禁用UAC">#</a>禁用UAC</h2>
+<p>重点来了，当<code>ConsentPromptBehaviorAdmin</code>为<code>0</code>时也可以关闭UAC通知，这和用<code>EnableLUA</code>方式关闭是否有区别？<br>
+答案是<strong>有区别</strong>，当<code>EnableLUA</code>为<code>1</code>的时候表示UAC系统仍然有效，只不过是不再通知用户而已。<br>
+最直观的就是需要管理员权限运行的程序图标上依然会有小盾牌，哪怕你设置了&quot;从不通知&quot;。<br>
+而且随Windows启动的需要管理员权限的程序都会失败，只有在彻底关闭UAC时Windows才能拉起需要管理员权限的程序。<br>
+所以，将<code>EnableLUA</code>设置为<code>0</code>才是真正意义上的关闭。</p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/341747f5-6b5d-4d30-85fc-fa1cc04038d4">ConsentPromptBehaviorAdmin</a></p>
 <p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/9ad50fd3-4d8d-4870-9f5b-978ce292b9d8">PromptOnSecureDesktop</a></p>
 <p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/958053ae-5397-4f96-977f-b7700ee461ec">EnableLUA</a></p>
 <p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation">User Account Control: Switch to the secure desktop when prompting for elevation</a></p>
@@ -186,24 +206,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows/" title="Windows">
-                        #Windows
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -245,13 +247,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -471,43 +476,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + UAC%E7%9A%84%E6%B3%A8%E5%86%8C%E8%A1%A8%E8%AE%BE%E7%BD%AE + '&url=' + https%3A%2F%2Fashe27.github.io%2F2021%2F08%2F11%2Fuac%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2021/08/11/uac/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

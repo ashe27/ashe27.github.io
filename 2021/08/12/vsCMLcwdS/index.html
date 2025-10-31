@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,24 +172,49 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="PsExec"><a href="#PsExec" class="headerlink" title="PsExec"></a>PsExec</h2><p>下载地址：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/sysinternals/downloads/psexec">https://docs.microsoft.com/en-us/sysinternals/downloads/psexec</a><br>微软官方出品</p>
+        <h2 id="PsExec"><a class="header-anchor" href="#PsExec">#</a>PsExec</h2>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/sysinternals/downloads/psexec">https://docs.microsoft.com/en-us/sysinternals/downloads/psexec</a><br>
+微软官方出品</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PsExec.exe -sid regedit.exe</span><br></pre></td></tr></table></figure>
 <p>-s表示以SYSTEM账户运行，-i表示运行在用户桌面而非SYSTEM桌面，-d表示不等待进程结束。其他不常用参数输入-h查看。</p>
-<h2 id="NirCmd"><a href="#NirCmd" class="headerlink" title="NirCmd"></a>NirCmd</h2><p>下载地址：<a target="_blank" rel="noopener" href="https://www.nirsoft.net/utils/nircmd.html">https://www.nirsoft.net/utils/nircmd.html</a><br><a target="_blank" rel="noopener" href="https://www.nirsoft.net/">NirSoft</a> 出品，算是cmd的加强版，其中一个功能是支持以SYSTEM账户运行程序</p>
+<h2 id="NirCmd"><a class="header-anchor" href="#NirCmd">#</a>NirCmd</h2>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://www.nirsoft.net/utils/nircmd.html">https://www.nirsoft.net/utils/nircmd.html</a><br>
+<a target="_blank" rel="noopener" href="https://www.nirsoft.net">NirSoft</a> 出品，算是cmd的加强版，其中一个功能是支持以SYSTEM账户运行程序</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nircmd.exe elevatecmd runassystem C:\Windows\regedit.exe</span><br></pre></td></tr></table></figure>
-<h2 id="AdvancedRun"><a href="#AdvancedRun" class="headerlink" title="AdvancedRun"></a>AdvancedRun</h2><p>下载地址：<a target="_blank" rel="noopener" href="https://www.nirsoft.net/utils/advanced_run.html">https://www.nirsoft.net/utils/advanced_run.html</a><br><a target="_blank" rel="noopener" href="https://www.nirsoft.net/">NirSoft</a> 出品，带GUI界面，同时也支持命令行方式启动，支持中文、支持添加右键菜单，启动程序更方便。<br>支持更多的启动参数设置，如启动目录、窗口大小、兼容模式、环境变量等等。<br><img src="/images/1628729493924.png"><br>同时支持以<strong>TrustedInstaller</strong>账户启动</p>
-<h2 id="Process-Hacker"><a href="#Process-Hacker" class="headerlink" title="Process Hacker"></a>Process Hacker</h2><p>下载地址：<a target="_blank" rel="noopener" href="https://processhacker.sourceforge.io/">https://processhacker.sourceforge.io</a><br>一个进程管理器工具，类似 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/sysinternals/downloads/process-explorer">Process Explorer</a>，但是功能更强大，比普通的进程管理器多出很多底层级别的操作。以其他账户运行程序是其中一个功能，不过似乎不支持用命令行方式。<br><img src="/images/1628729538434.png"><br>同时支持以<strong>TrustedInstaller</strong>账户启动</p>
-<h2 id="NSudo"><a href="#NSudo" class="headerlink" title="NSudo"></a>NSudo</h2><p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/M2Team/NSudo">https://github.com/M2Team/NSudo</a><br>开源工具，有GUI界面，也支持命令行操作。</p>
+<h2 id="AdvancedRun"><a class="header-anchor" href="#AdvancedRun">#</a>AdvancedRun</h2>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://www.nirsoft.net/utils/advanced_run.html">https://www.nirsoft.net/utils/advanced_run.html</a><br>
+<a target="_blank" rel="noopener" href="https://www.nirsoft.net">NirSoft</a> 出品，带GUI界面，同时也支持命令行方式启动，支持中文、支持添加右键菜单，启动程序更方便。<br>
+支持更多的启动参数设置，如启动目录、窗口大小、兼容模式、环境变量等等。<br>
+<img src="/images/1628729493924.png" alt=""><br>
+同时支持以<strong>TrustedInstaller</strong>账户启动</p>
+<h2 id="Process-Hacker"><a class="header-anchor" href="#Process-Hacker">#</a>Process Hacker</h2>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://processhacker.sourceforge.io">https://processhacker.sourceforge.io</a><br>
+一个进程管理器工具，类似 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/sysinternals/downloads/process-explorer">Process Explorer</a>，但是功能更强大，比普通的进程管理器多出很多底层级别的操作。以其他账户运行程序是其中一个功能，不过似乎不支持用命令行方式。<br>
+<img src="/images/1628729538434.png" alt=""><br>
+同时支持以<strong>TrustedInstaller</strong>账户启动</p>
+<h2 id="NSudo"><a class="header-anchor" href="#NSudo">#</a>NSudo</h2>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/M2Team/NSudo">https://github.com/M2Team/NSudo</a><br>
+开源工具，有GUI界面，也支持命令行操作。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSudoLC.exe -U:S regedit.exe</span><br></pre></td></tr></table></figure>
-<p>同时支持以<strong>TrustedInstaller</strong>账户启动<br>更多说明可以使用-h参数查看，或访问 <a target="_blank" rel="noopener" href="https://nsudo.m2team.org/zh-hans/">https://nsudo.m2team.org/zh-hans/</a></p>
-<h2 id="RunX"><a href="#RunX" class="headerlink" title="RunX"></a>RunX</h2><p>下载地址：<a target="_blank" rel="noopener" href="https://www.d7xtech.com/free-software/runx/">https://www.d7xtech.com/free-software/runx/</a><br>执行程序带有数字签名。分两个版本，RunX.exe是GUI版，RunXcmd.exe是命令行版本。</p>
+<p>同时支持以<strong>TrustedInstaller</strong>账户启动<br>
+更多说明可以使用-h参数查看，或访问 <a target="_blank" rel="noopener" href="https://nsudo.m2team.org/zh-hans/">https://nsudo.m2team.org/zh-hans/</a></p>
+<h2 id="RunX"><a class="header-anchor" href="#RunX">#</a>RunX</h2>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://www.d7xtech.com/free-software/runx/">https://www.d7xtech.com/free-software/runx/</a><br>
+执行程序带有数字签名。分两个版本，RunX.exe是GUI版，RunXcmd.exe是命令行版本。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RunXcmd.exe /exec=&quot;C:\Windows\regedit.exe&quot; /account=system</span><br></pre></td></tr></table></figure>
-<p><img src="/images/1628732240937.png"><br>同时支持以<strong>TrustedInstaller</strong>账户启动</p>
-<h2 id="PowerRun"><a href="#PowerRun" class="headerlink" title="PowerRun"></a>PowerRun</h2><p>下载地址：<a target="_blank" rel="noopener" href="https://www.sordum.org/9416/powerrun-v1-5-run-with-highest-privileges/">https://www.sordum.org/9416/powerrun-v1-5-run-with-highest-privileges/</a><br>执行程序带有数字签名，支持命令行方式调用。<br>支持以<strong>TrustedInstaller</strong>账户启动</p>
-<h2 id="自定义右键菜单"><a href="#自定义右键菜单" class="headerlink" title="自定义右键菜单"></a>自定义右键菜单</h2><p>上面大部分工具都支持使用命令行，所以我们可以在exe右键菜单中添加一个快速启动的菜单项。<br>比如我用RunX的话，编写一个.reg文件导入即可</p>
+<p><img src="/images/1628732240937.png" alt=""><br>
+同时支持以<strong>TrustedInstaller</strong>账户启动</p>
+<h2 id="PowerRun"><a class="header-anchor" href="#PowerRun">#</a>PowerRun</h2>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://www.sordum.org/9416/powerrun-v1-5-run-with-highest-privileges/">https://www.sordum.org/9416/powerrun-v1-5-run-with-highest-privileges/</a><br>
+执行程序带有数字签名，支持命令行方式调用。<br>
+支持以<strong>TrustedInstaller</strong>账户启动</p>
+<h2 id="自定义右键菜单"><a class="header-anchor" href="#自定义右键菜单">#</a>自定义右键菜单</h2>
+<p>上面大部分工具都支持使用命令行，所以我们可以在exe右键菜单中添加一个快速启动的菜单项。<br>
+比如我用RunX的话，编写一个.reg文件导入即可</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\exefile\shell\runassystem]</span><br><span class="line">@=&quot;Run as SYSTEM&quot;</span><br><span class="line"></span><br><span class="line">[HKEY_CLASSES_ROOT\exefile\shell\runassystem\command]</span><br><span class="line">@=&quot;D:\\Tools\\RunXcmd.exe /exec=\&quot;%1\&quot; /account=system&quot;</span><br></pre></td></tr></table></figure>
 <p>这样启动exe就更方便了。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/">https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/">https://www.winhelponline.com/blog/run-program-as-system-localsystem-account-windows/</a></p>
 
       </div>
       
@@ -197,30 +226,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6/" title="工具软件">
-                        #工具软件
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/Windows/" title="Windows">
-                        #Windows
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -262,13 +267,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -488,43 +496,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E6%94%AF%E6%8C%81%E4%BB%A5%20SYSTEM%20%E8%B4%A6%E6%88%B7%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F%E7%9A%84%E5%B7%A5%E5%85%B7%E8%BD%AF%E4%BB%B6 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2021%2F08%2F12%2FvsCMLcwdS%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2021/08/12/vsCMLcwdS/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>

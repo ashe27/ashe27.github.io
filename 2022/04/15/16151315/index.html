@@ -4,9 +4,11 @@
   <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
   <meta name="author" content="John Doe" />
-  <meta name="description" content="" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
   
   
   <title>
@@ -47,8 +49,10 @@
   
 
   
+
   
-  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
 
   <script>
     var html = document.documentElement
@@ -57,7 +61,7 @@
       document.documentElement.setAttribute('color-mode', colorMode)
     }
   </script>
-<meta name="generator" content="Hexo 7.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"></head>
 
 
   <body>
@@ -168,36 +172,67 @@
           
       </div>
       <div class="markdown-body">
-        <p>我们有时有这样的需求：在.NET Framework 2.0中用上较新的C#特性，以提高开发效率及幸福感。<br>现代C#的某些特性需要框架支持，而微软官方已经放弃对.NET Framework 2.0的支持，某些特性甚至完全不支持.NET Framework。<br>为了在.NET Framework 2.0中使用上新特性，可以使用第三方库。</p>
+        <p>我们有时有这样的需求：<a target="_blank" rel="noopener" href="http://xn--3ds.NET">在.NET</a> Framework 2.0中用上较新的C#特性，以提高开发效率及幸福感。<br>
+现代C#的某些特性需要框架支持，<a target="_blank" rel="noopener" href="http://xn--kbtsi47ch5amyag8vtya618lnlcqx2d.NET">而微软官方已经放弃对.NET</a> Framework 2.0的支持，<a target="_blank" rel="noopener" href="http://xn--ihq5mv5ex0poxfiveutexvg132al6fyt3b.NET">某些特性甚至完全不支持.NET</a> Framework。<br>
+<a target="_blank" rel="noopener" href="http://xn--siq0gp9v.NET">为了在.NET</a> Framework 2.0中使用上新特性，可以使用第三方库。</p>
 <p><strong>改变语言版本</strong></p>
-<p>在开始介绍之前，我们最好将语言版本改至最高。<br>默认情况下，.NET Framework使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-version-history#c-version-73">C# 7.3</a> 版本。为了用上最新的语言特性，我们编辑工程文件<code>.csproj</code>，添加<code>&lt;LangVersion&gt;</code>属性</p>
+<p>在开始介绍之前，我们最好将语言版本改至最高。<br>
+默认情况下，.NET Framework使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-version-history#c-version-73">C# 7.3</a> 版本。为了用上最新的语言特性，我们编辑工程文件<code>.csproj</code>，添加<code>&lt;LangVersion&gt;</code>属性</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">ToolsVersion</span>=<span class="string">&quot;15.0&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="tag">&lt;<span class="name">LangVersion</span>&gt;</span>latest<span class="tag">&lt;/<span class="name">LangVersion</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p><code>latest</code>意味着使用编译器支持的最高语言版本</p>
 <blockquote>
 <p>若要了解当前使用的语言版本，请在代码中添加 #error version（区分大小写）。 这样做可使编译器报告编译器错误 CS8304，并显示一条消息，其中包含正在使用的编译器版本和当前选择的语言版本。</p>
 </blockquote>
 <hr>
-<h2 id="NET-Framework-3-5-特性"><a href="#NET-Framework-3-5-特性" class="headerlink" title=".NET Framework 3.5 特性"></a>.NET Framework 3.5 特性</h2><h3 id="无参数Action委托"><a href="#无参数Action委托" class="headerlink" title="无参数Action委托"></a>无参数Action委托</h3><p>介绍：<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.action?view=netframework-3.5">https://docs.microsoft.com/zh-cn/dotnet/api/system.action?view=netframework-3.5</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/NetLegacySupport.Action/">NetLegacySupport.Action</a></p>
-<h3 id="扩展方法"><a href="#扩展方法" class="headerlink" title="扩展方法"></a>扩展方法</h3><p>介绍：<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/programming-guide/classes-and-structs/extension-methods">https://docs.microsoft.com/zh-cn/dotnet/csharp/programming-guide/classes-and-structs/extension-methods</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/DevLib.Legacy">DevLib.Legacy</a></p>
+<h2 id="NET-Framework-3-5-特性"><a class="header-anchor" href="#NET-Framework-3-5-特性">#</a>.NET Framework 3.5 特性</h2>
+<h3 id="无参数Action委托"><a class="header-anchor" href="#无参数Action委托">#</a>无参数Action委托</h3>
+<p>介绍：<br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.action?view=netframework-3.5">https://docs.microsoft.com/zh-cn/dotnet/api/system.action?view=netframework-3.5</a></p>
+<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
+解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/NetLegacySupport.Action/">NetLegacySupport.Action</a></p>
+<h3 id="扩展方法"><a class="header-anchor" href="#扩展方法">#</a>扩展方法</h3>
+<p>介绍：<br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/programming-guide/classes-and-structs/extension-methods">https://docs.microsoft.com/zh-cn/dotnet/csharp/programming-guide/classes-and-structs/extension-methods</a></p>
+<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
+解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/DevLib.Legacy">DevLib.Legacy</a></p>
 <hr>
-<h2 id="NET-Framework-4-0-特性"><a href="#NET-Framework-4-0-特性" class="headerlink" title=".NET Framework 4.0 特性"></a>.NET Framework 4.0 特性</h2><h3 id="Tuple类"><a href="#Tuple类" class="headerlink" title="Tuple类"></a>Tuple类</h3><p>介绍：<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.tuple?view=netframework-4.0">https://docs.microsoft.com/zh-cn/dotnet/api/system.tuple?view=netframework-4.0</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/NetLegacySupport.Tuple">NetLegacySupport.Tuple</a></p>
-<h3 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h3><p>介绍：<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadlocal-1">https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadlocal-1</a></p>
+<h2 id="NET-Framework-4-0-特性"><a class="header-anchor" href="#NET-Framework-4-0-特性">#</a>.NET Framework 4.0 特性</h2>
+<h3 id="Tuple类"><a class="header-anchor" href="#Tuple类">#</a>Tuple类</h3>
+<p>介绍：<br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.tuple?view=netframework-4.0">https://docs.microsoft.com/zh-cn/dotnet/api/system.tuple?view=netframework-4.0</a></p>
+<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
+解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/NetLegacySupport.Tuple">NetLegacySupport.Tuple</a></p>
+<h3 id="ThreadLocal"><a class="header-anchor" href="#ThreadLocal">#</a>ThreadLocal</h3>
+<p>介绍：<br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadlocal-1">https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadlocal-1</a></p>
 <p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a></p>
 <hr>
-<h2 id="NET-Framework-4-7-特性"><a href="#NET-Framework-4-7-特性" class="headerlink" title=".NET Framework 4.7 特性"></a>.NET Framework 4.7 特性</h2><h3 id="ValueTuple-结构"><a href="#ValueTuple-结构" class="headerlink" title="ValueTuple 结构"></a>ValueTuple 结构</h3><p>介绍：<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.valuetuple?view=netframework-4.7">https://docs.microsoft.com/zh-cn/dotnet/api/system.valuetuple?view=netframework-4.7</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/builtin-types/value-tuples">https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/builtin-types/value-tuples</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Portable.System.ValueTuple">Portable.System.ValueTuple</a></p>
+<h2 id="NET-Framework-4-7-特性"><a class="header-anchor" href="#NET-Framework-4-7-特性">#</a>.NET Framework 4.7 特性</h2>
+<h3 id="ValueTuple-结构"><a class="header-anchor" href="#ValueTuple-结构">#</a>ValueTuple 结构</h3>
+<p>介绍：<br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.valuetuple?view=netframework-4.7">https://docs.microsoft.com/zh-cn/dotnet/api/system.valuetuple?view=netframework-4.7</a><br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/builtin-types/value-tuples">https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/builtin-types/value-tuples</a></p>
+<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
+解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Portable.System.ValueTuple">Portable.System.ValueTuple</a></p>
 <hr>
-<h2 id="不支持-NET-Framework-的特性"><a href="#不支持-NET-Framework-的特性" class="headerlink" title="不支持 .NET Framework 的特性"></a>不支持 .NET Framework 的特性</h2><h3 id="Range-结构"><a href="#Range-结构" class="headerlink" title="Range 结构"></a>Range 结构</h3><p>介绍：<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.range">https://docs.microsoft.com/zh-cn/dotnet/api/system.range</a></p>
+<h2 id="不支持-NET-Framework-的特性"><a class="header-anchor" href="#不支持-NET-Framework-的特性">#</a>不支持 .NET Framework 的特性</h2>
+<h3 id="Range-结构"><a class="header-anchor" href="#Range-结构">#</a>Range 结构</h3>
+<p>介绍：<br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.range">https://docs.microsoft.com/zh-cn/dotnet/api/system.range</a></p>
 <p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a></p>
-<h3 id="Index-结构"><a href="#Index-结构" class="headerlink" title="Index 结构"></a>Index 结构</h3><p>介绍：<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.index">https://docs.microsoft.com/zh-cn/dotnet/api/system.index</a></p>
+<h3 id="Index-结构"><a class="header-anchor" href="#Index-结构">#</a>Index 结构</h3>
+<p>介绍：<br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.index">https://docs.microsoft.com/zh-cn/dotnet/api/system.index</a></p>
 <p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a></p>
-<h3 id="仅初始化属性（Init-only-properties）"><a href="#仅初始化属性（Init-only-properties）" class="headerlink" title="仅初始化属性（Init-only properties）"></a>仅初始化属性（Init-only properties）</h3><p>介绍：<br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-9#init-only-setters">https://docs.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-9#init-only-setters</a><br><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/init">https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/init</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/IsExternalInit">IsExternalInit</a></p>
+<h3 id="仅初始化属性（Init-only-properties）"><a class="header-anchor" href="#仅初始化属性（Init-only-properties）">#</a>仅初始化属性（Init-only properties）</h3>
+<p>介绍：<br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-9#init-only-setters">https://docs.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-9#init-only-setters</a><br>
+<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/init">https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/init</a></p>
+<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
+解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/IsExternalInit">IsExternalInit</a></p>
 <hr>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/configure-language-version">C# 语言版本控制</a></p>
+<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
+<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/configure-language-version">C# 语言版本控制</a></p>
 
       </div>
       
@@ -209,30 +244,6 @@
                 <span>上一页</span>
               </a>
             
-          </div>
-          <div class="post-attach">
-            <span class="post-pubtime">
-              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2025-07-01 20:55:10
-            </span>
-            
-                  <span class="post-tags">
-                    <i class="iconfont icon-tags mr-10" title="标签"></i>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/dotnet/" title=".NET">
-                        #.NET
-                      </a>
-                    </span>
-                    
-                    <span class="span--tag mr-8">
-                      <a href="/tags/c-sharp/" title="C#">
-                        #C#
-                      </a>
-                    </span>
-                    
-                  </span>
-              
           </div>
           <div class="post-foot-prev">
             
@@ -274,13 +285,16 @@
     <ul>
       
         <li>
-          <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
-            <i class="iconfont icon-github"></i>
-          </a>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
         </li>
-      
+        
     </ul>
   </div>
+  
   
     
     <div class="footer-more">
@@ -500,43 +514,9 @@
 
 
         
-  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
-    <a href="javascript: void(0)">
-      <i id="theme-icon" class="iconfont icon-moon"></i>
-    </a>
-  </div>
-
-  
-<script src="/js/colorscheme.js"></script>
-
-
-
 
 
         
-  
-    <div class="share-icon tools-bar-item">
-      <a href="javascript: void(0)" id="share-icon">
-        <i class="iconfont iconshare"></i>
-      </a>
-      <div class="share-content hidden">
-        
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%9C%A8.NET%202.0%E4%B8%AD%E4%BD%BF%E7%94%A8C%23%E6%96%B0%E7%89%B9%E6%80%A7 + '&url=' + https%3A%2F%2Fashe27.github.io%2F2022%2F04%2F15%2F16151315%2F + '" target="_blank" title="Twitter">
-            <i class="iconfont icon-twitter"></i>
-          </a>
-        
-        
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://ashe27.github.io/2022/04/15/16151315/" target="_blank" title="Facebook">
-            <i class="iconfont icon-facebooksquare"></i>
-          </a>
-        
-      </div>
-    </div>
-  
-  
-<script src="/js/shares.js"></script>
-
-
 
       </div>
     </div>
