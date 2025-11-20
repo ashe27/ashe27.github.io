@@ -1,14 +1,15 @@
 .article-entry pre,
 .article-entry .highlight {
   background: #2d2d2d;
-  margin: 0 -20px;
-  padding: 15px 20px;
+  padding: 15px 15px;
   border-style: solid;
   border-color: color-border;
   border-width: 1px 0;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: visible;
   color: #ccc;
-  line-height: 22.400000000000002px
+  line-height: 22.400000000000002px;
+  box-sizing: border-box;
 }
 
 .article-entry .highlight .gutter pre,
@@ -199,9 +200,17 @@ pre .javascript .function {
   border-radius: 5px;
 }
 
+.markdown-body .highlight table {
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+}
+
 .markdown-body .highlight table td {
   padding: 0;
   border: none;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .markdown-body .highlight table tr {
@@ -218,6 +227,7 @@ pre .javascript .function {
   padding-left: 10px;
   padding-right: 10px;
   background-color: #2d2d2d !important;
+  box-sizing: border-box;
 }
 
 .markdown-body .highlight table tbody pre {

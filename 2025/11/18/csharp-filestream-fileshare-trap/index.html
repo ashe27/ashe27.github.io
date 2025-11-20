@@ -150,7 +150,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-11-18 22:39:40
+          2025-11-19 21:18:34
         </span>
         
               <span class="post-tags">
@@ -166,37 +166,40 @@
           
       </div>
       <div class="markdown-body">
-        <p>打开文件时，可能遇到过这样的代码：明明第一次打开文件时已经指定了允许读取 (<code>FileShare.Read</code>)，但第二次尝试读取时，依然抛出 IO 异常。</p>
-<h2 id="问题现场"><a class="header-anchor" href="#问题现场">#</a>问题现场</h2>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> fileName = <span class="string">&quot;test.txt&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 写入者：打开文件，允许其他人“读”</span></span><br><span class="line"><span class="keyword">var</span> fs1 = <span class="keyword">new</span> FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 读取者：尝试打开文件，允许其他人“读” -&gt; 报错！</span></span><br><span class="line"><span class="comment">// System.IO.IOException: The process cannot access the file ... because it is being used by another process.</span></span><br><span class="line"><span class="keyword">var</span> fs2 = <span class="keyword">new</span> FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);</span><br></pre></td></tr></table></figure>
-<h2 id="根本原因：FileShare-是双向契约"><a class="header-anchor" href="#根本原因：FileShare-是双向契约">#</a>根本原因：FileShare 是双向契约</h2>
-<p>很多人误以为 <code>FileShare</code> 只是用来<strong>限制后来者</strong>的，但实际上它也必须<strong>兼容先行者</strong>。<br>
-操作系统在检查文件锁时，会进行双重校验：</p>
+        <h2 id="为什么明明允许“共享读”，却还是被锁了？"><a class="header-anchor" href="#为什么明明允许“共享读”，却还是被锁了？">#</a>为什么明明允许“共享读”，却还是被锁了？</h2>
+<p>最近在写一段 C# 文件处理逻辑时，我掉进了一个看似简单却颇具迷惑性的坑。需求很简单：一个线程在写日志，另一个线程想要实时读取。<br>
+我理所当然地写下了这段代码：</p>
+<h3 id="案发现场与解决方法"><a class="header-anchor" href="#案发现场与解决方法">#</a>案发现场与解决方法</h3>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> fileName = <span class="string">&quot;test.txt&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 打开文件进行写入，并在 FileShare 中大度地允许“Read”（允许他人读取）</span></span><br><span class="line"><span class="keyword">var</span> fs1 = <span class="keyword">new</span> FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 尝试打开文件进行读取，我也设置了 FileShare.Read（我也允许他人读取）</span></span><br><span class="line"><span class="comment">// 砰！System.IO.IOException: ... process cannot access the file ...</span></span><br><span class="line"><span class="keyword">var</span> fs2 = <span class="keyword">new</span> FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);</span><br></pre></td></tr></table></figure>
+<p>这看起来很不合理，对吧？<code>fs1</code> 说“我允许别人读”，<code>fs2</code> 说“我要读”。明明两情相悦，为什么系统报了 <code>IOException</code>？</p>
+<p><strong>根本原因解析：</strong><br>
+问题的关键在于 <code>fs2</code> 构造函数中的 <code>FileShare.Read</code> 参数。</p>
+<ul>
+<li><strong><code>FileAccess</code></strong> 是我想做什么。</li>
+<li><strong><code>FileShare</code></strong> 是我允许别人（也就是文件上已存在的其他句柄）做什么。</li>
+</ul>
+<p>当 <code>fs2</code> 尝试打开文件时，操作系统会进行双向检查：</p>
 <ol>
-<li>
-<p><strong>校验 1（fs1 允许 fs2 吗？）：</strong></p>
-<ul>
-<li><code>fs2</code> 想要 <code>Read</code>。</li>
-<li><code>fs1</code> 声明了 <code>FileShare.Read</code>（允许别人读）。</li>
-<li><strong>通过</strong>。</li>
-</ul>
-</li>
-<li>
-<p><strong>校验 2（fs2 允许 fs1 吗？）：</strong></p>
-<ul>
-<li><code>fs2</code> 声明了 <code>FileShare.Read</code>。</li>
-<li><strong>重点来了：</strong> 这意味着 <code>fs2</code> 告诉操作系统：“我允许别人读，但<strong>我不允许别人写</strong>（因为我没加 Write）”。</li>
-<li>然而，<code>fs1</code> 当前正在持有 <code>FileAccess.Write</code> 权限。</li>
-<li><code>fs2</code> 的共享策略（No Write）与 <code>fs1</code> 的当前行为（Writing）冲突。</li>
-<li><strong>失败</strong>。</li>
-</ul>
-</li>
+<li><code>fs2</code> 请求 <code>FileAccess.Read</code>。检查 <code>fs1</code> 的共享设置：<code>fs1</code> 声明了 <code>FileShare.Read</code>。<strong>通过。</strong></li>
+<li><code>fs2</code> 声明了 <code>FileShare.Read</code>。这意味着 <code>fs2</code> 告诉操作系统：“在这个文件上，我只允许别人进行<strong>读</strong>操作”。<strong>检查 <code>fs1</code> 的当前权限：<code>fs1</code> 正在持有 <code>FileAccess.Write</code>。</strong></li>
 </ol>
-<p><strong>简单总结：</strong> 第二次打开文件时，声明的 <code>FileShare</code> 不仅定义了<strong>之后</strong>的人能做什么，也隐含了容忍<strong>之前</strong>已存在的人正在做什么。</p>
-<h2 id="解决方案"><a class="header-anchor" href="#解决方案">#</a>解决方案</h2>
-<p>为了让 <code>fs2</code> 能够成功打开，它必须显式声明：“我允许别人（包括已经打开该文件的 <code>fs1</code>）进行写入操作”。<br>
-将 <code>fs2</code> 的共享模式改为 <code>FileShare.ReadWrite</code>：</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// fs1 保持不变：我是来写的，我允许别人读</span></span><br><span class="line"><span class="keyword">var</span> fs1 = <span class="keyword">new</span> FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.Read);</span><br><span class="line"></span><br><span class="line"><span class="comment">// fs2 修正：我是来读的，但我允许别人（fs1）继续读写</span></span><br><span class="line"><span class="keyword">var</span> fs2 = <span class="keyword">new</span> FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);</span><br></pre></td></tr></table></figure>
+<p><strong>冲突爆发：</strong> <code>fs2</code> 的共享策略（只许读，不许写）与 <code>fs1</code> 正在做的事情（写）发生了冲突。因此，Windows 拒绝了 <code>fs2</code> 的请求。</p>
+<p><strong>解决方法：</strong><br>
+<code>fs2</code> 必须显式地宽容 <code>fs1</code> 的写入行为。我们需要将 <code>fs2</code> 的共享模式改为 <code>ReadWrite</code>：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 修正后的代码：fs2 必须允许其他人“Write”，因为 fs1 确实正在 Write</span></span><br><span class="line"><span class="keyword">var</span> fs2 = <span class="keyword">new</span> FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="底层真相：这是-Windows-的锅-Win32-API-复现"><a class="header-anchor" href="#底层真相：这是-Windows-的锅-Win32-API-复现">#</a>底层真相：这是 Windows 的锅 (Win32 API 复现)</h2>
+<p>有人可能会怀疑这是 .NET 框架本身设计的“矫情”。为了自证清白，我直接使用 C++ 调用 Win32 API <code>CreateFile</code> 来复现这个场景。你会发现，结果一模一样。<br>
+在 Windows 内核中，文件共享机制是非常严格的。</p>
+<ul>
+<li><code>FileAccess.Write</code> 对应 <code>GENERIC_WRITE</code></li>
+<li><code>FileShare.Read</code> 对应 <code>FILE_SHARE_READ</code></li>
+</ul>
+<p>下面是 C++ 的复现代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    LPCWSTR fileName = <span class="string">L&quot;test.txt&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 模拟 C# 的 fs1：写入模式，共享读</span></span><br><span class="line">    HANDLE hFile1 = <span class="built_in">CreateFile</span>(</span><br><span class="line">        fileName,</span><br><span class="line">        GENERIC_WRITE,          <span class="comment">// FileAccess.Write</span></span><br><span class="line">        FILE_SHARE_READ,        <span class="comment">// FileShare.Read</span></span><br><span class="line">        <span class="literal">NULL</span>,</span><br><span class="line">        CREATE_ALWAYS,          <span class="comment">// FileMode.Create</span></span><br><span class="line">        FILE_ATTRIBUTE_NORMAL,</span><br><span class="line">        <span class="literal">NULL</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (hFile1 == INVALID_HANDLE_VALUE) &#123;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;fs1 创建失败&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;fs1 创建成功 (Handle Open)&quot;</span> &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 模拟 C# 的 fs2：读取模式，共享读</span></span><br><span class="line">    <span class="comment">// 这里会失败，因为我们传了 FILE_SHARE_READ，这意味着我们不允许别人(hFile1)拥有 WRITE 权限</span></span><br><span class="line">    HANDLE hFile2 = <span class="built_in">CreateFile</span>(</span><br><span class="line">        fileName,</span><br><span class="line">        GENERIC_READ,           <span class="comment">// FileAccess.Read</span></span><br><span class="line">        FILE_SHARE_READ,        <span class="comment">// FileShare.Read (这里就是祸源)</span></span><br><span class="line">        <span class="literal">NULL</span>,</span><br><span class="line">        OPEN_EXISTING,          <span class="comment">// FileMode.Open</span></span><br><span class="line">        FILE_ATTRIBUTE_NORMAL,</span><br><span class="line">        <span class="literal">NULL</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (hFile2 == INVALID_HANDLE_VALUE) &#123;</span><br><span class="line">        DWORD error = <span class="built_in">GetLastError</span>();</span><br><span class="line">        <span class="comment">// 错误代码 32 (0x20): The process cannot access the file because it is being used by another process.</span></span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;fs2 打开失败! GetLastError: &quot;</span> &lt;&lt; error &lt;&lt; std::endl;</span><br><span class="line">        std::cerr &lt;&lt; <span class="string">&quot;原因: 第二个句柄的共享策略(FILE_SHARE_READ)与第一个句柄的访问权限(GENERIC_WRITE)冲突。&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;fs2 打开成功&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">        <span class="built_in">CloseHandle</span>(hFile2);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">CloseHandle</span>(hFile1);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a class="header-anchor" href="#总结">#</a>总结</h2>
+<p>不要被 <code>FileShare</code> 的名字误导，以为它只是“我开放给别人的权限”。在第二次打开文件时，它实际上变成了一个<strong>过滤器</strong>：它必须兼容文件上<strong>当前已存在</strong>的所有句柄的权限。<br>
+如果你的程序中有个 Writer 正在工作，任何后来的 Reader 想要加入，都必须在自己的 <code>FileShare</code> 中显式包含 <code>Write</code>，承认 Writer 的存在。</p>
 <h2 id="相关阅读"><a class="header-anchor" href="#相关阅读">#</a>相关阅读</h2>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/16544099">File sharing not working as expected</a></p>
 
@@ -225,7 +228,7 @@
     <div class="title">目录</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E7%8E%B0%E5%9C%BA"><span class="toc-text">问题现场</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%9C%AC%E5%8E%9F%E5%9B%A0%EF%BC%9AFileShare-%E6%98%AF%E5%8F%8C%E5%90%91%E5%A5%91%E7%BA%A6"><span class="toc-text">根本原因：FileShare 是双向契约</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%8E%E6%98%8E%E5%85%81%E8%AE%B8%E2%80%9C%E5%85%B1%E4%BA%AB%E8%AF%BB%E2%80%9D%EF%BC%8C%E5%8D%B4%E8%BF%98%E6%98%AF%E8%A2%AB%E9%94%81%E4%BA%86%EF%BC%9F"><span class="toc-text">为什么明明允许“共享读”，却还是被锁了？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E5%8F%91%E7%8E%B0%E5%9C%BA%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-text">案发现场与解决方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%95%E5%B1%82%E7%9C%9F%E7%9B%B8%EF%BC%9A%E8%BF%99%E6%98%AF-Windows-%E7%9A%84%E9%94%85-Win32-API-%E5%A4%8D%E7%8E%B0"><span class="toc-text">底层真相：这是 Windows 的锅 (Win32 API 复现)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E9%98%85%E8%AF%BB"><span class="toc-text">相关阅读</span></a></li></ol>
       
     </div>
   </div>
