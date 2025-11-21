@@ -150,7 +150,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-11-19 21:18:34
+          2025-11-21 20:50:28
         </span>
         
               <span class="post-tags">
@@ -187,7 +187,6 @@
 <p><strong>解决方法：</strong><br>
 <code>fs2</code> 必须显式地宽容 <code>fs1</code> 的写入行为。我们需要将 <code>fs2</code> 的共享模式改为 <code>ReadWrite</code>：</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 修正后的代码：fs2 必须允许其他人“Write”，因为 fs1 确实正在 Write</span></span><br><span class="line"><span class="keyword">var</span> fs2 = <span class="keyword">new</span> FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);</span><br></pre></td></tr></table></figure>
-<hr>
 <h2 id="底层真相：这是-Windows-的锅-Win32-API-复现"><a class="header-anchor" href="#底层真相：这是-Windows-的锅-Win32-API-复现">#</a>底层真相：这是 Windows 的锅 (Win32 API 复现)</h2>
 <p>有人可能会怀疑这是 .NET 框架本身设计的“矫情”。为了自证清白，我直接使用 C++ 调用 Win32 API <code>CreateFile</code> 来复现这个场景。你会发现，结果一模一样。<br>
 在 Windows 内核中，文件共享机制是非常严格的。</p>
