@@ -682,6 +682,202 @@ a:hover {
   right: -10px;
 }
 
+font-weight: bold;
+padding: 5px 0;
+}
+
+.catalog-content {
+  overflow: auto;
+}
+
+.post-catalog .toc-child {
+  padding-left: 10px;
+}
+
+.post-catalog li {
+  list-style-type: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 2;
+}
+
+.toc-link {
+  position: relative;
+  padding: 3px 5px;
+  opacity: 0.8;
+  border-left: 2px solid transparent;
+}
+
+.toc-link.active {
+  color: var(--color-text-a-active);
+  opacity: 1;
+}
+
+.toc-link:hover::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  bottom: 2px;
+  width: 6px;
+  height: 69%;
+  background-color: gray;
+  opacity: 0.45;
+}
+
+.toc-link.active::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  bottom: 2px;
+  width: 6px;
+  height: 69%;
+  background-color: gray;
+  opacity: 0.55;
+}
+
+.search-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s ease;
+  visibility: visible;
+  padding-right: 6px;
+  backdrop-filter: blur(8px);
+}
+
+.search-overlay.hidden {
+  background-color: transparent;
+  visibility: hidden;
+  transition: visibility 0s linear 0.2s, background-color 0.2s;
+  padding-right: 0;
+}
+
+.search-overlay.hidden .search-content {
+  position: relative;
+  top: 15%;
+  opacity: 0;
+}
+
+.search-content {
+  position: relative;
+  top: 18%;
+  opacity: 1;
+  background-color: transparent;
+  z-index: 999;
+  border-radius: 10px;
+  margin: 0 2rem;
+  transition: top 0.2s ease, opacity 0.2s ease;
+  outline: 0;
+}
+
+@media (min-width: 768px) {
+  .search-content {
+    width: 520px;
+    margin: 0 auto;
+  }
+}
+
+.search-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  background-color: var(--bg-content-search);
+  padding: 0 8px;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+}
+
+.search-input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  padding: 0 10px;
+  font-size: 1.6rem;
+  height: 38px;
+  line-height: 38px;
+  color: var(--color-text-a);
+}
+
+.search-result {
+  max-height: 350px;
+  overflow: auto;
+  background-color: var(--bg-content-search);
+  border-radius: 10px;
+  margin-top: 8px;
+}
+
+.search-result ul {
+  padding: 10px;
+}
+
+.search-result-list li {
+  list-style-type: none;
+  padding: 10px;
+  font-size: 1.6rem;
+  border-bottom: 1px dashed var(--color-divider-md-border);
+}
+
+.search-result-list li:nth-last-of-type(1) {
+  border-bottom: none;
+}
+
+.search-result-abstract {
+  padding: 10px 10px 0 10px;
+  font-size: 1.2rem;
+  color: var(--color-text-sub);
+  word-break: break-all;
+}
+
+.search-keyword {
+  color: var(--color-text-md-code);
+}
+
+.local-search-empty {
+  font-size: 1.6rem;
+  color: var(--color-text-a);
+}
+
+.tools-bar {
+  position: fixed;
+  right: 2.2rem;
+  bottom: 2.2rem;
+}
+
+.tools-bar .tools-bar-item {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.tools-bar .back-to-top.hidden {
+  display: none;
+}
+
+.share-icon {
+  position: relative
+}
+
+.share-content {
+  position: absolute;
+  top: 0;
+  right: 30px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  transition: all 0.3s;
+  z-index: 2;
+}
+
+.share-content.hidden {
+  opacity: 0;
+  z-index: -1;
+  right: -10px;
+}
+
 .share-content .share-item {
   padding: 0 10px;
 }
@@ -690,31 +886,45 @@ a:hover {
   position: relative;
 }
 
+.pin-copy .iconfont,
+.pin-copy i {
+  font-size: 1.2em;
+}
+
 .pin-copy:hover::before {
   content: "";
   position: absolute;
-  left: 50%;
-  top: -0.8rem;
-  transform: translateX(-50%);
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
   border: 0.5rem solid rgba(0, 0, 0, 70%);
+  border-top-color: transparent;
   border-bottom-color: transparent;
-  border-left-color: transparent;
+  border-left-color: rgba(0, 0, 0, 70%);
   border-right-color: transparent;
+  margin-right: -5px;
+  /* Adjust arrow position */
+  pointer-events: none;
+  z-index: 1000;
 }
 
 .pin-copy:hover::after {
   content: attr(data-text);
   position: absolute;
-  left: 50%;
-  top: -3rem;
-  transform: translateX(-50%);
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
   background-color: rgba(0, 0, 0, 70%);
   color: #ffffff;
   border-radius: 3px;
   padding: 6px;
-  font-size: 1rem;
-  line-height: 1rem;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
   white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+  margin-right: 5px;
+  /* Spacing from button */
 }
 
 /* GitHub 风格的标题锚点 - 默认隐藏，悬停时显示锁图标 */

@@ -197,13 +197,72 @@ pre .javascript .function {
 .markdown-body .highlight {
   color: #ccc;
   background-color: #2d2d2d;
-  border-radius: 5px;
+  border-radius: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin: 0;
+  padding: 0;
+  padding-right: 40px; /* 为复制按钮留出空间 */
+  contain: layout style;
+  max-height: none;
+  height: auto;
+}
+
+/* 防止 ClipboardJS 临时元素导致滚动条 */
+.markdown-body .highlight textarea,
+figure.highlight textarea {
+  position: fixed !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  outline: none !important;
+  resize: none !important;
+  z-index: -1 !important;
+  visibility: hidden !important;
+}
+
+/* 确保 figure 容器不会因为复制按钮导致布局变化 */
+figure.highlight {
+  contain: layout;
+  overflow: visible;
+}
+
+/* 代码块滚动条样式 */
+.markdown-body .highlight::-webkit-scrollbar {
+  height: 8px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 0 0 4px 4px;
+}
+
+.markdown-body .highlight::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.markdown-body .highlight::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Firefox 滚动条样式 */
+.markdown-body .highlight {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.2);
 }
 
 .markdown-body .highlight table {
   width: 100%;
   max-width: 100%;
   table-layout: fixed;
+  margin: 0;
+  margin-bottom: 0;
 }
 
 .markdown-body .highlight table td {
@@ -217,9 +276,17 @@ pre .javascript .function {
   border: none;
 }
 
+.markdown-body .highlight table tbody {
+  margin: 0;
+  padding: 0;
+}
+
 .markdown-body .highlight .gutter pre {
   color: #999;
   background: #1b1b1b;
+  border-radius: 0;
+  margin: 0;
+  margin-bottom: 0;
 }
 
 .highlight .code pre {
@@ -228,10 +295,32 @@ pre .javascript .function {
   padding-right: 10px;
   background-color: #2d2d2d !important;
   box-sizing: border-box;
+  border-radius: 0;
+  margin: 0;
+  margin-bottom: 0;
 }
 
 .markdown-body .highlight table tbody pre {
   border-radius: 0;
+  margin: 0;
+  margin-bottom: 0;
+}
+
+/* 确保代码块第一个和最后一个单元格有圆角 */
+.markdown-body .highlight table tr:first-child td:first-child .gutter pre {
+  border-top-left-radius: 4px;
+}
+
+.markdown-body .highlight table tr:first-child td:last-child .code pre {
+  border-top-right-radius: 4px;
+}
+
+.markdown-body .highlight table tr:last-child td:first-child .gutter pre {
+  border-bottom-left-radius: 4px;
+}
+
+.markdown-body .highlight table tr:last-child td:last-child .code pre {
+  border-bottom-right-radius: 4px;
 }
 
 details summary {
@@ -240,6 +329,19 @@ details summary {
 }
 figure {
   position: relative;
+  margin: 0;
+  margin-bottom: 0;
+  overflow: visible;
+}
+
+figure.highlight {
+  margin-bottom: 1rem;
+  overflow: visible;
+}
+
+figure.highlight .markdown-body .highlight {
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 figure figcaption {
@@ -258,4 +360,5 @@ figure .pin-copy {
   top: 0;
   right: 1rem;
   cursor: pointer;
+  z-index: 10;
 }
