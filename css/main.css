@@ -197,13 +197,72 @@ pre .javascript .function {
 .markdown-body .highlight {
   color: #ccc;
   background-color: #2d2d2d;
-  border-radius: 5px;
+  border-radius: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin: 0;
+  padding: 0;
+  padding-right: 40px; /* 为复制按钮留出空间 */
+  contain: layout style;
+  max-height: none;
+  height: auto;
+}
+
+/* 防止 ClipboardJS 临时元素导致滚动条 */
+.markdown-body .highlight textarea,
+figure.highlight textarea {
+  position: fixed !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  outline: none !important;
+  resize: none !important;
+  z-index: -1 !important;
+  visibility: hidden !important;
+}
+
+/* 确保 figure 容器不会因为复制按钮导致布局变化 */
+figure.highlight {
+  contain: layout;
+  overflow: visible;
+}
+
+/* 代码块滚动条样式 */
+.markdown-body .highlight::-webkit-scrollbar {
+  height: 8px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 0 0 4px 4px;
+}
+
+.markdown-body .highlight::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.markdown-body .highlight::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Firefox 滚动条样式 */
+.markdown-body .highlight {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.2);
 }
 
 .markdown-body .highlight table {
   width: 100%;
   max-width: 100%;
   table-layout: fixed;
+  margin: 0;
+  margin-bottom: 0;
 }
 
 .markdown-body .highlight table td {
@@ -217,9 +276,17 @@ pre .javascript .function {
   border: none;
 }
 
+.markdown-body .highlight table tbody {
+  margin: 0;
+  padding: 0;
+}
+
 .markdown-body .highlight .gutter pre {
   color: #999;
   background: #1b1b1b;
+  border-radius: 0;
+  margin: 0;
+  margin-bottom: 0;
 }
 
 .highlight .code pre {
@@ -228,10 +295,32 @@ pre .javascript .function {
   padding-right: 10px;
   background-color: #2d2d2d !important;
   box-sizing: border-box;
+  border-radius: 0;
+  margin: 0;
+  margin-bottom: 0;
 }
 
 .markdown-body .highlight table tbody pre {
   border-radius: 0;
+  margin: 0;
+  margin-bottom: 0;
+}
+
+/* 确保代码块第一个和最后一个单元格有圆角 */
+.markdown-body .highlight table tr:first-child td:first-child .gutter pre {
+  border-top-left-radius: 4px;
+}
+
+.markdown-body .highlight table tr:first-child td:last-child .code pre {
+  border-top-right-radius: 4px;
+}
+
+.markdown-body .highlight table tr:last-child td:first-child .gutter pre {
+  border-bottom-left-radius: 4px;
+}
+
+.markdown-body .highlight table tr:last-child td:last-child .code pre {
+  border-bottom-right-radius: 4px;
 }
 
 details summary {
@@ -240,6 +329,19 @@ details summary {
 }
 figure {
   position: relative;
+  margin: 0;
+  margin-bottom: 0;
+  overflow: visible;
+}
+
+figure.highlight {
+  margin-bottom: 1rem;
+  overflow: visible;
+}
+
+figure.highlight .markdown-body .highlight {
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 figure figcaption {
@@ -258,6 +360,7 @@ figure .pin-copy {
   top: 0;
   right: 1rem;
   cursor: pointer;
+  z-index: 10;
 }
 
 /* valine comments style sheets */
@@ -346,7 +449,8 @@ figure .pin-copy {
   padding: 0;
 }
 
-html, body {
+html,
+body {
   font-size: 10px;
   letter-spacing: 0.01rem;
   background-color: var(--bg-body);
@@ -383,15 +487,15 @@ body.hidden {
 
 /*控制整个滚动条*/
 ::-webkit-scrollbar {
-    background-color: transparent;
-    width: 6px;
-    height: 6px;
-    background-clip: padding-box;
+  background-color: transparent;
+  width: 6px;
+  height: 6px;
+  background-clip: padding-box;
 }
 
 /*滚动条中滑块部分*/
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(144,147,153,.5);
+  background-color: rgba(144, 147, 153, .5);
   /* border-radius: 5px; */
   transition: background-color 0.3s ease;
 }
@@ -449,6 +553,7 @@ a:hover {
   .container {
     width: 90%;
   }
+
   .index .post-list,
   .friend-index .friend-list,
   .archives .post-list,
@@ -456,9 +561,11 @@ a:hover {
   .about-index .markdown-body {
     padding: 0;
   }
+
   .category-index .category-list {
     padding: 0 40px;
   }
+
   .btn-catalog {
     display: block;
     position: fixed;
@@ -471,17 +578,19 @@ a:hover {
     color: var(--color-text-a);
     background-color: rgb(255 255 255 / 50%);
   }
+
   .btn-catalog i {
     font-size: 24px;
   }
+
   .post-catalog {
-    top: 44px!important;
-    bottom: unset!important;
-    right: 0!important;
-    width: unset!important;
+    top: 44px !important;
+    bottom: unset !important;
+    right: 0 !important;
+    width: unset !important;
     display: flex;
     justify-content: flex-end;
-    padding: 10px!important;
+    padding: 10px !important;
     background-color: #fff;
     box-shadow: -1px 2px 5px 0px #999;
     opacity: .9;
@@ -490,17 +599,21 @@ a:hover {
     border-bottom-left-radius: 4px;
     transition: all 0.2s ease;
   }
+
   .post-catalog.hidden {
-    opacity: 0!important;
-    top: 0!important;
-    z-index: -1!important;
+    opacity: 0 !important;
+    top: 0 !important;
+    z-index: -1 !important;
   }
+
   .post-catalog .title {
     display: none;
   }
+
   .post-catalog .catalog-content {
-    height: unset!important;
+    height: unset !important;
   }
+
   .back-to-top {
     opacity: 0;
     z-index: -1;
@@ -508,6 +621,7 @@ a:hover {
 }
 
 @media (max-width: 1200px) and (min-width: 887px) {
+
   .index .post-list,
   .friend-index .friend-list,
   .archives .post-list,
@@ -549,7 +663,9 @@ a:hover {
   padding-right: 8px;
 }
 
-.tag-details .time-m-d, .archives .time-m-d, .category-details .time-m-d {
+.tag-details .time-m-d,
+.archives .time-m-d,
+.category-details .time-m-d {
   margin: 0 30px;
 }
 
@@ -706,7 +822,8 @@ a:hover {
   transform-origin: left;
 }*/
 
-.tag-list-count, .category-list-count {
+.tag-list-count,
+.category-list-count {
   padding: 0 5px;
   color: #aaa;
   font-size: 1.2rem;
@@ -769,7 +886,8 @@ a:hover {
   border-top: 1px solid var(--color-divider-md-border);
 }
 
-.prev-or-next .post-foot-next, .prev-or-next .post-foot-prev {
+.prev-or-next .post-foot-next,
+.prev-or-next .post-foot-prev {
   white-space: nowrap;
 }
 
@@ -783,7 +901,9 @@ a:hover {
   flex-wrap: wrap;
 }
 
-.post-attach .post-pubtime, .post-attach .post-tags, .post-attach .post-categories {
+.post-attach .post-pubtime,
+.post-attach .post-tags,
+.post-attach .post-categories {
   padding: 0 10px;
   display: flex;
   align-items: center;
@@ -793,7 +913,9 @@ a:hover {
   .time-m-d {
     margin-right: 15px;
   }
-  .tag-details .time-m-d, .archives .time-m-d {
+
+  .tag-details .time-m-d,
+  .archives .time-m-d {
     margin: 0 15px;
   }
 }
@@ -870,7 +992,203 @@ a:hover {
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s ease;
+  visibility: visible;
+  padding-right: 6px;
+  backdrop-filter: blur(8px);
+}
+
+.search-overlay.hidden {
+  background-color: transparent;
+  visibility: hidden;
+  transition: visibility 0s linear 0.2s, background-color 0.2s;
+  padding-right: 0;
+}
+
+.search-overlay.hidden .search-content {
+  position: relative;
+  top: 15%;
+  opacity: 0;
+}
+
+.search-content {
+  position: relative;
+  top: 18%;
+  opacity: 1;
+  background-color: transparent;
+  z-index: 999;
+  border-radius: 10px;
+  margin: 0 2rem;
+  transition: top 0.2s ease, opacity 0.2s ease;
+  outline: 0;
+}
+
+@media (min-width: 768px) {
+  .search-content {
+    width: 520px;
+    margin: 0 auto;
+  }
+}
+
+.search-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  background-color: var(--bg-content-search);
+  padding: 0 8px;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+}
+
+.search-input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  padding: 0 10px;
+  font-size: 1.6rem;
+  height: 38px;
+  line-height: 38px;
+  color: var(--color-text-a);
+}
+
+.search-result {
+  max-height: 350px;
+  overflow: auto;
+  background-color: var(--bg-content-search);
+  border-radius: 10px;
+  margin-top: 8px;
+}
+
+.search-result ul {
+  padding: 10px;
+}
+
+.search-result-list li {
+  list-style-type: none;
+  padding: 10px;
+  font-size: 1.6rem;
+  border-bottom: 1px dashed var(--color-divider-md-border);
+}
+
+.search-result-list li:nth-last-of-type(1) {
+  border-bottom: none;
+}
+
+.search-result-abstract {
+  padding: 10px 10px 0 10px;
+  font-size: 1.2rem;
+  color: var(--color-text-sub);
+  word-break: break-all;
+}
+
+.search-keyword {
+  color: var(--color-text-md-code);
+}
+
+.local-search-empty {
+  font-size: 1.6rem;
+  color: var(--color-text-a);
+}
+
+.tools-bar {
+  position: fixed;
+  right: 2.2rem;
+  bottom: 2.2rem;
+}
+
+.tools-bar .tools-bar-item {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.tools-bar .back-to-top.hidden {
+  display: none;
+}
+
+.share-icon {
+  position: relative
+}
+
+.share-content {
+  position: absolute;
+  top: 0;
+  right: 30px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  transition: all 0.3s;
+  z-index: 2;
+}
+
+.share-content.hidden {
+  opacity: 0;
+  z-index: -1;
+  right: -10px;
+}
+
+font-weight: bold;
+padding: 5px 0;
+}
+
+.catalog-content {
+  overflow: auto;
+}
+
+.post-catalog .toc-child {
+  padding-left: 10px;
+}
+
+.post-catalog li {
+  list-style-type: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 2;
+}
+
+.toc-link {
+  position: relative;
+  padding: 3px 5px;
+  opacity: 0.8;
+  border-left: 2px solid transparent;
+}
+
+.toc-link.active {
+  color: var(--color-text-a-active);
+  opacity: 1;
+}
+
+.toc-link:hover::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  bottom: 2px;
+  width: 6px;
+  height: 69%;
+  background-color: gray;
+  opacity: 0.45;
+}
+
+.toc-link.active::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  bottom: 2px;
+  width: 6px;
+  height: 69%;
+  background-color: gray;
+  opacity: 0.55;
+}
+
+.search-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
   transition: background-color 0.2s ease;
   visibility: visible;
   padding-right: 6px;
@@ -1014,49 +1332,96 @@ a:hover {
   position: relative;
 }
 
+.pin-copy .iconfont,
+.pin-copy i {
+  font-size: 1.2em;
+}
+
 .pin-copy:hover::before {
   content: "";
   position: absolute;
-  left: 50%;
-  top: -0.8rem;
-  transform: translateX(-50%);
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
   border: 0.5rem solid rgba(0, 0, 0, 70%);
+  border-top-color: transparent;
   border-bottom-color: transparent;
-  border-left-color: transparent;
+  border-left-color: rgba(0, 0, 0, 70%);
   border-right-color: transparent;
+  margin-right: -5px;
+  /* Adjust arrow position */
+  pointer-events: none;
+  z-index: 1000;
 }
 
 .pin-copy:hover::after {
   content: attr(data-text);
   position: absolute;
-  left: 50%;
-  top: -3rem;
-  transform: translateX(-50%);
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
   background-color: rgba(0, 0, 0, 70%);
   color: #ffffff;
   border-radius: 3px;
   padding: 6px;
-  font-size: 1rem;
-  line-height: 1rem;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
   white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+  margin-right: 5px;
+  /* Spacing from button */
 }
 
-/* 美化标题锚点符号 - 竖线一直显示 */
+/* GitHub 风格的标题锚点 - 默认隐藏，悬停时显示锁图标 */
 .markdown-body .header-anchor {
-  opacity: 0.4;
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  transform: translateY(-50%);
+  padding-right: 0.25rem;
+  line-height: 1;
+  opacity: 0;
   transition: opacity 0.2s ease, color 0.2s ease;
   color: var(--color-text-a);
   text-decoration: none;
   font-weight: normal;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
+  font-size: 0;
+  /* 隐藏原始的 # 文本 */
 }
 
-.markdown-body .header-anchor:hover {
+.markdown-body h1:hover .header-anchor,
+.markdown-body h2:hover .header-anchor,
+.markdown-body h3:hover .header-anchor,
+.markdown-body h4:hover .header-anchor,
+.markdown-body h5:hover .header-anchor,
+.markdown-body h6:hover .header-anchor {
   opacity: 1;
   color: var(--color-text-a-hover);
 }
 
+/* 将 # 符号替换为锁图标 */
+.markdown-body .header-anchor::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' version='1.1' aria-hidden='true'><path fill-rule='evenodd' d='M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z'></path></svg>");
+  mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' version='1.1' aria-hidden='true'><path fill-rule='evenodd' d='M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z'></path></svg>");
+  vertical-align: middle;
+  margin-top: -0.05em;
+}
+
+/* 为标题添加左边距，为锚点留出空间 */
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+}
 .footer {
   padding-top: 30px;
   font-size: 1.2rem;
@@ -1477,11 +1842,12 @@ body {
 .navbar ul li.active a::after {
   background-color: #808080;
 }
-.markdown-body h1 .headerlink::before,
-.markdown-body h2 .headerlink::before,
-.markdown-body h3 .headerlink::before,
-.markdown-body h4 .headerlink::before,
-.markdown-body h5 .headerlink::before,
-.markdown-body h6 .headerlink::before {
+/* GitHub 风格的标题锚点颜色使用主题色 */
+.markdown-body h1:hover .header-anchor,
+.markdown-body h2:hover .header-anchor,
+.markdown-body h3:hover .header-anchor,
+.markdown-body h4:hover .header-anchor,
+.markdown-body h5:hover .header-anchor,
+.markdown-body h6:hover .header-anchor {
   color: #808080;
 }
