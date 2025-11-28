@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="John Doe" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      编译 Qt5.7.1 for ARM64（基于Windows） 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">编译 Qt5.7.1 for ARM64（基于Windows）</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-11-28 23:41:08
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Qt/" title="Qt">
+                    #Qt
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>细节参考之前制作Linux x86_64的文章：<a href="/2025/08/08/build-qt-linux-amd64-on-windows/">制作交叉 Qt 5.7.1 for Windows</a></p>
+<p>准备工具：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qtbase-opensource-src-5.7.1.7z">qtbase-opensource-src-5.7.1.7z</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.msys2.org/docs/installer">msys2</a>，主要是用它的命令行工具</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/winfsp/sshfs-win">sshfs-win</a>，挂载Linux根文件目录</li>
+<li>运行在Windows上的Linux aarch64的交叉编译器</li>
+</ol>
+<h2 id="Linux上安装尽可能多的库"><a class="header-anchor" href="#Linux上安装尽可能多的库">#</a>Linux上安装尽可能多的库</h2>
+<p>Qt 在配置时会检测各种库是否可用，这决定了编译出的 Qt 库有些什么功能，为了编译满血版，尽可能的安装多的库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install <span class="string">&quot;^libxcb.*&quot;</span> libx11-dev libx11-xcb-dev libxext-dev libxi-dev libxfixes-dev libglu1-mesa-dev libfreetype6-dev libxrender-dev libfontconfig1-dev libxkbcommon-dev libxkbcommon-x11-dev libdbus-1-dev libasound2-dev libpulse-dev libudev-dev libwayland-dev libatspi2.0-dev libgl1-mesa-dev libegl1-mesa-dev libgles2-mesa-dev zlib1g-dev libssl-dev libpng-dev libjpeg-dev libgbm-dev libdrm-dev libmtdev-dev unixodbc-dev libinput-dev libicu-dev libproxy-dev libdouble-conversion-dev libharfbuzz-dev freetds-dev libcups2-dev libpq-dev</span><br></pre></td></tr></table></figure>
+<h2 id="挂载sysroot"><a class="header-anchor" href="#挂载sysroot">#</a>挂载sysroot</h2>
+<p>在Windows下用sshfs-win挂载远程的<code>sysroot</code>，记得用<code>root</code>用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\\sshfs.r\root@192.168.27.5</span><br></pre></td></tr></table></figure>
+<h2 id="制作一份arm64的msakespec"><a class="header-anchor" href="#制作一份arm64的msakespec">#</a>制作一份arm64的msakespec</h2>
+<p>复制<code>mkspecs/linux-arm-gnueabi-g++</code>文件夹，更名为<code>linux-aarch64-gnu-g++</code>，编辑其中的<code>qmake.conf</code>文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#</span><br><span class="line"># qmake configuration for building with aarch64-linux-gnu-g++</span><br><span class="line">#</span><br><span class="line"></span><br><span class="line">MAKEFILE_GENERATOR      = UNIX</span><br><span class="line">CONFIG                 += incremental</span><br><span class="line">QMAKE_INCREMENTAL_STYLE = sublib</span><br><span class="line"></span><br><span class="line">include(../common/linux.conf)</span><br><span class="line">include(../common/gcc-base-unix.conf)</span><br><span class="line">include(../common/g++-unix.conf)</span><br><span class="line"></span><br><span class="line"># modifications to g++.conf</span><br><span class="line">QMAKE_CC                = aarch64-linux-gnu-gcc</span><br><span class="line">QMAKE_CXX               = aarch64-linux-gnu-g++</span><br><span class="line">QMAKE_LINK              = aarch64-linux-gnu-g++</span><br><span class="line">QMAKE_LINK_SHLIB        = aarch64-linux-gnu-g++</span><br><span class="line"></span><br><span class="line"># modifications to linux.conf</span><br><span class="line">QMAKE_AR                = aarch64-linux-gnu-ar cqs</span><br><span class="line">QMAKE_OBJCOPY           = aarch64-linux-gnu-objcopy</span><br><span class="line">QMAKE_NM                = aarch64-linux-gnu-nm -P</span><br><span class="line">QMAKE_STRIP             = aarch64-linux-gnu-strip</span><br><span class="line">load(qt_config)</span><br><span class="line">QMAKE_LIBS += -lrt -lpthread</span><br></pre></td></tr></table></figure>
+<p>末尾添加<code>-lrt -lpthread</code>是因为我编译<code>QSharedMemory</code>时提示链接库失败的问题了，可能是因为交叉编译引起的。</p>
+<h2 id="编译"><a class="header-anchor" href="#编译">#</a>编译</h2>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set PATH=C:\ai\cross-toolchain\Linux-aarch64\bin;C:\msys64\usr\bin;%PATH%</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">..\configure.bat -prefix /qt5.7.1-aarch64-linux-gnu -platform win32-g++ -xplatform linux-aarch64-gnu-g++ -sysroot Z: -confirm-license -opensource -release -opengl es2 -posix-ipc -nomake examples -nomake tests -D QT_HAVE_POLL -L Z:/usr/lib/aarch64-linux-gnu</span><br></pre></td></tr></table></figure>
+<p>这里值得一提的地方是<code>-prefix</code>路径，因为Qt的原因，最后会强制安装到<code>-sysroot</code>+<code>-prefix</code>路径，所以这里写一个相对路径即可，稍后有个小技巧让其安装到本机而不是远程主机。</p>
+<p>另一个就是手动添加了<code>-posix-ipc</code>，因为不添加的话，<code>QSharedMemory</code>会被禁用</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (dictionary[<span class="string">&quot;POSIX_IPC&quot;</span>] == <span class="string">&quot;yes&quot;</span>)</span><br><span class="line">    qconfigList += <span class="string">&quot;QT_POSIX_IPC&quot;</span>;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> ((<span class="built_in">platform</span>() != ANDROID) &amp;&amp; (<span class="built_in">platform</span>() != WINDOWS) &amp;&amp; (<span class="built_in">platform</span>() != WINDOWS_RT))</span><br><span class="line">    qconfigList &lt;&lt; <span class="string">&quot;QT_NO_SYSTEMSEMAPHORE&quot;</span> &lt;&lt; <span class="string">&quot;QT_NO_SHAREDMEMORY&quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>目标平台是<code>Linux</code>，这里会判定成功，导致添加了<code>QT_NO_SYSTEMSEMAPHORE</code>和<code>QT_NO_SHAREDMEMORY</code>宏。</p>
+<p>好了，开始编译</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mingw32-make -j</span><br></pre></td></tr></table></figure>
+<p>安装前先断开<code>Z:</code>的挂载，然后将<code>Z</code>盘映射到<code>C</code>盘，再安装！这样Qt库就安装到本机磁盘了！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subst Z: C:\</span><br><span class="line">mingw32-make install</span><br><span class="line">subst Z: /D</span><br></pre></td></tr></table></figure>
+<p>最后还要提醒一下，这样编译后<code>bin</code>目录下只有基础的<code>qmake.exe</code>、<code>uic.exe</code>和<code>moc.exe</code>，像其他的翻译程序之类的工具需要单独编译Windows版本的。</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/11/18/csharp-filestream-fileshare-trap/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux%E4%B8%8A%E5%AE%89%E8%A3%85%E5%B0%BD%E5%8F%AF%E8%83%BD%E5%A4%9A%E7%9A%84%E5%BA%93"><span class="toc-text">Linux上安装尽可能多的库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%82%E8%BD%BDsysroot"><span class="toc-text">挂载sysroot</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9C%E4%B8%80%E4%BB%BDarm64%E7%9A%84msakespec"><span class="toc-text">制作一份arm64的msakespec</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-text">编译</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>

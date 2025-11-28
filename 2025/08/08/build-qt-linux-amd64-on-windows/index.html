@@ -13,7 +13,7 @@
   
   <title>
     
-      不完美制作交叉 Qt 5.7.1 for Windows 
+      制作交叉 Qt 5.7.1 for Windows 
       
       
       |
@@ -146,11 +146,11 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">不完美制作交叉 Qt 5.7.1 for Windows</div>
+      <div class="post-title">制作交叉 Qt 5.7.1 for Windows</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-08-10 10:23:34
+          2025-11-27 21:39:38
         </span>
         
               <span class="post-tags">
@@ -167,15 +167,7 @@
       </div>
       <div class="markdown-body">
         <p>在之前的文章中学会了如何制作 GCC 交叉编译器，有了交叉编译器后，就可以用交叉编译器来编译第三方库，比如 Qt。<br>
-本次的最终任务是制作 Windows 上使用的 Qt linux x86_64 库。</p>
-<h2 id="为什么不完美"><a class="header-anchor" href="#为什么不完美">#</a>为什么不完美</h2>
-<p>可能是因为 Qt 5.7.1 版本太老的原因，最初尝试在 msys2 环境下制作，但是无法生成配置程序，大概是因为这个版本的 qmake 总是认为自身运行 Windows 原生环境下，导致一些代码逻辑在 msys2 下失败了，不知道新版本 Qt 情况如何。<br>
-正因为这样我们就只能在 Windows 下编译，但在 Windows 下又无法用<code>configure</code>来配置，只能用<code>configure.bat</code>，但用<code>configure.bat</code>时就不会有 Linux 下的一些编译选项和检测，这样就无法编译制作一些 Linux Qt 依赖的插件库。<br>
-所以只能编译 Qt 的基础库，比如<code>Qt5Core</code>、<code>Qt5Gui</code>等等，当最终编译出的项目要部署时就会缺少一些插件库，这就是我说的“不完美”。</p>
-<p><br>
-如何解决呢？<br>
-一个曲线救国的方法，在目标 Linux 系统上用相同的编译器，Qt版本、编译参数编译一份 Qt 库，这样我们在部署自己的项目时就不用 Windows 的 Qt 库了，只用拷贝自己的项目文件到目标 Linux 系统上即可，实际运行时 Qt 库用的是 Linux 下编译的那套。<br>
-这就要求两边的编译器、Qt版本、编译参数完全一致，否则可能因为 ABI 问题引起崩溃之类的问题。</p>
+本次的最终任务是制作 Windows 上使用的 Qt Linux x86_64 库。</p>
 <h2 id="准备工作"><a class="header-anchor" href="#准备工作">#</a>准备工作</h2>
 <h3 id="本机编译器"><a class="header-anchor" href="#本机编译器">#</a>本机编译器</h3>
 <p>本机编译器的职责是编译<code>qmake.exe</code>、<code>moc.exe</code>、<code>uic.exe</code>等运行在 Windows 上的工具。<br>
@@ -286,7 +278,7 @@ Windows 打开<code>此电脑</code>，右键选择<code>映射网络驱动器</
     <div class="title">目录</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%AE%8C%E7%BE%8E"><span class="toc-text">为什么不完美</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-text">准备工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E6%9C%BA%E7%BC%96%E8%AF%91%E5%99%A8"><span class="toc-text">本机编译器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%99%A8"><span class="toc-text">交叉编译器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87sysroot"><span class="toc-text">准备sysroot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#msys2"><span class="toc-text">msys2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E7%BC%96%E8%AF%91"><span class="toc-text">开始编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%96%84%E5%90%8E%E5%B7%A5%E4%BD%9C"><span class="toc-text">善后工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%81%A2%E5%A4%8D-qmake-conf"><span class="toc-text">恢复 qmake.conf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#qt-conf"><span class="toc-text">qt.conf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%B7%E8%B4%9D-GCC-%E8%BF%90%E8%A1%8C%E6%97%B6"><span class="toc-text">拷贝 GCC 运行时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%B7%E8%B4%9D%E7%BC%96%E8%AF%91%E6%89%80%E9%9C%80%E7%9A%84-so-%E6%96%87%E4%BB%B6"><span class="toc-text">拷贝编译所需的 so 文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="toc-text">运行测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%85%B6%E4%BB%96%E6%A8%A1%E5%9D%97"><span class="toc-text">编译其他模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-text">准备工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E6%9C%BA%E7%BC%96%E8%AF%91%E5%99%A8"><span class="toc-text">本机编译器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91%E5%99%A8"><span class="toc-text">交叉编译器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87sysroot"><span class="toc-text">准备sysroot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#msys2"><span class="toc-text">msys2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E7%BC%96%E8%AF%91"><span class="toc-text">开始编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%96%84%E5%90%8E%E5%B7%A5%E4%BD%9C"><span class="toc-text">善后工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%81%A2%E5%A4%8D-qmake-conf"><span class="toc-text">恢复 qmake.conf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#qt-conf"><span class="toc-text">qt.conf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%B7%E8%B4%9D-GCC-%E8%BF%90%E8%A1%8C%E6%97%B6"><span class="toc-text">拷贝 GCC 运行时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%B7%E8%B4%9D%E7%BC%96%E8%AF%91%E6%89%80%E9%9C%80%E7%9A%84-so-%E6%96%87%E4%BB%B6"><span class="toc-text">拷贝编译所需的 so 文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="toc-text">运行测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%85%B6%E4%BB%96%E6%A8%A1%E5%9D%97"><span class="toc-text">编译其他模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
       
     </div>
   </div>
