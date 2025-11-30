@@ -13,7 +13,7 @@
   
   <title>
     
-      在.NET 2.0中使用C#新特性 
+      编译 Qt5.7.1 for ARM64（基于Windows）（第二版） 
       
       
       |
@@ -146,25 +146,19 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">在.NET 2.0中使用C#新特性</div>
+      <div class="post-title">编译 Qt5.7.1 for ARM64（基于Windows）（第二版）</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-07-01 20:55:10
+          2025-11-30 14:45:36
         </span>
         
               <span class="post-tags">
                 <i class="iconfont icon-tags mr-10" title="标签"></i>
                 
                 <span class="span--tag mr-8">
-                  <a href="/tags/dotnet/" title=".NET">
-                    #.NET
-                  </a>
-                </span>
-                
-                <span class="span--tag mr-8">
-                  <a href="/tags/c-sharp/" title="C#">
-                    #C#
+                  <a href="/tags/Qt/" title="Qt">
+                    #Qt
                   </a>
                 </span>
                 
@@ -172,85 +166,49 @@
           
       </div>
       <div class="markdown-body">
-        <p>我们有时有这样的需求：<a target="_blank" rel="noopener" href="http://xn--3ds.NET">在.NET</a> Framework 2.0中用上较新的C#特性，以提高开发效率及幸福感。<br>
-现代C#的某些特性需要框架支持，<a target="_blank" rel="noopener" href="http://xn--kbtsi47ch5amyag8vtya618lnlcqx2d.NET">而微软官方已经放弃对.NET</a> Framework 2.0的支持，<a target="_blank" rel="noopener" href="http://xn--ihq5mv5ex0poxfiveutexvg132al6fyt3b.NET">某些特性甚至完全不支持.NET</a> Framework。<br>
-<a target="_blank" rel="noopener" href="http://xn--siq0gp9v.NET">为了在.NET</a> Framework 2.0中使用上新特性，可以使用第三方库。</p>
-<p><strong>改变语言版本</strong></p>
-<p>在开始介绍之前，我们最好将语言版本改至最高。<br>
-默认情况下，.NET Framework使用 <a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-version-history#c-version-73">C# 7.3</a> 版本。为了用上最新的语言特性，我们编辑工程文件<code>.csproj</code>，添加<code>&lt;LangVersion&gt;</code>属性</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Project</span> <span class="attr">ToolsVersion</span>=<span class="string">&quot;15.0&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://schemas.microsoft.com/developer/msbuild/2003&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="tag">&lt;<span class="name">LangVersion</span>&gt;</span>latest<span class="tag">&lt;/<span class="name">LangVersion</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PropertyGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><code>latest</code>意味着使用编译器支持的最高语言版本</p>
-<blockquote>
-<p>若要了解当前使用的语言版本，请在代码中添加 #error version（区分大小写）。 这样做可使编译器报告编译器错误 CS8304，并显示一条消息，其中包含正在使用的编译器版本和当前选择的语言版本。</p>
-</blockquote>
-<hr>
-<h2 id="NET-Framework-3-5-特性"><a class="header-anchor" href="#NET-Framework-3-5-特性">#</a>.NET Framework 3.5 特性</h2>
-<h3 id="无参数Action委托"><a class="header-anchor" href="#无参数Action委托">#</a>无参数Action委托</h3>
-<p>介绍：<br>
-<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.action?view=netframework-3.5">https://docs.microsoft.com/zh-cn/dotnet/api/system.action?view=netframework-3.5</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
-解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/NetLegacySupport.Action/">NetLegacySupport.Action</a></p>
-<h3 id="扩展方法"><a class="header-anchor" href="#扩展方法">#</a>扩展方法</h3>
-<p>介绍：<br>
-<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/programming-guide/classes-and-structs/extension-methods">https://docs.microsoft.com/zh-cn/dotnet/csharp/programming-guide/classes-and-structs/extension-methods</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
-解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/DevLib.Legacy">DevLib.Legacy</a></p>
-<hr>
-<h2 id="NET-Framework-4-0-特性"><a class="header-anchor" href="#NET-Framework-4-0-特性">#</a>.NET Framework 4.0 特性</h2>
-<h3 id="Tuple类"><a class="header-anchor" href="#Tuple类">#</a>Tuple类</h3>
-<p>介绍：<br>
-<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.tuple?view=netframework-4.0">https://docs.microsoft.com/zh-cn/dotnet/api/system.tuple?view=netframework-4.0</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
-解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/NetLegacySupport.Tuple">NetLegacySupport.Tuple</a></p>
-<h3 id="ThreadLocal"><a class="header-anchor" href="#ThreadLocal">#</a>ThreadLocal</h3>
-<p>介绍：<br>
-<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadlocal-1">https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadlocal-1</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a></p>
-<hr>
-<h2 id="NET-Framework-4-7-特性"><a class="header-anchor" href="#NET-Framework-4-7-特性">#</a>.NET Framework 4.7 特性</h2>
-<h3 id="ValueTuple-结构"><a class="header-anchor" href="#ValueTuple-结构">#</a>ValueTuple 结构</h3>
-<p>介绍：<br>
-<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.valuetuple?view=netframework-4.7">https://docs.microsoft.com/zh-cn/dotnet/api/system.valuetuple?view=netframework-4.7</a><br>
-<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/builtin-types/value-tuples">https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/builtin-types/value-tuples</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
-解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Portable.System.ValueTuple">Portable.System.ValueTuple</a></p>
-<hr>
-<h2 id="不支持-NET-Framework-的特性"><a class="header-anchor" href="#不支持-NET-Framework-的特性">#</a>不支持 .NET Framework 的特性</h2>
-<h3 id="Range-结构"><a class="header-anchor" href="#Range-结构">#</a>Range 结构</h3>
-<p>介绍：<br>
-<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.range">https://docs.microsoft.com/zh-cn/dotnet/api/system.range</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a></p>
-<h3 id="Index-结构"><a class="header-anchor" href="#Index-结构">#</a>Index 结构</h3>
-<p>介绍：<br>
-<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/api/system.index">https://docs.microsoft.com/zh-cn/dotnet/api/system.index</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a></p>
-<h3 id="仅初始化属性（Init-only-properties）"><a class="header-anchor" href="#仅初始化属性（Init-only-properties）">#</a>仅初始化属性（Init-only properties）</h3>
-<p>介绍：<br>
-<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-9#init-only-setters">https://docs.microsoft.com/zh-cn/dotnet/csharp/whats-new/csharp-9#init-only-setters</a><br>
-<a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/init">https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/keywords/init</a></p>
-<p>解决方案1：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/Theraot.Core">Theraot.Core</a><br>
-解决方案2：<a target="_blank" rel="noopener" href="https://www.nuget.org/packages/IsExternalInit">IsExternalInit</a></p>
-<hr>
-<h2 id="参考"><a class="header-anchor" href="#参考">#</a>参考</h2>
-<p><a target="_blank" rel="noopener" href="https://docs.microsoft.com/zh-cn/dotnet/csharp/language-reference/configure-language-version">C# 语言版本控制</a></p>
+        <p>上次在《<a href="/2025/11/27/build-qt571-linux-aarch64-on-windows/">制作交叉 Qt 5.7.1 for Windows</a>》文中编译时需要挂载远程Linux根文件，由于远程机器和我的宿主机器不在一个局域网，导致中途偶有断连的情况，然后编译就中断了。<br>
+还有另一个小毛病就是最后安装阶段总是会安装到<code>-sysroot</code>指定的目录下去，这远程I/O也不流畅。<br>
+所以这次的目标是在Windows本机编译，重点工作是制作一份<code>sysroot</code>。</p>
+<h2 id="制作sysroot"><a class="header-anchor" href="#制作sysroot">#</a>制作sysroot</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt install debootstrap</span><br><span class="line">debootstrap --<span class="built_in">arch</span>=arm64 --variant=minbase focal /opt/sysroot-focal http://mirrors.aliyun.com/ubuntu-ports/</span><br><span class="line"><span class="built_in">chroot</span> /opt/sysroot-focal</span><br></pre></td></tr></table></figure>
+<p>参数含义：</p>
+<ul>
+<li><code>--arch</code>：系统架构</li>
+<li><code>--variant</code>：最小化安装</li>
+<li><code>focal</code>：系统代号</li>
+</ul>
+<h3 id="安装库"><a class="header-anchor" href="#安装库">#</a>安装库</h3>
+<p>先编辑仓库源<code>/etc/apt/sources.list</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deb http://mirrors.aliyun.com/ubuntu-ports/ focal main restricted universe multiverse</span><br></pre></td></tr></table></figure>
+<p>安装需要用到的库，因为我要编译Qt5.7.1，所以我安装了以下这些：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt update</span><br><span class="line">apt install <span class="string">&quot;^libxcb.*&quot;</span> libx11-dev libx11-xcb-dev libxext-dev libxi-dev libxfixes-dev libglu1-mesa-dev libfreetype6-dev libxrender-dev libfontconfig1-dev libxkbcommon-dev libxkbcommon-x11-dev libdbus-1-dev libasound2-dev libpulse-dev libudev-dev libwayland-dev libatspi2.0-dev libgl1-mesa-dev libegl1-mesa-dev libgles2-mesa-dev zlib1g-dev libssl-dev libpng-dev libjpeg-dev libgbm-dev libdrm-dev libmtdev-dev unixodbc-dev libinput-dev libicu-dev libproxy-dev libdouble-conversion-dev libharfbuzz-dev freetds-dev libcups2-dev libpq-dev</span><br></pre></td></tr></table></figure>
+<h3 id="打包"><a class="header-anchor" href="#打包">#</a>打包</h3>
+<p>安装完成后退出sysroot，然后打包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 退出sysroot</span></span><br><span class="line"><span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /opt/sysroot-focal</span><br><span class="line">tar -cJvhf ../sysroot-focal-arm64.tar.xz usr/include usr/lib/aarch64-linux-gnu</span><br></pre></td></tr></table></figure>
+<p>将Linux上打包好的<code>sysroot-focal-arm64.tar.xz</code>拷贝到Windows宿主机，解压后编辑<code>/usr/lib/aarch64-linux-gnu/libc.so</code>文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/* GNU ld script</span><br><span class="line">   Use the shared library, but some functions are only in</span><br><span class="line">   the static library, so try that secondarily.  */</span><br><span class="line">OUTPUT_FORMAT(elf64-littleaarch64)</span><br><span class="line">GROUP ( /lib/aarch64-linux-gnu/libc.so.6 /usr/lib/aarch64-linux-gnu/libc_nonshared.a  AS_NEEDED ( /lib/aarch64-linux-gnu/ld-linux-aarch64.so.1 ) )</span><br></pre></td></tr></table></figure>
+<p>去掉其中的路径，只保留文件名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/* GNU ld script</span><br><span class="line">   Use the shared library, but some functions are only in</span><br><span class="line">   the static library, so try that secondarily.  */</span><br><span class="line">OUTPUT_FORMAT(elf64-littleaarch64)</span><br><span class="line">GROUP ( libc.so.6 libc_nonshared.a  AS_NEEDED ( ld-linux-aarch64.so.1 ) )</span><br></pre></td></tr></table></figure>
+<p>至此，这个sysroot就可以在Windows上使用了。</p>
+<h2 id="编译Qt5-7-1"><a class="header-anchor" href="#编译Qt5-7-1">#</a>编译Qt5.7.1</h2>
+<p>编译还是和以前一样，只不过<code>-sysroot</code>指向本机目录了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">set PATH=C:\ai\cross-toolchain\Linux-aarch64\bin;C:\msys64\usr\bin;%PATH%</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">..\configure.bat -prefix /qt5.7.1-aarch64-linux-gnu -platform win32-g++ -xplatform linux-aarch64-gnu-g++ -sysroot C:\ai\sysroot-focal-arm64 -confirm-license -opensource -release -opengl es2 -posix-ipc -nomake examples -nomake tests -D QT_HAVE_POLL -L C:\ai\sysroot-focal-arm64\usr\lib\aarch64-linux-gnu</span><br><span class="line"></span><br><span class="line">mingw32-make -j</span><br><span class="line">mingw32-make install</span><br></pre></td></tr></table></figure>
+<h3 id="编译其他Qt模块"><a class="header-anchor" href="#编译其他Qt模块">#</a>编译其他Qt模块</h3>
+<p>以<code>qtserialport</code>模块为例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">set PATH=C:\ai\cross-toolchain\Linux-aarch64\bin;C:\msys64\usr\bin;%PATH%</span><br><span class="line">cd C:\Qt\qtserialport-opensource-src-5.7.1</span><br><span class="line">C:\qt5.7.1-aarch64-linux-gnu\bin\qmake.exe -spec linux-aarch64-gnu-g++ QMAKE_CXXFLAGS+=--sysroot=C:\ai\sysroot-focal-arm64 QMAKE_LFLAGS+=--sysroot=C:\ai\sysroot-focal-arm64</span><br><span class="line">mingw32-make -j</span><br><span class="line">mingw32-make install</span><br></pre></td></tr></table></figure>
 
       </div>
       
         <div class="prev-or-next">
           <div class="post-foot-next">
             
-              <a href="/2022/04/15/16150088/" target="_self">
+              <a href="/2025/11/27/build-qt571-linux-aarch64-on-windows/" target="_self">
                 <i class="iconfont icon-chevronleft"></i>
                 <span>上一页</span>
               </a>
             
           </div>
           <div class="post-foot-prev">
-            
-              <a href="/2022/04/20/visual-studio/" target="_self">
-                <span>下一页</span>
-                <i class="iconfont icon-chevronright"></i>
-              </a>
             
           </div>
         </div>
@@ -264,7 +222,7 @@
     <div class="title">目录</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#NET-Framework-3-5-%E7%89%B9%E6%80%A7"><span class="toc-text">.NET Framework 3.5 特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E5%8F%82%E6%95%B0Action%E5%A7%94%E6%89%98"><span class="toc-text">无参数Action委托</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%96%B9%E6%B3%95"><span class="toc-text">扩展方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NET-Framework-4-0-%E7%89%B9%E6%80%A7"><span class="toc-text">.NET Framework 4.0 特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tuple%E7%B1%BB"><span class="toc-text">Tuple类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ThreadLocal"><span class="toc-text">ThreadLocal</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NET-Framework-4-7-%E7%89%B9%E6%80%A7"><span class="toc-text">.NET Framework 4.7 特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ValueTuple-%E7%BB%93%E6%9E%84"><span class="toc-text">ValueTuple 结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E6%94%AF%E6%8C%81-NET-Framework-%E7%9A%84%E7%89%B9%E6%80%A7"><span class="toc-text">不支持 .NET Framework 的特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Range-%E7%BB%93%E6%9E%84"><span class="toc-text">Range 结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Index-%E7%BB%93%E6%9E%84"><span class="toc-text">Index 结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%85%E5%88%9D%E5%A7%8B%E5%8C%96%E5%B1%9E%E6%80%A7%EF%BC%88Init-only-properties%EF%BC%89"><span class="toc-text">仅初始化属性（Init-only properties）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B6%E4%BD%9Csysroot"><span class="toc-text">制作sysroot</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%BA%93"><span class="toc-text">安装库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%93%E5%8C%85"><span class="toc-text">打包</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91Qt5-7-1"><span class="toc-text">编译Qt5.7.1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%85%B6%E4%BB%96Qt%E6%A8%A1%E5%9D%97"><span class="toc-text">编译其他Qt模块</span></a></li></ol></li></ol>
       
     </div>
   </div>
