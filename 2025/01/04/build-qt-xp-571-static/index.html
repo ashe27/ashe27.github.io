@@ -150,7 +150,7 @@
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2025-07-26 16:19:44
+          2025-12-12 22:48:28
         </span>
         
               <span class="post-tags">
@@ -166,12 +166,13 @@
           
       </div>
       <div class="markdown-body">
-        <p>之前写过一篇 <a href="/2024/06/29/build-qt-xp-571/">VS2017 编译 Qt 5.7.1</a> 文章介绍了 Qt 的编译方式。为了支持 XP 系统，不得不使用 VS2017 来编译，这带来一个问题：无法享受 C++ 20 以后的现代式编程。<br>
+        <p>之前写过一篇 <a href="/2024/06/29/build-qt-xp-571/">VS2017 编译 Qt 5.7.1</a> 文章介绍了 Qt 的编译方式。为了支持 XP 系统，不得不使用 VS2017 来编译，这带来一个问题：无法享受更现代的 C++20。<br>
 好在有 <a target="_blank" rel="noopener" href="https://github.com/Chuyu-Team/YY-Thunks">YY-Thunks</a> 这个神器可以解决 XP 缺失一些 API 的问题。<br>
 总体的编译流程和之前差不多，只是一些配置细节不同。</p>
 <h2 id="准备"><a class="header-anchor" href="#准备">#</a>准备</h2>
 <p>Qt 5.7.1：<a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/">https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/</a><br>
-VC-LTL5 v5.2.2：<a target="_blank" rel="noopener" href="https://github.com/Chuyu-Team/VC-LTL5/releases/tag/v5.2.2">https://github.com/Chuyu-Team/VC-LTL5/releases/tag/v5.2.2</a></p>
+YY-Thunks 1.1.7：<a target="_blank" rel="noopener" href="https://github.com/Chuyu-Team/YY-Thunks/releases/tag/v1.1.7">https://github.com/Chuyu-Team/YY-Thunks/releases/tag/v1.1.7</a><br>
+VC-LTL5 5.2.2：<a target="_blank" rel="noopener" href="https://github.com/Chuyu-Team/VC-LTL5/releases/tag/v5.2.2">https://github.com/Chuyu-Team/VC-LTL5/releases/tag/v5.2.2</a></p>
 <p><br>
 其中 VC-LTL5 是可选的，用了它后可以让 Qt 和应用程序共享 crt 了，这样可以减少程序的体积。<br>
 不过要注意的是，引入 VC-LTL5 后如果模块（DLL）之间存在互相访问 C++ 数据类型的话，则双方都要引入 VC-LTL5，否则会引发内存访问异常。</p>
@@ -179,17 +180,29 @@ VC-LTL5 v5.2.2：<a target="_blank" rel="noopener" href="https://github.com/Chuy
 <p>我不喜欢下载完整的源码编译，太笨重了，我更喜欢按需编译，只编译用到的部分。<br>
 下载 <a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qtbase-opensource-src-5.7.1.7z">qtbase-opensource-src-5.7.1.7z</a> 并解压。</p>
 <h3 id="编辑-msvc-desktop-conf"><a class="header-anchor" href="#编辑-msvc-desktop-conf">#</a>编辑 msvc-desktop.conf</h3>
-<p>在<code>DEFINES</code>后追加<code>_WIN32_WINNT=0x0501</code>，避免使用 Vista 系统后才有的 Win32 API</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEFINES += UNICODE WIN32 _UNICODE _WIN32_WINNT=0x0501</span><br></pre></td></tr></table></figure>
-<p><br>
-要在 XP 系统上运行，则必须将子系统版本改为<code>5.01</code>，在任意位置插入<code>QMAKE_SUBSYSTEM_SUFFIX=,5.01</code></p>
+<ul>
+<li>定义SDK版本<br>
+打开文件<code>mkspecs\common\msvc-desktop.conf</code>，在<code>DEFINES</code>后追加<code>_WIN32_WINNT=0x0501</code>，避免使用 Vista 系统后才有的 Win32 API</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEFINES += UNICODE WIN32 _WIN32_WINNT=0x0501</span><br></pre></td></tr></table></figure>
+<ul>
+<li>修改子系统版本<br>
+要在XP系统上运行，则必须将子系统版本改为<code>5.01</code>，在<code>QMAKE_LFLAGS_WINDOWS</code>下面插入<code>QMAKE_SUBSYSTEM_SUFFIX=,5.01</code></li>
+</ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_LFLAGS_CONSOLE    = /SUBSYSTEM:CONSOLE</span><br><span class="line">QMAKE_LFLAGS_WINDOWS    = /SUBSYSTEM:WINDOWS</span><br><span class="line">QMAKE_SUBSYSTEM_SUFFIX  = ,5.01</span><br></pre></td></tr></table></figure>
-<p><code>-MD</code>改为<code>-MT</code>，这样编译出的 Qt DLL 文件就不依赖VC运行库了</p>
+<p><code>-MD</code>改为<code>-MT</code>，这样编译出的DLL文件就不依赖VC运行库了</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_CFLAGS_RELEASE    = -O2 -MT</span><br><span class="line">QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO += -O2 -MT -Zi</span><br><span class="line">QMAKE_CFLAGS_DEBUG      = -Zi -MTd</span><br></pre></td></tr></table></figure>
-<p>如果不希望产生 .pdb 文件，则可以将<code>-Zi</code>去掉，并找到<code>QMAKE_LFLAGS_DEBUG</code></p>
+<p>如果不希望产生<code>.pdb</code>文件，则可以将<code>-Zi</code>去掉，并找到<code>QMAKE_LFLAGS_DEBUG</code></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_LFLAGS_DEBUG      = /DEBUG</span><br></pre></td></tr></table></figure>
 <p>改为</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_LFLAGS_DEBUG      = /DEBUG:NONE</span><br></pre></td></tr></table></figure>
+<ul>
+<li>引入 YY-Thunks<br>
+在<code>QMAKE_LFLAGS</code>后面追加<code>YY_Thunks_for_WinXP.obj</code>文件的路径</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_LFLAGS = /NOLOGO /DYNAMICBASE /NXCOMPAT C:\Qt\YY_Thunks_for_WinXP.obj</span><br></pre></td></tr></table></figure>
+<p>根据YY-Thunks说明，DLL文件还要修改入口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_LFLAGS_DLL = /DLL /ENTRY:&quot;DllMainCRTStartupForYY_Thunks&quot;</span><br></pre></td></tr></table></figure>
 <h3 id="编译"><a class="header-anchor" href="#编译">#</a>编译</h3>
 <p>启动 VS2022 32位命令行工具</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&quot;%programfiles%\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars32.bat&quot; x86</span><br><span class="line">cd C:\Qt\qtbase-opensource-src-5.7.1</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line"></span><br><span class="line"># 启用 VC-LTL5</span><br><span class="line">set WindowsTargetPlatformMinVersion=5.1.2600.0</span><br><span class="line">&quot;C:\VC-LTL-Binary-v5.2.2\VC-LTL helper for nmake.cmd&quot;</span><br><span class="line"></span><br><span class="line"># 编译</span><br><span class="line">..\configure.bat -prefix &quot;C:\qt5.7.1-vc144-i386&quot; -platform win32-msvc2015 -confirm-license -opensource -debug-and-release -nomake examples -nomake tests -no-directwrite -no-angle -opengl desktop -mp</span><br><span class="line">nmake</span><br><span class="line">nmake install</span><br></pre></td></tr></table></figure>
@@ -202,7 +215,7 @@ VC-LTL5 v5.2.2：<a target="_blank" rel="noopener" href="https://github.com/Chuy
 <h3 id="“binary-function”-不是-“std”-的成员"><a class="header-anchor" href="#“binary-function”-不是-“std”-的成员">#</a>“binary_function”: 不是 “std” 的成员</h3>
 <p>这是第2个错误</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\tools\qlalr\compress.cpp(40): error C2039: &quot;binary_function&quot;: 不是 &quot;std&quot; 的成员</span><br></pre></td></tr></table></figure>
-<p>解决方法：在<code>compress.cpp</code>中添加头文件<code>#include &lt;functional&gt;</code>。</p>
+<p>解决方法：在<code>src\tools\qlalr\compress.cpp</code>中添加头文件<code>#include &lt;functional&gt;</code>。</p>
 <h3 id="缺少-tmschema-h"><a class="header-anchor" href="#缺少-tmschema-h">#</a>缺少 tmschema.h</h3>
 <p>这是第3个错误</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\widgets\styles\qwindowsxpstyle_p_p.h(64): fatal error C1083: 无法打开包括文件: “tmschema.h”: No such file or directory</span><br></pre></td></tr></table></figure>
@@ -217,8 +230,12 @@ VC-LTL5 v5.2.2：<a target="_blank" rel="noopener" href="https://github.com/Chuy
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Qt\qtbase-opensource-src-5.7.1\src\testlib\qtestcase.cpp(1578): error C3861: “RtlCaptureStackBackTrace”: 找不到标识符</span><br></pre></td></tr></table></figure>
 <p>这个错误在以前的文章中提到过，在<code>qtestcase.cpp</code>文件中加入以下声明：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> __declspec(dllimport) <span class="function">USHORT WINAPI <span class="title">RtlCaptureStackBackTrace</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    __in ULONG FramesToSkip,</span></span></span><br><span class="line"><span class="params"><span class="function">    __in ULONG FramesToCapture,</span></span></span><br><span class="line"><span class="params"><span class="function">    __out_ecount(FramesToCapture) PVOID *BackTrace,</span></span></span><br><span class="line"><span class="params"><span class="function">    __out_opt PULONG BackTraceHash</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
+<h2 id="调整YY-Thunks-for-WinXP-obj文件路径"><a class="header-anchor" href="#调整YY-Thunks-for-WinXP-obj文件路径">#</a>调整YY_Thunks_for_WinXP.obj文件路径</h2>
+<p>编辑<code>mkspecs\common\msvc-desktop.conf</code>文件，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_LFLAGS = /NOLOGO /DYNAMICBASE /NXCOMPAT $$[QT_INSTALL_PREFIX]/YY_Thunks_for_WinXP.obj</span><br></pre></td></tr></table></figure>
+<p>这样在后续编译其他模块时才能正常引用<code>YY_Thunks_for_WinXP.obj</code>，记得将<code>YY_Thunks_for_WinXP.obj</code>拷贝到qt根目录下。</p>
 <h2 id="编译其他模块"><a class="header-anchor" href="#编译其他模块">#</a>编译其他模块</h2>
-<p><code>qtbase</code>只够满足编译最基础的 Qt 程序，缺少了设计师、预言家等工具，一般至少还需要编译配套工具和多语言：</p>
+<p><code>qtbase</code>只够满足编译最基础的 Qt 程序，缺少了设计师、语言家等工具，一般至少还需要编译配套工具和多语言：</p>
 <ol>
 <li><a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qttools-opensource-src-5.7.1.7z">qttools-opensource-src-5.7.1.7z</a></li>
 <li><a target="_blank" rel="noopener" href="https://download.qt.io/new_archive/qt/5.7/5.7.1/submodules/qttranslations-opensource-src-5.7.1.7z">qttranslations-opensource-src-5.7.1.7z</a></li>
@@ -227,9 +244,9 @@ VC-LTL5 v5.2.2：<a target="_blank" rel="noopener" href="https://github.com/Chuy
 编译模块的方法：进到模块根目录后依次执行</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;%programfiles%\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars32.bat&quot; x86</span><br><span class="line">set WindowsTargetPlatformMinVersion=5.1.2600.0</span><br><span class="line">&quot;C:\VC-LTL-Binary-v5.2.2\VC-LTL helper for nmake.cmd&quot;</span><br><span class="line">C:\qt5.7.1-vc144-i386\bin\qmake.exe -makefile -spec win32-msvc2015</span><br><span class="line">nmake</span><br><span class="line">nmake install</span><br></pre></td></tr></table></figure>
 <h2 id="分发"><a class="header-anchor" href="#分发">#</a>分发</h2>
-<p>使用<code>configure -prefix &quot;C:\qt5.7.1-vc144-i386&quot; ...</code>命令来配置Qt的编译时，这个绝对路径会被硬编码到编译出来的多个关键文件中，其中最重要的就是 qmake.exe。<br>
-当其他人将这个编译好的Qt包解压到其他路径（例如 D:\Qt\）下，然后尝试在Qt Creator中添加这个Qt时，Qt Creator会执行 D:\Qt\bin\qmake.exe 来查询Qt的配置信息。然而，qmake.exe 内部记录的路径仍然是编译时的 “C:\qt5.7.1-vc144-i386”。<br>
-Qt Creator发现 qmake 报告的路径和 qmake 自身的实际路径不符，并且在报告的路径下找不到必需的文件，因此判断这是一个损坏或无效的Qt版本，从而给出 “Invalid Qt version” 的错误。</p>
+<p>使用<code>configure -prefix &quot;C:\qt5.7.1-vc144-i386&quot; ...</code>编译Qt时，这个绝对路径会被硬编码到编译出来的多个关键文件中，其中最重要的就是qmake.exe。<br>
+当其他人将这个编译好的Qt包解压到其他路径（例如 D:\Qt\）下，然后尝试在Qt Creator中添加这个Qt时，Qt Creator会执行<code>D:\Qt\bin\qmake.exe</code>来查询Qt的配置信息。然而，qmake.exe内部记录的路径仍然是编译时的&quot;C:\qt5.7.1-vc144-i386&quot;。<br>
+Qt Creator发现qmake报告的路径和qmake自身的实际路径不符，并且在报告的路径下找不到必需的文件，因此判断这是一个损坏或无效的Qt版本，从而给出 “Invalid Qt version” 的错误。</p>
 <p><br>
 解决方法，手动创建一个<code>qt.conf</code>文件放到<code>bin</code>目录下，文件内容是：</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Paths]</span></span><br><span class="line"><span class="attr">Prefix</span>=..</span><br></pre></td></tr></table></figure>
@@ -265,7 +282,7 @@ Qt Creator发现 qmake 报告的路径和 qmake 自身的实际路径不符，�
     <div class="title">目录</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91-qtbase"><span class="toc-text">编译 qtbase</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%BE%91-msvc-desktop-conf"><span class="toc-text">编辑 msvc-desktop.conf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-text">编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FILE-ID-128-%E7%B1%BB%E5%9E%8B%E9%87%8D%E5%AE%9A%E4%B9%89"><span class="toc-text">_FILE_ID_128 类型重定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%80%9Cbinary-function%E2%80%9D-%E4%B8%8D%E6%98%AF-%E2%80%9Cstd%E2%80%9D-%E7%9A%84%E6%88%90%E5%91%98"><span class="toc-text">“binary_function”: 不是 “std” 的成员</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E5%B0%91-tmschema-h"><span class="toc-text">缺少 tmschema.h</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%80%9CNIIF-USER%E2%80%9D-%E6%9C%AA%E5%A3%B0%E6%98%8E%E7%9A%84%E6%A0%87%E8%AF%86%E7%AC%A6"><span class="toc-text">“NIIF_USER”: 未声明的标识符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E5%B0%91-RtlCaptureStackBackTrace"><span class="toc-text">缺少 RtlCaptureStackBackTrace</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%85%B6%E4%BB%96%E6%A8%A1%E5%9D%97"><span class="toc-text">编译其他模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%8F%91"><span class="toc-text">分发</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87"><span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91-qtbase"><span class="toc-text">编译 qtbase</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%BE%91-msvc-desktop-conf"><span class="toc-text">编辑 msvc-desktop.conf</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91"><span class="toc-text">编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FILE-ID-128-%E7%B1%BB%E5%9E%8B%E9%87%8D%E5%AE%9A%E4%B9%89"><span class="toc-text">_FILE_ID_128 类型重定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%80%9Cbinary-function%E2%80%9D-%E4%B8%8D%E6%98%AF-%E2%80%9Cstd%E2%80%9D-%E7%9A%84%E6%88%90%E5%91%98"><span class="toc-text">“binary_function”: 不是 “std” 的成员</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E5%B0%91-tmschema-h"><span class="toc-text">缺少 tmschema.h</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%80%9CNIIF-USER%E2%80%9D-%E6%9C%AA%E5%A3%B0%E6%98%8E%E7%9A%84%E6%A0%87%E8%AF%86%E7%AC%A6"><span class="toc-text">“NIIF_USER”: 未声明的标识符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E5%B0%91-RtlCaptureStackBackTrace"><span class="toc-text">缺少 RtlCaptureStackBackTrace</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E6%95%B4YY-Thunks-for-WinXP-obj%E6%96%87%E4%BB%B6%E8%B7%AF%E5%BE%84"><span class="toc-text">调整YY_Thunks_for_WinXP.obj文件路径</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%85%B6%E4%BB%96%E6%A8%A1%E5%9D%97"><span class="toc-text">编译其他模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%8F%91"><span class="toc-text">分发</span></a></li></ol>
       
     </div>
   </div>
