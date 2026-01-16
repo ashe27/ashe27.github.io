@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="John Doe" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      解决backward-cpp交叉编译时无法打印文件名、行号的问题 
+      
+      
+      |
+    
+     ashe&#39;s blog
+  </title>
+
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+
+  
+<link rel="stylesheet" href="/css/github-markdown-light.css">
+
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">ashe</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Archives</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">解决backward-cpp交叉编译时无法打印文件名、行号的问题</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2026-01-16 23:59:40
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/c-plus-plus/" title="C++">
+                    #C++
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <p>程序有时候会崩溃退出，完全不知道是哪里崩的，一点信息都没有。于是找到了 <a target="_blank" rel="noopener" href="https://github.com/bombela/backward-cpp">backward-cpp</a> 这个项目，它使用非常简单，跨平台支持的不错。</p>
+<p>但是我在Linux下使用时无法打印源文件名，折腾了好几个小时才找到原因：因为我是在Windows下交叉编译的，而backward-cpp的cmake配置中会自动检测<code>dw</code>、<code>dwarf</code>和<code>bfd</code>，显然在Windows下是没有这些库的，于是崩溃时只能打印内存地址。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Stack trace (most recent call last):</span><br><span class="line"><span class="comment">#4    Object &quot;[0xffffffffffffffff]&quot;, at 0xffffffffffffffff, in </span></span><br><span class="line"><span class="comment">#3    Object &quot;./DemoServer&quot;, at 0x415838, in </span></span><br><span class="line"><span class="comment">#2    Object &quot;/lib/x86_64-linux-gnu/libc.so.6&quot;, at 0x7f4eefe5483f, in __libc_start_main</span></span><br><span class="line"><span class="comment">#1    Object &quot;./DemoServer&quot;, at 0x41576f, in </span></span><br><span class="line"><span class="comment">#0    Object &quot;./DemoServer&quot;, at 0x415f13, in </span></span><br><span class="line">Segmentation fault (Address not mapped to object [(nil)])</span><br></pre></td></tr></table></figure>
+<h2 id="方案一：在Windows下连接libdwarf-libelf-libdl等库"><a class="header-anchor" href="#方案一：在Windows下连接libdwarf-libelf-libdl等库">#</a>方案一：在Windows下连接libdwarf, libelf, libdl等库</h2>
+<p>在Linux下安装相关的库，然后将头文件和库文件拷贝到Windows上，再到CMake中链接也是可以的，但这会陷入依赖地狱，非常折腾。</p>
+<h2 id="方案二：用addr2line"><a class="header-anchor" href="#方案二：用addr2line">#</a>方案二：用addr2line</h2>
+<p>仅依赖addr2line命令，这样在Windows上编译时就是零依赖，只需要修改下backward的源码即可。</p>
+<p>首先，不再用库自带的CMake配置了，直接下载<a target="_blank" rel="noopener" href="https://github.com/bombela/backward-cpp/blob/master/backward.hpp">backward.hpp</a>引入到项目中。<br>
+然后写个简单的target：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(TARGET_NAME backward)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(<span class="variable">$&#123;TARGET_NAME&#125;</span> INTERFACE)</span><br><span class="line"></span><br><span class="line"><span class="keyword">target_include_directories</span>(<span class="variable">$&#123;TARGET_NAME&#125;</span> INTERFACE <span class="variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">target_compile_definitions</span>(<span class="variable">$&#123;TARGET_NAME&#125;</span> INTERFACE</span><br><span class="line">        BACKWARD_HAS_DW=<span class="number">0</span></span><br><span class="line">        BACKWARD_HAS_BFD=<span class="number">0</span></span><br><span class="line">        BACKWARD_HAS_DWARF=<span class="number">0</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>修改<code>TraceResolverLinuxImpl&lt;trace_resolver_tag::backtrace_symbol&gt;::resolve</code>方法。<br>
+之前：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ResolvedTrace <span class="title">resolve</span><span class="params">(ResolvedTrace trace)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> *filename = _symbols[trace.idx];</span><br><span class="line">    <span class="type">char</span> *funcname = filename;</span><br><span class="line">    <span class="keyword">while</span> (*funcname &amp;&amp; *funcname != <span class="string">&#x27;(&#x27;</span>) &#123;</span><br><span class="line">      funcname += <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    trace.object_filename.<span class="built_in">assign</span>(filename,</span><br><span class="line">                                 funcname); <span class="comment">// ok even if funcname is the ending</span></span><br><span class="line">                                            <span class="comment">// \0 (then we assign entire string)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (*funcname) &#123; <span class="comment">// if it&#x27;s not end of string (e.g. from last frame ip==0)</span></span><br><span class="line">      funcname += <span class="number">1</span>;</span><br><span class="line">      <span class="type">char</span> *funcname_end = funcname;</span><br><span class="line">      <span class="keyword">while</span> (*funcname_end &amp;&amp; *funcname_end != <span class="string">&#x27;)&#x27;</span> &amp;&amp; *funcname_end != <span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">        funcname_end += <span class="number">1</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      *funcname_end = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">      trace.object_function = <span class="keyword">this</span>-&gt;<span class="built_in">demangle</span>(funcname);</span><br><span class="line">      trace.source.function = trace.object_function; <span class="comment">// we cannot do better.</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> trace;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>修改后：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ResolvedTrace <span class="title">resolve</span><span class="params">(ResolvedTrace trace)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> cmd[<span class="number">1024</span>];</span><br><span class="line">    <span class="type">char</span> self_path[PATH_MAX] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="type">ssize_t</span> len = ::<span class="built_in">readlink</span>(<span class="string">&quot;/proc/self/exe&quot;</span>, self_path, <span class="built_in">sizeof</span>(self_path) - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (len &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        self_path[len] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        FILE* f = <span class="built_in">fopen</span>(<span class="string">&quot;/proc/self/cmdline&quot;</span>, <span class="string">&quot;rb&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (f) &#123;</span><br><span class="line">            <span class="type">size_t</span> n = <span class="built_in">fread</span>(self_path, <span class="number">1</span>, <span class="built_in">sizeof</span>(self_path) - <span class="number">1</span>, f);</span><br><span class="line">            <span class="keyword">if</span> (n &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                self_path[n] = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">fclose</span>(f);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (self_path[<span class="number">0</span>] == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (_symbols) &#123;</span><br><span class="line">            <span class="type">char</span> *filename = _symbols[trace.idx];</span><br><span class="line">            trace.object_filename = filename ? filename : <span class="string">&quot;unknown&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> trace;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">snprintf</span>(cmd, <span class="built_in">sizeof</span>(cmd), <span class="string">&quot;/usr/bin/addr2line -e \&quot;%s\&quot; -f -C 0x%lx&quot;</span>, self_path, (<span class="type">unsigned</span> <span class="type">long</span>)trace.addr);</span><br><span class="line"></span><br><span class="line">    FILE* fp = <span class="built_in">popen</span>(cmd, <span class="string">&quot;r&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (fp) &#123;</span><br><span class="line">        <span class="type">char</span> func_buf[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">        <span class="type">char</span> file_buf[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">        <span class="type">char</span>* line1 = <span class="built_in">fgets</span>(func_buf, <span class="built_in">sizeof</span>(func_buf), fp);</span><br><span class="line">        <span class="type">char</span>* line2 = <span class="built_in">fgets</span>(file_buf, <span class="built_in">sizeof</span>(file_buf), fp);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (line1 &amp;&amp; line2) &#123;</span><br><span class="line">            <span class="type">size_t</span> l = <span class="built_in">strlen</span>(func_buf);</span><br><span class="line">            <span class="keyword">if</span> (l &gt; <span class="number">0</span> &amp;&amp; func_buf[l<span class="number">-1</span>] == <span class="string">&#x27;\n&#x27;</span>) func_buf[l<span class="number">-1</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">            l = <span class="built_in">strlen</span>(file_buf);</span><br><span class="line">            <span class="keyword">if</span> (l &gt; <span class="number">0</span> &amp;&amp; file_buf[l<span class="number">-1</span>] == <span class="string">&#x27;\n&#x27;</span>) file_buf[l<span class="number">-1</span>] = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">            trace.object_function = func_buf;</span><br><span class="line">            trace.source.function = func_buf;</span><br><span class="line"></span><br><span class="line">            std::string file_line = file_buf;</span><br><span class="line">            <span class="type">size_t</span> colon_pos = file_line.<span class="built_in">find_last_of</span>(<span class="string">&#x27;:&#x27;</span>);</span><br><span class="line">            <span class="keyword">if</span> (colon_pos != std::string::npos) &#123;</span><br><span class="line">                trace.source.filename = file_line.<span class="built_in">substr</span>(<span class="number">0</span>, colon_pos);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    trace.source.line = std::<span class="built_in">stoi</span>(file_line.<span class="built_in">substr</span>(colon_pos + <span class="number">1</span>));</span><br><span class="line">                &#125; <span class="built_in">catch</span> (...) &#123; trace.source.line = <span class="number">0</span>; &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                trace.source.filename = file_line;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">pclose</span>(fp);</span><br><span class="line">        <span class="keyword">return</span> trace;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (_symbols) &#123;</span><br><span class="line">        <span class="type">char</span> *filename = _symbols[trace.idx];</span><br><span class="line">        trace.object_filename = filename ? filename : <span class="string">&quot;unknown&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> trace;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>再次测试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Stack trace (most recent call last):</span><br><span class="line"><span class="comment">#4    Source &quot;??&quot;, line 0, in ?? [0xffffffffffffffff]</span></span><br><span class="line"><span class="comment">#3    Source &quot;/opt/glibc-2.23/csu/../sysdeps/x86_64/start.S&quot;, line 118, in _start [0x415978]</span></span><br><span class="line"><span class="comment">#2    Source &quot;??&quot;, line 0, in ?? [0x7f3c4eddc082]</span></span><br><span class="line"><span class="comment">#1    Source &quot;C:\work\code\MyApp\cmake-build-relwithdebinfo-linux-x86_64/C:/work/code/MyApp/src/Demo/Server/src/main.cpp&quot;, line 117, in main [0x4158af]</span></span><br><span class="line"><span class="comment">#0    Source &quot;C:\work\code\MyApp\cmake-build-relwithdebinfo-linux-x86_64/C:/work/code/MyApp/src/Demo/Server/src/main.cpp&quot;, line 101, in cause_crash() [0x416053]</span></span><br><span class="line">Segmentation fault (Address not mapped to object [(nil)])</span><br><span class="line">Segmentation fault (core dumped)</span><br></pre></td></tr></table></figure>
+<p>可以看到源文件名和行号都能打印了，只是这个路径还是Windows下的，这个可以用<code>-fdebug-prefix-map</code>编译选项来优化一下</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_compile_options</span>(<span class="string">&quot;-fdebug-prefix-map=$&#123;CMAKE_SOURCE_DIR&#125;=&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>这样就变成相对路径了，完美了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Stack trace (most recent call last):</span><br><span class="line"><span class="comment">#4    Source &quot;??&quot;, line 0, in ?? [0xffffffffffffffff]</span></span><br><span class="line"><span class="comment">#3    Source &quot;/opt/glibc-2.23/csu/../sysdeps/x86_64/start.S&quot;, line 118, in _start [0x415978]</span></span><br><span class="line"><span class="comment">#2    Source &quot;??&quot;, line 0, in ?? [0x7fb465c5d082]</span></span><br><span class="line"><span class="comment">#1    Source &quot;/src/Demo/Server/src/main.cpp&quot;, line 117, in main [0x4158af]</span></span><br><span class="line"><span class="comment">#0    Source &quot;/src/Demo/Server/src/main.cpp&quot;, line 101, in cause_crash() [0x416053]</span></span><br><span class="line">Segmentation fault (Address not mapped to object [(nil)])</span><br><span class="line">Segmentation fault (core dumped)</span><br></pre></td></tr></table></figure>
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/12/03/build-qt571-linux-aarch64-on-windows3/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80%EF%BC%9A%E5%9C%A8Windows%E4%B8%8B%E8%BF%9E%E6%8E%A5libdwarf-libelf-libdl%E7%AD%89%E5%BA%93"><span class="toc-text">方案一：在Windows下连接libdwarf, libelf, libdl等库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%BA%8C%EF%BC%9A%E7%94%A8addr2line"><span class="toc-text">方案二：用addr2line</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/ashe27">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+
+
+        
+
+      </div>
+    </div>
+  </body>
+</html>
